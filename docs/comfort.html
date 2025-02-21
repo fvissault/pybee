@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mots de comfort</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>Mots de comfort</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p>
+            Beetle vous offre la possibilité d'utiliser des mots de comfort. Généralement, ces mots (que nous allons passer en revue plus 
+            bas) sont des mots qui n'utilisent pas la pile de travail mais utilisent la suite de la séquence.
+        </p>
+        <h3><u>Load</u></h3>
+        <p>
+            Ce mot vous permet de charger le contenu d'un fichier btl et de l'interpréter. Le fichier btl doit être précisé sans l'extension
+            btl.
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code><b>load</b> <i>my_file</i></code>
+        </div>
+
+        <h3><u>see</u></h3>
+        <p>
+            Ce mot vous permet de visualiser une définition si celle-ci n'est pas native. Si la définition est native, un warning vous 
+            l'indiquera
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>see</b> dup<br>
+                : dup
+                        <blockquote>0 pick</blockquote>
+                ;</code>
+        </div>
+
+        <h3><u>list</u></h3>
+        <p>
+            Ce mot vous permet de visualiser le contenu d'un fichier btl sans l'interpréter. Le fichier btl doit être précisé sans l'extension
+            btl.
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>list</b> import<br>
+                <?btl<br>
+                import math<br>
+                import file<br>
+                import mysqldb<br>
+                import date<br>
+                packages<br>
+                words<br>
+                ?></code>
+        </div>
+
+        <a href="precedent">Précédent</a> | <a href="index.html">Index</a> | <a href="suivant">Suivant</a>
+
+    </body>
+</html>
