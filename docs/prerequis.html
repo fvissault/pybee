@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Prérequis</title>
+    </head>
+    <body style="font-family:tahoma,arial;">
+        <div style="width:400px; float:left;">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div style="width:800px; float:left;">
+            <h1>Prérequis</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="index.html">Index</a> | <a href="introduction.html">Suivant : Introduction</a></p>
+
+        <p>
+            Pour utiliser Beetle, un certain nombre de prérequis (qui ne sont pas si importants) sont nécessaires. Vous pouvez 
+            exécuter plusieurs actions :
+            <ul>
+                <li>faire fonctionner Beetle dans une page web et non seulement dans une console</li>
+                <li>utiliser une base de données telle que MySql</li>
+            </ul>
+        </p>
+        <h3><u>1. Apache</u></h3>
+        <p>
+            Pour pouvoir exécuter ces 2 fonctionnalités décrites ci-dessus, nous préconisons l'installation de WampServer 64 bits 
+            (x64) 3.3.7. Wampserver vous apportera :
+        </p>
+        <ul>
+            <li>Le serveur web Apache version 2.4.62.1</li>
+            <li>La base de données Mysql version 9.1.0 et MariaDb version 11.5.2</li>
+        </ul>
+        <p>
+            - Site pour installer <a href="https://www.wampserver.com/" target="_blank">Wampserver</a><br>
+            - La procédure d'installation est un peu particulière, vous devez suivre impérativement les instructions qui sont décrites 
+            <a href="http://forum.wampserver.com/read.php?1,137154" target="_blank">ici</a>
+        </p>
+
+        <h3><u>2. Python</u></h3>
+        <p>
+            Beetle est écrit en Python version 3.12.4. Bien que nous avons essayé d'utiliser les packages standards de python, 
+            nous avons quelques spécificités qu'il faut tout de même prendre en compte.
+            <br>Voici la liste des packages en question : 
+        </p>
+        <ul>
+            <li><b>keyboard</b> - version 0.13.5</li>
+            <li><b><a href="https://pypi.org/project/legacy-cgi/" taget="_blank">legacy-cgi</a></b> - version 2.6.1</li>
+            <li><b>mysql-connector-python</b> - version 9.1.0</li>
+        </ul>
+        <p>La commande permettant d'installer un package Python est la suivante : <b>pip install</b> <i>nom_du_package</i></p>
+        <p>Il est conseillé d'installer Python dans un répertoire au plus haut sur votre disque. Par exemple : 'c:\python'</p>
+        
+        <h3><u>3. Beetle</u></h3>
+        <p>
+            Il est conseillé d'installer Beetle dans le répertoire 'www' d'Apache. Dans le répertoire 'www', vous allez constater
+            l'existence du répertoire 'pybee'. L'arborescence doit impérativement être respectée et se présente de la façon suivante :
+        </p>
+        <ul>
+            <li><b>pybee</b>
+                <ul>
+                    <li><b>docs</b> (La documentation que vous êtes en train de consulter)</li>
+                    <li><b>packages</b> (les classes représentant les packages de Beetle)
+                        <ul>
+                            <li><b>errors</b> (les classes errors des packages)</li>
+                            <li><b>help</b> (les classes help des packages)</li>
+                        </ul>
+                    </li>
+                    <li><b>userarea</b> (zone de dépot des fichiers Beetle)</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p><a href="index.html">Index</a> | <a href="introduction.html">Suivant : Introduction</a></p>
+
+    </body>
+</html>

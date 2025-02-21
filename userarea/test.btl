@@ -1,0 +1,25 @@
+<?btl
+: newfib 
+    dup 1 >=                            ( premier test )
+    if 
+        dup 1 =                         ( deuxième test )
+        if 
+            0 .cr drop 
+        else  
+            1 0 2.s reverse
+            2 var i 
+            do                          ( début de la boucle )
+                2dup + dup . rot drop 
+            loop                        ( fin de la boucle )
+            2drop forget i cr 
+        then 
+    else 
+        "Usage : n FIB with n > 0" .cr 
+    then 
+;
+50 newfib
+cr
+words
+cr cr
+list test
+?>

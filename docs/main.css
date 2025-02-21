@@ -1,0 +1,27 @@
+.div_code {
+    border:1px black solid; 
+    background-color:lightgray; 
+    padding:10px; 
+    margin:10px;
+    font-family:courier;
+    font-size:15px;
+}
+
+body {
+    font-family:tahoma,arial;
+}
+
+.div_logo {
+    width:400px; 
+    float:left;
+}
+
+.div_title {
+    width:800px; 
+    float:left;
+}
+
+blockquote {
+    margin-top: 0px; 
+    margin-bottom: 0px;
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Packages</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>Packages</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="dictionaries.html">Précédent : Dictionnaires</a> | <a href="index.html">Index</a> | <a href="console.html">Suivant : Console</a></p>
+
+        <p>
+            Nous vous proposons une méthodologie pour créer de nouveaux packages. Il est important que vous suiviez cette 
+            procédure au risque que vos efforts ne soient pas couronnés de succès.
+        </p>
+        <p>
+            Vous devez fabriquer une classe qui représente votre package dans un fichier que <b>vous placerez impérativement dans le 
+            répertoire 'packages' de Beetle</b>. Le nom de votre fichier doit porter le même nom que votre classe
+            Et votre package ne doit comporter qu'une seule classe pour représenter votre package.
+            Vous pouvez avoir plusieurs classes dans ce fichier mais seule la classe qui porte le même nom que votre 
+            fichier représente votre package
+        </p>
+        <p>Vous avez l'obligation d'utiliser Python pour écrire votre nouveau package.</p>
+        <p>Voici un modèle de classe pour votre futur package (<b>myextension.py</b>) :</p>
+        <div class="div_code">
+            <code>
+                from packages.base_module import base_module # this is mandatory<br>
+                from packages.help.myextension_help import myextension_help<br>
+                from packages.errors.myextension_errors import myextension_errors<br>
+                <br>
+                class <b>myextension</b>(base_module):<br>
+                    <blockquote>def __init__(self, interpreter):<br>
+                        <blockquote>super().__init__(interpreter)<br>
+                        self.dictionary = {'myinstruction' : self.my_instr, ...}<br>
+                        self.help = myextension_help(interpreter.output)<br>
+                        self.version = 'vx.y.z'<br>
+                        </blockquote>
+                        <br>
+                    def my_instr(self):<br>
+                        <blockquote>#<br>
+                        # you do here what you want<br>
+                        #<br>
+                        return 'nobreak'                            # mandatory if you don't use error
+                        </blockquote>
+                    </blockquote>
+            </code>
+        </div>
+            
+        <p>Mais cela ne s'arrête pas la. Il vous faudra également créer 2 autres classes pour faire fonctionner votre nouveau package.</p>
+        <p>Ces classes sont :</p>
+        <ul>
+            <li>la classe <b><i>myextension</i>_errors</b> que vous devrez placer dans le répertoire 'packages/errors'</li>
+            <li>la classe <b><i>myextension</i>_help</b> que vous devrez placer dans le répertoire 'packages/help'</li>
+        </ul>
+        <p>La classe concernant les erreurs de votre package ressemble à cela (<b>myextension_errors.py</b>) :</p>            
+        
+        <div class="div_code">
+            <code>
+                from packages.errors.errors import error<br>
+                <br>
+                class <b>myextension_errors</b>:<br>
+                <blockquote>my_error_name = error(error_type, error_message)<br>
+                    ...<br>
+                    <br>
+                    # error_type = 'warning' or 'error' or 'fatal' : fatal error_type stop the Beetle interpreter<br>
+                    # error_message is a string like vous want to say
+                </blockquote>
+            </code>
+        </div>
+            
+        <p>L'aide de votre extension doit être défini dans une nouvelle classe. C'est en réalité un dictionnaire que vous plcerez ans un fichier qui se nomme de cette façon : <b>myextension_help.py</b>.</p>
+            
+        <p>Son contenu est :</p>
+            
+        <div class="div_code">
+            <code>
+            class <b>myextension_help</b>(help):<br>
+            <blockquote>def __init__(self, output):
+                <blockquote>super().__init__(output)<br>
+                    self.help_dict = {'myinstruction' : help_message, ...}<br>
+                    # help_message is a string
+                </blockquote>
+            </blockquote>
+            </code>
+        </div>
+
+        <p><a href="dictionaries.html">Précédent : Dictionnaires</a> | <a href="index.html">Index</a> | <a href="console.html">Suivant : Console</a></p>
+
+    </body>
+</html>

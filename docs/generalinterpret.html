@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Interpréteur : généralités</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>Interpréteur : généralités</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+        <a href="filesystem.html">Système de fichiers</a> | <a href="index.html">Index</a> | <a href="sequences.html">Interpréteur : notions de séquences</a>
+
+        <p>
+            Beetle est un langage interprété écrit en Python. Un interpréteur est donc écrit pour exécuter vos mots. L'interpréteur se 
+            base principalement sur 2 piles LIFO : pile de travail (work stack) et pile de retour (return stack). Il vous permet 
+            d'exécuter du code Beetle en empilant un certain nombre de séquences d'instructions. Ceci est expliqué dans le chapitre 
+            suivant.
+        </p>
+
+        <p>
+            L'interpréteur Beetle va interpréter l'ensemble des mots que vous taper dans la console. Si vous commettez une erreur de 
+            syntaxe, l'interpréteur va vous expliquer quoi et ou votre erreur a été faite.
+        </p>
+        <p>
+            Le package 'core' est automatiquement chargé dans l'interpréteur. Vous ne pouvez pas charger 2 fois le package 'core'. 
+            Les mots du package 'core' sont attribués à l'interpréteur par défaut. Celui-ci va vous permettre :
+        </p>
+        <ul>
+            <li>De créer des définitions</li>
+            <li>D'interpréter des conditionnelles</li>
+            <li>D'interpréter des boucles</li>
+            <li>D'interpréter des instructions Beetle en général</li>
+            <li>D'obtenir de l'aide</li>
+            <li>D'inclure des données simples comme des entiers, des nombres décimaux, etc... dans la pile de données (work stack)</li>
+        </ul>
+        <p>L'interpréteur ne fait que reconnaitre :</p>
+        <ul>
+            <li>Les entiers (1, 12, -5, …)</li>
+            <li>Les nombres décimaux (1.2, 1e-10, 14E15, …)</li>
+            <li>Les chaines de caractères ( "chaine de caractères", …) Seul le caractère " délimite les chaines de caractères</li>
+            <li>Et les mots du dictionnaire</li>
+        </ul>
+        <p>Tous les mots doivent être séparés par le caractère ESPACE</p>
+
+        <p>2 types de comportement sont autorisés par l'interpréteur. Dans les séquences :</p>
+        <ul>
+            <li>soit la notation polonaise inversée est utilisée</li>
+            <li>soit la séquence d'instructions est utilisée</li>
+        </ul>
+        <p>
+            Dans le cas ou la notation polonaise inversée est utilisée, les instructions vont lire la pile de données (work stack)<br>
+            Par exemple : 
+        </p>
+        <div class="div_code">
+            <code>
+                <b>2 dup dump</b> => affiche 2 2
+            </code>
+        </div>
+        <p>
+            Dans le cas ou on utilise la séquence d'instructions, le sujet est placé après le mot comme dans l'exemple ci-dessous :
+        </p>
+        <div class="div_code">
+            <code>
+                <b>load my_file</b> => exécute le contenu de my_file.btl
+            </code>
+        </div>
+        <p>
+            Cette écriture est plus simple car si l'on devait utiliser la pile de travail (work stack) pour interpréter cette instruction, 
+            nous devrions écrire quelque chose comme cela :
+        </p>
+        <div class="div_code">
+            <code>
+                <b>"my_file" load</b> ou <b>my_file load</b>
+            </code>
+        </div>
+        <p>
+            Ce qui est moins intuitif et donc moins clair. Dans la deuxième écriture, l'interpréteur renvoie un erreur qui indique que 
+            'my_file' n'est pas un mot connu.
+        </p>
+        <a href="filesystem.html">Système de fichiers</a> | <a href="index.html">Index</a> | <a href="sequences.html">Interpréteur : notions de séquences</a>
+
+    </body>
+</html>

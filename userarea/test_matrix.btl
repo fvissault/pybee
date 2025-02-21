@@ -1,0 +1,30 @@
+<?btl
+import math
+
+[ [ 1 2 3 ] [ 4 5 6 ] [ 7 8 9 ] ] var m1
+[ [ 1 2 ] [ 3 4 ] ] var m2
+( affichage des matrices )
+"m1 =" . m1 @ .cr 
+"m2 =" . m2 @ .cr
+
+"m1 + m2 ==>" .
+m1 @ m2 @ + .cr
+
+"m2 + m1 ==>" .
+m2 @ m1 @ + .cr
+
+"m1 + m1 ==>" .
+m1 @ m1 @ + .cr
+
+"m1 - m2 ==>" .
+m1 @ m2 @ - .cr
+
+"m2 - m1 ==>" .
+m2 @ m1 @ - .cr
+
+"m1 - m1 ==>" .
+m1 @ m1 @ - .cr
+
+forget m1
+forget m2
+?>

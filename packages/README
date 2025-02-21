@@ -1,0 +1,59 @@
+'''
+How to make an extension of Beetle
+----------------------------------
+
+You must create a class like that. The name of file must be the same of the class name.
+And only one class in your file is mandatory
+
+
+from packages.base_module import base_module                        # this is mandatory
+from packages.help.myextenion_help import myextension_help
+from packages.errors.myextension_errors import myextension_errors
+
+class myextension(base_module):
+    def __init__(self, interpreter):
+        super().__init__(interpreter)
+        self.dictionary = {'myinstruction' : self.my_instr,
+                           ...}
+        self.help = myextension_help(interpreter.output)
+        self.version = 'vx.y.z'
+    
+    def my_instr(self):
+        #
+        # you do here what you want
+        #
+        return 'nobreak'                            # mandatory if you don't use error
+
+you must return something like : 'nobreak' or an error
+
+---------
+
+Errors for your extension must be defined in class. The name of the file contains this class must be 'myextension_errors.py' 
+and it will be in 'packages/errors'
+
+it content is :
+
+from packages.errors.errors import error
+
+class myexension_errors:
+    my_error_name = error(error_type, error_message)
+    ...
+
+    # error_type = 'warning' or 'error' or 'fatal' : fatal error_type stop the Beetle interpreter
+    # error_message is a string like vous want to say
+
+---------
+
+Help for your extension must be defined in class. The name of the file contains this class must be 'myextension_help.py' 
+and it will be in 'packages/help'
+
+it content is :
+
+class myxtension_help(help):
+    def __init__(self, output):
+        super().__init__(output)
+        self.help_dict = {'myinstruction' : help_message,
+                          ...}
+        # help_message is a string
+
+'''

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Notions de séquence</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>Notions de séquence</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <a href="generalinterpret.html">Précédent : Interpreteur - généralités</a> | <a href="index.html">Index</a> | <a href="comfort.html">Suivant : Interpreteur - Mots de confort</a>
+
+        <p>L'interpréteur Beetle interprète vos ensembles d'instructions en gérant un ensemble de séquences.</p>
+        <p>D'une manière générale, voici le traitement des séquences réalisé :</p>
+
+        <div class="div_code">
+            <code>Séquence 1 : i1 ... in</code>
+        </div>
+        <p>se transforme en :</p>
+        <div class="div_code">
+            <code>Séquence 1 : i2 ... in<br>
+                Séquence 2 : i1-i1 ... i1-in
+            </code>
+        </div>
+        <p>
+            La séquence 2 est créée avec les instructions i1. Tant que la séquence 2 n'est pas vide, les instructions de cette séquence
+            sont interprétées. Lorsque la séquence 2 est vide, elle est détruite pour interpréter l'instruction i2 de la séquence 1 
+            jusqu'à que la séquence 1 soit vide. Lorsque la séquence 1 est vide, l'interprétation se termine et vous devez avoir le résultat
+            attendue sur la pile de travail (work stack)
+        </p>
+        <p>Voici un exemple concret :</p>
+        <div class="div_code">
+            <code>séquence 1 : 2 dup dump</code>
+        </div>
+        <p>se transforme en :</p>
+        <div class="div_code">
+            <code>séquence 1 : dump<br>
+                séquence 2 : 0 pick
+            </code>
+        </div>
+        <p>se transforme en :</p>
+        <div class="div_code">
+            <code>séquence 1 : dump<br>
+                séquence 2 : pick
+            </code>
+        </div>
+        <p>se transforme en :</p>
+        <div class="div_code">
+            <code>séquence 1 : dump</code>
+        </div>
+        <p>se transforme en :</p>
+        <div class="div_code">
+            <code>(vide) ==> ws : 2 2</code>
+        </div>
+
+
+        <a href="generalinterpret.html">Précédent : Interpreteur - généralités</a> | <a href="index.html">Index</a> | <a href="comfort.html">Suivant : Interpreteur - Mots de confort</a>
+
+    </body>
+</html>

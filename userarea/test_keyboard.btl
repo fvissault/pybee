@@ -1,0 +1,14 @@
+<?btl
+( appuyer sur la touche q pour sortir de la boucle )
+clt
+begin
+    "q" kpress 
+    if 
+        "la touche 'q' a été préssée!" .cr leave 
+    then
+    "a" kpress 
+    if 
+        "la touche 'a' a été préssée!" .cr 
+    then
+again
+?>

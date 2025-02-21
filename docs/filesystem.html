@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Système de fichiers</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>Système de fichiers</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="web.html">Beetle sur le web</a> | <a href="index.html">Index</a> | <a href="generalinterpret.html">Suivant : Interpréteur : généralités</a></p>
+
+        <p>Ce chapitre existe pour faire un résumé de ce qui a déjà été dit précédemment. Nous allons discuter ici de 3 parties :</p>
+        <ul>
+            <li>Système de fichiers de Beetle</li>
+            <li>Système de fichiers par défaut de vos programmes : userarea</li>
+            <li>Comment modifier le système de fichiers par défaut de vos programmes</li>
+        </ul>
+
+        <h3><u>Système de fichiers de Beetle</u></h3>
+        <p>L'aborescence des fichiers de Beetle est la suivante et ne doit pas être modifiée :</p>
+        <ul>
+            <li><b>pybee</b>
+                <ul>
+                    <li><b>docs</b>
+                        <ul>
+                            <li>(La documentation que vous êtes en train de consulter)</li>
+                        </ul>
+                    </li>
+                    <li><b>packages</b>
+                        <ul>
+                            <li><b>errors</b> (les classes errors des packages)</li>
+                            <li><b>help</b> (les classes help des packages)</li>
+                            <li>base_module.py</li>
+                            <li>core.py</li>
+                            <li>date.py</li>
+                            <li>file.py</li>
+                            <li>math.py</li>
+                            <li>mysqldb.py</li>
+                            <li>termcolors.py</li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                    <li><b>userarea</b> (zone de dépot des fichiers Beetle)</li>
+                    <li>beetle.py</li>
+                    <li>browser.py</li>
+                    <li>console.py</li>
+                    <li>interpreter_v2.py</li>
+                </ul>
+            </li>
+        </ul>
+        <h3><u>Système de fichiers par défaut de vos programmes</u></h3>
+        <p>
+            Par défaut, Beetle vous met à disposition une zone mémoire ou vous pouvez déposer vos fichiers et vous propose un ensemble 
+            de mots vous permettant d'exploiter cette zone mémoire.
+        </p>
+        <p>Voici comment est découpée cette zone de mémoire</p>
+        <ul>
+            <li><b>userarea</b>
+                <ul>
+                    <li><b>my_project_dir</b> (exemple de répertoire représentant mon projet)
+                        <ul>
+                            <li>my_file1.btl</li>
+                            <li>my_file2.btl</li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                    <li>import.btl</li>
+                    <li>test_case.btl</li>
+                    <li>test_database.btl</li>
+                    <li>test_date.btl</li>
+                    <li>...</li>
+                </ul>
+            </li>
+        </ul>
+        <h3><u>Comment modifier le système de fichiers par défaut de vos programmes</u></h3>
+        <p>
+            Il est possible de paramétrer Beetle sur une autre zone de mémoire. Dans Beetle, vous avez une variable prédéfinie nommée 
+            'path' positionnée à la valeur 'userarea'
+        </p>
+        <p>A partir de la console, vous pouvez modifier le contenu de 'path' en exécutant les mots suivants :</p>
+        <div class="div_code">
+            <code>
+                "my_new_dir" path !
+            </code>
+        </div>
+        <p>
+            Dans une page 'web', cela se passe dans le paramètre 'path' de l'url 
+            <b>http://localhost/pybee/browser.py?file=my_filename&path=my_path</b>
+        </p>
+        <p>Le paramètre 'path' de l'url est optionnel. Vous avez, au choix, 3 solutions pour construire cette url :</p>
+        <ul>
+            <li>Le paramètre 'path' n'existe pas dans l'url => Beetle pointe sur les fichiers qui se trouvent dans 'userarea'</li>
+            <li>
+                Le paramètre 'path' existe dans l'url et a la valeur 'default' => Beetle pointe sur les fichiers qui se trouvent dans 
+                'userarea'
+            </li>
+            <li>
+                Le paramètre 'path' existe dans l'url et sa valeur n'est pas 'default' => Beetle pointe sur les fichiers qui se trouvent 
+                sur le chemin fourni par le paramètre 'path'. La variable 'path' de Beetle est mise à jour avec le nouveau chemin 
+                spécifié
+            </li>
+        </ul>
+        <p><a href="web.html">Beetle sur le web</a> | <a href="index.html">Index</a> | <a href="generalinterpret.html">Suivant : Interpréteur : généralités</a></p>
+
+    </body>
+</html>

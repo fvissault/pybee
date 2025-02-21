@@ -1,0 +1,37 @@
+<?btl
+import mysqldb
+clt
+( dbparam )
+connect
+true = 
+if
+    ( "==> Connected to database test2!" .cr
+    use test2
+    |create> table table2 engine innodb ai 0 >| 
+    "==> La table 'table2'dans la base test2 a été correctement créée!" .cr
+    |drop> table table2 >|
+    "==> La table 'table2' dans la base 'test2' a été correctement supprimée!" .cr
+    |create> database test3 charset utf8 collate utf8_general_ci >|
+    "==> La base 'test3' a été correctement créée!" .cr )
+    use test3
+    ( |create> table table1 engine innodb ai 0 >|
+    "==> La table 'table1' dans la base 'test3' a été correctement créée!" .2cr
+    "==> Liste des bases disponibles" .cr
+    |show> databases >| .2cr
+    "==> Liste des variables de la session" .cr
+    |show> status >| .2cr
+    "==> Liste des champs de la table1 de la base test3" .cr
+    |show> fields from test3.table1 >| .2cr
+    "==> Statut global" .cr
+    |show> global status >| .2cr )
+    "==> Résultat de la requete select 1" .cr
+    |select> * from table1 >| .2cr
+    "==> Résultat de la requete select 2" .cr
+    |select> * from table1 where name='Frédéric' >| .2cr
+    "==> Résultat de la requete select 3" .cr
+    |select> * from table1 where name='Brigitte' >| dup
+    0 "name" arget .cr
+    0 arrow "name" arcol .cr
+    |select> * from table1 order by name desc limit 0,10 >| .
+then
+?>
