@@ -37,25 +37,33 @@
         <div class="div_code">
             <code>séquence 1 : 2 dup dump</code>
         </div>
-        <p>se transforme en :</p>
+        <p>L'interprétation de cette séquence 1 va se dérouler de cette façon :</p>
+        <ul>
+            <li>2 est poussé sur la pile de travail (work stack)</li>
+            <li>la définition de l'instruction 'dup' est la suivante : '<b>: dup 0 pick ;</b>'</li>
+            <li>l'instruction dump rest pour l'instant dans la séquence 1</li>
+        </ul>
+        <p>Et se transforme en :</p>
         <div class="div_code">
             <code>séquence 1 : dump<br>
                 séquence 2 : 0 pick
             </code>
         </div>
-        <p>se transforme en :</p>
-        <div class="div_code">
-            <code>séquence 1 : dump<br>
-                séquence 2 : pick
-            </code>
-        </div>
-        <p>se transforme en :</p>
+        <p>L'interprétation de la séquence 2 va se dérouler de cette façon :</p>
+        <ul>
+            <li>0 est poussé sur la pile de travail (work stack)</li>
+            <li>
+                la définition de l'instruction 'pick' est native et ne possède pas de définition. Cette instruction extrait le haut la pile 
+                de travail. Il reste 2 sur la pile de travail. 'pick' duplique le top de la pile de travail.</li>
+            <li>l'instruction dump rest pour l'instant dans la séquence 1</li>
+        </ul>
+        <p>Et se transforme en :</p>
         <div class="div_code">
             <code>séquence 1 : dump</code>
         </div>
-        <p>se transforme en :</p>
+        <p>La pile de travail contient maintenant les éléments suivants :</p>
         <div class="div_code">
-            <code>(vide) ==> ws : 2 2</code>
+            <code>2 2</code>
         </div>
 
 
