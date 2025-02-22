@@ -100,6 +100,72 @@
                 9 3 2 1</code>
         </div>
 
+        <h3><u>?</u></h3>
+        <p>
+            Ce mot vous affiche le contenu d'une variable en particulier. Vous ne pouvez pas afficher le contenu d'une variable 
+            qui n'existe pas. C'est pour cela que sa syntaxe est la suivante.
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> path <b>?</b><br>
+                userarea</code>
+        </div>
+
+        <h3><u>words</u></h3>
+        <p>
+            Ce mot vous affiche dans la console tous les mots disponibles de votre dictionnaire.
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>words</b><br>
+                -------/core/ (172 words)<br>
+                ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t</code>
+        </div>
+
+        <h3><u>wp?</u></h3>
+        <p>
+            work pointer (wp) : Ce mot met sur la pile de travail l'adresse du prochain élément de la pile de travail. Si 0 est renvoyé, cela signifie que la 
+            pile de travail est vide
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>wp?</b> .<br>
+                0</code>
+        </div>
+
+        <h3><u>sp?</u></h3>
+        <p>
+            sequence pointer (sp) : Ce mot met sur la pile de travail l'adresse de la prochaine séquence de l'interpréteur. 0 ne sera jamais
+            renvoyé.
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>sp?</b> .<br>
+                1</code>
+        </div>
+
+        <h3><u>vp?</u></h3>
+        <p>
+            vocabulary pointer (vp) : Ce mot met sur la pile de travail l'adresse du prochain mot dans le dictionnaire.
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>vp?</b> .<br>
+                168</code>
+        </div>
+
+        <h3><u>?pack</u></h3>
+        <p>
+            Ce mot vous permet de savoir si un package a été chargé. La valeur renvoyée est soit 0 (false), soit 1 (true). 
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>?pack</b> core .<br>
+                1<br>
+                Beetle> <b>?pack</b> other_pack_name .<br>
+                0</code>
+        </div>
+
         <a href="sequences.html">Précédent : Notions de séquence</a> | <a href="index.html">Index</a> | <a href="stackuse.html">Suivant : Structures du langage - Manipulation de la pile</a>
 
     </body>

@@ -2099,15 +2099,15 @@ class core(base_module):
     Instruction ?pack : indique si l'élément de la pile de travail est un package
     '''
     def ispackloaded_instr(self):
-        if len(self.work) > 0:
-            o = self.pop_work()
-            if o in self.interpreter.packages.keys():
-                self.work.appendleft(1)
-            else:
-                self.work.appendleft(0)
-            return 'nobreak'
+        seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
+        if len(seq) == 0:
+            return core_errors.error_import_name_missing.print_error('?pack', self.interpreter.output)
+        packname = self.pop_sequence()
+        if packname in self.interpreter.packages.keys():
+            self.work.appendleft(1)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?pack', self.interpreter.output)
+            self.work.appendleft(0)
+        return 'nobreak'
 
     '''
     Instruction wp? : indique l'adresse du prochain élément de la pile de travail
@@ -2117,10 +2117,10 @@ class core(base_module):
         return 'nobreak'
 
     '''
-    Instruction sp? : indique l'adresse du prochain élément de la séquence
+    Instruction sp? : indique l'adresse de la prochaine séquence
     '''
     def seqpointer_instr(self):
-        self.work.appendleft(len(self.sequence))
+        self.work.appendleft(len(self.interpreter.sequences))
         return 'nobreak'
 
     '''
