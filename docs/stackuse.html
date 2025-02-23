@@ -15,11 +15,75 @@
 
         <a href="comfort.html">Précédent : X.3. Interpreteur - Mots de confort</a> | <a href="index.html">Index</a> | <a href="comments.html">Suivant : XI.2. Structures du langage - Commentaires</a>
 
-        <h1>My First Heading</h1>
-        <h2>My Second Heading</h2>
-        <h3>My Second Heading</h3>
+        <p>Comme la plupart des langage existants, Beetle fonctionne avec 2 piles LIFO :</p>
+        <ul>
+            <li>
+                la pile de travail (work stack) ou il est possible de stocker de la données et des mots vous permettant de manipuler ces 
+                données
+            </li>
+            <li>
+                la pile de retour (return stack) qui possède les mêmes possibilités que la pile de travail. Nous pouvons considérer cette
+                pile comme secondaire.
+            </li>
+            <li>quelques mots que nous allons également décrire qui vont se charger de faire le lien entre les 2 piles.</li>
+        </ul>
 
-        <p>My first paragraph.</p>
+        <h2>Les mots permettant la manipulation des données de la pile de travail</h2>
+        <h3><u>dup</u></h3>
+        <p>
+            Ce mot pour dupliquer la donnée qui se trouve en haut de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 2 <b>dup</b> dump<br>
+                2 2</code>
+        </div>
+
+        <h3><u>swap</u></h3>
+        <p>
+            Ce mot inverse l'ordre des 2 données qui se trouve en haut de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>swap</b> dump<br>
+                1 2</code>
+        </div>
+
+        <h3><u>over</u></h3>
+        <p>
+            Ce mot insére en haut de la pile en la créant, la deuxième donnée de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>over</b> dump<br>
+                1 2 1</code>
+        </div>
+
+        <h3><u>rot</u></h3>
+        <p>
+            Ce mot effectue une rotation su les 3 données qui se trouve en haut de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 3 <b>rot</b> dump<br>
+                1 3 2<br><br>
+                Beetle> <b>rot</b> dump<br>
+                2 1 3</code>
+        </div>
+
+        <h3><u>nip</u></h3>
+        <p>
+            Ce mot suppripme la deuxième valeur à partir du haut de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>nip</b> dump<br>
+                2</code>
+        </div>
+
+        <h2>Les mots permettant la manipulation des données de la pile de retour</h2>
+
+        <h2>Les mots permettant de faire le lien entre les 2 piles</h2>
 
         <div class="div_code">
             <code>: test . cr ;</code>
