@@ -29,6 +29,7 @@
         </ul>
 
         <h2>Les mots permettant la manipulation des données de la pile de travail</h2>
+
         <h3><u>dup</u></h3>
         <p>
             Ce mot pour dupliquer la donnée qui se trouve en haut de la pile
@@ -161,6 +162,35 @@
                 2 1<br><br>
                 Beetle> dump<br>
                 2 1</code>
+        </div>
+
+        <h3><u>cls</u></h3>
+        <p>
+            clear stack (cls) : vide la pile de travail
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> <b>cls</b></code>
+        </div>
+
+        <h3><u>2dup</u></h3>
+        <p>
+            Ce mot pour dupliquer les 2 données qui se trouve en haut de la pile
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>2dup</b> dump<br>
+                2 1 2 1</code>
+        </div>
+
+        <h3><u>2swap</u></h3>
+        <p>
+            Ce mot inverse l'ordre des 4 données qui se trouve en haut de la pile 2 par 2
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 3 4 <b>2swap</b> dump<br>
+                2 1 4 3</code>
         </div>
 
         <h2>Les mots permettant la manipulation des données de la pile de retour</h2>
