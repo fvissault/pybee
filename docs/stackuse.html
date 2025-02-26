@@ -28,7 +28,7 @@
             <li>quelques mots que nous allons également décrire qui vont se charger de faire le lien entre les 2 piles.</li>
         </ul>
 
-        <h2>Les mots permettant la manipulation des données de la pile de travail</h2>
+        <h2><u>Les mots permettant la manipulation des données de la pile de travail</u></h2>
 
         <h3><u>dup</u></h3>
         <p>
@@ -223,9 +223,63 @@
                 1</code>
         </div>
 
-        <h2>Les mots permettant la manipulation des données de la pile de retour</h2>
+        <h2><u>Les mots permettant la manipulation des données de la pile de retour</u></h2>
 
-        <h2>Les mots permettant de faire le lien entre les 2 piles</h2>
+        <h3><u>rdup</u></h3>
+        <p>
+            Ce mot pour dupliquer la donnée qui se trouve en haut de la pile de retour
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 >r <b>rdup</b> r> r> dump<br>
+                1 1<br><br>
+                Beetle> 1 >r <b>rdup</b> rdump<br>
+                1 1</code>
+        </div>
+
+        <h3><u>rover</u></h3>
+        <p>
+            Ce mot insére en haut de la pile de retour en la créant, la deuxième donnée de la pile de retour
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 >r >r <b>rover</b> r> r> r> dump<br>
+                1 2 1</code>
+        </div>
+
+        <h3><u>rswap</u></h3>
+        <p>
+            Ce mot inverse l'ordre des 2 données qui se trouve en haut de la pile de retour
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 >r >r <b>rswap</b> r> r> dump<br>
+                2 1<br><br>
+                Beetle> 1 2 >r >r <b>rswap</b> rdump<br>
+                2 1</code>
+        </div>
+
+        <h2><u>Les mots permettant de faire le lien entre les 2 piles</u></h2>
+
+        <h3><u>>r</u></h3>
+        <p>
+            Ce mot positionne le haut de la pile de travail sur la pile de retour
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>>r >r</b> rswap rdump<br>
+                2 1</code>
+        </div>
+
+        <h3><u>r></u></h3>
+        <p>
+            Ce mot positionne le haut de la pile de retour sur le haut de la pile de travail
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 >r >r rswap <b>r> r></b> dump<br>
+                2 1</code>
+        </div>
 
         <a href="comfort.html">Précédent : X.3. Interpreteur - Mots de confort</a> | <a href="index.html">Index</a> | <a href="comments.html">Suivant : XI.2. Structures du langage - Commentaires</a>
 
