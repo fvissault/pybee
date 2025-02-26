@@ -2,6 +2,7 @@ from packages.errors.errors import error
 
 class core_errors:
     error_nothing_in_work_stack =               error('warning', 'work stack empty')
+    error_nothing_in_return_stack =             error('warning', 'return stack empty')
     error_invalid_instruction =                 error('fatal', 'invalid instruction')
     error_package_dont_exists =                 error('warning', 'package don\'t exists')
     error_definition_dont_exists =              error('warning', 'definition don\'t exists')

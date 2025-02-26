@@ -1112,7 +1112,7 @@ class core(base_module):
                 self.altwork.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('@r', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('@r', self.interpreter.output)
 
     '''
     Instruction r> : supprime l'élément qui se trouve en haut de la pile de retour pour le positionner en haut de la pile de travail
@@ -1124,7 +1124,7 @@ class core(base_module):
             self.work.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>r', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('>r', self.interpreter.output)
 
     '''
     Instruction r@ : supprime l'élément qui se trouve en haut de la pile de retour pour le positionner en haut de la pile de travail
@@ -1139,7 +1139,7 @@ class core(base_module):
                 self.work.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('r@', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('r@', self.interpreter.output)
 
     '''
     Instruction rdrop : supprime l'élément qui se trouve en haut de la pile de retour
@@ -1149,7 +1149,7 @@ class core(base_module):
             self.altwork.popleft()
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rdrop', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('rdrop', self.interpreter.output)
 
     '''
     Instruction rswap : échange les 2 éléments qui se trouve en haut de la pile de retour
@@ -1162,7 +1162,7 @@ class core(base_module):
             self.altwork.appendleft(op2)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rswap', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('rswap', self.interpreter.output)
 
     '''
     Instruction rdup : dupplique l'élément qui se trouve en haut de la pile de travail alternative et l'ajoute en haut de la pile
@@ -1173,7 +1173,7 @@ class core(base_module):
             self.altwork.appendleft(temp)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rdup', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('rdup', self.interpreter.output)
 
     '''
     Instruction rover : copie le 2ième élément qui se trouve en haut de la pile de travail alternative en haut de la pile de travail alternative
@@ -1187,7 +1187,7 @@ class core(base_module):
             self.altwork.appendleft(op2)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rover', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('rover', self.interpreter.output)
 
     '''
     Instruction rdump : affiche le contenu de la pile de retour
@@ -1199,7 +1199,7 @@ class core(base_module):
             print('')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rdump', self.interpreter.output)
+            return core_errors.error_nothing_in_return_stack.print_error('rdump', self.interpreter.output)
 
     '''
     Instruction ! : affecte la valeur d'une variable uniquement
