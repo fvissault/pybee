@@ -266,7 +266,7 @@
         <p>Sa syntaxe est la suivante : </p>
         <div class="div_code">
             <code>Beetle> 1 >r <b>rdrop</b> rdump<br>
-                (vide)</code>
+                rdump warning : return stack empty</code>
         </div>
 
         <h2><u>Les mots permettant de faire le lien entre les 2 piles</u></h2>
@@ -281,6 +281,16 @@
                 2 1</code>
         </div>
 
+        <h3><u>2>r</u></h3>
+        <p>
+            Ce mot positionne 2 fois le haut de la pile de travail sur la pile de retour
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 <b>2>r</b> rswap rdump<br>
+                2 1</code>
+        </div>
+
         <h3><u>r></u></h3>
         <p>
             Ce mot positionne le haut de la pile de retour sur le haut de la pile de travail
@@ -288,6 +298,16 @@
         <p>Sa syntaxe est la suivante : </p>
         <div class="div_code">
             <code>Beetle> 1 2 >r >r rswap <b>r> r></b> dump<br>
+                2 1</code>
+        </div>
+
+        <h3><u>2r></u></h3>
+        <p>
+            Ce mot positionne 2 fois le haut de la pile de retour sur le haut de la pile de travail
+        </p>
+        <p>Sa syntaxe est la suivante : </p>
+        <div class="div_code">
+            <code>Beetle> 1 2 >r >r rswap <b>2r></b> dump<br>
                 2 1</code>
         </div>
 
