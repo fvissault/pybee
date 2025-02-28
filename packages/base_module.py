@@ -96,7 +96,7 @@ class base_module:
         i.core_instr.dictionary.pop('?')
         i.sequences = []
         i.lastseqnumber = -1
-        #i.work.clear()
+        i.work.clear()
         #sequence.reverse()
         i.set_sequence(sequence)
         i.interpret()
