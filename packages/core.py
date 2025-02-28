@@ -1822,7 +1822,7 @@ class core(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('cell!', self.interpreter.output)
 
     '''
-    Instruction cell+ : crée nombre cellules dans un tableau : index value (array|var_name) CELL+
+    Instruction cell+ : crée nombre cellules dans un tableau : index value var_name CELL+
     '''
     def addcell_instr(self):
         if len(self.work) > 1:
