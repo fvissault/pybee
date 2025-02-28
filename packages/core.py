@@ -1789,11 +1789,11 @@ class core(base_module):
                 if tab in self.variables:
                     tab = self.dictionary[tab]
                     if not isinstance(tab, list) and not isinstance(tab , dict):
-                        return core_errors.error_get_cell_on_array_invalid.print_error('1cell@', self.interpreter.output)
+                        return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
                 if not isinstance(tab, list) and not isinstance(tab , dict):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('2cell@', self.interpreter.output)
+                    return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
             elif not isinstance(tab, list) and not isinstance(tab , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('3cell@', self.interpreter.output)
+                return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
             result = tab[position]
             self.work.appendleft(result)
             return 'nobreak'
