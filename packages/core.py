@@ -1829,7 +1829,10 @@ class core(base_module):
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
-                    tab = self.dictionary[tab]
+                    if len(self.dictionary[tab]) == 1:
+                        tab = self.dictionary[tab][0]
+                    else:
+                        tab = self.dictionary[tab]
                     if not isinstance(tab, list) and not isinstance(tab , dict):
                         return core_errors.error_get_cell_on_array_invalid.print_error('cell+', self.interpreter.output)
                 if not isinstance(tab, list) and not isinstance(tab , dict):
