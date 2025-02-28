@@ -1683,8 +1683,8 @@ class core(base_module):
                         continue
                     elseq.append(instr)
                     instr = str(self.pop_sequence())
-                i = self.prepare_interpreter(elseq)
-                result[elname] = i.core_instr.pop_work()
+                i = self.prepare_interpreter(deque(elseq))
+                result[elname] = i.work[0]
             if instr == ',':
                 instr = str(self.pop_sequence())
                 continue
@@ -1754,7 +1754,7 @@ class core(base_module):
             if self.interpreter.isemptylastsequence():
                 return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
             instr = str(self.pop_sequence())
-        i = self.prepare_interpreter(result)
+        i = self.prepare_interpreter(deque(result))
         return list(i.work)
 
     '''
