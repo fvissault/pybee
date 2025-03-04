@@ -573,19 +573,9 @@ class core(base_module):
                 self.work.popleft()
                 pack = self.interpreter.search_in_pack(name)
                 if pack != False:
-                    if len(self.interpreter.packages[pack].dictionary[name]) > 1:
-                        d = self.interpreter.packages[pack].dictionary[name]
-                    else:
-                        d = self.interpreter.packages[pack].dictionary[name][0]
+                    d = self.interpreter.packages[pack].dictionary[name]
                 try:
-                    if isinstance(d, list):
-                        self.work.appendleft(d)
-                    elif isinstance(d, int):
-                        self.work.appendleft(d)
-                    elif self.isfloat(d):
-                        self.work.appendleft(float(d))
-                    else:
-                        self.work.appendleft(d)
+                    self.work.appendleft(d)
                 except TypeError:
                     return core_errors.error_integer_and_float_expected.print_error('@', self.interpreter.output)
                 return 'nobreak'
@@ -1230,7 +1220,13 @@ class core(base_module):
             value = self.pop_work()
             for pack in self.interpreter.packages:
                 if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
-                    self.interpreter.packages[pack].dictionary[name].append(value)
+                    if self.interpreter.packages[pack].dictionary[name] == None:
+                        self.interpreter.packages[pack].dictionary[name] = value
+                    elif self.isfloat(self.interpreter.packages[pack].dictionary[name]) or self.isinteger(self.interpreter.packages[pack].dictionary[name]) or isinstance(self.isfloat(self.interpreter.packages[pack].dictionary[name]), str):
+                        self.interpreter.packages[pack].dictionary[name] = [self.interpreter.packages[pack].dictionary[name]]
+                        self.interpreter.packages[pack].dictionary[name].append(value)
+                    elif isinstance(self.interpreter.packages[pack].dictionary[name], list):
+                        self.interpreter.packages[pack].dictionary[name].append(value)
                     self.work.appendleft(name)
                     break
             return 'nobreak'
@@ -1581,7 +1577,8 @@ class core(base_module):
             self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         if var_name in self.dictionary.keys():
             return core_errors.error_name_already_exists.print_error('create', self.interpreter.output)
-        self.dictionary[var_name] = []
+        #self.dictionary[var_name] = []
+        self.dictionary[var_name] = None
         self.variables.append(var_name)
         if self.interpreter.from_instr in self.interpreter.compile:
             self.interpreter.userdefinitions[var_name] = self.interpreter.compile[self.interpreter.from_instr].copy()
@@ -1864,7 +1861,10 @@ class core(base_module):
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
-                    tab = self.dictionary[tab]
+                    if len(self.dictionary[tab]) == 1:
+                        tab = self.dictionary[tab][0]
+                    else:
+                        tab = self.dictionary[tab]
                     if not isinstance(tab, list) and not isinstance(tab , dict):
                         return core_errors.error_get_cell_on_array_invalid.print_error('cell-', self.interpreter.output)
                 if not isinstance(tab, list) and not isinstance(tab , dict):
@@ -1879,7 +1879,8 @@ class core(base_module):
                 if index not in tab.keys():
                     return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
             tab.pop(index)
-            self.work.appendleft(tab)
+            #self.work.appendleft(tab)
+            return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('cell-', self.interpreter.output)
 
