@@ -1901,6 +1901,7 @@ class core(base_module):
                     self.work.appendleft(1)
                 else:
                     self.work.appendleft(0)
+            return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('cell=', self.interpreter.output)
 
