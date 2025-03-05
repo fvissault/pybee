@@ -1831,8 +1831,6 @@ class core(base_module):
                     return core_errors.error_not_a_variable.print_error('cell+', self.interpreter.output)
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
-                #elif not isinstance(tab, list) and not isinstance(tab , dict):
-                #    return core_errors.error_get_cell_on_array_invalid.print_error('cell+', self.interpreter.output)
             value = self.pop_work()
             if not isinstance(value, int) and not isinstance(value, float) and not self.isfloat(value) and not isinstance(value, list) and not isinstance(value, dict):
                 return core_errors.error_bad_type.print_error('cell+', self.interpreter.output)
@@ -1859,25 +1857,20 @@ class core(base_module):
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
-                    if len(self.dictionary[tab]) == 1:
-                        tab = self.dictionary[tab][0]
-                    else:
-                        tab = self.dictionary[tab]
-                    if not isinstance(tab, list) and not isinstance(tab , dict):
-                        return core_errors.error_get_cell_on_array_invalid.print_error('cell-', self.interpreter.output)
-                if not isinstance(tab, list) and not isinstance(tab , dict):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('cell-', self.interpreter.output)
-            elif not isinstance(tab, list) and not isinstance(tab , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('cell-', self.interpreter.output)
+                    content = self.dictionary[tab]
+                else:
+                    return core_errors.error_not_a_variable.print_error('cell-', self.interpreter.output)
+            elif isinstance(tab, list) or isinstance(tab, dict):
+                content = tab
             index = self.pop_work()
-            if isinstance(tab, list):
+            if isinstance(content, list):
                 if not isinstance(index, int) or index < 0 or index >= len(tab):
                     return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
-            if isinstance(tab, dict):
-                if index not in tab.keys():
+            if isinstance(content, dict):
+                if index not in content.keys():
                     return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
-            tab.pop(index)
-            #self.work.appendleft(tab)
+            content.pop(index)
+            self.work.appendleft(tab)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('cell-', self.interpreter.output)
