@@ -1870,7 +1870,7 @@ class core(base_module):
                 if index not in content.keys():
                     return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
             content.pop(index)
-            self.work.appendleft(tab)
+            self.work.appendleft(content)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('cell-', self.interpreter.output)
