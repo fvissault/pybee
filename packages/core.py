@@ -1883,21 +1883,19 @@ class core(base_module):
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
-                    tab = self.dictionary[tab]
-                    if not isinstance(tab, list) and not isinstance(tab , dict):
-                        return core_errors.error_get_cell_on_array_invalid.print_error('cell=', self.interpreter.output)
-                if not isinstance(tab, list) and not isinstance(tab , dict):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('cell=', self.interpreter.output)
-            elif not isinstance(tab, list) and not isinstance(tab , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('cell=', self.interpreter.output)
+                    arr = self.dictionary[tab]
+                else:
+                    return core_errors.error_not_a_variable.print_error('cell=', self.interpreter.output)
+            elif isinstance(tab, list) or isinstance(tab, dict):
+                arr = tab
             content = self.pop_work()
-            if isinstance(tab, list):
-                if content in tab:
+            if isinstance(arr, list):
+                if content in arr:
                     self.work.appendleft(1)
                 else:
                     self.work.appendleft(0)
-            if isinstance(tab, dict):
-                if content in tab.values():
+            if isinstance(arr, dict):
+                if content in arr.values():
                     self.work.appendleft(1)
                 else:
                     self.work.appendleft(0)
