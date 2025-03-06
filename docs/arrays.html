@@ -32,6 +32,8 @@
             <li>créer un tableau</li>
             <li>ajouter des valeurs</li>
             <li>supprimer des valeurs</li>
+            <li>modifier des valeurs</li>
+            <li>amplitude d'un tableau</li>
         </ul>
         <p>Pour créer un tableau, Beetle vous offre plusieurs solutions :</p>
         <div class="div_code">
@@ -48,6 +50,26 @@
             Beetle> <b>[</b> 2 dup <b>]</b> dump ( ajout d'instructions à la création du tableau )<br>
             [2, 2]</code>
         </div>
+        <p>Si vous souhaitez ajouter des valeurs à un tableau :</p>
+        <div class="div_code">
+            <code>Beetle> [ 1 2 ] var table ( on positionne un tableau dans la variable table )
+                <br><br>
+                Beetle> 3 table <b>cell+</b> dump<br>
+                [1, 2, 3]<br><br>
+                Beetle> "Chaine de caractères" table <b>cell+</b> dump<br>
+                [1, 2, 3, 'Chaine de caractères']
+            </code>
+        </div>
+        <p>Pour supprimer des valeurs d'un tableau, c'est également simple :</p>
+        <div class="div_code">
+            <code>Beetle> [ 1 2 ] var table ( on positionne un tableau dans la variable table )
+                <br><br>
+                Beetle> 1 table <b>cell-</b> dump ( rappelez-vous, une liste indéxée commence toujours par 0 )<br>
+                [1]
+            </code>
+        </div>
+
+        <h3>Les tables de hachage</h3>
 
         <a href="stackuse.html">Précédent : XI.1. Structures du langage - Manipulation de la pile</a> | <a href="index.html">Index</a> | <a href="generaldefs.html">Suivant : XI.3.a. Structures du langage - Définitions - Généralités</a>
 
