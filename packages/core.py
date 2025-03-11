@@ -24,6 +24,7 @@ class core(base_module):
                            'over' : 'swap dup rot rot',
                            '2over' : '2>r 2dup 2r> 2swap', 
                            'rot' : '2 roll', 
+                           'rotonall' : self.rotonall_instr, 
                            '.' : self.point_instr, 
                            '.s' : 'dup .', 
                            '2.s' : '2dup . .', 
@@ -2380,3 +2381,6 @@ class core(base_module):
             return core_errors.error_not_a_variable_or_definition.print_error("execute", self.interpreter.output)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('execute', self.interpreter.output)
+
+    def rotonall_instr(self):
+        pass
