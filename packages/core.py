@@ -1834,7 +1834,7 @@ class core(base_module):
             value = self.pop_work()
             if not isinstance(value, int) and not isinstance(value, float) and not self.isfloat(value) and not isinstance(value, list) and not isinstance(value, dict):
                 return core_errors.error_bad_type.print_error('cell+', self.interpreter.output)
-            if isinstance(tab, dict):
+            if isinstance(content, dict):
                 index = self.pop_work()
                 if not isinstance(index, str):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)

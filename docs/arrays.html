@@ -24,7 +24,7 @@
         <h3>Les listes indexées</h3>
         <p>
             Comme son nom l'indique, une liste indexée est un tableau dont les valeurs sont accessibles par un index.
-            Cet index commence toujours à 0 comme dans tous les langages. Les tableax n'ont a priori pas de limites
+            Cet index commence toujours à 0 comme dans tous les langages. Les tableaux n'ont a priori pas de limites
             autre que la taille de votre disque dur.
         </p>
         <p>Nous allons donc voir ensemble comment :</p>
@@ -100,6 +100,38 @@
         </div>
 
         <h3>Les tables de hachage</h3>
+        <p>
+            En ce qui concerne les tables de hachage, les index n'existent pas. Ce sont des clés. Les clés sont des chaines 
+            de caractères. Les tables de hachage n'ont pas limite de taille autre que celle de votre disque dur.
+        </p>
+        <p>Nous allons donc voir ensemble comment :</p>
+        <ul>
+            <li>créer une table de hachage</li>
+            <li>ajouter un couple (nom, valeur)</li>
+            <li>supprimer un couple (nom, valeur)</li>
+            <li>modifier un couple (nom, valeur)</li>
+            <li>obtenir une valeur à partir de son nom</li>
+        </ul>
+        <p>Pour créer une table de hachage, il vous faudra écrire ce type d'instruction :</p>
+        <div class="div_code">
+            <code>Beetle> <b>{</b> n1 : 1 , n2 : 2 <b>}</b> dump<br>
+            {'n1': 1, 'n2': 2}</code>
+        </div>
+        <p>
+            { et } sont 2 mots du vocabulaire de Beetle. Il n'est pas utile d'entourer les noms des éléments de la table par des
+            simples quotes ou double quotes. Pour séparer les noms des valeurs, il est obligatoire d'utliser le séparateur ':' (deux-points) et 
+            pour séparer les couples, il est obligatoire d'utiliser la ',' (virgule).
+        </p>
+        <p>Pour ajouter et modifier un couple (nom, valeur) dans une table de hachage :</p>
+        <div class="div_code">
+            <code>Beetle> { n1 : 1 , n2 : 2 } var table ( on positionne une table de hachage dans la variable table )
+                <br><br>
+                Beetle> ( syntaxe : name value array -- array )<br><br>
+                Beetle> "n3" 3 table <b>cell+</b> .<br>
+                {'n1': 1, 'n2': 2, 'n3': 3}<br><br>
+                Beetle> "n3" 4 table <b>cell+</b> .<br>
+                {'n1': 1, 'n2': 2, 'n3': 4}</code>
+        </div>
 
         <a href="stackuse.html">Précédent : XI.1. Structures du langage - Manipulation de la pile</a> | <a href="index.html">Index</a> | <a href="generaldefs.html">Suivant : XI.3.a. Structures du langage - Définitions - Généralités</a>
 
