@@ -1778,20 +1778,20 @@ class core(base_module):
         if len(self.work) > 1:
             position = self.pop_work()
             tab = self.pop_work()
-            if not isinstance(position, int) or position < 0 or position >= len(tab):
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
-            if isinstance(tab, dict) and position not in tab.keys():
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
             if isinstance(tab, str):
                 if tab in self.variables:
-                    tab = self.dictionary[tab]
-                    if not isinstance(tab, list) and not isinstance(tab , dict):
-                        return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
-                if not isinstance(tab, list) and not isinstance(tab , dict):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
-            elif not isinstance(tab, list) and not isinstance(tab , dict):
+                    content = self.dictionary[tab]
+                else:
+                    return core_errors.error_not_a_variable.print_error('cell@', self.interpreter.output)
+            elif isinstance(tab, list) or isinstance(tab, dict):
+                content = tab
+            if not isinstance(content, list) and not isinstance(content , dict):
                 return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
-            result = tab[position]
+            if isinstance(content, dict) and position not in content.keys():
+                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+            elif isinstance(position, int) and (position < 0 or position >= len(content)):
+                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+            result = content[position]
             self.work.appendleft(result)
             return 'nobreak'
         else:
