@@ -143,6 +143,17 @@
                 {}
             </code>
         </div>
+        <p>Pour obtenir une valeur d'une table de hachage à partir de son nom, il faudra procéder comme suit :</p>
+        <div class="div_code">
+            <code>Beetle> { n1 : 1 , n2 : 2 } var table ( on positionne une table de hachage dans la variable table )
+                <br><br>
+                Beetle> ( syntaxe : array position -- valeur )<br><br>
+                Beetle> table "n2" <b>cell@</b> . ( on veut afficher la valeur de n2 )<br>
+                2<br><br>
+                Beetle> table "n1" <b>cell@</b> . ( on veut afficher la valeur de n1 )<br>
+                1
+            </code>
+        </div>
 
         <a href="stackuse.html">Précédent : XI.1. Structures du langage - Manipulation de la pile</a> | <a href="index.html">Index</a> | <a href="generaldefs.html">Suivant : XI.3.a. Structures du langage - Définitions - Généralités</a>
 
