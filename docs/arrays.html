@@ -127,10 +127,21 @@
             <code>Beetle> { n1 : 1 , n2 : 2 } var table ( on positionne une table de hachage dans la variable table )
                 <br><br>
                 Beetle> ( syntaxe : name value array -- array )<br><br>
-                Beetle> "n3" 3 table <b>cell+</b> .<br>
+                Beetle> "n3" 3 table <b>cell+</b> . ( ajout du couple (n3, 3) )<br>
                 {'n1': 1, 'n2': 2, 'n3': 3}<br><br>
-                Beetle> "n3" 4 table <b>cell+</b> .<br>
+                Beetle> "n3" 4 table <b>cell+</b> . ( modification de la valeur de n3 )<br>
                 {'n1': 1, 'n2': 2, 'n3': 4}</code>
+        </div>
+        <p>Pour supprimer un couple (nom, valeur) d'une table de hachage, il faut procéder de la manière suivante :</p>
+        <div class="div_code">
+            <code>Beetle> { n1 : 1 , n2 : 2 } var table ( on positionne une table de hachage dans la variable table )
+                <br><br>
+                Beetle> ( syntaxe : position array -- array )<br><br>
+                Beetle> "n2" table <b>cell-</b> . ( on cherche à supprimer n2 )<br>
+                {'n1': 1}<br><br>
+                Beetle> "n1" table <b>cell-</b> . ( on cherche à supprimer n1 )<br>
+                {}
+            </code>
         </div>
 
         <a href="stackuse.html">Précédent : XI.1. Structures du langage - Manipulation de la pile</a> | <a href="index.html">Index</a> | <a href="generaldefs.html">Suivant : XI.3.a. Structures du langage - Définitions - Généralités</a>
