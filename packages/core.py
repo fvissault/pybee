@@ -1247,7 +1247,7 @@ class core(base_module):
                 # begin = Récupérer la valeur de la variable
                 self.work.popleft()
                 # begin = Récupérer la valeur de la variable
-                begin = self.dictionary[varname][0]
+                begin = self.dictionary[varname]
             else:
                 return core_errors.error_not_a_variable_or_constant.print_error('do ... loop begin', self.interpreter.output)
             # limit = lire la limite de la boucle sur la pile work
@@ -1261,7 +1261,7 @@ class core(base_module):
                     #print('varname = ' + varname)
                     #print(self.variables)
                     #self.interpreter.print_sequence_numbers()
-                    self.dictionary[varname][0] = compteur
+                    self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
                     self.interpreter.decreaselastseqnumber()
@@ -1279,7 +1279,7 @@ class core(base_module):
                         break
                     increment = self.pop_work()
                     compteur += increment
-                    self.dictionary[varname][0] = compteur
+                    self.dictionary[varname] = compteur
             instructions.clear()
             return 'nobreak'
         else:
