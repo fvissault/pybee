@@ -34,7 +34,7 @@
         </p>
 
         <div class="div_code">
-            <code>: nom ( commentaire ) instructions ; [ immediate ]</code>
+            <code>: nom ( commentaire ) instructions ;</code>
         </div>
         <ul>
             <li>Le : indique le début de la définition</li>
@@ -91,11 +91,17 @@
         </div>
 
         <h2>c. Définitions immediates (immediate)</h2>
-        <p>My first paragraph.</p>
+        <p>
+            Les définitions immediates vous permettent de définir des mots qui vont enrichir le vocabulaire de Beetle de la même façon 
+            que pour les définitions classiques. Si cette définition immediate est insérée dans la définition d'un autre mot, elle sera
+            interprétée immdiatement. La syntaxe d'une définition immediate est la suivante, il suffit de rajouter le mot
+            <b>immediate</b> après le ; :
+        </p>
 
         <div class="div_code">
-            <code>: test . cr ;</code>
+            <code>: nom ( commentaire ) instructions ; immediate</code>
         </div>
+
         <h2>d. Définitions non nommées (:noname)</h2>
         <p>My first paragraph.</p>
 
