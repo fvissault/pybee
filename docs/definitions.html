@@ -21,10 +21,10 @@
         </p>
         <ul>
             <li>de manière classique</li>
-            <li>les définitions immediates : immediate</li>
-            <li>les définitions non nommées : :noname</li>
-            <li>les définitions vides : defer</li>
-            <li>les variables et constantes : var et const</li>
+            <li>les définitions immediates : <b>immediate</b></li>
+            <li>les définitions non nommées : <b>:noname</b></li>
+            <li>les définitions vides : <b>defer</b></li>
+            <li>les variables et constantes : <b>var</b> et <b>const</b></li>
         </ul>
 
         <h2>b. Définitions classiques</h2>
@@ -39,7 +39,7 @@
         <ul>
             <li>Le : indique le début de la définition</li>
             <li>Le ; indique la fin de la définition</li>
-            <li>Le commentaire va créer une entrée dans l'aide de Beetle</li>
+            <li>Le commentaire va créer une entrée dans l'aide de Beetle pour cette nouvelle définition</li>
             <li>Après le commentaire et avant le ;, les instructions de la définition sont insérées</li>
         </ul>
 
@@ -58,14 +58,17 @@
             <code>Beetle> 50 <b>carre</b> .<br>
                 2500</code>
         </div>
-        <p>Allons un peu plus loin! Admettons que maintenant, nous avons besoin de la définition <b>cube</b> :</p>
+        <p>
+            Allons un peu plus loin! Admettons que maintenant, nous avons besoin de la définition <b>cube</b> en utilisant la définition 
+            de carre que l'on vient de créer :
+        </p>
         <div class="div_code">
             <code>Beetle> : <b>cube</b> ( obtenir le cube de n ) dup carre * ;</code>
         </div>
         <p>Dans le vocabulaire, nous allons retrouver notre nouvelle définition.</p>
         <div class="div_code">
             <code>Beetle> words<br>
-                -------/core/ (175 words)<br>
+                -------/core/ (171 words)<br>
                 ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye <b>carre</b> case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create <b>cube</b> decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rotonall rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t</code>
         </div>
         <p>Et pour utiliser de nouveau le mot <b>cube</b>, nous devrons faire comme suit :</p>
@@ -73,7 +76,7 @@
             <code>Beetle> 50 <b>cube</b> .<br>
                 125000</code>
         </div>
-        <p>Ainsi, vous pouvez enchainer autant de mots que vous souhaitez.</p>
+        <p>Ainsi, vous pouvez imbriquer les appels de définitions indéfiniment comme vous le souhaitez.</p>
 
         <p>De manière marginale, vous pouvez consulter vos définitions en utilisant le mot <b>see</b></p>
         <div class="div_code">
