@@ -114,6 +114,19 @@
             Beetle> say-hello ( on appelle 'say-hello' seul )<br>
             Hello ok</code>
         </div>
+        <p>Regardons ce que sont devenues les définitions de 'say-hello' et de 'greet'</p>
+        <div class="div_code">
+            <code>Beetle> see say-hello<br>
+                : say-hello
+                        <blockquote>"Hello" .</blockquote>
+                ; immediate<br>
+                ok<br><br>
+                Beetle> see greet<br>
+                : greet
+                        <blockquote>"I speak Beetle" .</blockquote>
+                ;<br>
+                ok</code>
+        </div>
 
         <h2>d. Définitions non nommées (:noname)</h2>
         <p>My first paragraph.</p>
