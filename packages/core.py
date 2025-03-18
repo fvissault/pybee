@@ -2309,16 +2309,16 @@ class core(base_module):
     '''
     def noname_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+            return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
         instr = self.pop_sequence()
         if instr == ':':
-            return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+            return core_errors.error_twopoints_invalid.print_error(':noname', self.interpreter.output)
         comment = ''
         if instr == '(':
             # traitement du commentaire
             while instr != ')':
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+                    return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
                 instr = self.pop_sequence()
                 if instr != ')':
                     comment = comment + ' ' + instr
@@ -2328,10 +2328,10 @@ class core(base_module):
             defbody = defbody + ' ' + str(instr)
         while instr != ';':
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+                return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
             instr = self.pop_sequence()
             if instr == ':':
-                return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+                return core_errors.error_twopoints_invalid.print_error(':noname', self.interpreter.output)
             if instr != ';':
                 defbody = defbody + ' ' + str(instr)
         self.work.appendleft(defbody.strip())
