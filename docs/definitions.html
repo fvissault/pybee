@@ -45,7 +45,8 @@
 
         <p>Imaginons que nous ayons besoin d'une définition qui nous donne le carré d'un nombre n, voici comme nous pourrions procéder</p>
         <div class="div_code">
-            <code>Beetle> : <b>carre</b> ( obtenir le carre de n ) dup * ;</code>
+            <code>Beetle> : <b>carre</b> ( obtenir le carre de n ) dup * ;<br>
+                ok</code>
         </div>
         <p>Dans le vocabulaire, nous allons retrouver notre nouvelle définition.</p>
         <div class="div_code">
@@ -56,14 +57,15 @@
         <p>Et pour utiliser notre nouvelle définition, nous devrons faire comme suit :</p>
         <div class="div_code">
             <code>Beetle> 50 <b>carre</b> .<br>
-                2500</code>
+                2500 ok</code>
         </div>
         <p>
             Allons un peu plus loin! Admettons que maintenant, nous avons besoin de la définition <b>cube</b> en utilisant la définition 
             de carre que l'on vient de créer :
         </p>
         <div class="div_code">
-            <code>Beetle> : <b>cube</b> ( obtenir le cube de n ) dup carre * ;</code>
+            <code>Beetle> : <b>cube</b> ( obtenir le cube de n ) dup carre * ;<br>
+            ok</code>
         </div>
         <p>Dans le vocabulaire, nous allons retrouver notre nouvelle définition.</p>
         <div class="div_code">
@@ -74,7 +76,7 @@
         <p>Et pour utiliser de nouveau le mot <b>cube</b>, nous devrons faire comme suit :</p>
         <div class="div_code">
             <code>Beetle> 50 <b>cube</b> .<br>
-                125000</code>
+                125000 ok</code>
         </div>
         <p>Ainsi, vous pouvez imbriquer les appels de définitions indéfiniment comme vous le souhaitez.</p>
 
@@ -83,11 +85,11 @@
             <code>Beetle> <b>see</b> carre<br>
                 : carre
                         <blockquote>dup *</blockquote>
-                ;<br><br>
+                ; ok<br><br>
                 Beetle> <b>see</b> cube<br>
                 : cube
                     <blockquote>dup carre *</blockquote>
-                ;</code>
+                ; ok</code>
         </div>
 
         <h2>c. Définitions immediates (immediate)</h2>
@@ -100,6 +102,17 @@
 
         <div class="div_code">
             <code>: nom ( commentaire ) instructions ; immediate</code>
+        </div>
+        <p>Voici un exemple d'utilisation du mot <b>immediate</b> qui vous donnera un aperçu de cette fonctionnalité :</p>
+        <div class="div_code">
+            <code>Beetle> : say-hello "Hello" . ; <b>immediate</b> ( on définit un mot 'say-hello' immediat )<br>
+            ok <i>N'affiche rien</i><br><br>
+            Beetle> : greet say-hello "I speak Beetle" . ; ( on définit le mot 'greet' qui appelle le mot 'say-hello' )<br>
+            Hello ok<br><br>
+            Beetle> greet ( on appelle 'greet' seul )<br>
+            I speak Beetle ok<br><br>
+            Beetle> say-hello ( on appelle 'say-hello' seul )<br>
+            Hello ok</code>
         </div>
 
         <h2>d. Définitions non nommées (:noname)</h2>
