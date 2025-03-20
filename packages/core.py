@@ -6,6 +6,7 @@ from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.base_module import base_module
 from packages.help.core_help import core_help
+from packages.termcolors import termcolors
 
 class core(base_module):
     def __init__(self, interpreter):
@@ -2192,10 +2193,10 @@ class core(base_module):
         irightwork = list(iright.work)
         if ileftwork == irightwork:
             self.work.appendleft(1)
-            print("true test", end=' ')
+            print(termcolors.GREEN + "true test" + termcolors.NORMAL, end=' ')
         else:
             self.work.appendleft(0)
-            print("false test", end=' ')
+            print(termcolors.ERROR + "false test" + termcolors.NORMAL, end=' ')
         return 'nobreak'
 
 
