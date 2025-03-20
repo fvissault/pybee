@@ -129,10 +129,21 @@
         </div>
 
         <h2>d. Définitions non nommées (:noname)</h2>
-        <p>My first paragraph.</p>
+        <p>
+            Avec Beetle, vous pouvez créer des mots qui n'ont pas de nom. Pour cela, il vous suffit d'utiliser le mot 
+            <b>:noname</b>. Les instructions que vous avez associé à votre définition non nommée vont tout simplement
+            se retrouver sur la pile de données. Le mot <b>:noname</b> est associé à une définition nommée en utilisant
+            le mot <b>is</b>
+        </p>
+        <p>Voici un exemple parlant pour vous aider à comprendre le concept :</p>
 
         <div class="div_code">
-            <code>: test . cr ;</code>
+            <code>Beetle> defer print ( créons une définition qui n'a pas d'instruction )<br><br>
+                Beetle> <b>:noname</b> .cr ; ( créons une définition qui n'a pas de nom )<br><br>
+                Beetle> <b>is</b> print ( ici, on précise que cette définition nom nommée sera associée au mot 'print' )<br><br>
+                Beetle> 2 print ( nous voulons afficher 2 en utilisant 'print' )<br>
+                2
+            </code>
         </div>
         <h2>e. Définitions vides (defer)</h2>
         <p>My first paragraph.</p>
