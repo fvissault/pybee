@@ -2196,7 +2196,7 @@ class core(base_module):
             print(termcolors.GREEN + "true test" + termcolors.NORMAL, end=' ')
         else:
             self.work.appendleft(0)
-            print(termcolors.ERROR + "false test" + termcolors.NORMAL, end=' ')
+            print(termcolors.FATAL + "false test" + termcolors.NORMAL, end=' ')
         return 'nobreak'
 
 
