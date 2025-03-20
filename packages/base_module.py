@@ -106,7 +106,7 @@ class base_module:
         i = deepcopy(self.interpreter)
         i.sequences = []
         i.lastseqnumber = -1
-        #i.work.clear()
+        i.work.clear()
         #sequence.reverse()
         i.set_sequence(sequence)
         i.interpret()

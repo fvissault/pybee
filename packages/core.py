@@ -2170,13 +2170,41 @@ class core(base_module):
         return 'nobreak'
 
     def begintest_instr(self):
-        pass
+        left_instrs = deque()
+        right_instrs = deque()
+        instr = self.pop_sequence()
+        while str(instr).lower() != '->':
+            left_instrs.append(str(instr).lower())
+            instr = self.pop_sequence()
+            if str(instr).lower() == '}t':
+                return core_errors.error_invalid_instruction.print_error('tests - }t', self.interpreter.output)
+        instr = self.pop_sequence()
+        while str(instr).lower() != '}t':
+            right_instrs.append(str(instr).lower())
+            instr = self.pop_sequence()
+            if str(instr).lower() == '->':
+                return core_errors.error_invalid_instruction.print_error('tests - ->', self.interpreter.output)
+            if str(instr).lower() == 't{':
+                return core_errors.error_invalid_instruction.print_error('tests - t{', self.interpreter.output)
+        ileft = self.exec_interpreter(left_instrs)
+        iright = self.exec_interpreter(right_instrs)
+        ileftwork = list(ileft.work)
+        irightwork = list(iright.work)
+        if ileftwork == irightwork:
+            self.work.appendleft(1)
+            print("true test", end=' ')
+        else:
+            self.work.appendleft(0)
+            print("false test", end=' ')
+        return 'nobreak'
+
+
 
     def endtest_instr(self):
-        pass
+        return core_errors.error_array_invalid.print_error('}t', self.interpreter.output)
 
     def test_instr(self):
-        pass
+        return core_errors.error_array_invalid.print_error('->', self.interpreter.output)
 
     def case_instr(self):
         temp_zone = deque()
@@ -2186,7 +2214,7 @@ class core(base_module):
             def_zone = deque()
             op1 = self.pop_work()
             instr = ''
-            while instr != 'endcase':
+            while str(instr).lower() != 'endcase':
                 cond_zone.clear()
                 of_zone.clear()
                 def_zone.clear()
