@@ -152,17 +152,57 @@
             </code>
         </div>
         <h2>e. Définitions vides (defer)</h2>
-        <p>My first paragraph.</p>
+        <p>
+            De la même manière que vous pouvez créer des définitions sans nom, vous pouvez créer des définitions sans corps.
+            Un exemple vous permettra de comprendre ce que le mot 'defer' fait :
+        </p>
 
         <div class="div_code">
-            <code>: test . cr ;</code>
+            <code>Beetle> <b>defer</b> .3* ( créons une définition qui n'a pas d'instruction )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> :noname 3 * . ; ( créons une définition qui n'a pas de nom )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> is .3* ( ici, on précise que cette définition nom nommée sera associée au mot '.3*' )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 2 .3* ( nous voulons afficher 6 en utilisant '.3*' )<br>
+                6<br>
+                <span style="color:green;">ok</span>
+            </code>
         </div>
         <h2>f. Définitions de variables et constantes (var et const)</h2>
 
-        <p>My first paragraph.</p>
+        <p>
+            Les variables et les constantes sont considérées comme des définitions. Pour les variables :
+        </p>
 
         <div class="div_code">
-            <code>: test . cr ;</code>
+            <code>Beetle> 30 <b>var</b> temperature ( mémoriser 30 dans la variable temperature )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 3.5 <b>var</b> secondes ( mémoriser 3.5 dans la variable secondes )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> "Une chaine de caractères" <b>var</b> chaine ( mémoriser "Une chaine de caractères" dans la variable chaine )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> [ 1 2 ] <b>var</b> tableau ( mémoriser un tableau indéxé dans la variable tableau )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> { n1 : 1 , n2 : 2 } <b>var</b> hashtable ( mémoriser une table de hachage dans la variable hashtable )<br>
+                <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <p>Pour les constantes que vous pouvez définir mais que vous ne pourrez pas modifier :</p>
+
+        <div class="div_code">
+            <code>Beetle> 30 <b>const</b> temperature ( mémoriser 30 dans la constante temperature )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 3.5 <b>const</b> secondes ( mémoriser 3.5 dans la constante secondes )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> "Une chaine de caractères" <b>const</b> chaine ( mémoriser "Une chaine de caractères" dans la constant chaine )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> [ 1 2 ] <b>const</b> tableau ( mémoriser un tableau indéxé dans la constante tableau )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> { n1 : 1 , n2 : 2 } <b>const</b> hashtable ( mémoriser une table de hachage dans la constante hashtable )<br>
+                <span style="color:green;">ok</span>
+            </code>
         </div>
 
         <a href="arrays.html">Précédent : XI.2. Structures du langage - Tableaux</a> | <a href="index.html">Index</a> | <a href="conds.html">XI.4. Structures du langage - Conditionnelles</a>
