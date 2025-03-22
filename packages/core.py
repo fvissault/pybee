@@ -296,16 +296,16 @@ class core(base_module):
             instr = self.pop_sequence()
             if instr == ':':
                 return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
-            if instr != ';' and str(instr).lower() != 'does>':
-                # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
-                if str(self.interpreter.instr).lower() in self.interpreter.immediate:
-                    imm = deque()
-                    imm.append(str(instr).lower())
-                    self.interpreter.set_sequence(imm)
-                    ret = self.interpreter.interpret('last_sequence')
-                else:
-                    if instr != ';':
-                        defbody = defbody + ' ' + str(instr)
+            #if instr != ';' and str(instr).lower() != 'does>':
+            # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
+            if str(self.interpreter.instr).lower() in self.interpreter.immediate:
+                imm = deque()
+                imm.append(str(instr).lower())
+                self.interpreter.set_sequence(imm)
+                ret = self.interpreter.interpret('last_sequence')
+            else:
+                if instr != ';':
+                    defbody = defbody + ' ' + str(instr)
         self.dictionary[defname] = defbody.strip()
 
         # traitement de la section does>

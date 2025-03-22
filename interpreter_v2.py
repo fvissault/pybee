@@ -107,7 +107,7 @@ class interpreter:
             elif instr in self.core_instr.variables:
                 # variable insert in work stack
                 self.work.appendleft(instr)
-            elif instr in self.userdefinitions.keys():
+            elif instr in self.userdefinitions.keys() and len(self.userdefinitions[instr]) > 0:
                 # constant name insert in work stack
                 instr_content = self.get_instr_content(instr)
                 if instr_content != None:
