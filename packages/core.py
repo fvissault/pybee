@@ -2027,6 +2027,7 @@ class core(base_module):
     def isint_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
+            self.work.appendleft(o)
             if self.isinteger(o):
                 self.work.appendleft(1)
             else:
@@ -2041,6 +2042,7 @@ class core(base_module):
     def isfloat_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
+            self.work.appendleft(o)
             if self.isfloat(o):
                 self.work.appendleft(1)
             else:
@@ -2055,6 +2057,7 @@ class core(base_module):
     def isstr_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
+            self.work.appendleft(o)
             if isinstance(o, str):
                 self.work.appendleft(1)
             else:
@@ -2069,6 +2072,7 @@ class core(base_module):
     def ischar_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
+            self.work.appendleft(o)
             if isinstance(o, str) and len(o) == 1:
                 self.work.appendleft(1)
             else:
@@ -2083,6 +2087,7 @@ class core(base_module):
     def isarray_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
+            self.work.appendleft(o)
             if isinstance(o, list):
                 self.work.appendleft(1)
             else:
