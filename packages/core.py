@@ -296,7 +296,6 @@ class core(base_module):
             instr = self.pop_sequence()
             if instr == ':':
                 return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
-            #if instr != ';' and str(instr).lower() != 'does>':
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
