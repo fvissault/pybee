@@ -1539,22 +1539,23 @@ class core(base_module):
         if def_name not in self.variables:
             for p in self.interpreter.packages.keys():
                 if def_name in self.interpreter.packages[p].dictionary.keys():
-                    if isinstance(self.interpreter.packages[p].dictionary[def_name], str):
-                        print(': ' + def_name)
-                        if str(self.interpreter.packages[p].dictionary[def_name]) != '':
-                            definition = str(self.interpreter.packages[p].dictionary[def_name])
-                            definition = definition.replace('if ', rettab + 'if' + rettab + tab)
-                            definition = definition.replace('else ', rettab + 'else' + rettab + tab)
-                            definition = definition.replace('then', rettab + 'then')
-                            definition = definition.replace('do ', rettab + 'do' + rettab + tab)
-                            definition = definition.replace('loop ', rettab + 'loop' + rettab)
-                            definition = definition.replace('+loop ', rettab + '+loop' + rettab)
-                            print(tab + definition)
-                        if def_name in self.interpreter.immediate:
-                            print('; immediate')
-                        else:
-                            print(';')
-                        return 'nobreak'
+                    definition = str(self.interpreter.packages[p].dictionary[def_name])
+                    print(': ' + def_name)
+                    if definition != '':
+                        definition = definition.replace('if ', rettab + 'if' + rettab + tab)
+                        definition = definition.replace('else ', rettab + 'else' + rettab + tab)
+                        definition = definition.replace('then', rettab + 'then')
+                        definition = definition.replace('do ', rettab + 'do' + rettab + tab)
+                        definition = definition.replace('loop ', rettab + 'loop' + rettab)
+                        definition = definition.replace('+loop ', rettab + '+loop' + rettab)
+                        print(tab + definition)
+                    if def_name in self.interpreter.compile.keys():
+                        print(rettab + 'does> ' + list(self.interpreter.compile[def_name])[0])
+                    if def_name in self.interpreter.immediate:
+                        print('; immediate')
+                    else:
+                        print(';')
+                    return 'nobreak'
             core_errors.error_native_definition.print_error('see ' + def_name, self.interpreter.output)
         else:
             core_errors.error_definition_only.print_error('see', self.interpreter.output)
