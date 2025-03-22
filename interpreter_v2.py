@@ -104,14 +104,14 @@ class interpreter:
             elif instr[0] == '"' and instr[-1] == '"':
                 # string insert in work stack
                 self.work.appendleft(instr[1:-1])
-            elif instr in self.core_instr.variables: # or instr in self.core_instr.constants:
-                # variable or constant name insert in work stack
+            elif instr in self.core_instr.variables:
+                # variable insert in work stack
                 self.work.appendleft(instr)
-                if instr in self.userdefinitions.keys():
-                    if len(self.userdefinitions[instr]) > 0:
-                        seq:deque = self.userdefinitions[instr].copy()
-                        seq.reverse()
-                        self.sequences[self.lastseqnumber].extendleft(seq)
+            elif instr in self.userdefinitions.keys():
+                # constant name insert in work stack
+                instr_content = self.get_instr_content(instr)
+                if instr_content != None:
+                    self.work.appendleft(instr_content)
             elif self.instr_search(instr.lower()) == False:
                 # instr not in package dictionaries
                 return core_errors.error_invalid_instruction.print_error(instr, self.output)
@@ -144,6 +144,13 @@ class interpreter:
             if instr in self.packages[p].dictionary.keys():
                 return True
         return False
+
+    def get_instr_content(self, instr):
+        for p in self.packages:
+            if instr in self.packages[p].dictionary.keys():
+                return self.packages[p].dictionary[instr]
+        return None
+            
 
     def package_search(self, instr, package):
         if instr.lower() in package.dictionary.keys():
