@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Boucles</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body style="font-family:tahoma,arial;">
+        <div style="width:400px; float:left;">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div style="width:800px; float:left;">
+            <h1>XI.5. Structures du langage - Boucles</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <a href="conds.html">Précédent : XI.4. Structures du langage - Conditionnelles</a> | <a href="index.html">Index</a> | <a href="operations.html">Suivant :  : XI.6. Structures du langage - Opérations arithmétiques</a>
+
+        <h3>Boucles finies simples : do ... loop</h3>
+        <p>La syntaxe du premier type de boucle et la plus simple est la suivante :</p>
+        <div class="div_code">
+            <code>limit variable <b>do</b>> instructions <b>loop</b></code>
+        </div>
+        <ul>
+            <li><b>limit</b> : fin de l'incrément de la boucle</li>
+            <li>
+                <b>variable</b> : début de l'incrément de la boucle dans une variable. L'incrément est stocké dans une variable que vous 
+                pouvez utiliser dans la boucle. La variable que vous utilisez pour la valeur initiale de votre boucle est 
+                automatiquement incrémentée de 1 en 1
+            </li>
+        </ul>
+        <p>Exemple pour le premier type de boucle :</p>
+        <div class="div_code">
+            <code>Beetle> 50 0 var i do i @ . loop<br>
+                0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 <span style="color:green;">ok</span></code>
+        </div>
+
+        <h3>Boucles finies avec contrôle de l'incrément : do ... +loop</h3>
+        <h3>Boucles infinies simples : begin ... again</h3>
+        <h3>Boucles infinies simples : begin ... until</h3>
+        <h3>Boucles infinies complexes : begin ... while ... repeat</h3>
+
+        <p>My first paragraph.</p>
+
+        <div class="div_code">
+            <code>: test . cr ;</code>
+        </div>
+
+        <a href="conds.html">Précédent : XI.4. Structures du langage - Conditionnelles</a> | <a href="index.html">Index</a> | <a href="operations.html">Suivant :  : XI.6. Structures du langage - Opérations arithmétiques</a>
+
+    </body>
+</html>
+
+
+
+Plusieurs types de boucles sont possibles :
+•	Boucles finies 
+•	Boucles infinies
+Boucles finies
+Vous avez à disposition 2 types de boucles finies.
+La syntaxe du premier type de boucle et la plus simple est la suivante :
+limit variable DO instructions LOOP
+•	limit : fin de l'incrément de la boucle
+•	variable : début de l'incrément de la boucle dans une variable. L'incrément est stocké dans une variable que vous pouvez utiliser dans la boucle. La variable que vous utilisez pour la valeur initiale de votre boucle est automatiquement incrémentée de 1 en 1 
+Exemple pour le premier type de boucle :
+0 VAR I 
+50 I DO I @ . LOOP
+
+Affiche  tous les nombres de 0 à 49
+
+La syntaxe du deuxième type de boucle est la suivante :
+limit variable DO instructions incrément +LOOP
+•	limit : fin de l'incrément de la boucle
+•	variable : début de l'incrément de la boucle dans une variable. L'incrément est stocké dans une variable que vous pouvez utiliser dans la boucle. La variable que vous utilisez pour la valeur initiale de votre boucle est automatiquement incrémentée de 1 en 1 
+•	incrément : incrément (ou pas de boucle) qui peut être positif ou négatif. Si limit < contenu de la variable, l'incrément doit être négatif sinon vous faites une boucle infinie
+Exemple pour le second type de boucle :
+0 VAR I
+50 I DO I @ . 5 +LOOP
+
+Affiche  tous les nombres entre 0 et 45 incluent de 5 en 5
+
+Boucles infinies
+Vous avez le choix entre 3 types de boucles infinies
+Le premier type de boucle infinie vous permet de définir une condition d'arrêt. La syntaxe de ce type de boucle est la suivante :
+BEGIN instructions flag UNTIL
+•	flag : représente la condition d'arrêt de votre boucle. Si flag = false alors on continue dans la boucle. Si flag = true alors on sort de la boucle 
+•	instructions : corresponds aux instructions à exécuter dans la boucle (sont comprises les instructions permettant de calculer le flag)
+Exemple :
+0 VAR I
+BEGIN I @ . 1 I +! I @ 50 > UNTIL
+
+Affiche  tous les nombres de 0 à 49
+Le deuxième type de boucle infinie est une boucle sans condition d'arrêt. Pour sortir de cette boucle, vous devrez utiliser l'instruction LEAVE. La syntaxe de ce type de boucle est la suivante :
+BEGIN instructions AGAIN
+•	instructions : corresponds aux instructions à exécuter dans la boucle
+Exemple :
+0 VAR I
+BEGIN I @ . 1 I +! AGAIN
+
+Affiche  tous les nombres à partir de 0 indéfiniment
+
+Le troisième et dernier type de boucle que vous pouvez utiliser est une boucle un peu particulière. Voici sa syntaxe :
+BEGIN instructions1 flag WHILE instructions2 REPEAT
+•	flag : représente la condition d'arrêt de votre boucle. Si flag = true alors on continue dans la boucle à partir du début de instructions1 en ayant exécuté instructions2. Si flag = false alors on sort de la boucle.
+•	instructions1 : corresponds aux instructions entre BEGIN et WHILE. Le calcul du flag est inclus dans les instructions1
+•	instructions2 : corresponds aux instructions entre WHILE et REPEAT
+Exemple :
+0 VAR I
+BEGIN I @ . I @ 50 < WHILE 1 I +! REPEAT
+
+Affiche  tous les nombres de 0 à 49
+Pour sortir de tous ces types de boucle, vous pouvez utiliser le mot LEAVE. L'instruction vous fait sortir de la boucle à l'endroit où il est écrit. LEAVE en dehors d'une boucle n'a aucun effet.
