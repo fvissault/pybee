@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Conditionnelles</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body style="font-family:tahoma,arial;">
+        <div style="width:400px; float:left;">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div style="width:800px; float:left;">
+            <h1>XI.4. Structures du langage - Conditionnelles</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <a href="definitions.html">Précédent : XI.3. Structures du langage - Définitions</a> | <a href="index.html">Index</a> | <a href="loops.html">Suivant : XI.5. Structures du langage - Boucles</a>
+
+        <p>Les conditionnelles vous permettent d'exécuter des instructions suivant le résultat d'une condition.</p>
+        <p>
+            <ul>
+                <li>Les conditions sont des booléens représentés par true ( différent de 0) ou false (0)</li>
+                <li>condition = true : exécute les instructions de instructions1</li>
+                <li>
+                    condition = false : exécute les instructions de instructions2. Cette partie est facultative. Si celle-ci n'existe 
+                    pas, l'interpréteur continue son exécution.
+                </li>
+            </ul>
+            La condition peut être calculée. Un ensemble de mots sont mis à disposition pour effectuer ce calcul : =, <=, >=, !=, <, >, 
+            0<, 0<=, 0=, 0>, 0>=, invert, and, or, xor, true, false
+        </p>
+        <ul>
+            <li><b>=</b> : égalité</li>
+            <li><b><=</b> : inférieur ou égal</li>
+            <li><b>=</b> : supérieur ou égal</li>
+            <li><b>!=</b> : différent de</li>
+            <li><b><</b> : inférieur</li>
+            <li><b>></b> : supérieur</li>
+            <li><b>0<</b> : inférieur à 0</li>
+            <li><b>0<=</b> : inférieur ou égal à 0</li>
+            <li><b>0=</b> : égal à 0</li>
+            <li><b>0></b> : supérieur à 0</li>
+            <li><b>0>=</b> : supérieur ou égal à 0</li>
+            <li><b>invert</b> : inversion (correspond au non logique)</li>
+            <li><b>and</b> : et logique</li>
+            <li><b>or</b> : ou logique</li>
+            <li><b>xor</b> : ou exclusif</li>
+            <li><b>true</b> : 1</li>
+            <li><b>false</b> : 0</li>
+        </ul>
+    <h3>a. Conditionnelles à parcours unique : if ... then</h3>
+        <p>La syntaxe des conditionnelles à parcours unique est la suivante :</p>
+        <div class="div_code">
+            <code>condition <b>if</b> instructions <b>then</b></code>
+        </div>
+        <p>Exemple de conditionnelle à parcours unique :</p>
+        <div class="div_code">
+            <code>Beetle> 1 0 < if "true zone" . then<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 1 1 = if "true zone" . then<br>
+                true zone <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <h3>b. Conditionnelles à 2 choix de parcours : if ... else ... then</h3>
+        <p>La syntaxe des conditionnelles à 2 choix de parcours est la suivante :</p>
+        <div class="div_code">
+            <code>condition <b>if</b> instructions1 <b>else</b> instructions2 <b>then</b></code>
+        </div>
+        <p>Exemple de conditionnelle à parcours unique :</p>
+        <div class="div_code">
+            <code>Beetle> 1 0 > if "true zone" . else "false zone" . then<br>
+                true zone <span style="color:green;">ok</span><br><br>
+                Beetle> 1 0 < if "true zone" . else "false zone" . then<br>
+                false zone <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <p>Il n'y a pas de restrictions à l'imbrication des conditionnelles. Exemple d'imbrication de conditionnelle :</p>
+        <div class="div_code">
+            <code>Beetle> 50 dup 1 >= if dup 1 = if 0 .cr drop else 1 0 2dup . . reverse 2 var fib#i do 2dup + dup . rot drop loop 2drop forget fib#i cr then else "Usage : n FIB with n > 0" .cr then<br>
+                0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 3524578 5702887 9227465 14930352 24157817 39088169 63245986 102334155 165580141 267914296 433494437 701408733 1134903170 1836311903 2971215073 4807526976 7778742049 <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <a href="definitions.html">Précédent : XI.3. Structures du langage - Définitions</a> | <a href="index.html">Index</a> | <a href="loops.html">Suivant : XI.5. Structures du langage - Boucles</a>
+
+    </body>
+</html>
