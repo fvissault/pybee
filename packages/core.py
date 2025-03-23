@@ -1220,7 +1220,7 @@ class core(base_module):
             self.work.popleft()
             value = self.pop_work()
             for pack in self.interpreter.packages:
-                if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
+                if name in self.interpreter.packages[pack].dictionary.keys():
                     if self.interpreter.packages[pack].dictionary[name] == None:
                         self.interpreter.packages[pack].dictionary[name] = value
                     elif self.isfloat(self.interpreter.packages[pack].dictionary[name]) or self.isinteger(self.interpreter.packages[pack].dictionary[name]) or isinstance(self.isfloat(self.interpreter.packages[pack].dictionary[name]), str):
@@ -1579,12 +1579,11 @@ class core(base_module):
             self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         if var_name in self.dictionary.keys():
             return core_errors.error_name_already_exists.print_error('create', self.interpreter.output)
-        #self.dictionary[var_name] = []
         self.dictionary[var_name] = None
-        self.variables.append(var_name)
-        if self.interpreter.from_instr in self.interpreter.compile:
+        if self.interpreter.from_instr in self.interpreter.compile.keys():
             self.interpreter.userdefinitions[var_name] = self.interpreter.compile[self.interpreter.from_instr].copy()
-
+        else:
+            self.variables.append(var_name)
         self.work.appendleft(var_name)
         return 'nobreak'
 
