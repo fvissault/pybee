@@ -1205,6 +1205,7 @@ class core(base_module):
             value = self.pop_work()
             for pack in self.interpreter.packages:
                 if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
+                    # TO DO : tenir compte des différents types de contenus de variable
                     self.interpreter.packages[pack].dictionary[name][0] = value
                     break
             return 'nobreak'
@@ -1301,9 +1302,9 @@ class core(base_module):
         firstzone = deque()
         secondzone = deque()
         instr = self.search_begin_loop(firstzone)
-        if instr == 'while':
+        if str(instr).lower() == 'while':
             instr = self.search_begin_loop(secondzone)
-        if instr == 'again':
+        if str(instr).lower() == 'again':
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
                 ret = self.interpreter.interpret('last_sequence')
@@ -1311,7 +1312,7 @@ class core(base_module):
                 if ret == 'leave':
                     firstzone.clear()
                     break
-        elif instr == 'until':
+        elif str(instr).lower() == 'until':
             flag = False
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
@@ -1326,7 +1327,7 @@ class core(base_module):
                 if flag != 0:
                     firstzone.clear()
                     break
-        elif instr == 'repeat':
+        elif str(instr).lower() == 'repeat':
             flag = True
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
