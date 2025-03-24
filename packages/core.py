@@ -1258,9 +1258,6 @@ class core(base_module):
                 return core_errors.error_integer_expected.print_error('do ... loop limit', self.interpreter.output)
             if instr == 'loop':
                 for compteur in range(begin, limit):
-                    #print('varname = ' + varname)
-                    #print(self.variables)
-                    #self.interpreter.print_sequence_numbers()
                     self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
@@ -1273,7 +1270,7 @@ class core(base_module):
                 while compteur < limit:
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
-                    self.interpreter.decreaselastseqnumber()
+                    #self.interpreter.decreaselastseqnumber()
                     if ret == 'leave':
                         instructions.clear()
                         break
