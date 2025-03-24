@@ -35,6 +35,25 @@
         </div>
 
         <h3>b. Boucles finies avec contrôle de l'incrément : do ... +loop</h3>
+        <p>La syntaxe du second type de boucle est la suivante :</p>
+        <div class="div_code">
+            <code>limit variable <b>do</b> instructions incrément <b>+loop</b></code>
+        </div>
+        <ul>
+            <li><b>limit</b> : fin de l'incrément de la boucle</li>
+            <li>
+                <b>variable</b> : début de l'incrément de la boucle dans une variable. L'incrément est stocké dans une variable que vous 
+                pouvez utiliser dans la boucle. La variable que vous utilisez pour la valeur initiale de votre boucle est 
+                automatiquement incrémentée de la valeur de l'incrément que vous aurez choisi
+            </li>
+            <li>incrément : incrément (ou pas de boucle) qui peut être positif ou négatif. Si limit < contenu de la variable, l'incrément doit être négatif sinon vous faites une boucle infinie</li>
+        </ul>
+        <p>Exemple pour le premier type de boucle :</p>
+        <div class="div_code">
+            <code>Beetle> 50 0 var i do i @ . 5 +loop<br>
+                0 5 10 15 20 25 30 35 40 45 <span style="color:green;">ok</span></code>
+        </div>
+
         <h3>c. Boucles infinies simples : begin ... again</h3>
         <h3>d. Boucles infinies simples : begin ... until</h3>
         <h3>e. Boucles infinies complexes : begin ... while ... repeat</h3>
