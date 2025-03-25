@@ -1205,8 +1205,7 @@ class core(base_module):
             value = self.pop_work()
             for pack in self.interpreter.packages:
                 if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
-                    # TO DO : tenir compte des différents types de contenus de variable
-                    self.interpreter.packages[pack].dictionary[name][0] = value
+                    self.interpreter.packages[pack].dictionary[name] = value
                     break
             return 'nobreak'
         else:
