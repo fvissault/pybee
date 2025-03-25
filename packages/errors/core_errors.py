@@ -7,7 +7,7 @@ class core_errors:
     error_package_dont_exists =                 error('warning', 'package don\'t exists')
     error_definition_dont_exists =              error('warning', 'definition don\'t exists')
     error_native_definition =                   error('warning', 'nothing to see, it is a native definition')
-    error_not_a_variable_or_constant =          error('error', 'variable or constant expected')
+    error_not_a_variable_or_constant =          error('fatal', 'variable or constant expected')
     error_name_already_exists =                 error('error', 'this constant or variable already exists')
     error_name_missing =                        error('fatal', 'name of your variable or constant is missing')
     error_import_name_missing =                 error('fatal', 'name of your package is missing')
