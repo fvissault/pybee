@@ -72,17 +72,6 @@
 
 
 
-La syntaxe du deuxième type de boucle est la suivante :
-limit variable DO instructions incrément +LOOP
-•	limit : fin de l'incrément de la boucle
-•	variable : début de l'incrément de la boucle dans une variable. L'incrément est stocké dans une variable que vous pouvez utiliser dans la boucle. La variable que vous utilisez pour la valeur initiale de votre boucle est automatiquement incrémentée de 1 en 1 
-•	incrément : incrément (ou pas de boucle) qui peut être positif ou négatif. Si limit < contenu de la variable, l'incrément doit être négatif sinon vous faites une boucle infinie
-Exemple pour le second type de boucle :
-0 VAR I
-50 I DO I @ . 5 +LOOP
-
-Affiche  tous les nombres entre 0 et 45 incluent de 5 en 5
-
 Boucles infinies
 Vous avez le choix entre 3 types de boucles infinies
 Le premier type de boucle infinie vous permet de définir une condition d'arrêt. La syntaxe de ce type de boucle est la suivante :
