@@ -1203,7 +1203,7 @@ class core(base_module):
             if name not in self.variables:
                 return core_errors.error_not_a_variable.print_error('!', self.interpreter.output)
             value = self.pop_work()
-            for pack in self.interpreter.packages:
+            for pack in self.interpreter.packages.keys():
                 if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
                     self.interpreter.packages[pack].dictionary[name] = value
                     break
