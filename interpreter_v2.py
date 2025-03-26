@@ -18,7 +18,7 @@ class interpreter:
         self.userdefinitions = {}
         self.does = deque()
         self.output = output
-        self.version = 'v2.3.5'
+        self.version = 'v2.3.6'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
 
