@@ -117,8 +117,8 @@ class interpreter:
                 # instr not in package dictionaries
                 return core_errors.error_invalid_instruction.print_error(instr, self.output)
             elif self.instr_search(str(instr).lower()): 
-                pack = self.search_in_pack(instr)
-                ret = self.package_search(instr, self.packages[pack])
+                pack = self.search_in_pack(str(instr).lower())
+                ret = self.package_search(str(instr).lower(), self.packages[pack])
                 if ret == 'break':
                     self.sequences.clear()
                     break
