@@ -47,9 +47,10 @@ class interpreter:
                 self.lastseqnumber -= 1
 
     def decreaselastseqnumber(self):
-        if self.isemptysequence(self.sequences[self.lastseqnumber]):
-            del(self.sequences[self.lastseqnumber])
-            self.lastseqnumber -= 1
+        if len(self.sequences) > 0:
+            if self.isemptysequence(self.sequences[self.lastseqnumber]):
+                del(self.sequences[self.lastseqnumber])
+                self.lastseqnumber -= 1
 
     def isemptylastsequence(self):
         if len(self.sequences[self.lastseqnumber]) == 0:
@@ -112,16 +113,17 @@ class interpreter:
                 instr_content = self.get_instr_content(instr)
                 if instr_content != None:
                     self.work.appendleft(instr_content)
-            elif self.instr_search(instr.lower()) == False:
+            elif self.instr_search(str(instr).lower()) == False:
                 # instr not in package dictionaries
                 return core_errors.error_invalid_instruction.print_error(instr, self.output)
-            elif self.instr_search(instr): 
+            elif self.instr_search(str(instr).lower()): 
                 pack = self.search_in_pack(instr)
                 ret = self.package_search(instr, self.packages[pack])
-                if ret == 'nobreak':
-                    continue
-                else: 
+                if ret == 'break':
+                    self.sequences.clear()
                     break
+                else:
+                    continue
             else:
                 return core_errors.error_invalid_instruction.print_error(instr, self.output)
             self.decreaselastseqnumber()
@@ -162,10 +164,10 @@ class interpreter:
                         self.string_treatment_for_load_file(split)
                     self.from_instr = instr
                     self.set_sequence(self.instructions)
-                    ret = self.interpret('last_sequence')
+                    self.interpret('last_sequence')
                     self.instructions.clear()
                     self.decreaselastseqnumber()
-                    return 'nobreak'
+                    return "nobreak"
                 else:
                     # instructions qui ne sont pas dans la définition
                     package.set_work_stack(self.work)
