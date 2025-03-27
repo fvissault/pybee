@@ -10,6 +10,7 @@ class interpreter:
         self.lastseqnumber = -1
         self.currentseqnumber = 0
         self.from_instr = ''
+        self.recentWord = None
         self.instructions = deque()
         self.instr = ''
         self.immediate = []
