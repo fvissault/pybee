@@ -285,7 +285,7 @@ class core(base_module):
                 imm = deque()
                 imm.append(str(instr).lower())
                 self.interpreter.set_sequence(imm)
-                ret = self.interpreter.interpret('last_sequence')
+                self.interpreter.interpret('last_sequence')
             else:
                 if instr != ';':
                     defbody = defbody + ' ' + str(instr)
@@ -301,7 +301,7 @@ class core(base_module):
                 imm = deque()
                 imm.append(str(instr).lower())
                 self.interpreter.set_sequence(imm)
-                ret = self.interpreter.interpret('last_sequence')
+                self.interpreter.interpret('last_sequence')
             else:
                 if instr != ';':
                     defbody = defbody + ' ' + str(instr)
@@ -321,11 +321,12 @@ class core(base_module):
             self.interpreter.compile[defname] = does.copy()
 
         # traitement de la section immediate
-        if len(seq) > 0:
-            immediate = seq[0]
-            if str(immediate).lower() == 'immediate':
-                self.pop_sequence()
-                self.interpreter.immediate.append(defname)
+        #if len(seq) > 0:
+        #    immediate = seq[0]
+        #    if str(immediate).lower() == 'immediate':
+        #        self.pop_sequence()
+        #        self.interpreter.immediate.append(defname)
+        self.interpreter.recentWord = defname
 
         if comment.strip() != '':
             self.help.set_help(defname, comment.strip())
@@ -1582,6 +1583,7 @@ class core(base_module):
         else:
             self.variables.append(var_name)
         self.work.appendleft(var_name)
+        self.interpreter.recentWord = var_name
         return 'nobreak'
 
     '''
@@ -1594,7 +1596,8 @@ class core(base_module):
     Instruction immediate : définition de l'exécution d'instructions immediate
     '''
     def immediate_instr(self):
-        return core_errors.error_immediate_only_in_definition.print_error('immediate', self.interpreter.output)
+        self.interpreter.immediate.append(self.interpreter.recentWord)
+        return "nobreak"
 
     '''
     Instruction postpone : sorte d'alias de mots
