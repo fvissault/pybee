@@ -92,9 +92,13 @@ class interpreter:
             if isinstance(instr, str) and instr.lower() == 'leave':
                 self.from_instr = ''
                 return 'leave'
-            elif isinstance(instr, int) or isinstance(instr, float) or isinstance(instr, list) or isinstance(instr, dict) or self.core_instr.isfloat(str(instr)) or self.core_instr.isinteger(str(instr)):
+            elif self.core_instr.isfloat(str(instr)) or self.core_instr.isinteger(str(instr)):
+                self.work.appendleft(instr)
+                continue
+            elif isinstance(instr, list) or isinstance(instr, dict):
                 # integer, float or list insert in work stack
                 self.work.appendleft(instr)
+                continue
             elif base != 10 and self.instr_search(str(instr).lower()) == False:
                 try:
                     temp = int(str(instr), base)
@@ -106,9 +110,11 @@ class interpreter:
             elif instr[0] == '"' and instr[-1] == '"':
                 # string insert in work stack
                 self.work.appendleft(instr[1:-1])
+                continue
             elif instr in self.core_instr.variables:
                 # variable insert in work stack
                 self.work.appendleft(instr)
+                continue
             elif instr in self.userdefinitions.keys() and len(self.userdefinitions[instr]) > 0:
                 # constant name insert in work stack
                 instr_content = self.get_instr_content(instr)
