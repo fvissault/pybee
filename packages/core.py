@@ -320,12 +320,6 @@ class core(base_module):
                     does.append(str(instr))
             self.interpreter.compile[defname] = does.copy()
 
-        # traitement de la section immediate
-        #if len(seq) > 0:
-        #    immediate = seq[0]
-        #    if str(immediate).lower() == 'immediate':
-        #        self.pop_sequence()
-        #        self.interpreter.immediate.append(defname)
         self.interpreter.recentWord = defname
 
         if comment.strip() != '':
