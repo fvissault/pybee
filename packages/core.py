@@ -297,7 +297,9 @@ class core(base_module):
             if instr == ':':
                 return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
             # si l'instruction est postpone
-            
+            if str(instr).lower() == 'postpone':
+                instr = self.pop_sequence()
+                defbody = defbody + ' ' + str(instr)
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
