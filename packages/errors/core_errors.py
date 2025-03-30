@@ -35,6 +35,7 @@ class core_errors:
     error_definition_only =                     error('error', 'only definition name expected')
     error_twopoints_invalid =                   error('fatal', 'begin definition not allowed here')
     error_does_invalid =                        error('fatal', 'instruction only usable in definition with create')
+    error_usable_instruction =                   error('fatal', 'instruction only usable in definition')
     error_get_cell_on_array_invalid =           error('error', 'not an array')
     error_index_on_array_invalid =              error('error', 'invalid index on array')
     error_condition_invalid =                   error('error', 'invalid break condition')
