@@ -296,6 +296,8 @@ class core(base_module):
             instr = self.pop_sequence()
             if instr == ':':
                 return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+            # si l'instruction est postpone
+            
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
@@ -1597,7 +1599,7 @@ class core(base_module):
     Instruction postpone : sorte d'alias de mots
     '''
     def postpone_instr(self):
-        pass
+        return core_errors.error_usable_instruction.print_error('postpone', self.interpreter.output)
 
     '''
     Instruction array : créé un tableau : n1 n2 n3 ... size array
