@@ -283,7 +283,29 @@ class core(base_module):
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(instr).lower() in self.interpreter.immediate:
                 imm = deque()
-                imm.append(str(instr).lower())
+
+                dictinstr = self.interpreter.get_instr_content(str(instr).lower())
+                if dictinstr == None:
+                    return core_errors.error_definition_dont_exists.print_error('definition', self.interpreter.output)
+                if isinstance(dictinstr, str):
+                    splitdictinstr = dictinstr.split()
+                    postponefound = False
+                    for el in splitdictinstr:
+                        if postponefound:
+                            #postponefound = False
+                            defbody = defbody + ' ' + str(el)
+                        if str(el).lower() == 'postpone':
+                            postponefound = True
+                            continue
+                        else:
+                            if postponefound == False:
+                                imm.append(el)
+                            else:
+                                postponefound = False
+                else:
+                    imm.append(instr)
+
+
                 self.interpreter.set_sequence(imm)
                 self.interpreter.interpret('last_sequence')
             else:
@@ -299,7 +321,28 @@ class core(base_module):
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
-                imm.append(str(instr).lower())
+
+                dictinstr = self.interpreter.get_instr_content(str(instr).lower())
+                if dictinstr == None:
+                    return core_errors.error_definition_dont_exists.print_error('definition', self.interpreter.output)
+                if isinstance(dictinstr, str):
+                    splitdictinstr = dictinstr.split()
+                    postponefound = False
+                    for el in splitdictinstr:
+                        if postponefound:
+                            #postponefound = False
+                            defbody = defbody + ' ' + str(el)
+                        if str(el).lower() == 'postpone':
+                            postponefound = True
+                            continue
+                        else:
+                            if postponefound == False:
+                                imm.append(el)
+                            else:
+                                postponefound = False
+                else:
+                    imm.append(instr)
+
                 self.interpreter.set_sequence(imm)
                 self.interpreter.interpret('last_sequence')
             else:
