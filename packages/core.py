@@ -192,7 +192,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.5.8'
+        self.version = 'v1.5.9'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
