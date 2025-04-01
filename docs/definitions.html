@@ -25,6 +25,7 @@
             <li>les définitions non nommées : <b>:noname</b></li>
             <li>les définitions vides : <b>defer</b></li>
             <li>les variables et constantes : <b>var</b> et <b>const</b></li>
+            <li>report d'exécution : <b>postpone</b></li>
         </ul>
 
         <h2>b. Définitions classiques</h2>
@@ -214,6 +215,48 @@
                 {'n1':1, 'n2':2} <span style="color:green;">ok</span><br><br>
                 Beetle> forget hashtable ( pour supprimer hashtable de votre vocabulaire )<br>
                 <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <h2>g. Report d'exécution (postpone)</h2>
+        <p>
+            l'instruction <b>postpone</b> vous permet de reporter l'exécution d'un mot. Voici un exemple qui va vous donner une idée de
+            ce que fait <b>postpone</b> :
+        </p>
+
+        <div class="div_code">
+            <code>Beetle> : someword "Hello" . ; ( on définit le mot simple 'someword' )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> see someword ( voir la définition de someword )<br>
+                : sw
+                    <blockquote>"Hello" .</blockquote>
+                ;<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> : imm postpone someword "I'm Beetle" . ; immediate ( créer une définition imediate contenant un postpone )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> see imm ( voir la définition de imm )<br>
+                : imm<br>
+                    <blockquote>someword "I'm Beetle" .</blockquote> 
+                ; immediate<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> : exemple imm ; ( créer une nouvelle définition exemple )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> see exemple ( voir la définition de exemple )<br>
+                : exemple<br>
+                    <blockquote>someword</blockquote> 
+                ;<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> someword ( exécution de someword )<br>
+                Hello <span style="color:green;">ok</span><br><br>
+                Beetle> imm ( exécution de imm )<br>
+                I'm Beetle <span style="color:green;">ok</span><br><br>
+                Beetle> exemple ( exécution de exemple )<br>
+                Hello <span style="color:green;">ok</span><br><br>
+                Beetle> postpone ( doit entrainer une erreur )<br>
+                <span style="color:magenta;">postpone error : variable or definition name is missing</span><br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> postpone dup ( ne fait rien : du point de vue de la sémantique, c'est correct mais ça ne veut rien dire )<br>
+                <span style="color:green;">ok</span><br><br>
             </code>
         </div>
 
