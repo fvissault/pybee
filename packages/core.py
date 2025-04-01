@@ -290,9 +290,22 @@ class core(base_module):
                 if isinstance(dictinstr, str):
                     splitdictinstr = dictinstr.split()
                     postponefound = False
+                    stringfound = False
+                    string = ''
                     for el in splitdictinstr:
+                        if el[-1] == '"':
+                            string += ' ' + el
+                            stringfound = False
+                            imm.append(string.strip(' '))
+                            continue
+                        if el[0] == '"':
+                            stringfound = True
+                            string += ' ' + el
+                            continue
+                        if stringfound:
+                            string += ' ' + el
+                            continue
                         if postponefound:
-                            #postponefound = False
                             defbody = defbody + ' ' + str(el)
                         if str(el).lower() == 'postpone':
                             postponefound = True
@@ -329,8 +342,19 @@ class core(base_module):
                     splitdictinstr = dictinstr.split()
                     postponefound = False
                     for el in splitdictinstr:
+                        if el[-1] == '"':
+                            string += ' ' + el
+                            stringfound = False
+                            imm.append(string.strip(' '))
+                            continue
+                        if el[0] == '"':
+                            stringfound = True
+                            string += ' ' + el
+                            continue
+                        if stringfound:
+                            string += ' ' + el
+                            continue
                         if postponefound:
-                            #postponefound = False
                             defbody = defbody + ' ' + str(el)
                         if str(el).lower() == 'postpone':
                             postponefound = True
