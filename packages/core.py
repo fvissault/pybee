@@ -180,6 +180,7 @@ class core(base_module):
                            'evaluate' : self.evaluate_instr,
                            'execute' : self.execute_instr,
                            ':noname' : self.noname_instr,
+                           'here' : self.here_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
                            'testloop' : '1500 1000 var #i do #i @ emit loop forget #i cr',
                            'testfib' : '1 0 2.s reverse 2 var fib#i do 2dup + .s rot drop loop 2drop forget fib#i',
@@ -2481,3 +2482,10 @@ class core(base_module):
 
     def rotonall_instr(self):
         pass
+
+    def here_instr(self):
+        if self.interpreter.recentWord != None:
+            self.work.appendleft(self.interpreter.recentWord)
+        else:
+            self.work.appendleft('here')
+        return 'nobreak'
