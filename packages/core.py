@@ -1664,7 +1664,10 @@ class core(base_module):
     Instruction postpone : sorte d'alias de mots
     '''
     def postpone_instr(self):
-        return core_errors.error_usable_instruction.print_error('postpone', self.interpreter.output)
+        if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
+            return core_errors.error_variable_or_definition_name_missing.print_error('postpone', self.interpreter.output)
+        self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
+        return "nobreak"
 
     '''
     Instruction array : créé un tableau : n1 n2 n3 ... size array
