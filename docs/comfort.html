@@ -39,9 +39,11 @@
             <code>Beetle> <b>see</b> dup<br>
                 : dup
                         <blockquote>0 pick</blockquote>
-                ;<br><br>
+                ;<br>
+                <span style="color:green;">ok</span><br><br>
                 Beetle> <b>see</b> list<br>
-                see list warning : nothing to see, it is a native definition</code>
+                see list warning : nothing to see, it is a native definition<br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>list</u></h3>
@@ -52,14 +54,15 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> <b>list</b> import<br>
-                <?btl<br>
+                &lt;?btl<br>
                 import math<br>
                 import file<br>
                 import mysqldb<br>
                 import date<br>
                 packages<br>
                 words<br>
-                ?></code>
+                ?><br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>constants</u></h3>
@@ -69,7 +72,8 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> <b>constants</b><br>
-                true = 1 ; false = 0 ; base = 10 ;</code>
+                true = 1 ; false = 0 ; base = 10 ;<br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>variables</u></h3>
@@ -79,7 +83,8 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> <b>variables</b><br>
-                path = userarea ;</code>
+                path = userarea ;<br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>packages</u></h3>
@@ -89,7 +94,8 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> <b>packages</b><br>
-                core : version = v1.5.5</code>
+                core : version = v1.5.5<br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>dump</u></h3>
@@ -99,7 +105,7 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> 1 2 3 4 5 + <b>dump</b><br>
-                9 3 2 1</code>
+                9 3 2 1 <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>?</u></h3>
@@ -110,7 +116,7 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> path <b>?</b><br>
-                userarea</code>
+                userarea <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>words</u></h3>
@@ -121,39 +127,40 @@
         <div class="div_code">
             <code>Beetle> <b>words</b><br>
                 -------/core/ (172 words)<br>
-                ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t</code>
+                ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t<br>
+                <span style="color:green;">ok</span></code>
         </div>
 
-        <h3><u>wp?</u></h3>
+        <h3><u>wp</u></h3>
         <p>
             work pointer (wp) : Ce mot met sur la pile de travail l'adresse du prochain élément de la pile de travail. Si 0 est renvoyé, cela signifie que la 
             pile de travail est vide
         </p>
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
-            <code>Beetle> <b>wp?</b> .<br>
-                0</code>
+            <code>Beetle> <b>wp</b> .<br>
+                0 <span style="color:green;">ok</span></code>
         </div>
 
-        <h3><u>sp?</u></h3>
+        <h3><u>sp</u></h3>
         <p>
             sequence pointer (sp) : Ce mot met sur la pile de travail l'adresse de la prochaine séquence de l'interpréteur. 0 ne sera jamais
             renvoyé.
         </p>
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
-            <code>Beetle> <b>sp?</b> .<br>
-                1</code>
+            <code>Beetle> <b>sp</b> .<br>
+                1 <span style="color:green;">ok</span></code>
         </div>
 
-        <h3><u>vp?</u></h3>
+        <h3><u>vp</u></h3>
         <p>
             vocabulary pointer (vp) : Ce mot met sur la pile de travail l'adresse du prochain mot dans le dictionnaire.
         </p>
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
-            <code>Beetle> <b>vp?</b> .<br>
-                168</code>
+            <code>Beetle> <b>vp</b> .<br>
+                168 <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>?pack</u></h3>
@@ -163,9 +170,19 @@
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
             <code>Beetle> <b>?pack</b> core .<br>
-                1<br><br>
+                1 <span style="color:green;">ok</span><br><br>
                 Beetle> <b>?pack</b> other_pack_name .<br>
-                0</code>
+                0 <span style="color:green;">ok</span></code>
+        </div>
+
+        <h3><u>cls</u></h3>
+        <p>
+            clear stack (cls) : vide la pile de données 
+        </p>
+        <p>Sa syntaxe et son résultat sont les suivants :</p>
+        <div class="div_code">
+            <code>Beetle> <b>cls</b><br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>clt</u></h3>
@@ -174,7 +191,8 @@
         </p>
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
-            <code>Beetle> <b>clt</b></code>
+            <code>Beetle> <b>clt</b><br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <h3><u>( ... )</u></h3>
@@ -184,7 +202,8 @@
         </p>
         <p>Sa syntaxe et son résultat sont les suivants :</p>
         <div class="div_code">
-            <code>Beetle> <b>(</b> ceci est un commentaire <b>)</b></code>
+            <code>Beetle> <b>(</b> ceci est un commentaire <b>)</b><br>
+                <span style="color:green;">ok</span></code>
         </div>
 
         <a href="sequences.html">Précédent : X.2. Interpreteur - Notions de séquence</a> | <a href="index.html">Index</a> | <a href="stackuse.html">Suivant : XI.1. Structures du langage - Manipulation de la pile</a>
