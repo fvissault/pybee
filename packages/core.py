@@ -1857,6 +1857,10 @@ class core(base_module):
                 return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
             elif isinstance(position, int) and (position < 0 or position >= len(content)):
                 return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+            if isinstance(content, dict) and not isinstance(position, str):
+                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+            elif isinstance(content, list) and not isinstance(position, int):
+                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
             result = content[position]
             self.work.appendleft(result)
             return 'nobreak'
@@ -1898,7 +1902,7 @@ class core(base_module):
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             value = self.pop_work()
-            if not isinstance(value, int) and not isinstance(value, float) and not self.isfloat(value) and not isinstance(value, list) and not isinstance(value, dict):
+            if not isinstance(value, int) and not isinstance(value, float) and not isinstance(value, list) and not isinstance(value, dict):
                 return core_errors.error_bad_type.print_error('cell+', self.interpreter.output)
             if isinstance(content, dict):
                 index = self.pop_work()
@@ -1906,6 +1910,8 @@ class core(base_module):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
+            elif isinstance(content[index], list):
+                content[index].append(value)
             elif isinstance(content, dict):
                 content[index] = value
             elif isinstance(content, list):
@@ -2091,7 +2097,7 @@ class core(base_module):
     def isint_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
-            self.work.appendleft(o)
+            #self.work.appendleft(o)
             if self.isinteger(o):
                 self.work.appendleft(1)
             else:
@@ -2106,7 +2112,7 @@ class core(base_module):
     def isfloat_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
-            self.work.appendleft(o)
+            #self.work.appendleft(o)
             if self.isfloat(o):
                 self.work.appendleft(1)
             else:
@@ -2121,7 +2127,7 @@ class core(base_module):
     def isstr_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
-            self.work.appendleft(o)
+            #self.work.appendleft(o)
             if isinstance(o, str):
                 self.work.appendleft(1)
             else:
@@ -2136,7 +2142,7 @@ class core(base_module):
     def ischar_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
-            self.work.appendleft(o)
+            #self.work.appendleft(o)
             if isinstance(o, str) and len(o) == 1:
                 self.work.appendleft(1)
             else:
@@ -2151,8 +2157,8 @@ class core(base_module):
     def isarray_instr(self):
         if len(self.work) > 0:
             o = self.pop_work()
-            self.work.appendleft(o)
-            if isinstance(o, list):
+            #self.work.appendleft(o)
+            if isinstance(o, list) or isinstance(o, dict):
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
