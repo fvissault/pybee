@@ -181,6 +181,7 @@ class core(base_module):
                            'execute' : self.execute_instr,
                            ':noname' : self.noname_instr,
                            'here' : self.here_instr,
+                           'local' : self.local_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
                            'testloop' : '1500 1000 var #i do #i @ emit loop forget #i cr',
                            'testfib' : '1 0 2.s reverse 2 var fib#i do 2dup + .s rot drop loop 2drop forget fib#i',
@@ -633,7 +634,10 @@ class core(base_module):
     def arobase_instr(self):
         if len(self.work) > 0:
             name = str(self.work[0])
-            if name in self.variables:
+            if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                self.work.appendleft(self.interpreter.locals[self.interpreter.lastseqnumber][name])
+                return 'nobreak'
+            elif name in self.variables:
                 self.work.popleft()
                 pack = self.interpreter.search_in_pack(name)
                 if pack != False:
@@ -1261,15 +1265,19 @@ class core(base_module):
     def exclam_instr(self):
         if len(self.work) > 1:
             name = self.pop_work()
-            if name in self.interpreter.userdefinitions.keys():
-                return core_errors.error_invalid_update_constant.print_error('!', self.interpreter.output)
-            if name not in self.variables:
-                return core_errors.error_not_a_variable.print_error('!', self.interpreter.output)
-            value = self.pop_work()
-            for pack in self.interpreter.packages.keys():
-                if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
-                    self.interpreter.packages[pack].dictionary[name] = value
-                    break
+            if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                value = self.pop_work()
+                self.interpreter.locals[self.interpreter.lastseqnumber][name] = value
+            else:
+                if name in self.interpreter.userdefinitions.keys():
+                    return core_errors.error_invalid_update_constant.print_error('!', self.interpreter.output)
+                if name not in self.variables:
+                    return core_errors.error_not_a_variable.print_error('!', self.interpreter.output)
+                value = self.pop_work()
+                for pack in self.interpreter.packages.keys():
+                    if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
+                        self.interpreter.packages[pack].dictionary[name] = value
+                        break
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('!', self.interpreter.output)
@@ -1910,12 +1918,12 @@ class core(base_module):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
-            elif isinstance(content[index], list):
-                content[index].append(value)
             elif isinstance(content, dict):
                 content[index] = value
             elif isinstance(content, list):
                 content.append(value)
+            elif isinstance(content[index], list):
+                content[index].append(value)
             self.work.appendleft(content)
             return 'nobreak'
         else:
@@ -2492,3 +2500,20 @@ class core(base_module):
         else:
             self.work.appendleft('here')
         return 'nobreak'
+    
+    '''
+    Instruction local : création d'une variable locale à un mot
+    exemple : 
+        val local a => créé une variable locale a = val
+    '''
+    def local_instr(self):
+        if self.interpreter.lastseqnumber == 0:
+            return core_errors.error_local_var_only_in_def.print_error('local', self.interpreter.output)
+        if len(self.work) > 0:
+            val = self.pop_work()
+            if self.interpreter.isemptylastsequence():
+                return core_errors.error_local_var_name_missing.print_error('local', self.interpreter.output)
+            localname = self.pop_sequence()
+            self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('local', self.interpreter.output)
