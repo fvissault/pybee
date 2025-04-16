@@ -24,7 +24,9 @@
             <li>les définitions immediates : <b>immediate</b></li>
             <li>les définitions non nommées : <b>:noname</b></li>
             <li>les définitions vides : <b>defer</b></li>
-            <li>les variables et constantes : <b>var</b> et <b>const</b></li>
+            <li>les variables globales : <b>var</b> et <b>2var</b></li>
+            <li>les variables locales : <b>local</b></li>
+            <li>les constantes : <b>const</b> et <b>2const</b></li>
             <li>report d'exécution : <b>postpone</b></li>
         </ul>
 
@@ -170,10 +172,10 @@
                 <span style="color:green;">ok</span>
             </code>
         </div>
-        <h2>f. Définitions de variables et constantes (var et const)</h2>
+        <h2>f. Définitions de variables globales (var et 2var)</h2>
 
         <p>
-            Les variables et les constantes sont considérées comme des définitions. Pour les variables :
+            Les variables sont considérées comme des définitions. Pour les variables :
         </p>
 
         <div class="div_code">
@@ -194,9 +196,40 @@
                 Beetle> { n3 : 3 , n4 : 4 } hashtable ! ( pour modifier le contenu de hashtable )<br>
                 <span style="color:green;">ok</span><br><br>
                 Beetle> forget hashtable ( pour supprimer hashtable de votre vocabulaire )<br>
-                <span style="color:green;">ok</span>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 2 3 2var a ( créé le tableau 'a' contenant 3 et 2 : l'ordre des valeurs que l'on met dans ce tableau est important )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> a @ . ( affichage du contenu de 'a' )<br>
+                [3, 2] <span style="color:green;">ok</span>
             </code>
         </div>
+
+
+        <h2>g. Définitions des variables locales (local)</h2>
+
+        <p>
+            La portée des variables locales est restreinte au corps d'une définition. Les variables locales peuvent porter le même nom
+            que que les variables globales. Dans ce cas, elles seront traitées en priorité par rapport aux variables globales.<br>
+            Les variables locales sont automatiquement détruites en sortie de définition dans lesquelles elles sont créés.
+        </p>
+        <p>
+            Les variables locales vont être particulièrement utiles pour écrire des définitions récursives.
+        </p>
+
+        <div class="div_code">
+            <code>Beetle> 5 <b>local</b> a ( ceci n'est pas autorisé : il n'est pas possible d'utiliser le mot local en dehors d'une définition )<br>
+                <span style="color:red;">local fatal : local variables are allowed in definition only</span><br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> : x <b>local</b> a 6 a ! a @ . ; ( il faut créer les variables locales dans une définition. Ici, on affecte 6 à 'a', 
+                puis on affiche le contenu de 'a'. Et 'a' est initialisée avec la valeur du haut de la pile. Tout ceci dans une 
+                définition qui s'appelle 'x'. )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 5 x ( appel de notre nouveau mot 'x' )<br>
+                6 <span style="color:green;">ok</span><br><br>
+            </code>
+        </div>
+
+        <h2>h. Définitions des constantes (const et 2const)</h2>
 
         <p>Pour les constantes que vous pouvez définir mais que vous ne pourrez pas modifier :</p>
 
@@ -214,11 +247,15 @@
                 Beetle> hashtable . ( pour afficher le contenu de hashable : contrairement à une variable, vous ne pouvez pas modifier une constante. Vous ne pouvez pas utiliser ! )<br>
                 {'n1':1, 'n2':2} <span style="color:green;">ok</span><br><br>
                 Beetle> forget hashtable ( pour supprimer hashtable de votre vocabulaire )<br>
-                <span style="color:green;">ok</span>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> 2 3 2const a ( créé le tableau 'a' contenant 3 et 2 : l'ordre des valeurs que l'on met dans ce tableau est important )<br>
+                <span style="color:green;">ok</span><br><br>
+                Beetle> a . ( pour les constantes, nous n'utilisons pas @ pour en voir le contenu )<br>
+                [3, 2] <span style="color:green;">ok</span>
             </code>
         </div>
-
-        <h2>g. Report d'exécution (postpone)</h2>
+        
+        <h2>i. Report d'exécution (postpone)</h2>
         <p>
             l'instruction <b>postpone</b> vous permet de reporter l'exécution d'un mot. Voici un exemple qui va vous donner une idée de
             ce que fait <b>postpone</b> :
