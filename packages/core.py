@@ -635,6 +635,7 @@ class core(base_module):
         if len(self.work) > 0:
             name = str(self.work[0])
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                self.work.popleft()
                 self.work.appendleft(self.interpreter.locals[self.interpreter.lastseqnumber][name])
                 return 'nobreak'
             elif name in self.variables:
