@@ -7,6 +7,7 @@ class interpreter:
         self.work = deque()
         self.altwork = deque()
         self.sequences = []
+        self.locals = []
         self.lastseqnumber = -1
         self.currentseqnumber = 0
         self.from_instr = ''
@@ -25,6 +26,7 @@ class interpreter:
 
     def set_sequence(self, sequence:deque):
         self.sequences.append(sequence.copy())
+        self.locals.append({})
         self.lastseqnumber += 1
 
     def isemptysequence(self, sequence:deque):
@@ -45,12 +47,14 @@ class interpreter:
         for index, seq in enumerate(self.sequences):
             if len(seq) == 0:
                 del(self.sequences[index])
+                del(self.locals[index])
                 self.lastseqnumber -= 1
 
     def decreaselastseqnumber(self):
         if len(self.sequences) > 0:
             if self.isemptysequence(self.sequences[self.lastseqnumber]):
                 del(self.sequences[self.lastseqnumber])
+                del(self.locals[self.lastseqnumber])
                 self.lastseqnumber -= 1
 
     def isemptylastsequence(self):
@@ -73,6 +77,7 @@ class interpreter:
     def print_sequence_numbers(self):
         print('lastseqnumber = ' + str(self.lastseqnumber))
         print('sequences = ', self.sequences)
+        print('locals = ', self.locals)
         print('work = ', self.work)
 
     '''
@@ -111,8 +116,7 @@ class interpreter:
                 # string insert in work stack
                 self.work.appendleft(instr[1:-1])
                 continue
-            elif instr in self.core_instr.variables:
-                # variable insert in work stack
+            elif instr in self.core_instr.variables or instr in self.locals[self.lastseqnumber].keys():
                 self.work.appendleft(instr)
                 continue
             elif instr in self.userdefinitions.keys() and len(self.userdefinitions[instr]) > 0:
