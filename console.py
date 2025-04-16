@@ -24,6 +24,7 @@ class console:
 
             # clean de l'interprète
             self.i.sequences.clear()
+            self.i.locals.clear()
             self.i.lastseqnumber = -1
             self.i.currentseqnumber = 0
 
