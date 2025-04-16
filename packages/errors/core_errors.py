@@ -10,6 +10,8 @@ class core_errors:
     error_not_a_variable_or_constant =          error('fatal', 'variable or constant expected')
     error_name_already_exists =                 error('error', 'this constant or variable already exists')
     error_name_missing =                        error('fatal', 'name of your variable or constant is missing')
+    error_local_var_name_missing =              error('fatal', 'name of your local variable is missing')
+    error_local_var_only_in_def =               error('fatal', 'local variables are allowed in definition only')
     error_import_name_missing =                 error('fatal', 'name of your package is missing')
     error_def_name_missing =                    error('fatal', 'name of your definition is missing')
     error_def_name_already_exists =             error('fatal', 'name of your definition already exists')
