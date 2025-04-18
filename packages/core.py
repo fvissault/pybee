@@ -1315,7 +1315,10 @@ class core(base_module):
             instr = self.search_do_loop(instructions)
             # lire le nom de la variable
             varname = self.work[0]
-            if varname in self.variables:
+            if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                self.work.popleft()
+                begin = self.self.interpreter.locals[self.interpreter.lastseqnumber][varname]
+            elif varname in self.variables:
                 # begin = Récupérer la valeur de la variable
                 self.work.popleft()
                 # begin = Récupérer la valeur de la variable
@@ -1330,7 +1333,10 @@ class core(base_module):
                 return core_errors.error_integer_expected.print_error('do ... loop limit', self.interpreter.output)
             if instr == 'loop':
                 for compteur in range(begin, limit):
-                    self.dictionary[varname] = compteur
+                    if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                        self.self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
+                    else:
+                        self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
                     self.interpreter.decreaselastseqnumber()
@@ -1348,7 +1354,10 @@ class core(base_module):
                         break
                     increment = self.pop_work()
                     compteur += increment
-                    self.dictionary[varname] = compteur
+                    if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                        self.self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
+                    else:
+                        self.dictionary[varname] = compteur
             instructions.clear()
             return 'nobreak'
         else:
@@ -1913,18 +1922,19 @@ class core(base_module):
             value = self.pop_work()
             if not isinstance(value, int) and not isinstance(value, float) and not isinstance(value, list) and not isinstance(value, dict):
                 return core_errors.error_bad_type.print_error('cell+', self.interpreter.output)
+            index = None
             if isinstance(content, dict):
                 index = self.pop_work()
                 if not isinstance(index, str):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
-            elif isinstance(content, dict):
+            elif index is not None and isinstance(content[index], list):
+                content[index].append(value)
+            elif index is not None and isinstance(content, dict):
                 content[index] = value
             elif isinstance(content, list):
                 content.append(value)
-            elif isinstance(content[index], list):
-                content[index].append(value)
             self.work.appendleft(content)
             return 'nobreak'
         else:
