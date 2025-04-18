@@ -26,7 +26,10 @@ class interpreter:
 
     def set_sequence(self, sequence:deque):
         self.sequences.append(sequence.copy())
-        self.locals.append({})
+        if len(self.locals) == 0:
+            self.locals.append({})
+        else:
+            self.locals.append(self.locals[len(self.locals) - 1])
         self.lastseqnumber += 1
 
     def isemptysequence(self, sequence:deque):
