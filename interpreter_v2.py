@@ -29,7 +29,7 @@ class interpreter:
         if len(self.locals) == 0:
             self.locals.append({})
         else:
-            self.locals.append(self.locals[len(self.locals) - 1])
+            self.locals.append(self.locals[len(self.locals) - 1].copy())
         self.lastseqnumber += 1
 
     def isemptysequence(self, sequence:deque):
