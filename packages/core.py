@@ -152,6 +152,9 @@ class core(base_module):
                            '>base' : self.tobase_instr,
                            '>decimal' : self.todecimal_instr,
                            '?int' : self.isint_instr,
+                           '?def' : self.isdef_instr,
+                           '?var' : self.isvar_instr,
+                           '?local' : self.islocal_instr,
                            '?float' : self.isfloat_instr,
                            '?str' : self.isstr_instr,
                            '?char' : self.ischar_instr,
@@ -1317,7 +1320,7 @@ class core(base_module):
             varname = self.work[0]
             if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
                 self.work.popleft()
-                begin = self.self.interpreter.locals[self.interpreter.lastseqnumber][varname]
+                begin = self.interpreter.locals[self.interpreter.lastseqnumber][varname]
             elif varname in self.variables:
                 # begin = Récupérer la valeur de la variable
                 self.work.popleft()
@@ -1334,15 +1337,15 @@ class core(base_module):
             if instr == 'loop':
                 for compteur in range(begin, limit):
                     if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                        self.self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
+                        self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
                     else:
                         self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
                     self.interpreter.decreaselastseqnumber()
                     if ret == 'leave':
-                        instructions.clear()
                         break
+                instructions.clear()
             if instr == '+loop':
                 compteur = begin
                 while compteur < limit:
@@ -1355,7 +1358,7 @@ class core(base_module):
                     increment = self.pop_work()
                     compteur += increment
                     if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                        self.self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
+                        self.interpreter.locals[self.interpreter.lastseqnumber][varname] = compteur
                     else:
                         self.dictionary[varname] = compteur
             instructions.clear()
@@ -2141,6 +2144,42 @@ class core(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('?float', self.interpreter.output)
 
     '''
+    Instruction ?def : indique si le haut de la pile de travail est un mot du dictionnaire
+    '''
+    def isdef_instr(self):
+        if len(self.work) > 0:
+            name = self.pop_work()
+            for p in self.interpreter.packages.keys():
+                if name in self.interpreter.packages[p].dictionary.keys():
+                    self.work.appendleft(1)
+                    return 'nobreak'
+            self.work.appendleft(0)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('?def', self.interpreter.output)
+
+    '''
+    Instruction ?var : indique si le haut de la pile de travail est une variable
+    '''
+    def isvar_instr(self):
+        if len(self.work) > 0:
+            name = self.pop_work()
+            for p in self.interpreter.packages.keys():
+                if name in self.interpreter.packages[p].variables.keys():
+                    self.work.appendleft(1)
+                    return 'nobreak'
+            self.work.appendleft(0)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('?def', self.interpreter.output)
+
+    '''
+    Instruction ?local : indique si le nombre de la pile de travail est une variable locale
+    '''
+    def islocal_instr(self):
+        pass
+
+    '''
     Instruction ?str : indique si le nombre de la pile de travail est une chaine de caractères
     '''
     def isstr_instr(self):
@@ -2404,6 +2443,7 @@ class core(base_module):
             defername = self.pop_sequence()
             if defername in self.interpreter.defer:
                 self.dictionary[defername] = str(wordname)
+                self.interpreter.userdefinitions[defername] = deque()
                 return 'nobreak'
             else:
                 return core_errors.error_not_a_defer_action.print_error("is", self.interpreter.output)
