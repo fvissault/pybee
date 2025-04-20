@@ -97,8 +97,10 @@ class base_module:
         i.sequences = []
         i.lastseqnumber = -1
         i.work.clear()
+        i.locals.clear()
         #sequence.reverse()
         i.set_sequence(sequence)
+        i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
         i.interpret()
         return i
         
