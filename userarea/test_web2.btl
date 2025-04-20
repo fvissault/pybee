@@ -7,41 +7,35 @@
 { tag : "title" , content : [ "Ceci est une page test" ] } var title
 "content" title @ head cell+
 cls
-html @ .cr
 
-html "content" cell@ .cr
-
-html "content" cell@ 0 cell@ .cr
-
-html "content" cell@ 1 cell@ .cr
-
-html "content" cell@ 1 cell@ "content" cell@ 0 cell@ .cr
-cr cr
-defer generate
-( usage : html @ -- )
-:noname 
-	dup >r
-	"<<!0!>>" [ r> "tag" cell@ ] format .cr
-	dup "content" cell@ local content
-    content @ .cr
-    content @ cells .cr
-    "" local item
-	content @ cells 0 var i 
-	do
-        content @ i @ cell@ .cr
-		content @ i @ cell@ item !
-        item @ .cr
-		item @ ?str
-		if
-			item @ .
-		else
-			item @ generate
-		then
-	loop
-	dup >r
-	"</<!0!>>" [ r> "tag" cell@ ] format .
-;
-is generate
-
+"generate" ?def invert if
+	defer generate
+	( usage : html @ -- )
+	:noname
+		dup "tag" cell@ local tag
+		dup "content" cell@ local content
+		tag @ "html" = if "<!DOCTYPE html>" .cr then
+		"<<!0!>>" [ tag @ ] format .cr
+    	0 local item
+		0 local i
+		content @ cells i
+		do
+			content @ i @ cell@ item !
+			item @ ?str
+			if
+				item @ .cr
+			else
+				item @ generate
+			then
+		loop
+		"</<!0!>>" [ tag @ ] format .cr
+	;
+	is generate
+then
 html @ generate
+
+forget html
+forget head
+forget title
+forget body
 ?>
