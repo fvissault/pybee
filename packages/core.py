@@ -2171,13 +2171,21 @@ class core(base_module):
             self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?def', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('?var', self.interpreter.output)
 
     '''
     Instruction ?local : indique si le nombre de la pile de travail est une variable locale
     '''
     def islocal_instr(self):
-        pass
+        if len(self.work) > 0:
+            name = self.pop_work()
+            if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                self.work.appendleft(1)
+            else:
+                self.work.appendleft(0)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('?local', self.interpreter.output)
 
     '''
     Instruction ?str : indique si le nombre de la pile de travail est une chaine de caractères
