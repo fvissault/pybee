@@ -166,7 +166,7 @@ class core(base_module):
                            'vp' : self.dictpointer_instr,
                            'kpress' : self.keypress_instr,
                            'readk' : self.readkey_instr,
-                           'space' : 'bl emit',
+                           'space' : 'bl',
                            'arget' : 'rot rot swap cell@ cell@',
                            'arrow' : 'swap cell@',
                            'arcol' : 'swap cell@',
@@ -2317,7 +2317,7 @@ class core(base_module):
         left_instrs = deque()
         right_instrs = deque()
         instr = self.pop_sequence()
-        while str(instr).lower() != '->':
+        while str(instr).lower() != '<=>':
             left_instrs.append(str(instr).lower())
             instr = self.pop_sequence()
             if str(instr).lower() == '}t':
@@ -2326,8 +2326,8 @@ class core(base_module):
         while str(instr).lower() != '}t':
             right_instrs.append(str(instr).lower())
             instr = self.pop_sequence()
-            if str(instr).lower() == '->':
-                return core_errors.error_invalid_instruction.print_error('tests - ->', self.interpreter.output)
+            if str(instr).lower() == '<=>':
+                return core_errors.error_invalid_instruction.print_error('tests - <=>', self.interpreter.output)
             if str(instr).lower() == 't{':
                 return core_errors.error_invalid_instruction.print_error('tests - t{', self.interpreter.output)
         ileft = self.exec_interpreter(left_instrs)
