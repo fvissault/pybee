@@ -18,11 +18,11 @@ class math(base_module):
                            'random' : self.random_instr,
                            'intrand' : self.intrand_instr,
                            'floatrand' : self.floatrand_instr,
-                           'fib' : 'dup 1 >= if dup 1 = if 0 .cr drop else 1 0 2dup . . reverse 2 var fib#i do 2dup + dup . rot drop loop 2drop forget fib#i cr then else "Usage : n FIB with n > 0" .cr then',
-                           '#fib' : 'dup 1 >= if dup 1 = if 0 .cr drop else 1 0 reverse 2 var fib#i do 2dup + rot drop loop .cr drop forget fib#i then else "Usage : n #FIB with n > 0" .cr then',
+                           'fib' : '2 local i dup 1 >= if dup 1 = if 0 .cr drop else 1 0 2dup . . reverse i do 2dup + dup . rot drop loop 2drop cr then else "Usage : n FIB with n > 0" .cr then',
+                           '#fib' : '2 local i dup 1 >= if dup 1 = if 0 .cr drop else 1 0 reverse i do 2dup + rot drop loop .cr drop then else "Usage : n #FIB with n > 0" .cr then',
                            'square' : 'dup *',
                            'cube' : 'dup square *',
-                           'pow' : '2 var pow#i swap dup dup * rot pow#i do over * loop nip forget pow#i', 
+                           'pow' : '2 local i swap dup dup * rot i do over * loop nip', 
                            'abs' : self.abs_instr,
                            'sqrt' : self.sqrt_instr,
                            'log10' : self.log10_instr,
@@ -62,7 +62,7 @@ class math(base_module):
                            'id2d' : '[ [ 1 0 ] [ 0 1 ] ]',
                            'id3d' : '[ [ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ] ]',
                            'id4d' : '[ [ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ] [ 0 0 0 1 ] ]',
-                           'norm' : '0 var norm#res 0 var norm#i dup cells norm#i do dup norm#i @ swap cell@ 2 pow norm#res +! loop drop norm#res @ sqrt forget norm#res forget norm#i',
+                           'norm' : '0 local res 0 local i dup cells i do dup i @ swap cell@ 2 pow norm#res +! loop drop res @ sqrt',
                            'pi' : 3.141592653589793, 
                            'pi>deg' : 'pi >deg ceil', 
                            'pi/2' : 1.570796326794895, 
@@ -94,7 +94,7 @@ class math(base_module):
         interpreter.userdefinitions['3pi/2'] = deque(['@'])
         interpreter.userdefinitions['3pi/4'] = deque(['@'])
 
-        self.version = 'v0.2.9'
+        self.version = 'v0.3.1'
 
     '''
     Instruction cos : cosinus 
