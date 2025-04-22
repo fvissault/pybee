@@ -17,11 +17,11 @@ html @ .cr cr
 		dup "tag" cell@ local tag
 		dup "content" cell@ local content
 		"attrs" cell@ local attrs
+		0 local item
+		0 local i
 		tag @ "html" = if "<!DOCTYPE html>" .cr then
 		"<<!0!>" [ tag @ ] format .
 		">" .cr
-    	0 local item
-		0 local i
 		content @ cells i
 		do
 			content @ i @ cell@ item !
