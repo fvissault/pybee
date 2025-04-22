@@ -2576,6 +2576,7 @@ class core(base_module):
                 return core_errors.error_local_var_name_missing.print_error('local', self.interpreter.output)
             localname = self.pop_sequence()
             self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
+            return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('local', self.interpreter.output)
 
@@ -2583,10 +2584,69 @@ class core(base_module):
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
     '''
     def keys_instr(self):
-        pass
+        if len(self.work) > 0:
+            content = None
+            val = self.pop_work()
+            if isinstance(val , str):
+                for p in self.interpreter.packages.keys():
+                    if val in self.interpreter.packages[p].variables:
+                        content = self.interpreter.packages[p].dictionary[val]
+                        break
+                    elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
+                        content = self.interpreter.packages[p].dictionary[val]
+                        break
+                    elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
+                        break
+            if isinstance(val, dict) and content == None:
+                content = val
+            if content != None:
+                if not isinstance(content, dict):
+                    # error : ne peut s'appliquer qu'à des dictionnaires
+                    return core_errors.error_array_invalid.print_error('keys', self.interpreter.output)
+                self.work.appendleft(list(content.keys()))
+                return 'nobreak'
+            else:
+                # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
+                return core_errors.error_name_missing.print_error('keys', self.interpreter.output)
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('keys', self.interpreter.output)
+
 
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
     '''
     def values_instr(self):
-        pass
+        if len(self.work) > 0:
+            content = None
+            val = self.pop_work()
+            if isinstance(val , str):
+                for p in self.interpreter.packages.keys():
+                    if val in self.interpreter.packages[p].variables:
+                        content = self.interpreter.packages[p].dictionary[val]
+                        break
+                    elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
+                        content = self.interpreter.packages[p].dictionary[val]
+                        break
+                    elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
+                        break
+            if isinstance(val, dict) and content == None:
+                content = val
+            
+            # cas ou val est une liste, on retourne le tableau lui-même
+            if isinstance(val, list) and content == None:
+                self.work.appendleft(val)
+                return 'nobreak'
+            
+            if content != None:
+                if not isinstance(content, dict):
+                    # error : ne peut s'appliquer qu'à des dictionnaires
+                    return core_errors.error_array_invalid.print_error('values', self.interpreter.output)
+                self.work.appendleft(list(content.values()))
+                return 'nobreak'
+            else:
+                # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
+                return core_errors.error_name_missing.print_error('values', self.interpreter.output)
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('values', self.interpreter.output)
