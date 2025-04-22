@@ -1,12 +1,14 @@
 <?btl
-{ tag : "html" , content : [ ] } var html
-{ tag : "head" , content : [ ] } var head
-{ tag : "body" , content : [ "Contenu de la page" ] } var body
+{ tag : "html" , content : [ ] , attrs : [ { lang : "fr" } ] } var html
+{ tag : "head" , content : [ ] , attrs : [ ] } var head
+{ tag : "body" , content : [ "Contenu de la page" ] , attrs : [ ] } var body
 "content" head @ html cell+
 "content" body @ html cell+
-{ tag : "title" , content : [ "Ceci est une page test" ] } var title
+{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : [ ] } var title
 "content" title @ head cell+
 cls
+
+html @ .cr cr
 
 "generate" ?def invert if
 	defer generate
@@ -14,8 +16,10 @@ cls
 	:noname
 		dup "tag" cell@ local tag
 		dup "content" cell@ local content
+		"attrs" cell@ local attrs
 		tag @ "html" = if "<!DOCTYPE html>" .cr then
-		"<<!0!>>" [ tag @ ] format .cr
+		"<<!0!>" [ tag @ ] format .
+		">" .cr
     	0 local item
 		0 local i
 		content @ cells i
