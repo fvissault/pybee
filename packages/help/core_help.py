@@ -149,6 +149,8 @@ class core_help(help):
                           'kpress' : 'Allows the user to control the keyboard many time\nUsage : ( key ... ) KPRESS ( true | false ... )',
                           'readk' : 'Allows the user to control the keyboard one time\nUsage : ( key ... ) READK ( true | false ... )',
                           'space' : 'Constant representing the space character code\nUsage : ( ... ) SPACE ( 32 ... )',
-                          't{' : 'This word represents the beginning of a test sequence. This sequence must end with the word }t\nUsage : t{ ... -> ... }t',
-                          '}t' : 'This word represents the end of a test sequence. see also help of the word t{\nUsage : t{ ... -> ... }t',
-                          '->' : 'This word compares the stacks that are in a test sequence\nUsage : t{ ... -> ... }t'}
+                          't{' : 'This word represents the beginning of a test sequence. This sequence must end with the word }t\nUsage : t{ ... <=> ... }t',
+                          '}t' : 'This word represents the end of a test sequence. see also help of the word t{\nUsage : t{ ... <=> ... }t',
+                          '<=>' : 'This word compares the stacks that are in a test sequence\nUsage : t{ ... <=> ... }t',
+                          'keys' : 'With this word, you can give the keys of a hash table. The result is an array\nUsage : ( ht ... ) KEYS ( keys(ht) ... )',
+                          'values' : 'This word give you the values of a hash table. The result is an array\nUsage : ( ht ... ) VALUES ( values(ht) ... )'}
