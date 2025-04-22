@@ -172,7 +172,7 @@ class core(base_module):
                            'arcol' : 'swap cell@',
                            't{' : self.begintest_instr,
                            '}t' : self.endtest_instr,
-                           '->' : self.test_instr,
+                           '<=>' : self.test_instr,
                            'case' : self.case_instr,
                            'endcase' : self.endcase_instr,
                            'of' : self.of_instr,
