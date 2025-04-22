@@ -2348,7 +2348,7 @@ class core(base_module):
         return core_errors.error_array_invalid.print_error('}t', self.interpreter.output)
 
     def test_instr(self):
-        return core_errors.error_array_invalid.print_error('->', self.interpreter.output)
+        return core_errors.error_array_invalid.print_error('<=>', self.interpreter.output)
 
     def case_instr(self):
         temp_zone = deque()
