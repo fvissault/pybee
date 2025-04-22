@@ -185,6 +185,8 @@ class core(base_module):
                            ':noname' : self.noname_instr,
                            'here' : self.here_instr,
                            'local' : self.local_instr,
+                           'keys' : self.keys_instr,
+                           'values' : self.values_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
                            'testloop' : '1500 1000 var #i do #i @ emit loop forget #i cr',
                            'testfib' : '1 0 2.s reverse 2 var fib#i do 2dup + .s rot drop loop 2drop forget fib#i',
@@ -197,7 +199,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.5.9'
+        self.version = 'v1.6.3'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
@@ -2576,3 +2578,15 @@ class core(base_module):
             self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
         else:
             return core_errors.error_nothing_in_work_stack.print_error('local', self.interpreter.output)
+
+    '''
+    Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
+    '''
+    def keys_instr(self):
+        pass
+
+    '''
+    Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
+    '''
+    def values_instr(self):
+        pass
