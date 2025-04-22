@@ -28,7 +28,7 @@ class core(base_module):
                            'rotonall' : 'wp 1- roll', 
                            '.' : self.point_instr, 
                            '.s' : 'dup .', 
-                           '2.s' : '2dup . .', 
+                           '2.s' : '2dup . bl . bl', 
                            '.cr' : '. cr',
                            '.scr' : '.s cr',
                            '.2cr' : '.cr cr',
@@ -140,7 +140,7 @@ class core(base_module):
                            'list' : self.list_instr,
                            'char' : self.char_instr,
                            'chars' : self.chars_instr,
-                           'bl' : 'decimal 32',
+                           'bl' : 'decimal 32 emit',
                            'path' : 'userarea',
                            'recurse' : self.recurse_instr,
                            'format' : self.format_instr,
@@ -188,8 +188,8 @@ class core(base_module):
                            'keys' : self.keys_instr,
                            'values' : self.values_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
-                           'testloop' : '1500 1000 var #i do #i @ emit loop forget #i cr',
-                           'testfib' : '1 0 2.s reverse 2 var fib#i do 2dup + .s rot drop loop 2drop forget fib#i',
+                           'testloop' : '1000 local i 1500 i do i @ emit loop cr',
+                           'testfib' : '2 local i 1 0 2.s reverse i do 2dup + .s bl rot drop loop 2drop',
                            'test' : '123'}
         self.variables = ['path']
         self.interpreter.immediate.append('test')
