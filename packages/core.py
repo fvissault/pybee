@@ -247,7 +247,7 @@ class core(base_module):
         if len(self.work) > 0:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
-            print(temp, end=' ')
+            print(temp, end='')
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('.', self.interpreter.output)
