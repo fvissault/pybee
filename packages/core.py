@@ -1791,6 +1791,8 @@ class core(base_module):
         if len(result) > 0:
             result.reverse()
             self.work.appendleft(result)
+        else:
+            self.work.appendleft(result)
         return 'nobreak'
 
     '''
