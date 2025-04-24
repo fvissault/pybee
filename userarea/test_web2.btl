@@ -1,12 +1,14 @@
 <?btl
-{ tag : "html" , content : [ ] , attrs : [ { lang : "fr" } ] } var html
-{ tag : "head" , content : [ ] , attrs : [ ] } var head
-{ tag : "body" , content : [ "Contenu de la page" ] , attrs : [ ] } var body
+{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html
+{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head
+{ tag : "body" , content : [ "Contenu de la page" ] , attrs : { } , container : "y" } var body
 "content" head @ html cell+
 "content" body @ html cell+
-{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : [ ] } var title
+{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title
 "content" title @ head cell+
 cls
+
+html @ .cr cr
 
 "generate" ?def invert if
 	defer generate
@@ -14,10 +16,10 @@ cls
 	:noname
 		dup "tag" cell@ local tag
 		dup "content" cell@ local content
-		"attrs" cell@ local attrs
+		dup "attrs" cell@ local attrs
+		"container" cell@ local container
 		0 local item
 		0 local i
-		0 local j
 		0 local k
 		0 local v
 		tag @ "html" = if "<!DOCTYPE html>" .cr then
@@ -25,26 +27,35 @@ cls
 
 		attrs @ cells 0 > 
 		if
-			attrs @ 0 cell@ attrs !
+			( attrs @ 0 cell@ attrs ! )
 			attrs @ keys k !
 			attrs @ values v !
-			k @ cells j
+			k @ cells i
 			do
-				" <!0!>='<!1!>'" [ k @ j @ cell@ v @ j @ cell@ ] format .
+				" <!0!>='<!1!>'" [ k @ i @ cell@ v @ i @ cell@ ] format .
 			loop
 		then
-		">" .cr
-		content @ cells i
-		do
-			content @ i @ cell@ item !
-			item @ ?str
-			if
-				item @ .cr
-			else
-				item @ generate
-			then
-		loop
-		"</<!0!>>" [ tag @ ] format .cr
+		container @ "y" =
+		if
+			">" .cr
+			0 i !
+			content @ cells i
+			do
+				content @ i @ cell@ item !
+				item @ ?str
+				if
+					item @ .cr
+				else
+					item @ generate
+				then
+			loop
+		else
+			"/>" .cr
+		then
+		container @ "y" =
+		if
+			"</<!0!>>" [ tag @ ] format .cr
+		then
 	;
 	is generate
 then
