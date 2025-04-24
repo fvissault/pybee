@@ -8,8 +8,6 @@
 "content" title @ head cell+
 cls
 
-html @ .cr cr
-
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -19,8 +17,22 @@ html @ .cr cr
 		"attrs" cell@ local attrs
 		0 local item
 		0 local i
+		0 local j
+		0 local k
+		0 local v
 		tag @ "html" = if "<!DOCTYPE html>" .cr then
 		"<<!0!>" [ tag @ ] format .
+
+		attrs @ cells 0 > 
+		if
+			attrs @ 0 cell@ attrs !
+			attrs @ keys k !
+			attrs @ values v !
+			k @ cells j
+			do
+				" <!0!>='<!1!>'" [ k @ j @ cell@ v @ j @ cell@ ] format .
+			loop
+		then
 		">" .cr
 		content @ cells i
 		do
