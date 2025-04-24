@@ -7,7 +7,9 @@
 { tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title
 "content" title @ head cell+
 
-"content" { tag : "input" , content : [ ] , attrs : { id : "mydiv" , type : "text" , value : "test" } , container : "n" } body cell+
+{ tag : "form" , content : [ ] , attrs : { action : "http://localhost/pybee/browser.py?file=myaction" , method : "post" } , container : "y" } var form
+"content" form @ body cell+
+"content" { tag : "input" , content : [ ] , attrs : { id : "mydiv" , type : "text" , value : "test" } , container : "n" } form cell+
 
 cls
 
