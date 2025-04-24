@@ -6,6 +6,9 @@
 "content" body @ html cell+
 { tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title
 "content" title @ head cell+
+
+"content" { tag : "input" , content : [ ] , attrs : { id : "mydiv" , type : "text" , value : "test" } , container : "n" } body cell+
+
 cls
 
 html @ .cr cr
@@ -27,7 +30,6 @@ html @ .cr cr
 
 		attrs @ cells 0 > 
 		if
-			( attrs @ 0 cell@ attrs ! )
 			attrs @ keys k !
 			attrs @ values v !
 			k @ cells i
