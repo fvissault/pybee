@@ -1,17 +1,42 @@
 <?btl
-{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html
-{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head
-{ tag : "body" , content : [ "Contenu de la page" ] , attrs : { } , container : "y" } var body
-"content" head @ html cell+
-"content" body @ html cell+
-{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title
-"content" title @ head cell+
+"addcontent" ?def invert if
+	: addcontent 
+		@ "content" reverse cell+ 
+	;	
+then
+"webreset" ?def invert if
+	: webreset 
+		"html" ?var if forget html then
+		"head" ?var if forget head then
+		"title" ?var if forget title then
+		"body" ?var if forget body then
+		"form" ?var if forget form then 
+		{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
+		{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
+		{ tag : "body" , content : [ "Contenu de la page" ] , attrs : { } , container : "y" } var body 
+		html head addcontent
+		html body addcontent
+		{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title 
+		head title addcontent
+		{ tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form
+		cls
+	;
+then
+"addattr" ?def invert if
+	: addattr ( widgetvarname name value -- )
+		rot @ "attrs" cell@ cell+
+	;
+then
 
-{ tag : "form" , content : [ ] , attrs : { action : "http://localhost/pybee/browser.py?file=myaction" , method : "post" } , container : "y" } var form
-"content" form @ body cell+
+
+webreset
+body form addcontent
+form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 "content" { tag : "input" , content : [ ] , attrs : { id : "mydiv" , type : "text" , value : "test" } , container : "n" } form cell+
 
-cls
+( id = "mydiv" value = "test" type = "text" inputwidget )
+
+( widgetvarname name value addatrs )
 
 html @ .cr cr
 
@@ -69,4 +94,5 @@ forget html
 forget head
 forget title
 forget body
+forget form
 ?>
