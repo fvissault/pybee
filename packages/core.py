@@ -265,7 +265,7 @@ class core(base_module):
         if defname in self.dictionary.keys():
             return core_errors.error_def_name_already_exists.print_error('definition', self.interpreter.output)
         if defname == ':':
-            return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+            return core_errors.error_twopoints_invalid.print_error('1 definition', self.interpreter.output)
         for p in self.interpreter.packages.keys():
             if defname in self.interpreter.packages[p].dictionary.keys():
                 return core_errors.error_def_name_already_exists.print_error('definition', self.interpreter.output)
@@ -274,7 +274,7 @@ class core(base_module):
             return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
         instr = self.pop_sequence()
         if instr == ':':
-            return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+            return core_errors.error_twopoints_invalid.print_error('2 definition', self.interpreter.output)
         comment = ''
         if instr == '(':
             # traitement du commentaire
@@ -336,8 +336,9 @@ class core(base_module):
             if self.interpreter.isemptylastsequence():
                 return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
             instr = self.pop_sequence()
-            if instr == ':':
-                return core_errors.error_twopoints_invalid.print_error('definition', self.interpreter.output)
+            #if instr == ':':
+            #    print(self.interpreter.sequences[self.interpreter.lastseqnumber])
+            #    return core_errors.error_twopoints_invalid.print_error('3 definition', self.interpreter.output)
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
@@ -1626,10 +1627,11 @@ class core(base_module):
                     if definition != '':
                         definition = definition.replace('if ', rettab + 'if' + rettab + tab)
                         definition = definition.replace('else ', rettab + 'else' + rettab + tab)
-                        definition = definition.replace('then', rettab + 'then')
+                        definition = definition.replace('then', rettab + 'then' + rettab)
                         definition = definition.replace('do ', rettab + 'do' + rettab + tab)
                         definition = definition.replace('loop ', rettab + 'loop' + rettab)
                         definition = definition.replace('+loop ', rettab + '+loop' + rettab)
+                        definition = definition.replace('{', rettab + '{')
                         print(tab + definition)
                     if def_name in self.interpreter.compile.keys():
                         print(rettab + 'does> ' + list(self.interpreter.compile[def_name])[0])
@@ -1919,16 +1921,13 @@ class core(base_module):
     def addcell_instr(self):
         if len(self.work) > 1:
             tab = self.pop_work()
-            if isinstance(tab, str):
-                if tab in self.variables:
-                    content = self.dictionary[tab]
-                else:
-                    return core_errors.error_not_a_variable.print_error('cell+', self.interpreter.output)
+            if tab in self.variables:
+                content = self.dictionary[tab]
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
+            else:
+                return core_errors.error_not_a_variable.print_error('cell+', self.interpreter.output)
             value = self.pop_work()
-            if not isinstance(value, int) and not isinstance(value, float) and not isinstance(value, list) and not isinstance(value, dict):
-                return core_errors.error_bad_type.print_error('cell+', self.interpreter.output)
             index = None
             if isinstance(content, dict):
                 index = self.pop_work()
@@ -1936,7 +1935,7 @@ class core(base_module):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
-            elif index is not None and isinstance(content[index], list):
+            elif index is not None and isinstance(content, list):
                 content[index].append(value)
             elif index is not None and isinstance(content, dict):
                 content[index] = value
@@ -2169,7 +2168,7 @@ class core(base_module):
         if len(self.work) > 0:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
-                if name in self.interpreter.packages[p].variables.keys():
+                if name in self.interpreter.packages[p].variables:
                     self.work.appendleft(1)
                     return 'nobreak'
             self.work.appendleft(0)
