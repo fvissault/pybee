@@ -1935,7 +1935,7 @@ class core(base_module):
                     return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
-            elif index is not None and isinstance(content, list):
+            elif index is not None and index in content and isinstance(content[index], list):
                 content[index].append(value)
             elif index is not None and isinstance(content, dict):
                 content[index] = value
