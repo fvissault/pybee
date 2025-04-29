@@ -2193,7 +2193,7 @@ class core(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('?local', self.interpreter.output)
 
     '''
-    Instruction ?str : indique si le nombre de la pile de travail est une chaine de caractères
+    Instruction ?str : indique si le haut de la pile de travail est une chaine de caractères
     '''
     def isstr_instr(self):
         if len(self.work) > 0:
@@ -2208,7 +2208,7 @@ class core(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('?str', self.interpreter.output)
 
     '''
-    Instruction ?char : indique si le nombre de la pile de travail est un caractère
+    Instruction ?char : indique si le haut de la pile de travail est un caractère
     '''
     def ischar_instr(self):
         if len(self.work) > 0:
