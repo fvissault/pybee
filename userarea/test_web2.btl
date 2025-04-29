@@ -1,6 +1,6 @@
 <?btl
 "addcontent" ?def invert if
-	: addcontent 
+	: addcontent ( container widgettoadd ADDCONTENT : add widget in a container as a content )
 		@ "content" reverse cell+ 
 	;	
 then
