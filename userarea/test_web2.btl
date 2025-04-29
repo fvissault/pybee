@@ -1,7 +1,11 @@
 <?btl
 "addcontent" ?def invert if
 	: addcontent ( container widgettoadd ADDCONTENT : add widget in a container as a content )
-		@ "content" reverse cell+ 
+		dup ?var dup ?local or
+		if
+			@
+		then
+		"content" reverse cell+ 
 	;	
 then
 "webreset" ?def invert if
@@ -13,10 +17,10 @@ then
 		"form" ?var if forget form then 
 		{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
 		{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
-		{ tag : "body" , content : [ "Contenu de la page" ] , attrs : { } , container : "y" } var body 
+		{ tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
 		html head addcontent
 		html body addcontent
-		{ tag : "title" , content : [ "Ceci est une page test" ] , attrs : { } , container : "y" } var title 
+		{ tag : "title" , content : [ ] , attrs : { } , container : "y" } var title 
 		head title addcontent
 		{ tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form
 		cls
@@ -39,11 +43,10 @@ then
 
 webreset
 body form addcontent
+title "Ceci est une page test" addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
 "content" "mydiv" "test" "text" inputwidget form cell+
-
-( id = "mydiv" value = "test" type = "text" inputwidget )
 
 html @ .cr cr
 
