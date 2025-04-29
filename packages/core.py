@@ -1662,7 +1662,7 @@ class core(base_module):
         else:
             var_name = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
             self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
-        if var_name in self.dictionary.keys():
+        if var_name in list(self.dictionary.keys()):
             return core_errors.error_name_already_exists.print_error('create', self.interpreter.output)
         self.dictionary[var_name] = None
         if self.interpreter.from_instr in self.interpreter.compile.keys():
@@ -1720,9 +1720,9 @@ class core(base_module):
     '''
     def bbrace_instr(self):
         result = self.search_braces()
-        if len(result) > 0:
+        #if len(result) > 0:
             #result.reverse()
-            self.work.appendleft(result)
+        self.work.appendleft(result)
         return 'nobreak'
 
     def ebrace_instr(self):
@@ -1923,6 +1923,8 @@ class core(base_module):
             tab = self.pop_work()
             if tab in self.variables:
                 content = self.dictionary[tab]
+            elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             else:
