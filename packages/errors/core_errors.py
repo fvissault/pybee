@@ -8,7 +8,7 @@ class core_errors:
     error_definition_dont_exists =              error('warning', 'definition don\'t exists')
     error_native_definition =                   error('warning', 'nothing to see, it is a native definition')
     error_not_a_variable_or_constant =          error('fatal', 'variable or constant expected')
-    error_name_already_exists =                 error('error', 'this constant or variable already exists')
+    error_name_already_exists =                 error('fatal', 'this constant or variable already exists')
     error_name_missing =                        error('fatal', 'name of your variable or constant is missing')
     error_local_var_name_missing =              error('fatal', 'name of your local variable is missing')
     error_local_var_only_in_def =               error('fatal', 'local variables are allowed in definition only')
