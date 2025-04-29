@@ -23,12 +23,17 @@ then
 	;
 then
 "addattr" ?def invert if
-	: addattr ( widgetvarname name value ADDATTR : add an attribut to your widget )
+	: addattr ( widgetvarname name value ADDATTR : add an attribute to your widget )
 		rot @ "attrs" cell@ cell+
 	;
 then
 "inputwidget" ?def invert if
-	: inputwidget
+	: inputwidget ( id value type INPUTWIDGET : create a new input widget )
+		{ } local attrs
+		"type" swap attrs cell+ drop
+		"value" swap attrs cell+ drop
+		"id" swap attrs cell+ drop
+		{ tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
 
@@ -36,7 +41,7 @@ webreset
 body form addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
-"content" { tag : "input" , content : [ ] , attrs : { id : "mydiv" , type : "text" , value : "test" } , container : "n" } form cell+
+"content" "mydiv" "test" "text" inputwidget form cell+
 
 ( id = "mydiv" value = "test" type = "text" inputwidget )
 
