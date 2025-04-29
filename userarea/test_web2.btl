@@ -99,10 +99,4 @@ html @ .cr cr
 	is generate
 then
 html @ generate
-
-forget html
-forget head
-forget title
-forget body
-forget form
 ?>
