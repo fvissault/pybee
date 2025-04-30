@@ -63,6 +63,20 @@ then
 		{ tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
+"headscriptfile" ?def invert if
+	: headscriptfile ( filename HEADSCRIPTFILE : add a js file in head section )
+		{ } local attrs
+		"src" swap attrs cell+ drop
+		{ tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"imgwidget" ?def invert if
+	: imgwidget ( src IMGWIDGET : add an image )
+		{ } local attrs
+		"src" swap attrs cell+ drop
+		{ tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -118,6 +132,7 @@ title "Ceci est une page test" addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
 "content" "css/file.css" headlink head cell+
+"content" "js/file.js" headscriptfile head cell+
 "content" "Ceci est mon label" "mydiv" labelwidget form cell+
 "content" "mydiv" "test" "text" inputwidget form cell+
 
