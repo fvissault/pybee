@@ -117,7 +117,7 @@ body form addcontent
 title "Ceci est une page test" addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
-"content" "C:/wamp64/www/pybee/userarea/css/file.css" headlink head cell+
+"content" "css/file.css" headlink head cell+
 "content" "Ceci est mon label" "mydiv" labelwidget form cell+
 "content" "mydiv" "test" "text" inputwidget form cell+
 
