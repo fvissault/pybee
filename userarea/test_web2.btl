@@ -40,16 +40,29 @@ then
 		{ tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
-
-webreset
-body form addcontent
-title "Ceci est une page test" addcontent
-form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
-html "lang" "en" addattr
-"content" "mydiv" "test" "text" inputwidget form cell+
-
-html @ .cr cr
-
+"divcont" ?def invert if
+	: divcont ( id DIVCONT : create a new division container )
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"labelwidget" ?def invert if
+	: labelwidget ( label for LABELWIDGET : create a new label widget )
+		{ } local attrs
+		"for" swap attrs cell+ drop
+		local content
+		{ tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"headlink" ?def invert if
+	: headlink ( filename HEADLINK : add a css file in head section )
+		{ } local attrs
+		"href" swap attrs cell+ drop
+		"rel" "stylesheet" attrs cell+ drop
+		{ tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -98,5 +111,17 @@ html @ .cr cr
 	;
 	is generate
 then
-html @ generate
+
+webreset
+body form addcontent
+title "Ceci est une page test" addcontent
+form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
+html "lang" "en" addattr
+"content" "C:/wamp64/www/pybee/userarea/css/file.css" headlink head cell+
+"content" "Ceci est mon label" "mydiv" labelwidget form cell+
+"content" "mydiv" "test" "text" inputwidget form cell+
+
+html @ .cr cr
+
+html @ generate cls
 ?>
