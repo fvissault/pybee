@@ -77,6 +77,13 @@ then
 		{ tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
+"textareacont" ?def invert if
+	: textareacont ( id TESTAREACONT : add a textarea )
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }
+	;
+then
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -142,6 +149,8 @@ form div1 addcontent
 "img/bb.jpeg" imgwidget var myimg
 form myimg addcontent
 myimg "width" "300" addattr
+
+form "ta" textareacont addcontent
 
 html @ .cr cr
 
