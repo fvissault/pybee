@@ -135,7 +135,7 @@ head "css/file.css" headlink addcontent
 head "js/file.js" headscriptfile addcontent
 
 "division" divcont var div1
-div1 "Ceci est mon label" "mydiv" labelwidget addcontent
+div1 "Ceci est mon label : " "mydiv" labelwidget addcontent
 div1 "mydiv" "test" "text" inputwidget addcontent
 form div1 addcontent
 
