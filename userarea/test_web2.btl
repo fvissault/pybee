@@ -131,16 +131,17 @@ body form addcontent
 title "Ceci est une page test" addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
-"content" "css/file.css" headlink head cell+ drop
-"content" "js/file.js" headscriptfile head cell+ drop
+head "css/file.css" headlink addcontent
+head "js/file.js" headscriptfile addcontent
 
 "division" divcont var div1
-div1 @ .cr
-"content" "Ceci est mon label" "mydiv" labelwidget div1 cell+ drop
-div1 @ .cr
-"content" "mydiv" "test" "text" inputwidget div1 cell+ drop
-div1 @ .cr
+div1 "Ceci est mon label" "mydiv" labelwidget addcontent
+div1 "mydiv" "test" "text" inputwidget addcontent
 form div1 addcontent
+
+"img/bb.jpeg" imgwidget var myimg
+form myimg addcontent
+myimg "width" "300" addattr
 
 html @ .cr cr
 
