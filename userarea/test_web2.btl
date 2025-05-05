@@ -84,6 +84,11 @@ then
 		{ tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
+"br" ?def invert if
+	: br ( BR : add a br )
+		{ tag : "br" , content : [ ] , attrs : [ ] , container : "n" }
+	;
+then
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -150,6 +155,7 @@ form div1 addcontent
 form myimg addcontent
 myimg "width" "300" addattr
 
+form br addcontent
 form "ta" textareacont addcontent
 
 html @ .cr cr
