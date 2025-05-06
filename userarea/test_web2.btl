@@ -175,7 +175,6 @@ form br addcontent
 form "ta" textarea addcontent
 
 "cars" select var cars
-cars "style" "width:300px;" addattr
 cars "Volvo" "volvo" option addcontent
 cars "Saab" "saab" option addcontent
 cars "Mercedes" "mercedes" option addcontent
