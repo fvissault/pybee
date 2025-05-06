@@ -89,6 +89,22 @@ then
 		{ tag : "br" , content : [ ] , attrs : [ ] , container : "n" }
 	;
 then
+"select" ?def invert if
+	: select ( id SELECT : add a select )
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "select" , content : [ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"option" ?def invert if
+	: option ( value content OPTION : add an option to a select )
+		{ } local attrs
+		"value" swap attrs cell+ drop
+		local cont
+		{ tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
+	;
+then
+
 "generate" ?def invert if
 	defer generate
 	( usage : html @ -- )
@@ -158,10 +174,20 @@ myimg "width" "300" addattr
 form br addcontent
 form "ta" textarea addcontent
 
+"cars" select var cars
+cars "style" "width:300px;" addattr
+cars "Volvo" "volvo" option addcontent
+cars "Saab" "saab" option addcontent
+cars "Mercedes" "mercedes" option addcontent
+cars "Audi" "audi" option addcontent
+form br addcontent
+form cars addcontent
+
 html @ .cr cr
 
 html @ generate cls
 
 forget div1
 forget myimg
+forget cars
 ?>
