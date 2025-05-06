@@ -104,6 +104,23 @@ then
 		{ tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
 	;
 then
+"a" ?def invert if
+	: a ( href content A : add an anchor )
+		{ } local attrs
+		"href" swap attrs cell+ drop
+		local cont
+		{ tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"button" ?def invert if
+	: button ( type onclick content BUTTON : add a button )
+		{ } local attrs
+		"onclick" rot attrs cell+ drop
+		"type" rot attrs cell+ drop
+		local cont
+		{ tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
+	;
+then
 
 "generate" ?def invert if
 	defer generate
@@ -181,6 +198,10 @@ cars "Mercedes" "mercedes" option addcontent
 cars "Audi" "audi" option addcontent
 form br addcontent
 form cars addcontent
+
+form "button" "alert("Hello world!")" "Valider" button addcontent
+
+body "yahoo" "http://www.yahoo.fr" a addcontent
 
 html @ .cr cr
 
