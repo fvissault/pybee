@@ -31,8 +31,8 @@ then
 		rot @ "attrs" cell@ cell+
 	;
 then
-"inputwidget" ?def invert if
-	: inputwidget ( id value type INPUTWIDGET : create a new input widget )
+"field" ?def invert if
+	: field ( id value type FIELD : create a new input widget )
 		{ } local attrs
 		"type" swap attrs cell+ drop
 		"value" swap attrs cell+ drop
@@ -40,15 +40,15 @@ then
 		{ tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
-"divcont" ?def invert if
-	: divcont ( id DIVCONT : create a new division container )
+"div" ?def invert if
+	: div ( id DIV : create a new division container )
 		{ } local attrs
 		"id" swap attrs cell+ drop
 		{ tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
-"labelwidget" ?def invert if
-	: labelwidget ( label for LABELWIDGET : create a new label widget )
+"label" ?def invert if
+	: label ( label for LABEL : create a new label widget )
 		{ } local attrs
 		"for" swap attrs cell+ drop
 		local content
@@ -70,15 +70,15 @@ then
 		{ tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
-"imgwidget" ?def invert if
-	: imgwidget ( src IMGWIDGET : add an image )
+"img" ?def invert if
+	: img ( src IMG : add an image )
 		{ } local attrs
 		"src" swap attrs cell+ drop
 		{ tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }
 	;
 then
-"textareacont" ?def invert if
-	: textareacont ( id TESTAREACONT : add a textarea )
+"textarea" ?def invert if
+	: textarea ( id TESTAREA : add a textarea )
 		{ } local attrs
 		"id" swap attrs cell+ drop
 		{ tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }
@@ -146,19 +146,22 @@ html "lang" "en" addattr
 head "css/file.css" headlink addcontent
 head "js/file.js" headscriptfile addcontent
 
-"division" divcont var div1
-div1 "Ceci est mon label : " "mydiv" labelwidget addcontent
-div1 "mydiv" "test" "text" inputwidget addcontent
+"division" div var div1
+div1 "Ceci est mon label : " "mydiv" label addcontent
+div1 "mydiv" "test" "text" field addcontent
 form div1 addcontent
 
-"img/bb.jpeg" imgwidget var myimg
+"img/bb.jpeg" img var myimg
 form myimg addcontent
 myimg "width" "300" addattr
 
 form br addcontent
-form "ta" textareacont addcontent
+form "ta" textarea addcontent
 
 html @ .cr cr
 
 html @ generate cls
+
+forget div1
+forget myimg
 ?>
