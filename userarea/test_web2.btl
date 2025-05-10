@@ -97,8 +97,13 @@ then
 	;
 then
 "option" ?def invert if
-	: option ( value content OPTION : add an option to a select )
+	: option (  selected? value content OPTION : add an option to a select )
 		{ } local attrs
+		dup "y" =
+		if
+			"selected" swap attrs cell+
+		then
+		drop
 		"value" swap attrs cell+ drop
 		local cont
 		{ tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
@@ -110,6 +115,23 @@ then
 		"href" swap attrs cell+ drop
 		local cont
 		{ tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
+	;
+then
+"completeselect" ?def invert if
+	: completeselect ( optionsarray selectname COMPLETESELECT : add an select with options )
+		select local tempselect
+		0 local i
+		0 local item
+		0 local opt
+		( faire une boucle sur le tableau d'options )
+		dup cells i
+		do
+			dup i @ cell@ item !
+			item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt !
+			"content" opt @ tempselect cell+ drop
+		loop
+		drop
+		tempselect @
 	;
 then
 "button" ?def invert if
@@ -191,13 +213,16 @@ myimg "width" "300" addattr
 form br addcontent
 form "ta" textarea addcontent
 
-"cars" select var cars
-cars "Volvo" "volvo" option addcontent
-cars "Saab" "saab" option addcontent
-cars "Mercedes" "mercedes" option addcontent
-cars "Audi" "audi" option addcontent
+[ [ "Volvo" "volvo" "n" ] [ "Saab" "saab" "y" ] [ "Mercedes" "mercedes" "n" ] [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop
 form br addcontent
 form cars addcontent
+
+( Voici une autre façon de créer un select
+"cars" select var cars
+cars "n" "Volvo" "volvo" option addcontent
+cars "y" "Saab" "saab" option addcontent
+cars "n" "Mercedes" "mercedes" option addcontent
+cars "n" "Audi" "audi" option addcontent )
 
 form br addcontent
 form "button" "alert("Hello world!")" "Valider" button addcontent
