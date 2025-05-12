@@ -164,6 +164,19 @@ then
 		{ tag : "style" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
+"paragraph" ?def invert if
+	: paragraph ( content PARAGRAPH : add a paragraph )
+		local cont
+		{ tag : "p" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"maintitle" ?def invert if
+	: maintitle ( size content MAINTITLE : add a title h )
+		local cont
+		local size
+		{ tag : "h<!0!>" [ size @ ] format , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
 
 "generate" ?def invert if
 	defer generate
@@ -253,6 +266,8 @@ form br addcontent
 form "button" "alert("Hello world!")" "Valider" button addcontent
 
 body "yahoo" "http://www.yahoo.fr" a addcontent
+
+body 1 "Test de titre 1" maintitle addcontent
 
 html @ .cr cr
 
