@@ -177,6 +177,40 @@ then
 		{ tag : "h<!0!>" [ size @ ] format , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
+"span" ?def invert if
+	: span ( content SPAN : add a text block )
+		local cont
+		{ tag : "span" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"bold" ?def invert if
+	: bold ( content BOLD : add a bold text )
+		local cont
+		{ tag : "b" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"table" ?def invert if
+	: table ( TABLE : add a table )
+		{ tag : "table" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"tablerow" ?def invert if
+	: tablerow ( TABLEROW : add a row in table )
+		{ tag : "tr" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"tablecell" ?def invert if
+	: tablecell ( content TABLECELL : add a a cell in a row of table )
+		local cont
+		{ tag : "td" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"tablehead" ?def invert if
+	: tablehead ( content TABLEHEAD : add a a cell in a head row of table )
+		local cont
+		{ tag : "th" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
 
 "generate" ?def invert if
 	defer generate
