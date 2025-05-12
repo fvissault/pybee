@@ -143,6 +143,27 @@ then
 		{ tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
 	;
 then
+"header" ?def invert if
+	: header ( HEADER : add an header section )
+		{ tag : "header" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"footer" ?def invert if
+	: footer ( FOOTER : add an footer section )
+		{ tag : "footer" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"article" ?def invert if
+	: article ( ARTICLE : add an article section. An article section can contain others articles )
+		{ tag : "article" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"style" ?def invert if
+	: style ( content STYLE : add a style section )
+		local cont
+		{ tag : "style" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
 
 "generate" ?def invert if
 	defer generate
@@ -200,6 +221,7 @@ form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" add
 html "lang" "en" addattr
 head "css/file.css" headlink addcontent
 head "js/file.js" headscriptfile addcontent
+head "textarea { background-color: DarkSalmon; color: white; }" style addcontent
 
 "division" div var div1
 div1 "Ceci est mon label : " "mydiv" label addcontent
@@ -213,7 +235,10 @@ myimg "width" "300" addattr
 form br addcontent
 form "ta" textarea addcontent
 
-[ [ "Volvo" "volvo" "n" ] [ "Saab" "saab" "y" ] [ "Mercedes" "mercedes" "n" ] [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop
+[ [ "Volvo" "volvo" "n" ] 
+  [ "Saab" "saab" "y" ] 
+  [ "Mercedes" "mercedes" "n" ] 
+  [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop
 form br addcontent
 form cars addcontent
 
