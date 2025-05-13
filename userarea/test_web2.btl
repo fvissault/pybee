@@ -183,10 +183,22 @@ then
 		{ tag : "span" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
-"bold" ?def invert if
-	: bold ( content BOLD : add a bold text )
+"strong" ?def invert if
+	: strong ( content STRONG : add a bold text )
 		local cont
-		{ tag : "b" , content : [ cont @ ] , attrs : { } , container : "y" }
+		{ tag : "strong" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"small" ?def invert if
+	: small ( content SMALL : add a small text )
+		local cont
+		{ tag : "small" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"underline" ?def invert if
+	: underline ( content UNDERLINE : add a underlined text )
+		local cont
+		{ tag : "u" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
 "table" ?def invert if
@@ -200,15 +212,31 @@ then
 	;
 then
 "tablecell" ?def invert if
-	: tablecell ( content TABLECELL : add a a cell in a row of table )
+	: tablecell ( content TABLECELL : add a cell in a row of table )
 		local cont
 		{ tag : "td" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
 "tablehead" ?def invert if
-	: tablehead ( content TABLEHEAD : add a a cell in a head row of table )
+	: tablehead ( content TABLEHEAD : add a cell in a head row of table )
 		local cont
 		{ tag : "th" , content : [ cont @ ] , attrs : { } , container : "y" }
+	;
+then
+"unorderlist" ?def invert if
+	: unorderlist ( UNORDERLIST : add an unordered list )
+		{ tag : "ul" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"orderlist" ?def invert if
+	: orderlist ( ORDERLIST : add an ordered list )
+		{ tag : "ol" , content : [ ] , attrs : { } , container : "y" }
+	;
+then
+"listitem" ?def invert if
+	: listitem ( content LISTITEM : add a list item )
+		local cont
+		{ tag : "li" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
 
