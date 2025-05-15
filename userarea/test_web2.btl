@@ -239,6 +239,37 @@ then
 		{ tag : "li" , content : [ cont @ ] , attrs : { } , container : "y" }
 	;
 then
+"urlbase" ?def invert if
+	: urlbase ( href target URLBASE : add an url bas for all links on a page )
+		{ } local attrs
+		"target" rot attrs cell+ drop
+		"href" rot attrs cell+ drop
+		{ tag : "base" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
+"charset" ?def invert if
+	: charset ( character_set CHARSET : specifies the character encoding for the HTML document )
+		{ } local attrs
+		"charset" rot attrs cell+ drop
+		{ tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
+"httpequiv" ?def invert if
+	: httpequiv ( content http-equiv HTTPEQUIV : provides an HTTP header for the information/value of the content attribute )
+		{ } local attrs
+		"http-equiv" rot attrs cell+ drop
+		"content" rot attrs cell+ drop
+		{ tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
+"meta" ?def invert if
+	: meta ( content name META : specifies a named metadata with content )
+		{ } local attrs
+		"name" rot attrs cell+ drop
+		"content" rot attrs cell+ drop
+		{ tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }
+	;
+then
 
 "generate" ?def invert if
 	defer generate
@@ -316,13 +347,6 @@ form "ta" textarea addcontent
   [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop
 form br addcontent
 form cars addcontent
-
-( Voici une autre façon de créer un select
-"cars" select var cars
-cars "n" "Volvo" "volvo" option addcontent
-cars "y" "Saab" "saab" option addcontent
-cars "n" "Mercedes" "mercedes" option addcontent
-cars "n" "Audi" "audi" option addcontent )
 
 form br addcontent
 form "button" "alert("Hello world!")" "Valider" button addcontent
