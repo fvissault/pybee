@@ -317,13 +317,6 @@ form "ta" textarea addcontent
 form br addcontent
 form cars addcontent
 
-( Voici une autre façon de créer un select
-"cars" select var cars
-cars "n" "Volvo" "volvo" option addcontent
-cars "y" "Saab" "saab" option addcontent
-cars "n" "Mercedes" "mercedes" option addcontent
-cars "n" "Audi" "audi" option addcontent )
-
 form br addcontent
 form "button" "alert("Hello world!")" "Valider" button addcontent
 
