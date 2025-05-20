@@ -1,4 +1,4 @@
-#!C:\Users\a648326\AppData\Local\Programs\Python\Python312\python.exe
+#!C:\Users\A648326\AppData\Local\Programs\Python\Python312\python.exe
 # On windows -> #! python3
 # On OS X -> #! usr/bin/env python3
 # On Linux -> #! usr/bin/python3
