@@ -81,6 +81,28 @@
             Ce qui est moins intuitif et donc moins clair. Dans la deuxième écriture, l'interpréteur renvoie un erreur qui indique que 
             'my_file' n'est pas un mot connu.
         </p>
+
+        <h3>Notion de pré-chargement</h3>
+        <p>
+            Beetle vous offre la possibilité d'exécuter des instructions au lancement de l'interpréteur. Ceci peut être très utile 
+            pour définir les packages que vous souhaitez utiliser pour votre programme sans indiquer à chaque lancement de l'interpreteur
+            les packages nécessaires avec une ou plusieurs instructions d'import.<br>
+            Pour faire cela, dans la zone 'userarea', vous avez un fichier nommé 'preload.btl' qui contient les instructions que vous
+            voulez exécuter avant de lancer l'interpreteur.
+        </p>
+        <p>Le comportement de l'interpréteur suivant l'existence ou non du fichier 'preload.btl' :</p>
+        <ul>
+            <li>Si ce fichier n'existe pas (suppression malencontreuse ou renommage), l'interpréteur va tenter d'en créer un vide</li>
+            <li>Si ce fichier existe mais est vide, l'interpreteur ne fait rien.</li>
+        </ul> 
+        <p>Exemple de contenu du fichier 'preload.btl' :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                import math<br>
+                ?>
+            </code>
+        </div>
         <a href="filesystem.html">Précédent : IX. Système de fichiers</a> | <a href="index.html">Index</a> | <a href="sequences.html">Suivant : X.2. Interpréteur : notions de séquences</a>
 
     </body>
