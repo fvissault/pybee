@@ -45,6 +45,10 @@ class interpreter:
             self.instructions.clear()
             f.close()
             self.interpret()
+        else:
+            f = open(filename, "w")
+            lignes = ["<?btl\n", "?>"]
+            f.writelines(lignes)
 
     def set_sequence(self, sequence:deque):
         self.sequences.append(sequence.copy())
