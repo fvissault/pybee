@@ -1,6 +1,7 @@
 from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.core import core
+import os
 
 class interpreter:
     def __init__(self, output = 'console'):
@@ -23,6 +24,27 @@ class interpreter:
         self.version = 'v2.3.8'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
+        self.preload()
+
+    def preload(self):
+        filename = '{0}/preload.btl'.format(self.core_instr.dictionary['path'])
+        if os.path.exists(filename):
+            f = open(filename)
+            content = f.read().encode('mbcs').decode()
+            content = content.replace('"', '\\"')
+            content = '"' + content + '" .'
+            content = content.replace('\\"', '"')
+            content = content.replace('<?btl', '" . ')
+            content = content.replace('?>', ' "')
+            content = content.replace('\n', ' ')
+            content = content.replace('"" .', '')
+            content = ' '.join(content.split())
+            split = content.split(' ')
+            self.string_treatment_for_load_file(split)
+            self.set_sequence(self.instructions)
+            self.instructions.clear()
+            f.close()
+            self.interpret()
 
     def set_sequence(self, sequence:deque):
         self.sequences.append(sequence.copy())
