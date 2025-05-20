@@ -10,10 +10,25 @@ class web(base_module):
                            'webreset' : '''"html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then "form" ?var if forget form then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent { tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form cls''',
                            'addcontent' : '''dup ?var dup ?local or if @ then "content" reverse cell+''',
                            'addattr' : '''rot @ "attrs" cell@ cell+''',
-                           'field' : '''{ } local attrs "type" swap attrs cell+ drop "value" swap attrs cell+ drop "id" swap attrs cell+ drop { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'fieldarea' : '''{ } local attrs "type" swap attrs cell+ drop "value" swap attrs cell+ drop "id" swap attrs cell+ drop { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'div' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'label' : '''{ } local attrs "for" swap attrs cell+ drop local content { tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }''',
-                           'headlink' : '''{ } local attrs "href" swap attrs cell+ drop "rel" "stylesheet" attrs cell+ drop { tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }'''}
+                           'headlink' : '''{ } local attrs "href" swap attrs cell+ drop "rel" "stylesheet" attrs cell+ drop { tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'headscriptfile' : '''{ } local attrs "src" swap attrs cell+ drop { tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'img' : '''{ } local attrs "src" swap attrs cell+ drop { tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'textarea' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'br' : '''{ tag : "br" , content : [ ] , attrs : [ ] , container : "n" }''',
+                           'select' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "select" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'option' : '''{ } local attrs dup "y" = if "selected" swap attrs cell+ then drop "value" swap attrs cell+ drop local cont { tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
+                           'a' : '''{ } local attrs "href" swap attrs cell+ drop local cont { tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
+                           'completeselect' : '''select local tempselect 0 local i 0 local item 0 local opt dup cells i do dup i @ cell@ item ! item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! "content" opt @ tempselect cell+ drop loop drop tempselect @''',
+                           'button' : '''{ } local attrs "onclick" rot attrs cell+ drop "type" rot attrs cell+ drop local cont { tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
+                           'header' : '''{ tag : "header" , content : [ ] , attrs : { } , container : "y" }''',
+                           'footer' : '''{ tag : "footer" , content : [ ] , attrs : { } , container : "y" }''',
+                           'article' : '''{ tag : "article" , content : [ ] , attrs : { } , container : "y" }''',
+                           'style' : '''local cont { tag : "style" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'paragraph' : '''local cont { tag : "p" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'maintitle' : '''local cont local size { tag : "h<!0!>" [ size @ ] format , content : [ cont @ ] , attrs : { } , container : "y" }'''}
         self.help = web_help(self.interpreter.output)
         self.version = 'v1.0.0'
 
