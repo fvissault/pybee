@@ -28,7 +28,20 @@ class web(base_module):
                            'article' : '''{ tag : "article" , content : [ ] , attrs : { } , container : "y" }''',
                            'style' : '''local cont { tag : "style" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'paragraph' : '''local cont { tag : "p" , content : [ cont @ ] , attrs : { } , container : "y" }''',
-                           'maintitle' : '''local cont local size { tag : "h<!0!>" [ size @ ] format , content : [ cont @ ] , attrs : { } , container : "y" }'''}
+                           'maintitle' : '''local cont local size { tag : "h<!0!>" [ size @ ] format , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'span' : '''local cont { tag : "span" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'strong' : '''local cont { tag : "strong" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'small' : '''local cont { tag : "small" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'underline' : '''local cont { tag : "u" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'table' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "table" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'tablerow' : '''{ tag : "tr" , content : [ ] , attrs : { } , container : "y" }''',
+                           'tablecell' : '''local cont { tag : "td" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'tablehead' : '''local cont { tag : "th" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'unorderlist' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "ul" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'orderlist' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "ol" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'listitem' : '''local cont { tag : "li" , content : [ cont @ ] , attrs : { } , container : "y" }''',
+                           'urlbase' : '''{ } local attrs "target" rot attrs cell+ drop "href" rot attrs cell+ drop { tag : "base" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'charset' : '''{ } local attrs "charset" rot attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }'''}
         self.help = web_help(self.interpreter.output)
         self.version = 'v1.0.0'
 
