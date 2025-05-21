@@ -203,7 +203,9 @@ then
 then
 "table" ?def invert if
 	: table ( TABLE : add a table )
-		{ tag : "table" , content : [ ] , attrs : { } , container : "y" }
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "table" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
 "tablerow" ?def invert if
@@ -225,12 +227,16 @@ then
 then
 "unorderlist" ?def invert if
 	: unorderlist ( UNORDERLIST : add an unordered list )
-		{ tag : "ul" , content : [ ] , attrs : { } , container : "y" }
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "ul" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
 "orderlist" ?def invert if
 	: orderlist ( ORDERLIST : add an ordered list )
-		{ tag : "ol" , content : [ ] , attrs : { } , container : "y" }
+		{ } local attrs
+		"id" swap attrs cell+ drop
+		{ tag : "ol" , content : [ ] , attrs : attrs @ , container : "y" }
 	;
 then
 "listitem" ?def invert if
