@@ -1,0 +1,38 @@
+<?btl
+
+"layout_2z_h" ?def invert if
+  ( syntaxe : layout_name LAYOUT_2Z_H )
+  ( les zones s'appellent z1_layout_name et z2_layout_name )
+  : layout_2z_h 
+    "html" ?var if forget html then 
+    "head" ?var if forget head then 
+    "title" ?var if forget title then 
+    "body" ?var if forget body then 
+    { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
+    { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
+    { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
+    "z1" div var z1
+    "z2" div var z2
+    body z1 addcontent
+    body z2 addcontent
+    "" style var laystyle
+    head laystyle addcontent
+
+    html head addcontent 
+    html body addcontent 
+    { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title 
+    head title addcontent 
+    cls 
+  ;
+then
+
+layout_2z_h
+title "Ceci est une page test" addcontent
+html @ .cr cr
+
+html @ generate cls
+
+forget z1
+forget z2
+forget laystyle
+?>
