@@ -199,8 +199,11 @@ class interpreter:
             if instr.lower() not in self.core_instr.variables: # and instr.lower() not in self.core_instr.constants:
                 if isinstance(package.dictionary[instr.lower()], str):
                     # instructions dans la définition
-                    split = package.dictionary[instr.lower()].split(' ')
-                    if package.dictionary[instr.lower()] != '':
+                    instr_body = package.dictionary[instr.lower()]
+                    instr_body = instr_body.replace('\t', ' ')
+                    instr_body = instr_body.replace('\n', ' ')
+                    split = instr_body.split(' ')
+                    if instr_body != '':
                         self.string_treatment_for_load_file(split)
                     self.from_instr = instr
                     self.set_sequence(self.instructions)
