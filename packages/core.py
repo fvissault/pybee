@@ -1523,12 +1523,14 @@ class core(base_module):
     def variables_instr(self):
         mystr = ''
         for var in self.variables:
+            if mystr != '':
+                mystr += '\n'
             if self.interpreter.search_in_core(var):
-                mystr += var + ' = ' + str(self.dictionary[var]) + ' ; '
+                mystr += var + ' = ' + str(self.dictionary[var]) + ' ;'
             else:
                 pack = self.interpreter.search_in_pack(var)
                 if pack != False:
-                    mystr += var + ' = ' + str(self.interpreter.packages[pack].dictionary[var]) + ' ; '
+                    mystr += var + ' = ' + str(self.interpreter.packages[pack].dictionary[var]) + ' ;'
         if mystr != '':
             print(mystr)
         return 'nobreak'
@@ -1542,8 +1544,11 @@ class core(base_module):
             if self.interpreter.userdefinitions[const] == deque(['@']):
                 pack = self.interpreter.search_in_pack(const)
                 if pack != False:
-                    mystr += const + ' = ' + str(self.interpreter.packages[pack].dictionary[const]) + ' ; '
-        print(mystr)
+                    if mystr != '':
+                        mystr += '\n'
+                    mystr += const + ' = ' + str(self.interpreter.packages[pack].dictionary[const]) + ' ;'
+        if mystr != '':
+            print(mystr)
         return 'nobreak'
 
     '''
@@ -2035,16 +2040,21 @@ class core(base_module):
             elif not isinstance(tab, list):
                 return core_errors.error_get_cell_on_array_invalid.print_error('format', self.interpreter.output)
             content = self.pop_work()
+
+            content = content.replace('{', '<<')
+            content = content.replace('}', '>>')
             content = content.replace('<!', '{')
             content = content.replace('!>', '}')
             try:
                 content = content.format(*tab)
             except(IndexError):
-                return core_errors.error_index_on_array_invalid.print_error('format', self.interpreter.output)
+                return core_errors.error_index_on_array_invalid.print_error('1format', self.interpreter.output)
             except(ValueError):
-                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
+                return core_errors.error_string_invalid.print_error('2format', self.interpreter.output)
             except(KeyError):
-                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
+                return core_errors.error_string_invalid.print_error('3format', self.interpreter.output)
+            content = content.replace('<<', '{')
+            content = content.replace('>>', '}')
             self.work.appendleft(content)
             return 'nobreak'
         else:
