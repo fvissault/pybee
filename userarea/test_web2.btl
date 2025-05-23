@@ -28,7 +28,7 @@ form br addcontent
 form cars addcontent
 
 form br addcontent
-form "button" "alert("Hello world!")" "Valider" button addcontent
+form "button" "alert('Hello world!')" "Valider" button addcontent
 
 body "yahoo" "http://www.yahoo.fr" a addcontent
 
