@@ -3,7 +3,10 @@
 "layout_2z_h" ?def invert if
   ( syntaxe : layout_name LAYOUT_2Z_H )
   ( les zones s'appellent z1_layout_name et z2_layout_name )
-  : layout_2z_h 
+  : layout_2z_h
+    local layoutname
+    local grid_template_columns 
+    local grid_template_rows 
     "html" ?var if forget html then 
     "head" ?var if forget head then 
     "title" ?var if forget title then 
@@ -11,11 +14,17 @@
     { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
     { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
     { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
-    "z1" div var z1
-    "z2" div var z2
-    body z1 addcontent
-    body z2 addcontent
-    "" style var laystyle
+
+    "z1_<!0!>" [ layoutname @ ] format div var z1
+    "z2_<!0!>" [ layoutname @ ] format div var z2
+    "container_<!0!>" [ layoutname @ ] format div local container
+    container @ z1 addcontent
+    container @ z2 addcontent
+    body container @ addcontent
+
+    "#container_<!0!> { display: grid; grid-template-columns: <!1!>; grid-template-rows: <!2!>; }" [ layoutname @ grid_template_columns @ grid_template_rows @ ] format style var laystyle
+    laystyle "#container_<!0!> { background-color: indianred; padding:10px; }" [ layoutname @ ] format addcontent
+    laystyle "#container_<!0!> > div { background-color: #f1f1f1; border: 1px solid black;}" [ layoutname @ ] format addcontent
     head laystyle addcontent
 
     html head addcontent 
@@ -26,13 +35,11 @@
   ;
 then
 
-layout_2z_h
+"500px" "200px auto" "login" layout_2z_h
+z1 "1" addcontent
+z2 "2" addcontent
 title "Ceci est une page test" addcontent
 html @ .cr cr
 
 html @ generate cls
-
-forget z1
-forget z2
-forget laystyle
 ?>
