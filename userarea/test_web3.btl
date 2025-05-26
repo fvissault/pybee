@@ -1,12 +1,11 @@
 <?btl
 
-"layout_2z_h" ?def invert if
-  ( syntaxe : layout_name LAYOUT_2Z_H )
+"layout" ?def invert if
+  ( syntaxe : layout_name zone_count LAYOUT )
   ( les zones s'appellent z1_layout_name et z2_layout_name )
-  : layout_2z_h
+  : layout
+    local zonecount
     local layoutname
-    local grid_template_columns 
-    local grid_template_rows 
     "html" ?var if forget html then 
     "head" ?var if forget head then 
     "title" ?var if forget title then 
