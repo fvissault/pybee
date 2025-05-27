@@ -1354,7 +1354,7 @@ class core(base_module):
                 while compteur < limit:
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
-                    #self.interpreter.decreaselastseqnumber()
+                    self.interpreter.decreaselastseqnumber()
                     if ret == 'leave':
                         instructions.clear()
                         break
@@ -2536,6 +2536,7 @@ class core(base_module):
                 self.interpreter.string_treatment_for_load_file(split)
                 self.interpreter.set_sequence(self.interpreter.instructions.copy())
                 ret = self.interpreter.interpret('last_sequence')
+                self.interpreter.decreaselastseqnumber()
                 if ret == 'break':
                     return 'break'
                 else:
