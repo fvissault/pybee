@@ -14,11 +14,11 @@
     { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
     { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
 
-    "z1_<!0!>" [ layoutname @ ] format div var z1
-    "z2_<!0!>" [ layoutname @ ] format div var z2
+    "z1_<!0!>" [ layoutname @ ] format div "var z<!0!>" [ 1 ] format evaluate
+    ( "z2_<!0!>" [ layoutname @ ] format div "var z<!0!>" [ 2 ] format evaluate )
     "container_<!0!>" [ layoutname @ ] format div local container
     container @ z1 addcontent
-    container @ z2 addcontent
+    ( container @ z2 addcontent )
     body container @ addcontent
 
     "#container_<!0!> { display: grid; grid-template-columns: <!1!>; grid-template-rows: <!2!>; }" [ layoutname @ grid_template_columns @ grid_template_rows @ ] format style var laystyle
@@ -34,7 +34,7 @@
   ;
 then
 
-"500px" "200px auto" "login" layout_2z_h
+"login" 2 layout
 z1 "1" addcontent
 z2 "2" addcontent
 title "Ceci est une page test" addcontent
