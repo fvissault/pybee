@@ -2,21 +2,38 @@
 <html lang='fr'>
 <head>
 <style>
-#container_login { display: grid; grid-template-columns: 200px auto; grid-template-rows: 500px; }
-#container_login { background-color: indianred; padding:10px; }
-#container_login > div { background-color: #f1f1f1; border: 1px solid black;}
+#parentlayout { display: grid; }
+#parentlayout { grid-template-columns: 200px repeat(4, 1fr); }
+#parentlayout { grid-template-rows: 50px 500px 50px; }
+#parentlayout { grid-column-gap: 1px; }
+#parentlayout { grid-row-gap: 1px; }
+#parentlayout { background-color: indianred; padding:10px; }
+#z0 { grid-area: 1 / 1 / 2 / 6; }
+#z1 { grid-area: 2 / 1 / 3 / 2; }
+#z2 { grid-area: 2 / 2 / 3 / 6; }
+#z3 { grid-area: 3 / 1 / 4 / 6; }
+#z0 { background-color:white; }
+#z1 { background-color:white; }
+#z2 { background-color:white; }
+#z3 { background-color:white; }
 </style>
 <title>
 Ceci est une page test
 </title>
 </head>
 <body>
-<div id='container_login'>
-<div id='z1_login'>
+<div id='parentlayout'>
+<div id='z0'>
 1
 </div>
-<div id='z2_login'>
+<div id='z1'>
 2
+</div>
+<div id='z2'>
+3
+</div>
+<div id='z3'>
+4
 </div>
 </div>
 </body>
