@@ -20,7 +20,7 @@ z1 "2" addcontent
 z2 "3" addcontent
 z3 "4" addcontent
 title "Ceci est une page test" addcontent
-html @ .cr cr
+( html @ .cr cr )
 
 html @ generate cls
 ?>
