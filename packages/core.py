@@ -525,10 +525,10 @@ class core(base_module):
     Instruction cr : permet d'afficher un retour chariot dans la console
     '''
     def cr_instr(self):
-        if self.interpreter.output == 'web':
-            print('<br>')
-        else:
-            print('')
+        #if self.interpreter.output == 'web':
+        #    print('<br>')
+        #else:
+        print('')
         return 'nobreak'
 
 
