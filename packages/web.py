@@ -2,6 +2,8 @@ from packages.errors.core_errors import core_errors
 from packages.errors.web_errors import web_errors
 from packages.base_module import base_module
 from packages.help.web_help import web_help
+import re
+from collections import defaultdict
 
 class web(base_module):
     def __init__(self, interpreter):
@@ -46,9 +48,35 @@ class web(base_module):
                            'meta' : '''{ } local attrs "name" rot attrs cell+ drop "content" rot attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'layoutgrid' : '''local content local type "laystyle" ?var if type @ "other" = invert if laystyle "#parentlayout { grid-<!0!>: <!1!>; }" [ type @ content @ ] format addcontent else laystyle "#parentlayout { <!0!>; }" [ content @ ] format addcontent then then''',
                            'layoutarea' : '''local content local areanum local type "laystyle" ?var if type @ "other" = invert if laystyle "#z<!0!> { grid-area: <!1!>; }" [ areanum @ content @ ] format addcontent else laystyle "#z<!0!> { <!1!>; }" [ areanum @ content @ ] format addcontent then then''',
-                           'layout' : '''local zonecount 0 local i "html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body "parentlayout" div local container zonecount @ i do "z<!0!>" [ i @ ] format div "var z<!0!>" [ i @ ] format evaluate container @ "z<!0!>" [ i @ ] format addcontent loop body container @ addcontent "#parentlayout { display: grid; }" style var laystyle head laystyle addcontent html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent cls'''
+                           'layout' : '''local zonecount 0 local i "html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body "parentlayout" div local container zonecount @ i do "z<!0!>" [ i @ ] format div "var z<!0!>" [ i @ ] format evaluate container @ "z<!0!>" [ i @ ] format addcontent loop body container @ addcontent "#parentlayout { display: grid; }" style var laystyle head laystyle addcontent html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent cls''',
+                           'grouplaystyle' : self.grouplaystyle_instr
                            }
         self.help = web_help(self.interpreter.output)
         self.version = 'v1.0.0'
         self.variables = []
+
+    '''
+    Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
+    la variable 'laystyle' doit impértivement exister
+    '''
+    def grouplaystyle_instr(self):
+        for p in self.interpreter.packages.keys():
+            if 'laystyle' in self.interpreter.packages[p].variables:
+                content = "\n".join(self.interpreter.packages[p].dictionary['laystyle']['content'])
+                blocs = re.findall(r'([^{]+)\{([^}]+)\}', content)
+                regles = defaultdict(list)
+                for selecteur, declarations in blocs:
+                    selecteur = selecteur.strip()
+                    declarations = declarations.strip()
+                    regles[selecteur].append(declarations)
+                result = ''
+                for selecteur, listes_declarations in regles.items():
+                    result += f"{selecteur} {{\n\t"
+                    toutes_declarations = "\n\t".join(listes_declarations)
+                    result += toutes_declarations.strip() + "\n"
+                    result += "}\n"
+                self.interpreter.packages[p].dictionary['laystyle']['content'] = [result.strip("\n")]
+                return 'nobreak'
+        return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter.output)
+        
 
