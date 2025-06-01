@@ -4,16 +4,22 @@
 "template-rows" "50px 500px 50px" layoutgrid
 "column-gap" "1px" layoutgrid
 "row-gap" "1px" layoutgrid
-"other" "background-color: indianred; padding:10px" layoutgrid
+"other" "background-color: indianred" layoutgrid
+"other" "padding:10px" layoutgrid
 
 "area" 0 "1 / 1 / 2 / 6" layoutarea
 "area" 1 "2 / 1 / 3 / 2" layoutarea
 "area" 2 "2 / 2 / 3 / 6" layoutarea
 "area" 3 "3 / 1 / 4 / 6" layoutarea
 "other" 0 "background-color:white" layoutarea
+"other" 0 "display: grid" layoutarea
+"other" 0 "place-items: start center" layoutarea
 "other" 1 "background-color:white" layoutarea
 "other" 2 "background-color:white" layoutarea
 "other" 3 "background-color:white" layoutarea
+"other" 3 "display: grid" layoutarea
+"other" 3 "place-items: end center" layoutarea
+grouplaystyle
 
 z0 "1" addcontent
 z1 "2" addcontent
