@@ -6,6 +6,7 @@ class base_module:
         self.work = deque()
         self.altwork = deque()
         self.interpreter = interpreter
+        self.variables = []
 
     def set_work_stack(self, work):
         self.work = work
