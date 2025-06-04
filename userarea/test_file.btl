@@ -1,10 +1,10 @@
 <?btl
 import file
 
-"test.txt" rof myf
-myf c> .cr
-myf l> .cr
-myf f> .cr
+"test.txt" readingfile myf
+myf readchar .cr
+myf readline .cr
+myf readfile .cr
 ?exists myf .cr
 myf cf
 ?exists myf .
