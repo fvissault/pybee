@@ -1,5 +1,37 @@
 <?btl
-4 layout
+: layout
+local zonecount 
+local where
+0 local i 
+"html" ?var if forget html then
+"head" ?var if forget head then
+"title" ?var if forget title then 
+"body" ?var if forget body then 
+{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
+{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
+{ tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
+"parentlayout" div local container 
+zonecount @ i 
+do 
+    "z<!0!>" [ i @ ] format div "var z<!0!>" [ i @ ] format evaluate 
+    container @ "z<!0!>" [ i @ ] format addcontent 
+loop 
+body container @ addcontent 
+"#parentlayout { display: grid; }" style var laystyle 
+where @ "inlinestyle" = 
+if
+    head laystyle addcontent
+else
+    head "css/layout.css" headlink addcontent 
+then 
+html head addcontent 
+html body addcontent 
+{ tag : "title" , content : [ ] , attrs : { } , container : "y" } var title 
+head title addcontent 
+cls
+;
+
+"inlinestyle" 4 layout
 "template-columns" "200px repeat(4, 1fr)" layoutgrid
 "template-rows" "50px 500px 50px" layoutgrid
 "column-gap" "1px" layoutgrid
