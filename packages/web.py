@@ -52,7 +52,7 @@ class web(base_module):
                            'grouplaystyle' : self.grouplaystyle_instr
                            }
         self.help = web_help(self.interpreter.output)
-        self.version = 'v1.0.0'
+        self.version = 'v1.1.3'
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
