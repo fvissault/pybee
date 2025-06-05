@@ -22,7 +22,7 @@ class file(base_module):
     Instruction writein : content nom_du_descripteur WRITEIN -> écrit content dans le fichier 
     '''
     def writefile_instr(self):
-        if len(self.work) > 0:
+        if len(self.work) > 1:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('b>f', self.interpreter.output)
