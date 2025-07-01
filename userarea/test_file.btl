@@ -1,11 +1,11 @@
 <?btl
 import file
 
-"test.txt" readingfile myf
+"myf" "test.txt" readingfile
 myf readchar .cr
 myf readline .cr
 myf readfile .cr
-?exists myf .cr
-myf cf
-?exists myf .
+"myf" ?exists .cr
+myf closefile
+"myf" ?exists .
 ?>
