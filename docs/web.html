@@ -98,6 +98,31 @@
             Si vous commettez une erreur de syntaxe, vous afficherez les erreurs dans la page web.
             Ainsi vous pouvez utiliser un autre canal de sortie que la simple console.
         </p>
+        <h3>Autre manière de faire</h3>
+        <p>Vous disposez d'une autre manière de faire des appels à des fichiers dont l'extension est .btl. Voici comment faire cela.</p>
+        <p>
+            <u>Etape 1</u> : pour commencer, vous devez créer un fichier <b>.htaccess</b> que vous allez placer à la racine de pybee. Ce fichier <b>.htaccess</b> 
+            contient les lignes suivantes :
+        </p>
+        <div class="div_code">
+            <code>
+                RewriteEngine On<br>
+                RewriteRule ^(.+)\.btl$ /pybee/browser.py?file=$1 [QSA,L]
+            </code>
+        </div>
+        <p>Ce fichier est normalement fourni dans Beetle.</p>
+        <p><u>Etape 2</u> : vérifier que le module rewrite de votre serveur Apache est chargé</p>
+        <p>
+            <u>Etape 3</u> : relancer votre serveur Apache pour qu'il prenne en compte le chargement du module rewrite dans le cas ou il n'était pas
+            chargé
+        </p>
+        <p><u>Etape 4</u> : Votre url peut maintenant devenir : <b>http://localhost/pybee/test.btl</b></p>
+        <p>
+            Ceci est très pratique pour faire un site car toutes les urls de vos liens peuvent prendre cette forme au lieu de la forme 
+            précédente.<br>
+            Si vous modifiez le nom de votre projet de <b>pybee</b> en autre chose, n'oubliez pas de modifier également le fichier <b>.htaccess</b>
+            afin que tout se passe correctement.
+        </p>
 
         <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
 
