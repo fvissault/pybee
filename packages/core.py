@@ -199,7 +199,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.6.3'
+        self.version = 'v1.6.4'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
@@ -2319,8 +2319,8 @@ class core(base_module):
     def isexists_instr(self):
         if self.interpreter.isemptylastsequence():
             return core_errors.error_instruction_expected.print_error('?exists', self.interpreter.output)
-        obj_name = str(self.pop_sequence())
-        if obj_name in self.variables:
+        obj_name = self.pop_work()
+        if obj_name in self.variables or obj_name in self.interpreter.userdefinitions:
             self.work.appendleft(1)
         else:
             self.work.appendleft(0)
