@@ -40,11 +40,11 @@ class file(base_module):
         if len(self.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
-                return file_errors.error_not_a_file_descriptor.print_error('f>', self.interpreter.output)
+                return file_errors.error_not_a_file_descriptor.print_error('readfile', self.interpreter.output)
             content = self.interpreter.core_instr.dictionary[descriptor_name].read()
             self.interpreter.work.appendleft(content)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('f>', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('readfile', self.interpreter.output)
 
     '''
     Instruction readline : nom_du_descripteur READLINE -> met le contenu lu ligne par ligne sur la pile de travail
@@ -53,11 +53,11 @@ class file(base_module):
         if len(self.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
-                return file_errors.error_not_a_file_descriptor.print_error('l>', self.interpreter.output)
+                return file_errors.error_not_a_file_descriptor.print_error('readline', self.interpreter.output)
             content = self.interpreter.core_instr.dictionary[descriptor_name].readline()
             self.interpreter.work.appendleft(content)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('l>', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('readline', self.interpreter.output)
 
     '''
     Instruction readchar : nom_du_descripteur READCHAR -> met le contenu lu caractère par caractère sur la pile de travail
@@ -66,11 +66,11 @@ class file(base_module):
         if len(self.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
-                return file_errors.error_not_a_file_descriptor.print_error('c>', self.interpreter.output)
+                return file_errors.error_not_a_file_descriptor.print_error('readchar', self.interpreter.output)
             content = self.interpreter.core_instr.dictionary[descriptor_name].read(1)
             self.interpreter.work.appendleft(content)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('c>', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('readchar', self.interpreter.output)
 
     '''
     Instruction appendtofile : nom_du_descripteur filename APPENDTOFILE  -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'a'
@@ -86,7 +86,7 @@ class file(base_module):
                 f = open(filename, 'a')
             except OSError:
                 return file_errors.error_open_file_failed.print_error('appendtofile', self.interpreter.output)
-            self.interpreter.core_instr.constants.append(descriptor_name)
+            self.interpreter.userdefinitions[descriptor_name] = deque(['@'])
             self.interpreter.core_instr.dictionary[descriptor_name] = f
             return 'nobreak'
         else:
@@ -126,22 +126,22 @@ class file(base_module):
                 f = open(filename, 'r')
             except OSError:
                 return file_errors.error_open_file_failed.print_error('readingfile', self.interpreter.output)
-            self.interpreter.core_instr.constants.append(descriptor_name)
+            self.interpreter.userdefinitions[descriptor_name] = deque(['@'])
             self.interpreter.core_instr.dictionary[descriptor_name] = f
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('readingfile', self.interpreter.output)
 
     '''
-    Instruction closefile : nom_du_descripteur CF -> ferme le fichier et détruit la variable du descripteur
+    Instruction closefile : nom_du_descripteur CLOSEFILE -> ferme le fichier et détruit la variable du descripteur
     '''
     def closefile_instr(self):
         if len(self.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
-                return file_errors.error_not_a_file_descriptor.print_error('cf', self.interpreter.output)
+                return file_errors.error_not_a_file_descriptor.print_error('closefile', self.interpreter.output)
             self.interpreter.core_instr.dictionary[descriptor_name].close()
             del(self.interpreter.userdefinitions[descriptor_name])
             self.interpreter.core_instr.dictionary.pop(descriptor_name)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cf', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('closefile', self.interpreter.output)
