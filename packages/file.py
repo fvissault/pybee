@@ -26,12 +26,12 @@ class file(base_module):
         if len(self.work) > 1:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
-                return file_errors.error_not_a_file_descriptor.print_error('b>f', self.interpreter.output)
+                return file_errors.error_not_a_file_descriptor.print_error('writein', self.interpreter.output)
             content = self.pop_work()
             fdescriptor = self.interpreter.core_instr.dictionary[descriptor_name]
             fdescriptor.write(content)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('b>f', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('writein', self.interpreter.output)
 
     '''
     Instruction readfile : nom_du_descripteur READFILE -> met le contenu lu sur la pile de travail
@@ -96,7 +96,7 @@ class file(base_module):
     Instruction overwritetofile : nom_du_descripteur filename OVERWRITEOFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'w'
     '''
     def openoverdwritefile_instr(self):
-        if len(self.work) > 0:
+        if len(self.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
@@ -116,7 +116,7 @@ class file(base_module):
     Instruction readingfile : nom_du_descripteur filename READINGFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'r'
     '''
     def openreadfile_instr(self):
-        if len(self.work) > 0:
+        if len(self.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
