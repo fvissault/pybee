@@ -1,7 +1,6 @@
 <?btl
 : layout
 local zonecount 
-local where
 0 local i 
 "html" ?var if forget html then
 "head" ?var if forget head then
@@ -18,12 +17,6 @@ do
 loop 
 body container @ addcontent 
 "#parentlayout { display: grid; }" style var laystyle 
-where @ "inlinestyle" = 
-if
-    head laystyle addcontent
-else
-    head "css/layout.css" headlink addcontent 
-then 
 html head addcontent 
 html body addcontent 
 { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title 
@@ -31,7 +24,21 @@ head title addcontent
 cls
 ;
 
-"inlinestyle" 4 layout
+: savelaystyle
+local where
+where @ "inlinestyle" = 
+if
+    head laystyle addcontent
+else
+    head "css/layout.css" headlink addcontent 
+    "cssfile" "css/layout.css" overwritetofile
+    laystyle "content" cell@ 0 cell@ "cssfile" writein
+    "cssfile" closefile
+then 
+;
+
+
+4 layout
 "template-columns" "200px repeat(4, 1fr)" layoutgrid
 "template-rows" "50px 500px 50px" layoutgrid
 "column-gap" "1px" layoutgrid
@@ -52,6 +59,7 @@ cls
 "other" 3 "display: grid" layoutarea
 "other" 3 "place-items: end center" layoutarea
 grouplaystyle
+"outlinestyle" savelaystyle
 
 z0 "1" addcontent
 z1 "2" addcontent
