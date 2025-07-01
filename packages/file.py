@@ -3,6 +3,7 @@ from packages.errors.file_errors import file_errors
 from packages.base_module import base_module
 from packages.help.file_help import file_help
 from io import TextIOWrapper
+from collections import deque
 
 class file(base_module):
     def __init__(self, interpreter):
@@ -27,7 +28,8 @@ class file(base_module):
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('b>f', self.interpreter.output)
             content = self.pop_work()
-            self.interpreter.core_instr.dictionary[descriptor_name].write(content)
+            fdescriptor = self.interpreter.core_instr.dictionary[descriptor_name]
+            fdescriptor.write(content)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('b>f', self.interpreter.output)
 
@@ -71,67 +73,67 @@ class file(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('c>', self.interpreter.output)
 
     '''
-    Instruction append : filename APPEND nom_du_descripteur -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'a'
+    Instruction appendtofile : nom_du_descripteur filename APPENDTOFILE  -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'a'
     '''
     def openappendwritefile_instr(self):
-        if len(self.work) > 0:
+        if len(self.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_name_missing.print_error('append', self.interpreter.output)
-            descriptor_name = self.pop_sequence()
+                return core_errors.error_name_missing.print_error('appendtofile', self.interpreter.output)
+            descriptor_name = self.pop_work()
             try:
                 f = open(filename, 'a')
             except OSError:
-                return file_errors.error_open_file_failed.print_error('append', self.interpreter.output)
+                return file_errors.error_open_file_failed.print_error('appendtofile', self.interpreter.output)
             self.interpreter.core_instr.constants.append(descriptor_name)
             self.interpreter.core_instr.dictionary[descriptor_name] = f
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('wof', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('appendtofile', self.interpreter.output)
 
     '''
-    Instruction overwrite : filename OVERWRITE nom_du_descripteur -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'w'
+    Instruction overwritetofile : nom_du_descripteur filename OVERWRITEOFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'w'
     '''
     def openoverdwritefile_instr(self):
         if len(self.work) > 0:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_name_missing.print_error('overwrite', self.interpreter.output)
-            descriptor_name = self.pop_sequence()
+                return core_errors.error_name_missing.print_error('overwritetofile', self.interpreter.output)
+            descriptor_name = self.pop_work()
             try:
                 f = open(filename, 'w')
             except OSError:
-                return file_errors.error_open_file_failed.print_error('overwrite', self.interpreter.output)
-            self.interpreter.core_instr.constants.append(descriptor_name)
+                return file_errors.error_open_file_failed.print_error('overwritetofile', self.interpreter.output)
+            self.interpreter.userdefinitions[descriptor_name] = deque(['@'])
             self.interpreter.core_instr.dictionary[descriptor_name] = f
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('wof', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('overwritetofile', self.interpreter.output)
 
     '''
-    Instruction rof : filename ROF nom_du_descripteur -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'r'
+    Instruction readingfile : nom_du_descripteur filename READINGFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'r'
     '''
     def openreadfile_instr(self):
         if len(self.work) > 0:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_name_missing.print_error('rof', self.interpreter.output)
-            descriptor_name = self.pop_sequence()
+                return core_errors.error_name_missing.print_error('readingfile', self.interpreter.output)
+            descriptor_name = self.pop_work()
             try:
                 f = open(filename, 'r')
             except OSError:
-                return file_errors.error_open_file_failed.print_error('rof', self.interpreter.output)
+                return file_errors.error_open_file_failed.print_error('readingfile', self.interpreter.output)
             self.interpreter.core_instr.constants.append(descriptor_name)
             self.interpreter.core_instr.dictionary[descriptor_name] = f
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('rof', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('readingfile', self.interpreter.output)
 
     '''
-    Instruction cf : nom_du_descripteur CF -> ferme le fichier et détruit la variable du descripteur
+    Instruction closefile : nom_du_descripteur CF -> ferme le fichier et détruit la variable du descripteur
     '''
     def closefile_instr(self):
         if len(self.work) > 0:
@@ -139,7 +141,7 @@ class file(base_module):
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('cf', self.interpreter.output)
             self.interpreter.core_instr.dictionary[descriptor_name].close()
-            self.interpreter.core_instr.constants.remove(descriptor_name)
+            del(self.interpreter.userdefinitions[descriptor_name])
             self.interpreter.core_instr.dictionary.pop(descriptor_name)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('cf', self.interpreter.output)
