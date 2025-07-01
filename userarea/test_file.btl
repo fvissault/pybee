@@ -2,10 +2,10 @@
 import file
 
 "myf" "test.txt" readingfile
-myf readchar .cr
-myf readline .cr
-myf readfile .cr
+"myf" readchar .cr
+"myf" readline .cr
+"myf" readfile .cr
 "myf" ?exists .cr
-myf closefile
+"myf" closefile
 "myf" ?exists .
 ?>
