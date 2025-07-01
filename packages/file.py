@@ -17,7 +17,7 @@ class file(base_module):
                            'readline' : self.readline_instr,
                            'readchar' : self.readchar_instr}
         self.help = file_help(self.interpreter.output)
-        self.version = 'v1.0.3'
+        self.version = 'v1.1.3'
 
     '''
     Instruction writein : content nom_du_descripteur WRITEIN -> écrit content dans le fichier 
