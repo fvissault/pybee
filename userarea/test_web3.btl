@@ -1,5 +1,45 @@
 <?btl
-4 layout
+: layout
+local zonecount 
+var pagename
+0 local i 
+"html" ?var if forget html then
+"head" ?var if forget head then
+"title" ?var if forget title then 
+"body" ?var if forget body then 
+{ tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
+{ tag : "head" , content : [ ] , attrs : { } , container : "y" } var head 
+{ tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
+"parentlayout" div local container 
+zonecount @ i 
+do 
+    "z<!0!>" [ i @ ] format div "var z<!0!>" [ i @ ] format evaluate 
+    container @ "z<!0!>" [ i @ ] format addcontent 
+loop 
+body container @ addcontent 
+"#parentlayout { display: grid; }" style var laystyle 
+html head addcontent 
+html body addcontent 
+{ tag : "title" , content : [ ] , attrs : { } , container : "y" } var title 
+head title addcontent 
+cls
+;
+
+: savelaystyle
+local where
+where @ "inlinestyle" = 
+if
+    head laystyle addcontent
+else
+    head "css/<!0!>.css" [ pagename @ ] format headlink addcontent 
+    "cssfile" "css/<!0!>.css" [ pagename @ ] format overwritetofile
+    laystyle "content" cell@ 0 cell@ "cssfile" writein
+    "cssfile" closefile
+then 
+;
+
+
+"pagetest" 4 layout
 "template-columns" "200px repeat(4, 1fr)" layoutgrid
 "template-rows" "50px 500px 50px" layoutgrid
 "column-gap" "1px" layoutgrid
