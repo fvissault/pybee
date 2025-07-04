@@ -2043,8 +2043,8 @@ class core(base_module):
 
             content = content.replace('{', '<<')
             content = content.replace('}', '>>')
-            content = content.replace('<!', '{')
-            content = content.replace('!>', '}')
+            content = content.replace('<#', '{')
+            content = content.replace('#>', '}')
             try:
                 content = content.format(*tab)
             except(IndexError):
