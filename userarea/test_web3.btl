@@ -1,5 +1,8 @@
 <?btl
 "pagetest" 4 layout
+html " ceci est un commentaire 1 " comment addcontent
+head " ceci est un commentaire 2 " comment addcontent
+head "[if IE]>blabla<![endif]" comment addcontent
 "template-columns" "200px repeat(4, 1fr)" layoutgrid
 "template-rows" "50px 500px 50px" layoutgrid
 "column-gap" "1px" layoutgrid
@@ -21,6 +24,7 @@
 "other" 3 "place-items: end center" layoutarea
 grouplaystyle
 "outlinestyle" savelaystyle
+z0 " ceci est un commentaire 3 " comment addcontent
 
 z0 "1" addcontent
 z1 "2" addcontent
