@@ -51,4 +51,4 @@ class core_errors:
     error_immediate_only_in_definition =        error('warning', 'immediate instruction only at the end of definition')
     error_defer_action_not_set =                error('fatal', 'deferred action not set')
     error_not_a_defer_action =                  error('fatal', 'not a defer action')
-    error_nothing_to_evaluate =                 error('warming', 'nothing to evaluate')
+    error_nothing_to_evaluate =                 error('warning', 'nothing to evaluate')
