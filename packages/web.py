@@ -4,6 +4,7 @@ from packages.base_module import base_module
 from packages.help.web_help import web_help
 import re
 from collections import defaultdict
+import cgi
 
 class web(base_module):
     def __init__(self, interpreter):
@@ -119,7 +120,8 @@ class web(base_module):
                            'layoutarea' : '''local content local areanum local type "laystyle" ?var if type @ "other" = invert if laystyle "#z<#0#> { grid-area: <#1#>; }" [ areanum @ content @ ] format addcontent else laystyle "#z<#0#> { <#1#>; }" [ areanum @ content @ ] format addcontent then then''',
                            'layout' : '''local zonecount var pagename 0 local i "html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body "parentlayout" div local container zonecount @ i do "z<#0#>" [ i @ ] format div "var z<#0#>" [ i @ ] format evaluate container @ "z<#0#>" [ i @ ] format addcontent loop body container @ addcontent "#parentlayout { display: grid; }" style var laystyle html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent cls''',
                            'savelaystyle' : '''local where where @ "inlinestyle" = if head laystyle addcontent else head "css/<#0#>.css" [ pagename @ ] format headlink addcontent "cssfile" "css/<#0#>.css" [ pagename @ ] format overwritetofile laystyle "content" cell@ 0 cell@ "cssfile" writein "cssfile" closefile then''',
-                           'grouplaystyle' : self.grouplaystyle_instr
+                           'grouplaystyle' : self.grouplaystyle_instr,
+                           'paramget' : self.paramget_instr
                            }
         self.help = web_help(self.interpreter.output)
         self.version = 'v1.1.3'
@@ -147,3 +149,17 @@ class web(base_module):
                 self.interpreter.packages[p].dictionary['laystyle']['content'] = [result.strip("\n")]
                 return 'nobreak'
         return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter.output)
+
+    '''
+    Instruction paramget : permet de récupérer un paramètre passé entre les pages
+    '''
+    def paramget_instr(self):
+        if len(self.work) > 0:
+            fromform = cgi.FieldStorage()
+            paramname = self.pop_work()
+            value = str(fromform.getvalue(paramname))
+            if value == "None":
+                return core_errors.error_nothing_to_evaluate.print_error('paramget', self.interpreter.output)
+            self.work.appendleft(value)
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('paramget', self.interpreter.output)
