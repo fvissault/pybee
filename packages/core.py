@@ -2,6 +2,7 @@ import importlib
 import os
 import getpass
 import keyboard
+import hashlib
 from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.base_module import base_module
@@ -187,6 +188,7 @@ class core(base_module):
                            'local' : self.local_instr,
                            'keys' : self.keys_instr,
                            'values' : self.values_instr,
+                           '>md5' : self.md5_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
                            'testloop' : '1000 local i 1500 i do i @ emit loop cr',
                            'testfib' : '2 local i 1 0 2.s reverse i do 2dup + .s bl rot drop loop 2drop',
@@ -2626,7 +2628,6 @@ class core(base_module):
         else:
             return core_errors.error_nothing_in_work_stack.print_error('keys', self.interpreter.output)
 
-
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
     '''
@@ -2664,3 +2665,14 @@ class core(base_module):
                 return core_errors.error_name_missing.print_error('values', self.interpreter.output)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('values', self.interpreter.output)
+
+    '''
+    Instruction >md5 : écrit sur le haut de la pile de données le md5 du haut de la pile de données
+    '''
+    def md5_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            md5 = hashlib.md5(val.encode())
+            self.work.appendleft(md5.hexdigest())
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
