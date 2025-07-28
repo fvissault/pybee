@@ -1,0 +1,23 @@
+<?btl
+webreset
+body form addcontent
+title "Page test de passage de paramètres dans un formulaire" addcontent
+form "action" "test_form_result.btl" addattr
+html "lang" "en" addattr
+head "UTF-8" charset addcontent
+( head "content-type" "text/html;charset=UTF-8" httpequiv addcontent )
+head "userarea/css/file.css" headlink addcontent
+
+form "Ceci est mon label : " "mydiv" label addcontent
+"mydiv" "fred" "text" fieldarea var fa drop
+fa "name" "faname" addattr
+form fa addcontent
+form br addcontent
+form "submit" "Valider" button addcontent
+
+( html @ .cr cr )
+
+html @ generate cls
+
+forget fa
+?>
