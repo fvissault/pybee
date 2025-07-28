@@ -9,11 +9,12 @@ import cgi
 class web(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
+        #print(interpreter)
         self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
                            'webreset' : '''"html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then "form" ?var if forget form then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent { tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form cls''',
                            'addcontent' : '''dup ?var dup ?local or if @ then "content" reverse cell+''',
                            'addattr' : '''rot @ "attrs" cell@ cell+''',
-                           'fieldarea' : '''{ } local attrs "type" swap attrs cell+ drop "value" swap attrs cell+ drop "id" swap attrs cell+ drop { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'fieldarea' : '''{ } local attrs local fatype local favalue local faid "type" fatype @ attrs cell+ drop "value" favalue @ attrs cell+ drop "id" faid @ attrs cell+ drop { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'div' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'label' : '''{ } local attrs "for" swap attrs cell+ drop local content { tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }''',
                            'headlink' : '''{ } local attrs "href" swap attrs cell+ drop "rel" "stylesheet" attrs cell+ drop { tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }''',
@@ -25,7 +26,7 @@ class web(base_module):
                            'option' : '''{ } local attrs dup "y" = if "selected" swap attrs cell+ then drop "value" swap attrs cell+ drop local cont { tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'a' : '''{ } local attrs "href" swap attrs cell+ drop local cont { tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'completeselect' : '''select local tempselect 0 local i 0 local item 0 local opt dup cells i do dup i @ cell@ item ! item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! "content" opt @ tempselect cell+ drop loop drop tempselect @''',
-                           'button' : '''{ } local attrs "onclick" rot attrs cell+ drop "type" rot attrs cell+ drop local cont { tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
+                           'button' : '''{ } local attrs local cont local buttontype "type" buttontype @ attrs cell+ drop { tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'header' : '''{ tag : "header" , content : [ ] , attrs : { } , container : "y" }''',
                            'footer' : '''{ tag : "footer" , content : [ ] , attrs : { } , container : "y" }''',
                            'article' : '''{ tag : "article" , content : [ ] , attrs : { } , container : "y" }''',
@@ -44,8 +45,8 @@ class web(base_module):
                            'orderlist' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "ol" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'listitem' : '''local cont { tag : "li" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'urlbase' : '''{ } local attrs "target" rot attrs cell+ drop "href" rot attrs cell+ drop { tag : "base" , content : [ ] , attrs : attrs @ , container : "n" }''',
-                           'charset' : '''{ } local attrs "charset" rot attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
-                           'httpequiv' : '''{ } local attrs "http-equiv" rot attrs cell+ drop "content" rot attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'charset' : '''local charset { } local attrs "charset" charset @ attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'httpequiv' : '''local content local httpequiv { } local attrs "http-equiv" httpequiv @ attrs cell+ drop "content" content @ attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'meta' : '''{ } local attrs "name" rot attrs cell+ drop "content" rot attrs cell+ drop { tag : "meta" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'comment' : '''local cont { tag : "comment" , content : [ cont @ ] , attrs : { } , container : "n" }''',
                            'abbr': '''local cont local title { } local attrs "title" title @ attrs cell+ drop { tag : "abbr" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
@@ -124,7 +125,7 @@ class web(base_module):
                            'paramget' : self.paramget_instr
                            }
         self.help = web_help(self.interpreter.output)
-        self.version = 'v1.1.3'
+        self.version = 'v1.2.4'
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
@@ -155,11 +156,15 @@ class web(base_module):
     '''
     def paramget_instr(self):
         if len(self.work) > 0:
-            fromform = cgi.FieldStorage()
             paramname = self.pop_work()
-            value = str(fromform.getvalue(paramname))
-            if value == "None":
+            fstorage = self.interpreter.params
+            if fstorage[paramname] != None:
+                value = fstorage[paramname]
+                if value == None:
+                    return core_errors.error_nothing_to_evaluate.print_error('paramget', self.interpreter.output)
+                self.work.appendleft(value)
+                return 'nobreak'
+            else:
                 return core_errors.error_nothing_to_evaluate.print_error('paramget', self.interpreter.output)
-            self.work.appendleft(value)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('paramget', self.interpreter.output)
