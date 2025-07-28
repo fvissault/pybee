@@ -1,0 +1,3 @@
+<?btl
+"faname" paramget var myname @ .
+?>
