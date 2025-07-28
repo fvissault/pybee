@@ -57,8 +57,8 @@ body form addcontent
 title "Ceci est une page test" addcontent
 form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
-head "css/file.css" headlink addcontent
-head "js/file.js" headscriptfile addcontent
+head "userarea/css/file.css" headlink addcontent
+head "userarea/js/file.js" headscriptfile addcontent
 head "textarea { background-color: DarkSalmon; color: white; }" style addcontent
 
 "division" div var div1
@@ -66,7 +66,7 @@ div1 "Ceci est mon label : " "mydiv" label addcontent
 div1 "mydiv" "test" "text" fieldarea addcontent
 form div1 addcontent
 
-"img/bb.jpeg" img var myimg
+"userarea/img/bb.jpeg" img var myimg
 form myimg addcontent
 myimg "width" "300" addattr
 
@@ -81,7 +81,10 @@ form br addcontent
 form cars addcontent
 
 form br addcontent
-form "button" "alert("Hello world!")" "Valider" button addcontent
+"button" "Valider" button var valider drop
+valider "onclick" "alert("Hello world!")" addattr
+form valider addcontent
+
 
 body "yahoo" "http://www.yahoo.fr" a addcontent
 
@@ -95,7 +98,7 @@ body 5 "Test de titre 5" maintitle addcontent
 body "World Health Organization" "WHO" abbr addcontent
 body br addcontent
 
-"img/planets.gif" img var planets
+"userarea/img/planets.gif" img var planets
 body planets addcontent
 planets "width" "145" addattr
 planets "height" "126" addattr
@@ -109,7 +112,7 @@ body planetmap addcontent
 
 body br addcontent
 "controls" "noautoplay" "noloop" "nomuted" audio var horse
-horse "src" "img/horse.ogg" addattr
+horse "src" "userarea/img/horse.ogg" addattr
 body horse addcontent
 
 body br addcontent
