@@ -21,10 +21,20 @@ class interpreter:
         self.userdefinitions = {}
         self.does = deque()
         self.output = output
+        self.params = None
         self.version = 'v2.4.1'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
         self.preload()
+
+    def setparams(self, params):
+        self.params = {}
+        for key in params.keys():
+            item = params[key]
+            if isinstance(item, list):
+                self.params[key] = [i.value for i in item]
+            else:
+                self.params[key] = item.value
 
     def preload(self):
         filename = '{0}/preload.btl'.format(self.core_instr.dictionary['path'])
@@ -117,6 +127,7 @@ class interpreter:
                      'last_sequence' : self.isemptylastsequence, 
                      'current_sequence' : self.isemptycurrentsequence }
         while not type_seq[what]():
+            #self.print_sequence_numbers()
             self.instructions.clear()
             instr = self.instr = self.sequences[self.lastseqnumber][0]
             self.sequences[self.lastseqnumber].popleft()
