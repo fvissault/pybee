@@ -6,6 +6,7 @@ class base_module:
         self.work = deque()
         self.altwork = deque()
         self.interpreter = interpreter
+        #print(interpreter.params)
         self.variables = []
 
     def set_work_stack(self, work):
@@ -111,7 +112,6 @@ class base_module:
         i.lastseqnumber = -1
         i.work.clear()
         i.locals.clear()
-        #sequence.reverse()
         i.set_sequence(sequence)
         i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
         i.interpret()
