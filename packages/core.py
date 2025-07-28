@@ -201,7 +201,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.6.4'
+        self.version = 'v1.6.7'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
@@ -1747,7 +1747,8 @@ class core(base_module):
             instr = str(self.pop_sequence())
             if instr != ':':
                 # error
-                pass
+                print("error")
+                break
             else:
                 instr = str(self.pop_sequence())
                 elseq = []
@@ -1778,7 +1779,7 @@ class core(base_module):
                         continue
                     elseq.append(instr)
                     instr = str(self.pop_sequence())
-                i = self.prepare_interpreter(deque(elseq))
+                i = self.exec_interpreter(deque(elseq))
                 result[elname] = i.work[0]
             if instr == ',':
                 instr = str(self.pop_sequence())
@@ -1851,7 +1852,7 @@ class core(base_module):
             if self.interpreter.isemptylastsequence():
                 return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
             instr = str(self.pop_sequence())
-        i = self.prepare_interpreter(deque(result))
+        i = self.exec_interpreter(deque(result))
         return list(i.work)
 
     '''
