@@ -1,3 +1,4 @@
 <?btl
+redirect
 "faname" paramget var myname @ .
 ?>
