@@ -4,7 +4,6 @@
 # On Linux -> #! usr/bin/python3
 
 # -*- coding: utf8 -*-
-print("Content-type: text/html;charset=UTF-8\n")
 
 import cgi
 from interpreter_v2 import interpreter
