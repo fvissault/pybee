@@ -4,13 +4,14 @@ from packages.base_module import base_module
 from packages.help.web_help import web_help
 import re
 from collections import defaultdict
-import cgi
+from http.cookies import SimpleCookie
+import urllib.parse
 
 class web(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
         #print(interpreter)
-        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
+        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if htmlcontent "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
                            'webreset' : '''"html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then "form" ?var if forget form then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent { tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form cls''',
                            'addcontent' : '''dup ?var dup ?local or if @ then "content" reverse cell+''',
                            'addattr' : '''rot @ "attrs" cell@ cell+''',
@@ -122,7 +123,9 @@ class web(base_module):
                            'layout' : '''local zonecount var pagename 0 local i "html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body "parentlayout" div local container zonecount @ i do "z<#0#>" [ i @ ] format div "var z<#0#>" [ i @ ] format evaluate container @ "z<#0#>" [ i @ ] format addcontent loop body container @ addcontent "#parentlayout { display: grid; }" style var laystyle html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent cls''',
                            'savelaystyle' : '''local where where @ "inlinestyle" = if head laystyle addcontent else head "css/<#0#>.css" [ pagename @ ] format headlink addcontent "cssfile" "css/<#0#>.css" [ pagename @ ] format overwritetofile laystyle "content" cell@ 0 cell@ "cssfile" writein "cssfile" closefile then''',
                            'grouplaystyle' : self.grouplaystyle_instr,
-                           'paramget' : self.paramget_instr
+                           'paramget' : self.paramget_instr,
+                           'redirect' : self.redirect_instr,
+                           'htmlcontent' : self.htmlcontent_instr
                            }
         self.help = web_help(self.interpreter.output)
         self.version = 'v1.2.4'
@@ -168,3 +171,22 @@ class web(base_module):
                 return core_errors.error_nothing_to_evaluate.print_error('paramget', self.interpreter.output)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('paramget', self.interpreter.output)
+
+    '''
+    Instruction redirect : effectuer une redirection
+    '''
+    def redirect_instr(self):
+        if len(self.work) > 0:
+            url = self.pop_work()
+            print("Location: {0}\n".format(url))
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('paramget', self.interpreter.output)
+
+    '''
+    Instruction htmlcontent : précise que le contenu de la page est du code html : fonction utilisée dans generate
+    '''
+    def htmlcontent_instr(self):
+        print("Content-type: text/html;charset=UTF-8\n")
+        return 'nobreak'
+
