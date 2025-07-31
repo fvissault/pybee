@@ -1,4 +1,5 @@
 <?btl
+( "noredirect" "beetle" session )
 webreset
 body form addcontent
 title "Page test de passage de paramètres dans un formulaire" addcontent
