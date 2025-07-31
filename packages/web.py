@@ -4,14 +4,17 @@ from packages.base_module import base_module
 from packages.help.web_help import web_help
 import re
 from collections import defaultdict
-from http.cookies import SimpleCookie
+import http.cookies
+import uuid
 import urllib.parse
+import json
+from datetime import datetime, timedelta
 
 class web(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
         #print(interpreter)
-        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if htmlcontent "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
+        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if usecookies? invert if htmlcontent then "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
                            'webreset' : '''"html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then "form" ?var if forget form then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent { tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form cls''',
                            'addcontent' : '''dup ?var dup ?local or if @ then "content" reverse cell+''',
                            'addattr' : '''rot @ "attrs" cell@ cell+''',
@@ -125,10 +128,19 @@ class web(base_module):
                            'grouplaystyle' : self.grouplaystyle_instr,
                            'paramget' : self.paramget_instr,
                            'redirect' : self.redirect_instr,
-                           'htmlcontent' : self.htmlcontent_instr
+                           'htmlcontent' : self.htmlcontent_instr,
+                           'session' : self.session_instr,
+                           'setsessvar' : self.setsessvar_instr,
+                           'getsessvar' : self.getsessvar_instr,
+                           'usecookies?' : self.usecookies_instr,
+                           'setsessduration' : self.setsessduration_instr,
+                           'sessduration?' : self.sessduration_instr
                            }
         self.help = web_help(self.interpreter.output)
-        self.version = 'v1.2.4'
+        self.sessionvars = {"toto" : "titi"}
+        self.sessionduration = 30
+        self.usecookies = False
+        self.version = 'v1.3.2'
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
@@ -181,7 +193,7 @@ class web(base_module):
             print("Location: {0}\n".format(url))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('paramget', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
 
     '''
     Instruction htmlcontent : précise que le contenu de la page est du code html : fonction utilisée dans generate
@@ -190,3 +202,55 @@ class web(base_module):
         print("Content-type: text/html;charset=UTF-8\n")
         return 'nobreak'
 
+    def session_instr(self):
+        if len(self.work) > 1:
+            name = str(self.pop_work())
+            param = self.pop_work()
+            valeur = urllib.parse.quote(json.dumps(self.sessionvars))
+            session_id = str(uuid.uuid4())
+            expiredate = (datetime.now() + timedelta(minutes=self.sessionduration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
+            self.usecookies = True
+            if param == 'redirect':
+                print("Status: 302 Found")
+            else:
+                print("Content-Type: text/html;charset=UTF-8")
+            cookie = http.cookies.SimpleCookie()
+            cookie[name] = session_id
+            cookie[name]["path"] = "/"
+            cookie[name]["httponly"] = True
+            cookie[name]["Max-Age"] = self.sessionduration * 60
+            cookie[name]["Expires"] = expiredate
+            print(cookie.output())
+            if param != 'redirect':
+                print()
+            with open(f"userarea/tmp/session_{name}", "w") as f:
+                f.write(valeur)
+                f.close()            
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+        return 'nobreak'
+
+    def setsessvar_instr(self):
+        return 'nobreak'
+
+    def getsessvar_instr(self):
+        return 'nobreak'
+
+    def usecookies_instr(self):
+        if self.usecookies == True:
+            self.work.appendleft(1)
+        else:
+            self.work.appendleft(0)
+        return 'nobreak'
+
+    def setsessduration_instr(self):
+        if len(self.work) > 0:
+            duration = int(self.pop_work())
+            self.sessionduration = duration
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+        return 'nobreak'
+    
+    def sessduration_instr(self):
+        self.work.appendleft(self.sessionduration)
+        return 'nobreak'
