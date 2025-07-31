@@ -3,6 +3,7 @@ import os
 import getpass
 import keyboard
 import hashlib
+import json
 from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.base_module import base_module
@@ -189,6 +190,8 @@ class core(base_module):
                            'keys' : self.keys_instr,
                            'values' : self.values_instr,
                            '>md5' : self.md5_instr,
+                           'jsonenc' : self.jsonencode_instr,
+                           'jsondec' : self.jsondecode_instr,
                            'testcond' : '50 = if "égal" . else "pas egal" . then',
                            'testloop' : '1000 local i 1500 i do i @ emit loop cr',
                            'testfib' : '2 local i 1 0 2.s reverse i do 2dup + .s bl rot drop loop 2drop',
@@ -201,7 +204,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.6.7'
+        self.version = 'v1.6.9'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
@@ -2675,5 +2678,25 @@ class core(base_module):
             val = self.pop_work()
             md5 = hashlib.md5(val.encode())
             self.work.appendleft(md5.hexdigest())
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
+
+    '''
+    Instruction jsonencode : transforme une structure dict et list en une chaine de caractères
+    '''
+    def jsonencode_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            self.work.appendleft(json.dumps(val))
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
+
+    '''
+    Instruction jsondecode : transforme une chaine de caractères en une structure dict et list
+    '''
+    def jsondecode_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            self.work.appendleft(json.loads(val))
         else:
             return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
