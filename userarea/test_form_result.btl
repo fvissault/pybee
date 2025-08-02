@@ -1,7 +1,7 @@
 <?btl
-( "redirect" "beetle" session )
-( "http://localhost/pybee/test_form.btl" redirect )
-"http://www.yahoo.fr" redirect
+"redirect" "beetle" session
+"http://localhost/pybee/test_session.btl" redirect
+( "http://www.yahoo.fr" redirect )
 htmlcontent
 "faname" paramget var myname @ .
 ?>
