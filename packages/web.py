@@ -8,6 +8,7 @@ import http.cookies
 import uuid
 import urllib.parse
 import json
+import os
 from datetime import datetime, timedelta
 
 class web(base_module):
@@ -130,6 +131,7 @@ class web(base_module):
                            'redirect' : self.redirect_instr,
                            'htmlcontent' : self.htmlcontent_instr,
                            'session' : self.session_instr,
+                           'getsession' : self.getsession_instr,
                            'setsessvar' : self.setsessvar_instr,
                            'getsessvar' : self.getsessvar_instr,
                            'usecookies?' : self.usecookies_instr,
@@ -137,7 +139,7 @@ class web(base_module):
                            'sessduration?' : self.sessduration_instr
                            }
         self.help = web_help(self.interpreter.output)
-        self.sessionvars = {"toto" : "titi"}
+        self.sessionvars = {"auth" : 1}
         self.sessionduration = 30
         self.usecookies = False
         self.version = 'v1.3.2'
@@ -206,10 +208,13 @@ class web(base_module):
         if len(self.work) > 1:
             name = str(self.pop_work())
             param = self.pop_work()
-            valeur = urllib.parse.quote(json.dumps(self.sessionvars))
+            valeur = json.dumps(self.sessionvars)
             session_id = str(uuid.uuid4())
             expiredate = (datetime.now() + timedelta(minutes=self.sessionduration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
             self.usecookies = True
+            with open(f"userarea/tmp/session_{name}", "w") as f:
+                f.write(valeur)
+                f.close()            
             if param == 'redirect':
                 print("Status: 302 Found")
             else:
@@ -218,16 +223,29 @@ class web(base_module):
             cookie[name] = session_id
             cookie[name]["path"] = "/"
             cookie[name]["httponly"] = True
-            cookie[name]["Max-Age"] = self.sessionduration * 60
+            cookie[name]["Max-Age"] = str(self.sessionduration * 60)
             cookie[name]["Expires"] = expiredate
             print(cookie.output())
             if param != 'redirect':
                 print()
-            with open(f"userarea/tmp/session_{name}", "w") as f:
-                f.write(valeur)
-                f.close()            
         else:
             return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+        return 'nobreak'
+
+    def getsession_instr(self):
+        if len(self.work) > 0:
+            name = str(self.pop_work())
+            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE", ""))
+            session_cookie = cookie.get(name)
+            if session_cookie:
+                with open(f"userarea/tmp/session_{name}", "r") as f:
+                    sessionvars = f.read()
+                    self.sessionvars = json.loads(sessionvars)
+                    f.close()
+            else:
+                self.sessionvars =  {}
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter.output)
         return 'nobreak'
 
     def setsessvar_instr(self):
