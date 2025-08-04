@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Beetle sur le web</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>VIII. Beetle sur le web</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
+
+        <p>
+            Vous pouvez choisir d'utiliser la console pour réaliser vos programmes. Cependant, vous pouvez rediriger la sortie 
+            standard vers une page web en utilisant l'outil mis à votre disposition qui est, dans votre navigateur préféré :
+            <b>http://localhost/pybee/browser.py?file=my_filename&path=my_path</b>
+        </p>
+        <p>
+            Le paramètre 'file=my_filename' ne doit pas contenir l'extension de votre fichier mais doit être un fichier donc l'extension 
+            est .btl
+        </p>
+        <p>Le paramètre 'path' de l'url est optionnel. Vous avez, au choix, 3 solutions pour construire cette url :</p>
+        <ul>
+            <li>Le paramètre 'path' n'existe pas dans l'url => Beetle pointe sur les fichiers qui se trouvent dans 'userarea'</li>
+            <li>
+                Le paramètre 'path' existe dans l'url et a la valeur 'default' => Beetle pointe sur les fichiers qui se trouvent dans 
+                'userarea'
+            </li>
+            <li>
+                Le paramètre 'path' existe dans l'url et sa valeur n'est pas 'default' => Beetle pointe sur les fichiers qui se trouvent 
+                sur le chemin fourni par le paramètre 'path'. La variable 'path' de Beetle est mise à jour avec le nouveau chemin 
+                spécifié
+            </li>
+        </ul>
+        <p>
+            Avec ce mécanisme, vous pouvez déposer un ensemble de fichiers n'importe où sur votre disque. Les fichiers Beetle que vous 
+            créez pour vos sites sont totalement cachés d'un browser. Ce paramétre 'path' ne doit pas comporter de / à la fin
+        </p>
+        <p>
+            Exemple :<br> 
+            Si vous créez un répertoire <b>projet1</b> dans <b>userarea</b> et que vous y mettez un fichier <b>myprogram.btl</b>, votre 
+            url sera la suivante : <b>http://localhost/pybee/browser.py?file=projet1/myprogram</b>
+        </p>    
+        <p>De ce fait, vous contrôlez entièrement l'arboscence de votre site ou projet.</p>    
+        <p>
+            Autre exemple :<br>
+            En admettant que vous avez créé un fichier <b>test.btl</b> contenant :
+        </p>
+        <div class="div_code">
+            <code>
+                : newfib
+                <blockquote> 
+                    dup 1 >= ( premier test )<br>
+                    if 
+                    <blockquote>
+                        dup 1 = ( deuxième test )<br>
+                        if 
+                        <blockquote>
+                            0 .cr drop 
+                        </blockquote> 
+                        else 
+                        <blockquote>
+                            2 var i <br>
+                            1 0 2dup . . swap rot i<br> 
+                            do ( début de la boucle )
+                            <blockquote>
+                                2dup + dup . rot drop
+                            </blockquote> 
+                            loop ( fin de la bloucle )<br>
+                            2drop forget i cr
+                        </blockquote> 
+                        then
+                    </blockquote> 
+                    else 
+                    <blockquote>
+                        "Usage : n FIB with n > 0" .cr 
+                    </blockquote> 
+                    then 
+                </blockquote>
+                ;<br>
+                50 newfib<br>
+                cr<br>
+                words<br>
+                cr cr<br>
+                list test
+            </code>
+        </div>
+
+            
+        <p>Lorsque vous tapez : http://localhost/pybee/browser.py?file=test vous obtenez :</p>
+        <p><img src="images/webex.png"/></p>
+        <p>
+            Si vous commettez une erreur de syntaxe, vous afficherez les erreurs dans la page web.
+            Ainsi vous pouvez utiliser un autre canal de sortie que la simple console.
+        </p>
+        <h3>Autre manière de faire</h3>
+        <p>Vous disposez d'une autre manière de faire des appels à des fichiers dont l'extension est .btl. Voici comment faire cela.</p>
+        <p>
+            <u>Etape 1</u> : pour commencer, vous devez créer un fichier <b>.htaccess</b> que vous allez placer à la racine de pybee. Ce fichier <b>.htaccess</b> 
+            contient les lignes suivantes :
+        </p>
+        <div class="div_code">
+            <code>
+                RewriteEngine On<br>
+                RewriteRule ^(.+)\.btl$ /pybee/browser.py?file=$1 [QSA,L]
+            </code>
+        </div>
+        <p>Ce fichier est normalement fourni dans Beetle.</p>
+        <p><u>Etape 2</u> : vérifier que le module rewrite de votre serveur Apache est chargé</p>
+        <p>
+            <u>Etape 3</u> : relancer votre serveur Apache pour qu'il prenne en compte le chargement du module rewrite dans le cas ou il n'était pas
+            chargé
+        </p>
+        <p><u>Etape 4</u> : Votre url peut maintenant devenir : <b>http://localhost/pybee/test.btl</b></p>
+        <p>
+            Ceci est très pratique pour faire un site car toutes les urls de vos liens peuvent prendre cette forme au lieu de la forme 
+            précédente.<br>
+            Si vous modifiez le nom de votre projet de <b>pybee</b> en autre chose, n'oubliez pas de modifier également le fichier <b>.htaccess</b>
+            afin que tout se passe correctement.
+        </p>
+
+        <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
+
+    </body>
+</html>
