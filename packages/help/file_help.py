@@ -6,7 +6,7 @@ class file_help(help):
         self.help_dict = {'appendtofile' : 'Open file in writing mode append. If file doesn\'t exists, it will be created\nUsage : ( descriptor_name filename ... ) APPENDTOFILE ( ... )',
                           'overwritetofile' : 'Open file in writing mode write. If file doesn\'t exists, it will be created\nUsage : ( descriptor_name filename ... ) OVERWRITETOFILE ( ... )',
                           'readingfile' : 'Open file in reading mode. If file doesn\'t exists, an error will be raised\nUsage : ( descriptor_name filename ... ) READINDFILE ( ... )',
-                          'cloasefile' : 'Close file\nUsage : ( descriptor_name ... ) CLOSEFILE ( ... )',
+                          'closefile' : 'Close file\nUsage : ( descriptor_name ... ) CLOSEFILE ( ... )',
                           'writein' : 'Write something in a file\nUsage : ( descriptor_name content ... ) WRITEIN ( ... )',
                           'readfile' : 'File entire reading and put it in the top of data stack\nUsage : ( descriptor_name ... ) READFILE ( content ... )',
                           'readline' : 'File reading by line and put it in the top of data stack\nUsage : ( descriptor_name ... ) READLINE ( content ... )',
