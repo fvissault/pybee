@@ -74,6 +74,20 @@
                 </blockquote>
             </code>
         </div>
+        <p>Exemple de fichier erreurs du package 'file' (<b>file_errors.py</b>) :</p>            
+        <div class="div_code">
+            <code>
+                from packages.errors.errors import error<br><br>
+
+                class file_errors:<br>
+                <blockquote>
+                    error_open_file_failed = error('fatal', 'this file doesn\'t exists')<br>
+                    error_not_a_file_descriptor = error('error', 'not a file descriptor')<br>
+                    error_end_of_content_missing = error('error', 'end of content missing')<br>
+                    error_end_of_content_work_with_begin_of_content = error('error', 'end of content work with begin of content')
+                </blockquote>
+            </code>
+        </div>
             
         <p>L'aide de votre extension doit être défini dans une nouvelle classe. C'est en réalité un dictionnaire que vous plcerez ans un fichier qui se nomme de cette façon : <b>myextension_help.py</b>.</p>
             
@@ -81,11 +95,37 @@
             
         <div class="div_code">
             <code>
+            from packages.help.help import help<br><br>
             class <b>myextension_help</b>(help):<br>
             <blockquote>def __init__(self, output):
                 <blockquote>super().__init__(output)<br>
                     self.help_dict = {'myinstruction' : help_message, ...}<br>
                     # help_message is a string
+                </blockquote>
+            </blockquote>
+            </code>
+        </div>
+
+        <p>Exemple de fichier aide du package 'file' (<b>file_help.py</b>) :</p>            
+        <div class="div_code">
+            <code>
+            from packages.help.help import help<br><br>
+
+            class file_help(help):<br>
+            <blockquote>
+                def __init__(self, output):<br>
+                <blockquote>
+                    super().__init__(output)<br>
+                    self.help_dict = {'appendtofile' : 'Open file in writing mode append. If file doesn\'t exists, it will be created\nUsage : ( descriptor_name filename ... ) APPENDTOFILE ( ... )',<br>
+                    <blockquote>
+                                    'overwritetofile' : 'Open file in writing mode write. If file doesn\'t exists, it will be created\nUsage : ( descriptor_name filename ... ) OVERWRITETOFILE ( ... )',<br>
+                                    'readingfile' : 'Open file in reading mode. If file doesn\'t exists, an error will be raised\nUsage : ( descriptor_name filename ... ) READINDFILE ( ... )',<br>
+                                    'closefile' : 'Close file\nUsage : ( descriptor_name ... ) CLOSEFILE ( ... )',<br>
+                                    'writein' : 'Write something in a file\nUsage : ( descriptor_name content ... ) WRITEIN ( ... )',<br>
+                                    'readfile' : 'File entire reading and put it in the top of data stack\nUsage : ( descriptor_name ... ) READFILE ( content ... )',<br>
+                                    'readline' : 'File reading by line and put it in the top of data stack\nUsage : ( descriptor_name ... ) READLINE ( content ... )',<br>
+                                    'readchar' : 'File reading by character and put it in the top of data stack\nUsage : ( descriptor_name ... ) READCHAR ( content ... )'}
+                    </blockquote>
                 </blockquote>
             </blockquote>
             </code>
