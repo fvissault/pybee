@@ -36,6 +36,7 @@
                 <li>dictionnaire <b>'date'</b> qui vous permet de manipuler des dates</li>
                 <li>dictionnaire <b>'file'</b> qui vous permet de manipuler des fichiers</li>
                 <li>dictionnaire <b>'mysqldb'</b> qui vous offre la possibilité de vous connecter et requêter une base de données MySql</li>
+                <li>dictionnaire <b>'web'</b> qui vous offre la possibilité de développer vos pages web</li>
             </ul>
         </p>
         <p>
@@ -50,15 +51,30 @@
         <p>Et voici ce que cela vous affiche pour 'core' dans la console :</p>
         <div class="div_code">
             <code>Beetle> words<br>
-                -------/core/ (166 words)<br>
-                ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2>r 2const 2drop 
-                2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char 
-                ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! 
-                cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> 
-                drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input 
-                invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ 
-                rdrop rdump rdup readk recurse repeat roll rot rover rswap secinput see sp? space swap then true t{ until var 
-                variables vp? while words wp? xor { } }t</code>
+                -------/core/ (179 words)<br>
+                ! % ' ( ) * *! */ + +! +loop , - . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 
+                2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <=> <> = > >= >base >decimal >json >md5 >r ? ?array ?char ?def ?exists 
+                ?float ?int ?local ?pack ?str ?var @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! cell+ cell- 
+                cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit 
+                endcase endof evaluate execute false forget format help here hex if immediate import input invert is json> keys kpress leave 
+                list load local loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse 
+                repeat reverse roll rot rotonall rover rswap secinput see sp space swap then true t{ until values var variables vp while 
+                words wp xor { } }t
+            </code>
+        </div>
+        <p>Pour le package 'web', cela devrait ressembler à cela :</p>
+        <div class="div_code">
+            <code>Beetle> words<br>
+                -------/web/ (122 words)<br>
+                a abbr addattr addcontent address area article aside audio bdo blockquote bold br button canvas caption charset cite code 
+                col colgroup comment completeselect data datalist dd del details dfn dialog div dl dloption dt em fieldarea fieldset 
+                figcaption figure footer form generate getsession getsessvar grouplaystyle header headlink headscriptfile hr htmlcontent 
+                httpequiv iframe img ins italic kbd label layout layoutarea layoutgrid legend listitem main maintitle map mark menu meta 
+                meter nav noscript optgroup option orderlist paragraph paramget pictsrc picture pre quote redirect savelaystyle section 
+                select sessduration? session setsessduration setsessvar small source span strong style sub summary sup svg svgcircle 
+                svgellipse svgimage svgline svglineargradient svgmarker svgpath svgpattern svgpolygon svgpolyline svgradialgradient svgrect 
+                svgtext svgtextpath table tablecell tablehead tablerow textarea underline unorderlist urlbase usecookies? video webreset
+            </code>
         </div>
 
 
