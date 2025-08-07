@@ -71,7 +71,7 @@ class web(base_module):
                            'code': '''local cont { tag : "code" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'col': '''local colspan { } local attrs colspan @ 1 > if "span" colspan @ attrs cell+ drop then { tag : "col" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'colgroup': '''{ tag : "colgroup" , content : [ ] , attrs : { } , container : "y" }''',
-                           'data': '''local cont local value { } local attrs "value" value @ attrs cell+ drop { tag : "data" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
+                           'data': '''local value local cont { } local attrs "value" value @ attrs cell+ drop { tag : "data" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'datalist': '''local id { } local attrs "id" id @ attrs cell+ drop { tag : "datalist" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'dloption': '''local value { } local attrs "value" value @ attrs cell+ drop { tag : "option" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'dl': '''{ tag : "dl" , content : [ ] , attrs : { } , container : "y" }''',
