@@ -16,11 +16,333 @@
 
         <p><a href="math.html">Précédent : XII.5. Packages:Module 'mysqldb'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a></p>
 
-        <div style="clear:both;"><hr></div>
-        <h1>My First Heading</h1>
-        <h2>My Second Heading</h2>
-        <h3>My Second Heading</h3>
+        <h3>1. L'ensemble des mots</h3>
+        <p>
+            L'ensemble des mots qui composent ce package est le suivant : <br>
+            <b>a abbr addattr addcontent address area article aside audio bdo blockquote bold br button canvas caption charset cite code col 
+            colgroup comment completeselect data datalist dd del details dfn dialog div dl dloption dt em fieldarea fieldset figcaption 
+            figure footer form generate getsession getsessvar grouplaystyle header headlink headscriptfile hr htmlcontent httpequiv iframe 
+            img ins italic kbd label layout layoutarea layoutgrid legend listitem main maintitle map mark menu meta meter nav noscript 
+            optgroup option orderlist paragraph paramget pictsrc picture pre quote redirect savelaystyle section select sessduration? session 
+            setsessduration setsessvar small source span strong style sub summary sup svg svgcircle svgellipse svgimage svgline 
+            svglineargradient svgmarker svgpath svgpattern svgpolygon svgpolyline svgradialgradient svgrect svgtext svgtextpath table 
+            tablecell tablehead tablerow textarea underline unorderlist urlbase usecookies? video webreset</b>
+        </p>
 
+        <h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3>
+        <h4>Structure de données</h4>
+        <p>La seule structure de données manipulée par le package 'web' est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <b>{</b> (c'est un dictionnaire)<br>
+                <blockquote>
+                    "<b>tag</b>" : "my_tag", (corresponds au nom du tag : html, head, body, ...)<br>
+                    "<b>content</b>" : list_of_content, (corresponds au contenu du container représenté par le tag)<br>
+                    "<b>attrs</b>" : attr_dict, (dictionnaire des attributs du tag)<br>
+                    "<b>container</b>" : "y|n" (y = c'est un container, n = ce n'est pas un container)<br>
+                </blockquote>
+                <b>}</b>
+            </code>
+        </div>
+        <p>Exemple de structure de données définie avec Beetle :</p>
+        <div class="div_code">
+            <code>
+                { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }
+            </code>
+        </div>
+        <p>
+            Cette structure pour définir un input HTML. Ce n'est pas un container donc il n'a pas de contenu et il n'a que des attributs.
+            Les attributs se retrouvent dans la variable attrs.
+        </p>
+
+        <p>
+            Le package se charge de créer les tags principaux de la page web : comme 'html', 'head', 'body', 'title'. Ces structures 
+            sont stockées dans des variables qui portent le même nom : la structure pour le tag 'html' se trouve dans la variable <b>html</b>,
+            etc...
+        </p>
+
+        <h4>Mots principaux</h4>
+        <p>Pour ajouter un attribut à un tag, ce sera le mot : <b>addattr</b>. La syntaxe du mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>contenant_variable</i> "attribut_name" "attribut_value" <b>addattr</b>
+            </code>
+        </div>
+        
+        <p>Pour ajouter un contenu à un tag, ce sera le mot : <b>addcontent</b>. La syntaxe du mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>contenant_variable contenu_variable</i> <b>addcontent</b>
+            </code>
+        </div>
+        <p>Exemple concret (vous pouvez voir que ces 2 mots sont très importants dans le package 'web') :</p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                webreset<br>
+                body form <b>addcontent</b><br>
+                title "Page test de passage de paramètres dans un formulaire" <b>addcontent</b><br>
+                form "action" "test_form_result.btl" <b>addattr</b><br>
+                html "lang" "en" <b>addattr</b><br>
+                head "UTF-8" charset <b>addcontent</b><br>
+                head "userarea/css/file.css" headlink <b>addcontent</b><br>
+                form "Ceci est mon label : " "mydiv" label <b>addcontent</b><br>
+                "mydiv" "fred" "text" fieldarea var fa drop<br>
+                fa "name" "faname" <b>addattr</b><br>
+                form fa <b>addcontent</b><br>
+                form br <b>addcontent</b><br>
+                form "submit" "Valider" button <b>addcontent</b><br>
+                html @ generate cls<br>
+                forget fa<br>
+                ?>            
+            </code>
+        </div>
+
+        <h3>3. La construction du HTML : widgets de base (a, abbr, address, area, ...)</h3>
+        
+        <h4><u>Mot 'a'</u></h4> 
+        <p>Tag : <b>&lt;a></b></p>
+        <p>Attributs obligatoires : <b>href</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "href_attribut"</i> <b>a</b> --> {'tag':'a', 'content':['content'], 'attrs':{'href':'href_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'abbr'</u></h4> 
+        <p>Tag : <b>&lt;abbr></b></p>
+        <p>Attributs obligatoires : <b>title</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "title_attribut"</i> <b>abbr</b> --> {'tag':'abbr', 'content':['content'], 'attrs':{'title':'title_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'address'</u></h4> 
+        <p>Tag : <b>&lt;address></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>address</b> --> {'tag':'address', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'area'</u></h4> 
+        <p>Tag : <b>&lt;area></b></p>
+        <p>Attributs obligatoires : <b>href</b>, <b>coords</b>, <b>shape</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"shape_attribut" "coords_attribut" "href_attribut"</i> <b>area</b> --> {'tag':'area', 'content':[], 'attrs':{'shape':'shape_attribut', 'coords':'coords_attribut', 'href':'href_attribut'}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'article'</u></h4> 
+        <p>Tag : <b>&lt;article></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>article</b> --> {'tag':'article', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'aside'</u></h4> 
+        <p>Tag : <b>&lt;aside></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>aside</b> --> {'tag':'aside', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'audio'</u></h4> 
+        <p>Tag : <b>&lt;audio></b></p>
+        <p>Attributs obligatoires : <b>controls</b>, <b>autoplay</b>, <b>inloop</b>, <b>muted</b></p>
+        <p>
+            Si controls = 'controls' alors l'attribut controls apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si autoplay = 'autoplay' alors l'attribut controls apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si inloop = 'loop' alors l'attribut loop apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si muted = 'muted' alors l'attribut muted apparaitra dans les attributs du tag sinon il n'apparait pas
+        </p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"controls_attribut" "autoplay_attribut" "inloop_attribut" "muted_attribut"</i> <b>audio</b> --> {'tag':'audio', 'content':[], 'attrs':{'muted':'muted_attribut', 'autoplay':'autoplay_attribut', 'loop':'inloop_attribut', 'controls':'controls_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'bdo'</u></h4> 
+        <p>Tag : <b>&lt;bdo></b></p>
+        <p>Attributs obligatoires : <b>dir</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "dir_attribut"</i> <b>bdo</b> --> {'tag':'bdo', 'content':['content'], 'attrs':{'dir':'dir_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'blockquote'</u></h4> 
+        <p>Tag : <b>&lt;blockquote></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>blockquote</b> --> {'tag':'blockquote', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'bold'</u></h4> 
+        <p>Tag : <b>&lt;b></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>bold</b> --> {'tag':'b', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'br'</u></h4> 
+        <p>Tag : <b>&lt;br></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>br</b> --> {'tag':'br', 'content':[], 'attrs':{}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'button'</u></h4> 
+        <p>Tag : <b>&lt;button></b></p>
+        <p>Attributs obligatoires : <b>type</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "type_attribut"</i> <b>button</b> --> {'tag':'button', 'content':['content'], 'attrs':{'type':'type_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
+        <h4><u>Mot 'canvas'</u></h4> 
+        <h4><u>Mot 'caption'</u></h4> 
+        <h4><u>Mot 'charset'</u></h4> 
+        <h4><u>Mot 'cite'</u></h4> 
+        <h4><u>Mot 'code'</u></h4> 
+        <h4><u>Mot 'col'</u></h4> 
+        <h4><u>Mot 'colgroup'</u></h4> 
+        <h4><u>Mot 'comment'</u></h4> 
+        <h4><u>Mot 'data'</u></h4>
+        <h4><u>Mot 'datalist'</u></h4> 
+        <h4><u>Mot 'dd'</u></h4> 
+        <h4><u>Mot 'del'</u></h4> 
+        <h4><u>Mot 'details'</u></h4> 
+        <h4><u>Mot 'dfn'</u></h4> 
+        <h4><u>Mot 'dialog'</u></h4> 
+        <h4><u>Mot 'div'</u></h4> 
+        <h4><u>Mot 'dl'</u></h4> 
+        <h4><u>Mot 'dloption'</u></h4> 
+        <h4><u>Mot 'dt'</u></h4> 
+        <h4><u>Mot 'em'</u></h4> 
+        <h4><u>Mot 'fieldarea'</u></h4> 
+        <h4><u>Mot 'fieldset'</u></h4> 
+        <h4><u>Mot 'figcaption'</u></h4> 
+        <h4><u>Mot 'figure'</u></h4> 
+        <h4><u>Mot 'footer'</u></h4> 
+        <h4><u>Mot 'form'</u></h4>
+        <h4><u>Mot 'header'</u></h4> 
+        <h4><u>Mot 'headlink'</u></h4> 
+        <h4><u>Mot 'headscriptfile'</u></h4> 
+        <h4><u>Mot 'hr'</u></h4> 
+        <h4><u>Mot 'htmlcontent'</u></h4> 
+        <h4><u>Mot 'httpequiv'</u></h4> 
+        <h4><u>Mot 'iframe'</u></h4> 
+        <h4><u>Mot 'img'</u></h4> 
+        <h4><u>Mot 'ins'</u></h4> 
+        <h4><u>Mot 'italic'</u></h4> 
+        <h4><u>Mot 'kbd'</u></h4> 
+        <h4><u>Mot 'label'</u></h4> 
+        <h4><u>Mot 'legend'</u></h4> 
+        <h4><u>Mot 'listitem'</u></h4> 
+        <h4><u>Mot 'main'</u></h4> 
+        <h4><u>Mot 'maintitle'</u></h4> 
+        <h4><u>Mot 'map'</u></h4> 
+        <h4><u>Mot 'mark'</u></h4> 
+        <h4><u>Mot 'menu'</u></h4> 
+        <h4><u>Mot 'meta'</u></h4> 
+        <h4><u>Mot 'meter'</u></h4> 
+        <h4><u>Mot 'nav'</u></h4> 
+        <h4><u>Mot 'noscript'</u></h4> 
+        <h4><u>Mot 'optgroup'</u></h4> 
+        <h4><u>Mot 'option'</u></h4> 
+        <h4><u>Mot 'orderlist'</u></h4> 
+        <h4><u>Mot 'paragraph'</u></h4> 
+        <h4><u>Mot 'pictsrc'</u></h4> 
+        <h4><u>Mot 'picture'</u></h4> 
+        <h4><u>Mot 'pre'</u></h4> 
+        <h4><u>Mot 'quote'</u></h4> 
+        <h4><u>Mot 'section'</u></h4> 
+        <h4><u>Mot 'select'</u></h4> 
+        <h4><u>Mot 'small'</u></h4> 
+        <h4><u>Mot 'source'</u></h4> 
+        <h4><u>Mot 'span'</u></h4> 
+        <h4><u>Mot 'strong'</u></h4> 
+        <h4><u>Mot 'style'</u></h4> 
+        <h4><u>Mot 'sub'</u></h4> 
+        <h4><u>Mot 'summary'</u></h4> 
+        <h4><u>Mot 'sup'</u></h4> 
+        <h4><u>Mot 'svg'</u></h4> 
+        <h4><u>Mot 'svgcircle'</u></h4> 
+        <h4><u>Mot 'svgellipse'</u></h4> 
+        <h4><u>Mot 'svgimage'</u></h4> 
+        <h4><u>Mot 'svgline'</u></h4> 
+        <h4><u>Mot 'svglineargradient'</u></h4> 
+        <h4><u>Mot 'svgmarker'</u></h4> 
+        <h4><u>Mot 'svgpath'</u></h4> 
+        <h4><u>Mot 'svgpattern'</u></h4> 
+        <h4><u>Mot 'svgpolygon'</u></h4> 
+        <h4><u>Mot 'svgpolyline'</u></h4> 
+        <h4><u>Mot 'svgradialgradient'</u></h4> 
+        <h4><u>Mot 'svgrect'</u></h4> 
+        <h4><u>Mot 'svgtext'</u></h4> 
+        <h4><u>Mot 'svgtextpath'</u></h4> 
+        <h4><u>Mot 'table'</u></h4> 
+        <h4><u>Mot 'tablecell'</u></h4> 
+        <h4><u>Mot 'tablehead'</u></h4> 
+        <h4><u>Mot 'tablerow'</u></h4> 
+        <h4><u>Mot 'textarea'</u></h4> 
+        <h4><u>Mot 'underline'</u></h4> 
+        <h4><u>Mot 'unorderlist'</u></h4>
+        <h4><u>Mot 'urlbase'</u></h4> 
+        <h4><u>Mot 'video'</u></h4>
+
+        <h3>4. La construction du HTML : widgets complexes</h3>
+        <p>My first paragraph.</p>
+
+        <h3>5. La construction du HTML : (layout, webreset et htmlcontent, ...)</h3>
+        <p>My first paragraph.</p>
+        
+        <h3>6. La génération du HTML : (generate)</h3>
+        <p>My first paragraph.</p>
+        
+        <h3>7. Le passage de paramètres entre les pages : (posted)</h3>
+        <p>My first paragraph.</p>
+        
+        <h3>8. La gestion des sessions : (session, getsession, setsessionduration, ...)</h3>
         <p>My first paragraph.</p>
 
         <div class="div_code">
