@@ -239,22 +239,201 @@
         </div>
 
         <h4><u>Mot 'canvas'</u></h4> 
+        <p>Tag : <b>&lt;canvas></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>canvas</b> --> {'tag':'canvas', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'caption'</u></h4> 
+        <p>Tag : <b>&lt;caption></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>caption</b> --> {'tag':'caption', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'charset'</u></h4> 
+        <p>Tag : <b>&lt;meta></b></p>
+        <p>Attributs obligatoires : <b>charset</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"charset_attribut"</i> <b>charset</b> --> {'tag':'meta', 'content':[], 'attrs':{'charset':'charset_attribut'}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'cite'</u></h4> 
+        <p>Tag : <b>&lt;cite></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>cite</b> --> {'tag':'cite', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'code'</u></h4> 
+        <p>Tag : <b>&lt;code></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>code</b> --> {'tag':'code', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'col'</u></h4> 
+        <p>Tag : <b>&lt;col></b></p>
+        <p>Attributs obligatoires : <b>span</b></p>
+        <p>
+            Si span > 1 alors l'attribut span apparait sinon l'attribut n'apparait pas
+        </p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"span_attribut"</i> <b>col</b> --> {'tag':'meta', 'content':[], 'attrs':{'span':'span_attribut'}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'colgroup'</u></h4> 
+        <p>Tag : <b>&lt;colgroup></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>colgroup</b> --> {'tag':'colgroup', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'comment'</u></h4> 
+        <p>Tag : <b>&lt;!-- comment --></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>comment</b> --> {'tag':'comment', 'content':['content'], 'attrs':{}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'data'</u></h4>
+        <p>Tag : <b>&lt;data></b></p>
+        <p>Attributs obligatoires : <b>value</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "value_attribut"</i> <b>data</b> --> {'tag':'data', 'content':['content'], 'attrs':{'value':'value_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'datalist'</u></h4> 
+        <p>Tag : <b>&lt;datalist></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>datalist</b> --> {'tag':'datalist', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dd'</u></h4> 
+        <p>Tag : <b>&lt;dd></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>dd</b> --> {'tag':'dd', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'del'</u></h4> 
+        <p>Tag : <b>&lt;del></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>del</b> --> {'tag':'del', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'details'</u></h4> 
+        <p>Tag : <b>&lt;details></b></p>
+        <p>Attributs obligatoires : <b>open</b></p>
+        <p>
+            Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+        </p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"open_attribut"</i> <b>details</b> --> {'tag':'details', 'content':[], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dfn'</u></h4> 
+        <p>Tag : <b>&lt;dfn></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>dfn</b> --> {'tag':'dfn', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dialog'</u></h4> 
+        <p>Tag : <b>&lt;dialog></b></p>
+        <p>Attributs obligatoires : <b>open</b></p>
+        <p>
+            Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+        </p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "open_attribut"</i> <b>dialog</b> --> {'tag':'dialog', 'content':['content'], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'div'</u></h4> 
+        <p>Tag : <b>&lt;div></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>div</b> --> {'tag':'div', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dl'</u></h4> 
+        <p>Tag : <b>&lt;dl></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>dl</b> --> {'tag':'dl', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dloption'</u></h4> 
         <h4><u>Mot 'dt'</u></h4> 
         <h4><u>Mot 'em'</u></h4> 
