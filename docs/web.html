@@ -16,7 +16,7 @@
 
         <p><a href="math.html">Précédent : XII.5. Packages:Module 'mysqldb'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a></p>
 
-        <h3>1. L'ensemble des mots</h3>
+        <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
         <p>
             L'ensemble des mots qui composent ce package est le suivant : <br>
             <b>a abbr addattr addcontent address area article aside audio bdo blockquote bold br button canvas caption charset cite code col 
@@ -29,8 +29,8 @@
             tablecell tablehead tablerow textarea underline unorderlist urlbase usecookies? video webreset</b>
         </p>
 
-        <h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3>
-        <h4>Structure de données</h4>
+        <a name="generalprinciple"><h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3></a>
+        <h4><u>Structure de données</u></h4>
         <p>La seule structure de données manipulée par le package 'web' est la suivante :</p>
         <div class="div_code">
             <code>
@@ -61,7 +61,7 @@
             etc...
         </p>
 
-        <h4>Mots principaux</h4>
+        <h4><u>Mots principaux</u></h4>
         <p>Pour ajouter un attribut à un tag, ce sera le mot : <b>addattr</b>. La syntaxe du mot est la suivante :</p>
         <div class="div_code">
             <code>
@@ -98,12 +98,20 @@
             </code>
         </div>
 
-        <h3>3. La construction du HTML : widgets de base (a, abbr, address, area, ...)</h3>
-        
+        <a name="basicwidget"><h3>3. La construction du HTML : widgets de base (a, abbr, address, area, ...)</a></h3>
+
+        <p>
+            Ce package vous propose de vous créer cette structure pour chaque tag HTML. Avec les 2 mots décrits ci-dessus, vous pouvez en
+            créer de plus complexes. Ceux qui vous sont proposés dans la suite représentent les tags basiques.<br>
+            HTML est un langage permisif donc si vous positionnez un tag au mauais endroit, rien ne se passera. HTML n'en tiendra pas compte.
+            Du coup, Beetle ne vous emchêche pas de faire n'importe quoi. La charge du contrôle est laissé à HTML.<br>
+            Voici donc la description de cette liste exhaustive de mots :
+        </p>
         <h4><u>Mot 'a'</u></h4> 
         <p>Tag : <b>&lt;a></b></p>
         <p>Attributs obligatoires : <b>href</b></p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : oui</p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -115,6 +123,7 @@
         <p>Tag : <b>&lt;abbr></b></p>
         <p>Attributs obligatoires : <b>title</b></p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -126,6 +135,7 @@
         <p>Tag : <b>&lt;address></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -137,6 +147,7 @@
         <p>Tag : <b>&lt;area></b></p>
         <p>Attributs obligatoires : <b>href</b>, <b>coords</b>, <b>shape</b></p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -148,6 +159,7 @@
         <p>Tag : <b>&lt;article></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -159,6 +171,7 @@
         <p>Tag : <b>&lt;aside></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -176,6 +189,7 @@
             Si muted = 'muted' alors l'attribut muted apparaitra dans les attributs du tag sinon il n'apparait pas
         </p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -187,6 +201,7 @@
         <p>Tag : <b>&lt;bdo></b></p>
         <p>Attributs obligatoires : <b>dir</b></p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -198,6 +213,7 @@
         <p>Tag : <b>&lt;blockquote></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -209,6 +225,7 @@
         <p>Tag : <b>&lt;b></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -220,6 +237,7 @@
         <p>Tag : <b>&lt;br></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -231,6 +249,7 @@
         <p>Tag : <b>&lt;button></b></p>
         <p>Attributs obligatoires : <b>type</b></p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -242,6 +261,7 @@
         <p>Tag : <b>&lt;canvas></b></p>
         <p>Attributs obligatoires : <b>id</b></p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -253,6 +273,7 @@
         <p>Tag : <b>&lt;caption></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -264,6 +285,7 @@
         <p>Tag : <b>&lt;meta></b></p>
         <p>Attributs obligatoires : <b>charset</b></p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -275,6 +297,7 @@
         <p>Tag : <b>&lt;cite></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -286,6 +309,7 @@
         <p>Tag : <b>&lt;code></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -300,6 +324,7 @@
             Si span > 1 alors l'attribut span apparait sinon l'attribut n'apparait pas
         </p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -311,6 +336,7 @@
         <p>Tag : <b>&lt;colgroup></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -322,6 +348,7 @@
         <p>Tag : <b>&lt;!-- comment --></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -333,6 +360,7 @@
         <p>Tag : <b>&lt;data></b></p>
         <p>Attributs obligatoires : <b>value</b></p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -344,6 +372,7 @@
         <p>Tag : <b>&lt;datalist></b></p>
         <p>Attributs obligatoires : <b>id</b></p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -355,6 +384,7 @@
         <p>Tag : <b>&lt;dd></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -366,6 +396,7 @@
         <p>Tag : <b>&lt;del></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -380,6 +411,7 @@
             Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
         </p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -391,6 +423,7 @@
         <p>Tag : <b>&lt;dfn></b></p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -405,6 +438,7 @@
             Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
         </p>
         <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -416,6 +450,7 @@
         <p>Tag : <b>&lt;div></b></p>
         <p>Attributs obligatoires : <b>id</b></p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -424,9 +459,10 @@
         </div>
 
         <h4><u>Mot 'dl'</u></h4> 
-        <p>Tag : <b>&lt;dl></b></p>
+        <p>Tag : <b>&lt;dl></b> : Description List</p>
         <p>Attributs obligatoires : pas d'attribut</p>
         <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -435,8 +471,41 @@
         </div>
 
         <h4><u>Mot 'dloption'</u></h4> 
+        <p>Tag : <b>&lt;option></b> : Description List Option</p>
+        <p>Attributs obligatoires : <b>value</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"value_attribut"</i> <b>dloption</b> --> {'tag':'option', 'content':[], 'attrs':{'value':'value_attribut'}, 'container':'n'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'dt'</u></h4> 
+        <p>Tag : <b>&lt;dt></b> : Description Term</p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>dt</b> --> {'tag':'dt', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'em'</u></h4> 
+        <p>Tag : <b>&lt;em></b> : Emphasized</p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>em</b> --> {'tag':'em', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+            </code>
+        </div>
+
         <h4><u>Mot 'fieldarea'</u></h4> 
         <h4><u>Mot 'fieldset'</u></h4> 
         <h4><u>Mot 'figcaption'</u></h4> 
