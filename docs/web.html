@@ -115,7 +115,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "href_attribut"</i> <b>a</b> --> {'tag':'a', 'content':['content'], 'attrs':{'href':'href_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "href_attribut"</i> <b>a</b><br><br>
+                --> {'tag':'a', 'content':['content'], 'attrs':{'href':'href_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;a href="href_attribut">content&lt;/a>
             </code>
         </div>
 
@@ -127,7 +129,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "title_attribut"</i> <b>abbr</b> --> {'tag':'abbr', 'content':['content'], 'attrs':{'title':'title_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "title_attribut"</i> <b>abbr</b><br><br>
+                --> {'tag':'abbr', 'content':['content'], 'attrs':{'title':'title_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;abbr title="title_attribut">content&lt;/abbr>
             </code>
         </div>
 
@@ -139,7 +143,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>address</b> --> {'tag':'address', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <b>address</b><br><br>
+                --> {'tag':'address', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;address>&lt;/address>
             </code>
         </div>
 
@@ -151,7 +157,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"shape_attribut" "coords_attribut" "href_attribut"</i> <b>area</b> --> {'tag':'area', 'content':[], 'attrs':{'shape':'shape_attribut', 'coords':'coords_attribut', 'href':'href_attribut'}, 'container':'n'} est positionné sur la pile
+                <i>"shape_attribut" "coords_attribut" "href_attribut"</i> <b>area</b><br><br>
+                --> {'tag':'area', 'content':[], 'attrs':{'shape':'shape_attribut', 'coords':'coords_attribut', 'href':'href_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;area shape="shape_attribut" coords="coords_attribut" href="href_attribut"/>
             </code>
         </div>
 
@@ -163,7 +171,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>article</b> --> {'tag':'article', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <b>article</b><br><br>
+                --> {'tag':'article', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;article>&lt;/article>
             </code>
         </div>
 
@@ -175,7 +185,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>aside</b> --> {'tag':'aside', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <b>aside</b><br><br>
+                --> {'tag':'aside', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;aside>&lt;/aside>
             </code>
         </div>
 
@@ -193,7 +205,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"controls_attribut" "autoplay_attribut" "inloop_attribut" "muted_attribut"</i> <b>audio</b> --> {'tag':'audio', 'content':[], 'attrs':{'muted':'muted_attribut', 'autoplay':'autoplay_attribut', 'loop':'inloop_attribut', 'controls':'controls_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"controls_attribut" "autoplay_attribut" "inloop_attribut" "muted_attribut"</i> <b>audio</b><br><br>
+                --> {'tag':'audio', 'content':[], 'attrs':{'muted':'muted_attribut', 'autoplay':'autoplay_attribut', 'loop':'inloop_attribut', 'controls':'controls_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;audio[ muted][ autoplay][ loop][ controls]>&lt;/audio>
             </code>
         </div>
 
@@ -205,7 +219,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "dir_attribut"</i> <b>bdo</b> --> {'tag':'bdo', 'content':['content'], 'attrs':{'dir':'dir_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "dir_attribut"</i> <b>bdo</b><br><br>
+                --> {'tag':'bdo', 'content':['content'], 'attrs':{'dir':'dir_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;bdo dir="dir_attribut">content&lt;/bdo>
             </code>
         </div>
 
@@ -217,7 +233,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>blockquote</b> --> {'tag':'blockquote', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>blockquote</b><br><br>
+                --> {'tag':'blockquote', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;blockquote>content&lt;/blockquote>
             </code>
         </div>
 
@@ -229,7 +247,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>bold</b> --> {'tag':'b', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>bold</b><br><br>
+                --> {'tag':'b', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;b>content&lt;/b>
             </code>
         </div>
 
@@ -241,7 +261,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>br</b> --> {'tag':'br', 'content':[], 'attrs':{}, 'container':'n'} est positionné sur la pile
+                <b>br</b><br><br>
+                --> {'tag':'br', 'content':[], 'attrs':{}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;br/>
             </code>
         </div>
 
@@ -253,7 +275,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "type_attribut"</i> <b>button</b> --> {'tag':'button', 'content':['content'], 'attrs':{'type':'type_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "type_attribut"</i> <b>button</b><br><br>
+                --> {'tag':'button', 'content':['content'], 'attrs':{'type':'type_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;button type="type_attribut">content&lt;/button>
             </code>
         </div>
 
@@ -265,7 +289,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"id_attribut"</i> <b>canvas</b> --> {'tag':'canvas', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"id_attribut"</i> <b>canvas</b><br><br>
+                --> {'tag':'canvas', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;canvas id="id_attribut">&lt;/canvas>
             </code>
         </div>
 
@@ -277,7 +303,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>caption</b> --> {'tag':'caption', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>caption</b><br><br>
+                --> {'tag':'caption', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;caption>content&lt;/caption>
             </code>
         </div>
 
@@ -289,7 +317,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"charset_attribut"</i> <b>charset</b> --> {'tag':'meta', 'content':[], 'attrs':{'charset':'charset_attribut'}, 'container':'n'} est positionné sur la pile
+                <i>"charset_attribut"</i> <b>charset</b><br><br>
+                --> {'tag':'meta', 'content':[], 'attrs':{'charset':'charset_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;meta charset="charset_attribut"/>
             </code>
         </div>
 
@@ -301,7 +331,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>cite</b> --> {'tag':'cite', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>cite</b><br><br>
+                --> {'tag':'cite', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;cite>content&lt;/cite>
             </code>
         </div>
 
@@ -313,7 +345,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>code</b> --> {'tag':'code', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>code</b><br><br>
+                --> {'tag':'code', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;code>content&lt;/code>
             </code>
         </div>
 
@@ -328,7 +362,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"span_attribut"</i> <b>col</b> --> {'tag':'meta', 'content':[], 'attrs':{'span':'span_attribut'}, 'container':'n'} est positionné sur la pile
+                <i>"span_attribut"</i> <b>col</b><br><br>
+                --> {'tag':'col', 'content':[], 'attrs':{'span':'span_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;col span="span_attribut"/>
             </code>
         </div>
 
@@ -340,7 +376,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>colgroup</b> --> {'tag':'colgroup', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <b>colgroup</b><br><br>
+                --> {'tag':'colgroup', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;colgroup>&lt;/colgroup>
             </code>
         </div>
 
@@ -352,7 +390,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>comment</b> --> {'tag':'comment', 'content':['content'], 'attrs':{}, 'container':'n'} est positionné sur la pile
+                <i>"content"</i> <b>comment</b><br><br>
+                --> {'tag':'comment', 'content':['content'], 'attrs':{}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;!-- content -->
             </code>
         </div>
 
@@ -364,7 +404,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "value_attribut"</i> <b>data</b> --> {'tag':'data', 'content':['content'], 'attrs':{'value':'value_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "value_attribut"</i> <b>data</b><br><br>
+                --> {'tag':'data', 'content':['content'], 'attrs':{'value':'value_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;data value="value_attribut">content&lt;/data>
             </code>
         </div>
 
@@ -376,7 +418,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"id_attribut"</i> <b>datalist</b> --> {'tag':'datalist', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"id_attribut"</i> <b>datalist</b><br><br>
+                --> {'tag':'datalist', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;datalist id="id_attribut">&lt;/datalist>
             </code>
         </div>
 
@@ -388,7 +432,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>dd</b> --> {'tag':'dd', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>dd</b><br><br>
+                --> {'tag':'dd', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;dd>content&lt;/dd>
             </code>
         </div>
 
@@ -400,7 +446,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>del</b> --> {'tag':'del', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>del</b><br><br>
+                --> {'tag':'del', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;del>content&lt;/del>
             </code>
         </div>
 
@@ -410,12 +458,14 @@
         <p>
             Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
         </p>
-        <p>Contenu : pas de contenu</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
         <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"open_attribut"</i> <b>details</b> --> {'tag':'details', 'content':[], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"open_attribut"</i> <b>details</b><br><br>
+                --> {'tag':'details', 'content':[{'tag':'summary', 'content':['content'], 'attrs':{}, 'container':'y'}], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;details[ open]>&lt;summary>content&lt;summay>&lt;/details>
             </code>
         </div>
 
@@ -427,7 +477,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>dfn</b> --> {'tag':'dfn', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>dfn</b><br><br>
+                --> {'tag':'dfn', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;dfn>content&lt;/dfn>
             </code>
         </div>
 
@@ -442,7 +494,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content" "open_attribut"</i> <b>dialog</b> --> {'tag':'dialog', 'content':['content'], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"content" "open_attribut"</i> <b>dialog</b><br><br>
+                --> {'tag':'dialog', 'content':['content'], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;dialog[ open]>content&lt;/dialog>
             </code>
         </div>
 
@@ -454,7 +508,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"id_attribut"</i> <b>div</b> --> {'tag':'div', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile
+                <i>"id_attribut"</i> <b>div</b><br><br>
+                --> {'tag':'div', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;div id="id_attribut">&lt;/div>
             </code>
         </div>
 
@@ -466,19 +522,23 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <b>dl</b> --> {'tag':'dl', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <b>dl</b><br><br>
+                --> {'tag':'dl', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;dl>&lt;/dl>
             </code>
         </div>
 
         <h4><u>Mot 'dloption'</u></h4> 
-        <p>Tag : <b>&lt;option></b> : Description List Option</p>
+        <p>Tag : <b>&lt;option></b> : Data List Option</p>
         <p>Attributs obligatoires : <b>value</b></p>
         <p>Contenu : pas de contenu</p>
         <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"value_attribut"</i> <b>dloption</b> --> {'tag':'option', 'content':[], 'attrs':{'value':'value_attribut'}, 'container':'n'} est positionné sur la pile
+                <i>"value_attribut"</i> <b>dloption</b><br><br>
+                --> {'tag':'option', 'content':[], 'attrs':{'value':'value_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;option value="value_attribut"/>
             </code>
         </div>
 
@@ -490,7 +550,9 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>dt</b> --> {'tag':'dt', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>dt</b><br><br>
+                --> {'tag':'dt', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;dt>content&lt;/dt>
             </code>
         </div>
 
@@ -502,11 +564,26 @@
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"content"</i> <b>em</b> --> {'tag':'em', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile
+                <i>"content"</i> <b>em</b><br><br>
+                --> {'tag':'em', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;em>content&lt;/em>
             </code>
         </div>
 
         <h4><u>Mot 'fieldarea'</u></h4> 
+        <p>Tag : <b>&lt;input></b> : systématiquement l'attribut name est égal à l'id du widget</p>
+        <p>Attributs obligatoires : <b>id</b>, <b>value</b>, <b>type</b></p>
+        <p>Contenu : Pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"type_attribut" "value_attribut" "id_attribut"</i> <b>fieldarea</b><br><br>
+                --> {'tag':'input', 'content':[], 'attrs':{"type":"type_attribut", "value":"value_attribut", "id":"id_attribut", "name":"id_attribut"}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;input type="type_attribut" value="value_attribut" id="id_attribut" name="id_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'fieldset'</u></h4> 
         <h4><u>Mot 'figcaption'</u></h4> 
         <h4><u>Mot 'figure'</u></h4> 
