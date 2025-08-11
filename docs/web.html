@@ -103,7 +103,7 @@
         <p>
             Ce package vous propose de vous créer cette structure pour chaque tag HTML. Avec les 2 mots décrits ci-dessus, vous pouvez en
             créer de plus complexes. Ceux qui vous sont proposés dans la suite représentent les tags basiques.<br>
-            HTML est un langage permisif donc si vous positionnez un tag au mauais endroit, rien ne se passera. HTML n'en tiendra pas compte.
+            HTML est un langage permisif donc si vous positionnez un tag au mauvais endroit, rien ne se passera. HTML n'en tiendra pas compte.
             Du coup, Beetle ne vous emchêche pas de faire n'importe quoi. La charge du contrôle est laissé à HTML.<br>
             Voici donc la description de cette liste exhaustive de mots :
         </p>
@@ -916,16 +916,159 @@
         </div>
 
         <h4><u>Mot 'meta'</u></h4> 
+        <p>Tag : <b>&lt;meta></b></p>
+        <p>Attributs obligatoires : <b>name</b>, <b>content</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content_attribut" "name_attribut"</i> <b>meta</b><br><br>
+                --> {'tag':'meta', 'content':[], 'attrs':{'name':'name_attribut', 'content':'content_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;meta name="name_attribut" content="content_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'meter'</u></h4> 
+        <p>Tag : <b>&lt;meter></b></p>
+        <p>Attributs obligatoires : <b>max</b>, <b>min</b>, <b>value</b>, <b>id</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "max_attribut" "min_attribut" "value_attribut" "id_attribut"</i> <b>meter</b><br><br>
+                --> {'tag':'meter', 'content':['content'], 'attrs':{'max':'max_attribut', 'min':'min_attribut', 'value':'value_attribut', 'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;meter min="min_attribut" max="max_attribut" value="value_attribut" id="id_attribut">content&lt;/meter>
+            </code>
+        </div>
+
         <h4><u>Mot 'nav'</u></h4> 
+        <p>Tag : <b>&lt;nav></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>menu</b><br><br>
+                --> {'tag':'nav', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;nav>&lt;/nav>
+            </code>
+        </div>
+
         <h4><u>Mot 'noscript'</u></h4> 
+        <p>Tag : <b>&lt;noscript></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>noscript</b><br><br>
+                --> {'tag':'noscript', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;noscript>content&lt;/noscript>
+            </code>
+        </div>
+
         <h4><u>Mot 'optgroup'</u></h4> 
+        <p>Tag : <b>&lt;optgroup></b></p>
+        <p>Attributs obligatoires : <b>disabled</b>, <b>label</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"disabled_attribut" "label_attribut"</i> <b>optgroup</b><br><br>
+                --> {'tag':'optgroup', 'content':[], 'attrs':{'disabled':'disabled_attribut', 'label':'label_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;optgroup[ disabled] label="label_attribut">content&lt;/optgroup>
+            </code>
+        </div>
+
         <h4><u>Mot 'option'</u></h4> 
+        <p>Tag : <b>&lt;option></b></p>
+        <p>Attributs obligatoires : <b>value</b>, <b>selected</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content" "value_attribut" "selected_attribut"</i> <b>option</b><br><br>
+                --> {'tag':'option', 'content':['content'], 'attrs':{'value':'value_attribut', 'selected':'selected_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;option[ selected] value="value_attribut">content&lt;/option>
+            </code>
+        </div>
+
         <h4><u>Mot 'orderlist'</u></h4> 
+        <p>Tag : <b>&lt;ol></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>orderlist</b><br><br>
+                --> {'tag':'ol', 'content':['content'], 'attrs':{'value':'value_attribut', 'selected':'selected_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;ol id="id_attribut">&lt;/ol>
+            </code>
+        </div>
+
         <h4><u>Mot 'paragraph'</u></h4> 
+        <p>Tag : <b>&lt;p></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>paragraph</b><br><br>
+                --> {'tag':'p', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;p>content&lt;/p>
+            </code>
+        </div>
+
         <h4><u>Mot 'pictsrc'</u></h4> 
+        <p>Tag : <b>&lt;source></b></p>
+        <p>Attributs obligatoires : <b>media</b>, <b>srcset</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"media_attribut" "srcset_attribut"</i> <b>pictsrc</b><br><br>
+                --> {'tag':'source', 'content':[], 'attrs':{'media':'media_attribut', 'srcset':'srcset_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;source media="media_attribut" srcset="srcset_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'picture'</u></h4> 
+        <p>Tag : <b>&lt;picture></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>picture</b><br><br>
+                --> {'tag':'picture', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;picture>&lt;/picture>
+            </code>
+        </div>
+
         <h4><u>Mot 'pre'</u></h4> 
+        <p>Tag : <b>&lt;pre></b> : préserve les espaces et les retours à la ligne</p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>pre</b><br><br>
+                --> {'tag':'pre', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;pre>content&lt;/pre>
+            </code>
+        </div>
+
         <h4><u>Mot 'quote'</u></h4> 
         <h4><u>Mot 'section'</u></h4> 
         <h4><u>Mot 'select'</u></h4> 
@@ -936,22 +1079,41 @@
         <h4><u>Mot 'style'</u></h4> 
         <h4><u>Mot 'sub'</u></h4> 
         <h4><u>Mot 'summary'</u></h4> 
-        <h4><u>Mot 'sup'</u></h4> 
+        <h4><u>Mot 'sup'</u></h4>
+        
+        
         <h4><u>Mot 'svg'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgcircle'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgellipse'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgimage'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgline'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svglineargradient'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgmarker'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgpath'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgpattern'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgpolygon'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgpolyline'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgradialgradient'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgrect'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgtext'</u></h4> 
+        <p>Pas implémenté</p>
         <h4><u>Mot 'svgtextpath'</u></h4> 
+        <p>Pas implémenté</p>
+
+
         <h4><u>Mot 'table'</u></h4> 
         <h4><u>Mot 'tablecell'</u></h4> 
         <h4><u>Mot 'tablehead'</u></h4> 
