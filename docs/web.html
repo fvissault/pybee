@@ -1070,16 +1070,159 @@
         </div>
 
         <h4><u>Mot 'quote'</u></h4> 
+        <p>Tag : <b>&lt;q></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>quote</b><br><br>
+                --> {'tag':'q', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;q>content&lt;/q>
+            </code>
+        </div>
+
         <h4><u>Mot 'section'</u></h4> 
+        <p>Tag : <b>&lt;section></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>section</b><br><br>
+                --> {'tag':'section', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;section>&lt;/section>
+            </code>
+        </div>
+
         <h4><u>Mot 'select'</u></h4> 
+        <p>Tag : <b>&lt;select></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>select</b><br><br>
+                --> {'tag':'section', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;select id="id_attribut">&lt;/select>
+            </code>
+        </div>
+
         <h4><u>Mot 'small'</u></h4> 
+        <p>Tag : <b>&lt;small></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>small</b><br><br>
+                --> {'tag':'small', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;small>content&lt;/small>
+            </code>
+        </div>
+
         <h4><u>Mot 'source'</u></h4> 
+        <p>Tag : <b>&lt;source></b></p>
+        <p>Attributs obligatoires : <b>src</b>, <b>type</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"src_attribut" "sourcetype_attribut"</i> <b>source</b><br><br>
+                --> {'tag':'source', 'content':[], 'attrs':{'src':'src_attribut', 'type':'sourcetype_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;source type="sourcetype_attribut" src="src_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'span'</u></h4> 
+        <p>Tag : <b>&lt;span></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>span</b><br><br>
+                --> {'tag':'span', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;span>content&lt;/span>
+            </code>
+        </div>
+
         <h4><u>Mot 'strong'</u></h4> 
+        <p>Tag : <b>&lt;strong></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>strong</b><br><br>
+                --> {'tag':'strong', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;strong>content&lt;/strong>
+            </code>
+        </div>
+
         <h4><u>Mot 'style'</u></h4> 
+        <p>Tag : <b>&lt;style></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>style</b><br><br>
+                --> {'tag':'style', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;style>content&lt;/style>
+            </code>
+        </div>
+
         <h4><u>Mot 'sub'</u></h4> 
+        <p>Tag : <b>&lt;sub></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>sub</b><br><br>
+                --> {'tag':'sub', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;sub>content&lt;/sub>
+            </code>
+        </div>
+
         <h4><u>Mot 'summary'</u></h4> 
+        <p>Tag : <b>&lt;summary></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>summary</b><br><br>
+                --> {'tag':'summary', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;summary>content&lt;/summary>
+            </code>
+        </div>
+
         <h4><u>Mot 'sup'</u></h4>
+        <p>Tag : <b>&lt;sup></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>sup</b><br><br>
+                --> {'tag':'sup', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;sup>content&lt;/sup>
+            </code>
+        </div>
+
         
         
         <h4><u>Mot 'svg'</u></h4> 
