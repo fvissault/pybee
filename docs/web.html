@@ -573,7 +573,7 @@
         <h4><u>Mot 'fieldarea'</u></h4> 
         <p>Tag : <b>&lt;input></b> : systématiquement l'attribut name est égal à l'id du widget</p>
         <p>Attributs obligatoires : <b>id</b>, <b>value</b>, <b>type</b></p>
-        <p>Contenu : Pas de contenu</p>
+        <p>Contenu : pas de contenu</p>
         <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
@@ -585,15 +585,140 @@
         </div>
 
         <h4><u>Mot 'fieldset'</u></h4> 
+        <p>Tag : <b>&lt;fieldset></b></p>
+        <p>Attributs obligatoires : <b>name</b>, <b>disabled</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"name_attribut" "disabled_attribut"</i> <b>fieldset</b><br><br>
+                --> {'tag':'fieldset', 'content':[], 'attrs':{"name":"name_attribut", "disabled":"disabled_attribut"}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;fieldset[ disabled] name="name_attribut">&lt;/fieldset>
+            </code>
+        </div>
+
         <h4><u>Mot 'figcaption'</u></h4> 
+        <p>Tag : <b>&lt;figcaption></b></p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>figcaption</b><br><br>
+                --> {'tag':'figcaption', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;figcaption>content&lt;/figcaption>
+            </code>
+        </div>
+
         <h4><u>Mot 'figure'</u></h4> 
+        <p>Tag : <b>&lt;figure></b></p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>figure</b><br><br>
+                --> {'tag':'figure', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;figure>&lt;/figure>
+            </code>
+        </div>
+
         <h4><u>Mot 'footer'</u></h4> 
+        <p>Tag : <b>&lt;footer></b></p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>footer</b><br><br>
+                --> {'tag':'footer', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;footer>&lt;/footer>
+            </code>
+        </div>
+
         <h4><u>Mot 'form'</u></h4>
+        <p>Tag : <b>&lt;form></b></p>
+        <p>Attributs obligatoires : <b>action</b>, <b>method</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"action_attribut" "method_attribut"</i> <b>form</b><br><br>
+                --> {'tag':'form', 'content':[], 'attrs':{'action':'action_attribut', 'method':'method_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;form action="action_attribut" method="method_attribut">&lt;/form>
+            </code>
+        </div>
+
         <h4><u>Mot 'header'</u></h4> 
+        <p>Tag : <b>&lt;header></b></p>
+        <p>Attributs obligatoires : Pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>header</b><br><br>
+                --> {'tag':'header', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;header>&lt;/header>
+            </code>
+        </div>
+
         <h4><u>Mot 'headlink'</u></h4> 
+        <p>Tag : <b>&lt;link></b></p>
+        <p>Attributs obligatoires : <b>href</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"href_attribut"</i> <b>headlink</b><br><br>
+                --> {'tag':'link', 'content':[], 'attrs':{'href':'href_attribut', 'rel':'styleshhet'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;link action="action_attribut" rel="stylesheet"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'headscriptfile'</u></h4> 
+        <p>Tag : <b>&lt;script></b></p>
+        <p>Attributs obligatoires : <b>src</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"src_attribut"</i> <b>headscriptfile</b><br><br>
+                --> {'tag':'script', 'content':[], 'attrs':{'src':'src_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;script src="src_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'hr'</u></h4> 
+        <p>Tag : <b>&lt;hr></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>hr</b><br><br>
+                --> {'tag':'hr', 'content':[], 'attrs':{}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;hr/>
+            </code>
+        </div>
+
         <h4><u>Mot 'htmlcontent'</u></h4> 
+        <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
+        <div class="div_code">
+            <code> 
+                Content-type: text/html;charset=UTF-8
+            </code>
+        </div>
+        <p>Cela indique à votre navigateur qu'il va devoir afficher une page HTML.</p>
+
         <h4><u>Mot 'httpequiv'</u></h4> 
         <h4><u>Mot 'iframe'</u></h4> 
         <h4><u>Mot 'img'</u></h4> 
