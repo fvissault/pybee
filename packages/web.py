@@ -83,7 +83,7 @@ class web(base_module):
                            'dialog': '''local open local cont { } local attrs open @ "open" = if "open" open @ attrs cell+ drop then { tag : "dialog" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'em': '''local cont { tag : "em" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'fieldset': '''local disabled local name { } local attrs disabled @ "disabled" = if "disabled" disabled @ attrs cell+ drop then "name" name @ attrs cell+ drop { tag : "fieldset" , content : [ ] , attrs : attrs @ , container : "y" }''',
-                           'figcaption': '''{ tag : "figcaption" , content : [ ] , attrs : { } , container : "y" }''',
+                           'figcaption': '''local cont { tag : "figcaption" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'figure': '''{ tag : "figure" , content : [ ] , attrs : { } , container : "y" }''',
                            'form': '''local method local action { } local attrs "action" action @ attrs cell+ drop "method" method @ attrs cell+ drop { tag : "form" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'hr': '''{ tag : "hr" , content : [ ] , attrs : { } , container : "n" }''',
