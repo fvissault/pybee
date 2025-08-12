@@ -65,14 +65,14 @@
         <p>Pour ajouter un attribut à un tag, ce sera le mot : <b>addattr</b>. La syntaxe du mot est la suivante :</p>
         <div class="div_code">
             <code>
-                <i>contenant_variable</i> "attribut_name" "attribut_value" <b>addattr</b>
+                <i>contenant_variable "attribut_name" "attribut_value"</i> <b>addattr</b>
             </code>
         </div>
         
         <p>Pour ajouter un contenu à un tag, ce sera le mot : <b>addcontent</b>. La syntaxe du mot est la suivante :</p>
         <div class="div_code">
             <code>
-                <i>contenant_variable contenu_variable</i> <b>addcontent</b>
+                <i>contenant_variable { structure | Chaine_de_caractères }</i> <b>addcontent</b>
             </code>
         </div>
         <p>Exemple concret (vous pouvez voir que ces 2 mots sont très importants dans le package 'web') :</p>
@@ -710,15 +710,6 @@
             </code>
         </div>
 
-        <h4><u>Mot 'htmlcontent'</u></h4> 
-        <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
-        <div class="div_code">
-            <code> 
-                Content-type: text/html;charset=UTF-8
-            </code>
-        </div>
-        <p>Cela indique à votre navigateur qu'il va devoir afficher une page HTML.</p>
-
         <h4><u>Mot 'httpequiv'</u></h4> 
         <p>Tag : <b>&lt;meta></b></p>
         <p>Attributs obligatoires : <b>http-equiv</b>, <b>content</b></p>
@@ -1129,7 +1120,7 @@
         <p>Tag : <b>&lt;source></b></p>
         <p>Attributs obligatoires : <b>src</b>, <b>type</b></p>
         <p>Contenu : pas de contenu</p>
-        <p>Container? : <b>oui</b></p>
+        <p>Container? : <b>non</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
@@ -1258,20 +1249,151 @@
 
 
         <h4><u>Mot 'table'</u></h4> 
+        <p>Tag : <b>&lt;table></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>table</b><br><br>
+                --> {'tag':'table', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;table id="id_attribut">&lt;/table>
+            </code>
+        </div>
+
         <h4><u>Mot 'tablecell'</u></h4> 
+        <p>Tag : <b>&lt;td></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>tablecell</b><br><br>
+                --> {'tag':'td', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;td>content&lt;/td>
+            </code>
+        </div>
+
         <h4><u>Mot 'tablehead'</u></h4> 
+        <p>Tag : <b>&lt;th></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>tablehead</b><br><br>
+                --> {'tag':'th', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;th>content&lt;/th>
+            </code>
+        </div>
+
         <h4><u>Mot 'tablerow'</u></h4> 
+        <p>Tag : <b>&lt;tr></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <b>tablerow</b><br><br>
+                --> {'tag':'tr', 'content':[], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;tr>&lt;/tr>
+            </code>
+        </div>
+
         <h4><u>Mot 'textarea'</u></h4> 
+        <p>Tag : <b>&lt;textarea></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>textarea</b><br><br>
+                --> {'tag':'textarea', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;textarea id="id_attribut">&lt;/textarea>
+            </code>
+        </div>
+
         <h4><u>Mot 'underline'</u></h4> 
+        <p>Tag : <b>&lt;u></b></p>
+        <p>Attributs obligatoires : pas d'attribut</p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"content"</i> <b>underline</b><br><br>
+                --> {'tag':'u', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;u>content&lt;/u>
+            </code>
+        </div>
+
         <h4><u>Mot 'unorderlist'</u></h4>
+        <p>Tag : <b>&lt;ul></b></p>
+        <p>Attributs obligatoires : <b>id</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"id_attribut"</i> <b>unorderlist</b><br><br>
+                --> {'tag':'ul', 'content':[], 'attrs':{'id':'id_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;ul id="id_attribut">&lt;/ul>
+            </code>
+        </div>
+
         <h4><u>Mot 'urlbase'</u></h4> 
+        <p>Tag : <b>&lt;base></b></p>
+        <p>Attributs obligatoires : <b>href</b>, <b>target</b></p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>non</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"href_attribut" "target_attribut"</i> <b>urlbase</b><br><br>
+                --> {'tag':'base', 'content':[], 'attrs':{'href':'href_attribut', 'target':'target_attribut'}, 'container':'n'} est positionné sur la pile<br>
+                --> &lt;base href="href_attribut" target="target_attribut"/>
+            </code>
+        </div>
+
         <h4><u>Mot 'video'</u></h4>
+        <p>Tag : <b>&lt;video></b></p>
+        <p>Attributs obligatoires : <b>controls</b>, <b>autoplay</b>, <b>inloop</b>, <b>muted</b></p>
+        <p>
+            Si controls = 'controls' alors l'attribut controls apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si autoplay = 'autoplay' alors l'attribut controls apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si inloop = 'loop' alors l'attribut loop apparaitra dans les attributs du tag sinon il n'apparait pas<br>
+            Si muted = 'muted' alors l'attribut muted apparaitra dans les attributs du tag sinon il n'apparait pas
+        </p>
+        <p>Contenu : pas de contenu</p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"controls_attribut" "autoplay_attribut" "inloop_attribut" "muted_attribut"</i> <b>video</b><br><br>
+                --> {'tag':'video', 'content':[], 'attrs':{'muted':'muted_attribut', 'autoplay':'autoplay_attribut', 'loop':'inloop_attribut', 'controls':'controls_attribut'}, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;video[ muted][ autoplay][ loop][ controls]>&lt;/video>
+            </code>
+        </div>
+
 
         <a name="complexwidget"><h3>4. La construction du HTML : widgets complexes</h3></a>
         <p>My first paragraph.</p>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset et htmlcontent, ...)</h3></a>
-        <p>My first paragraph.</p>
+
+        <h4><u>Mot 'htmlcontent'</u></h4> 
+        <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
+        <div class="div_code">
+            <code> 
+                Content-type: text/html;charset=UTF-8
+            </code>
+        </div>
+        <p>Cela indique à votre navigateur qu'il va devoir afficher une page HTML.</p>
         
         <a name="generate"><h3>6. La génération du HTML : (generate)</h3></a>
         <p>My first paragraph.</p>
