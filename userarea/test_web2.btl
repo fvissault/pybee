@@ -1,8 +1,8 @@
 <?btl
 webreset
-body form addcontent
+body form1 addcontent
 title "Ceci est une page test" addcontent
-form "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
+form1 "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
 html "lang" "en" addattr
 head "userarea/css/file.css" headlink addcontent
 head "userarea/js/file.js" headscriptfile addcontent
@@ -11,26 +11,26 @@ head "textarea { background-color: DarkSalmon; color: white; }" style addcontent
 "division" div var div1
 div1 "Ceci est mon label : " "mydiv" label addcontent
 div1 "mydiv" "test" "text" fieldarea addcontent
-form div1 addcontent
+form1 div1 addcontent
 
 "userarea/img/bb.jpeg" img var myimg
-form myimg addcontent
+form1 myimg addcontent
 myimg "width" "300" addattr
 
-form br addcontent
-form "ta" textarea addcontent
+form1 br addcontent
+form1 "ta" textarea addcontent
 
 [ [ "Volvo" "volvo" "n" ] 
   [ "Saab" "saab" "y" ] 
   [ "Mercedes" "mercedes" "n" ] 
   [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop
-form br addcontent
-form cars addcontent
+form1 br addcontent
+form1 cars addcontent
 
-form br addcontent
+form1 br addcontent
 "button" "Valider" button var valider drop
 valider "onclick" "alert("Hello world!")" addattr
-form valider addcontent
+form1 valider addcontent
 
 
 body "yahoo" "http://www.yahoo.fr" a addcontent
