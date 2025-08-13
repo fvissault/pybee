@@ -1429,8 +1429,142 @@
             completeselect est un mot qui existe dans votre package 'web'. Libre à vous d'en créer d'autres suivant le besoin de votre
             projet. Par exemple, vous pouvez avoir besoin d'un objet 'card' comme c'est la mode en ce moment dans les sites web.
         </p>
+        <p>
+            Beetle vous offre également la possibilité de créer vos nouveaux widgets :
+            <ul>
+                <li>
+                    soit directement dans le package : vous retrouverez le mot associé à votre composant dans la liste des mots du package 'web'<br>
+                    <b>Cette solution est la solution durable</b>
+                </li>
+                <li>
+                    soit dans votre programme : vous retrouverez le mot associé à votre composant dans le package 'core'<br>
+                    <b>Cette solution est la solution éphémère</b>
+                </li>
+            </ul>
+        </p>
 
-        <a name="layout"><h3>5. La construction du HTML : (layout, webreset et htmlcontent, ...)</h3></a>
+        <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
+        <p>
+            Maintenant que vous connaissez le moyen de créer des widgets simples et complexe, Beetle vous met en place un ensemble de
+            variables (html, head, body, title, ...) pour vous faciliter la conception de vos pages. Les mots qui vous permettent de faire cela
+            sont : <b>layout</b> et <b>webreset</b>
+        </p>
+        <h4><u>Mot 'webreset'</u></h4>
+        <p>
+            Les variables que webreset va vous mettre à disposition sont : <b>html, head, body, title, form1</b> et vous allez les utiliser
+            souvent. Vous pouvez me croire...
+        </p>
+        <p>Un exemple complet :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                <b>webreset</b><br>
+                <b>body form1</b> addcontent<br>
+                <b>title</b> "Page test de passage de paramètres dans un formulaire" addcontent<br>
+                <b>form1</b> "action" "test_form_result.btl" addattr<br>
+                <b>html</b> "lang" "en" addattr<br>
+                <b>head</b> "UTF-8" charset addcontent<br>
+                <b>head</b> "userarea/css/file.css" headlink addcontent<br>
+                <b>form1</b> "Ceci est mon label : " "mydiv" label addcontent<br>
+                "mydiv" "fred" "text" fieldarea var fa drop<br>
+                <b>form1</b> fa addcontent<br>
+                <b>form1</b> br addcontent<br>
+                <b>form1</b> "submit" "Valider" button addcontent<br>
+                <b>html</b> @ generate cls<br>
+                forget fa<br>
+                ?>
+            </code>
+        </div>
+        <p>Ce petit bout de code donne ceci :</p>
+        <img src="images/test_form.png" width="350"/>
+        <p>Autre exemple complet :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                body form1 addcontent<br>
+                title "Ceci est une page test" addcontent<br>
+                form1 "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/file.css" headlink addcontent<br>
+                head "userarea/js/file.js" headscriptfile addcontent<br>
+                head "textarea { background-color: DarkSalmon; color: white; }" style addcontent<br>
+                <br>
+                "division" div var div1<br>
+                div1 "Ceci est mon label : " "mydiv" label addcontent<br>
+                div1 "mydiv" "test" "text" fieldarea addcontent<br>
+                form1 div1 addcontent<br>
+                <br>
+                "userarea/img/bb.jpeg" img var myimg<br>
+                form1 myimg addcontent<br>
+                myimg "width" "300" addattr<br>
+                <br>
+                form1 br addcontent<br>
+                form1 "ta" textarea addcontent<br>
+                <br>
+                [ [ "Volvo" "volvo" "n" ] <br>
+                [ "Saab" "saab" "y" ] <br>
+                [ "Mercedes" "mercedes" "n" ] <br>
+                [ "Audi" "audi" "n" ] ] "cars" completeselect var cars drop<br>
+                form1 br addcontent<br>
+                form1 cars addcontent<br>
+                <br>
+                form1 br addcontent<br>
+                "button" "Valider" button var valider drop<br>
+                valider "onclick" "alert("Hello world!")" addattr<br>
+                form1 valider addcontent<br>
+                <br>
+                body "yahoo" "http://www.yahoo.fr" a addcontent<br>
+                <br>
+                body 1 "Test de titre 1" maintitle addcontent<br>
+                body "Ceci est mon premier paragraph avec Beetle" paragraph addcontent<br>
+                body 2 "Test de titre 2" maintitle addcontent<br>
+                body 3 "Test de titre 3" maintitle addcontent<br>
+                body 4 "Test de titre 4" maintitle addcontent<br>
+                body 5 "Test de titre 5" maintitle addcontent<br>
+                <br>
+                body "World Health Organization" "WHO" abbr addcontent<br>
+                body br addcontent<br>
+                <br>
+                "userarea/img/planets.gif" img var planets<br>
+                body planets addcontent<br>
+                planets "width" "145" addattr<br>
+                planets "height" "126" addattr<br>
+                planets "usemap" "#planetmap" addattr<br>
+                <br>
+                "planetmap" map var planetmap<br>
+                planetmap "rect" "0,0,82,126" "sun.htm" area addcontent<br>
+                planetmap "circle" "90,58,3" "mercur.htm" area addcontent<br>
+                planetmap "circle" "124,58,8" "venus.htm" area addcontent<br>
+                body planetmap addcontent<br>
+                <br>
+                body br addcontent<br>
+                "controls" "noautoplay" "noloop" "nomuted" audio var horse<br>
+                horse "src" "userarea/img/horse.ogg" addattr<br>
+                body horse addcontent<br>
+                <br>
+                body br addcontent<br>
+                <br>
+                ( html @ .cr cr )<br>
+                <br>
+                html @ generate cls<br>
+                <br>
+                forget div1<br>
+                forget myimg<br>
+                forget cars<br>
+                ?>
+            </code>
+        </div>
+        <p>Ce bout de code donne ceci :</p>
+        <img src="images/test_web2.png" width="350"/>
+        <p>'webreset' est un mot qui vous permet de créer une page simple rapidement. Ce qui n'est pas le cas du mot 'layout'</p>
+
+        <h4><u>Mot 'layout'</u></h4> 
+        <p>
+            Les variables que layout va vous mettre à disposition sont : <b>html, head, body, title, laystyle</b>
+        </p>
+        <p>Ce bout de code donne ceci :</p>
+        <img src="images/test_web3.png" width="800"/>
 
         <h4><u>Mot 'htmlcontent'</u></h4> 
         <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
