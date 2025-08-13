@@ -1382,7 +1382,53 @@
 
 
         <a name="complexwidget"><h3>4. La construction du HTML : widgets complexes</h3></a>
-        <p>My first paragraph.</p>
+        <p>
+            Vous avez à disposition plus d'une centaine de widgets simples. Voir le chapitre précédent pour en avoir une liste exhaustive.
+            Mais Beetle vous offre la possibilité de créer des widgets plus complexe. Cela dépend du besoin de votre projet. Donc je vais 
+            vous expliquer comment créer de nouveaux widgets au travers d'un exemple.<br>
+            L'exemple en question est un select qui doit contenir l'ensemble de ses options et pouvoir en sélectionner un en particulier.<br>
+            Voici le code Beetle de ce widget :
+        </p>
+        <p>
+            En préalable du code, voici ce qu'on souhaite renseigner pour afficher ce widget.<br>
+            La structure qui permet de créer des options est la suivante :<br><br>
+            * option = ["contenu_de_l'option", "valeur_de_l'option", "sélection_l'option = 'y'|'n'"]<br>
+            * liste_d'option = [option*]<br><br>
+        </p>
+        <p>Voici un exemple de select qui vous permet de choisir une marque de voiture :</p>
+        <div class="div_code">
+            <code>
+            [ [ "Volvo" "volvo" "n" ] [ "Saab" "saab" "y" ] [ "Mercedes" "mercedes" "n" ] [ "Audi" "audi" "n" ] ] "cars" completeselect var cars
+            </code>
+        </div>
+        <p>Et le code Beetle correspondant :</p>
+        <div class="div_code">
+            <code>
+                : completeselect<br>
+                <blockquote>
+                    select local tempselect ( <b>création du select qui va recevoir les options</b> )<br> 
+                    0 local i<br> 
+                    0 local item<br> 
+                    0 local opt<br> 
+                    dup cells i<br> 
+                    do<br>
+                    <blockquote> 
+                        dup<br> 
+                        i @ cell@ item ! ( <b>on récupère le ième item de notre tableau</b> )<br> 
+                        item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! ( <b>création du widget option</b> )<br>
+                        "content" opt @ tempselect cell+ drop ( <b>on ajoute l'option nouvellement créé au contenu du select</b> )
+                    </blockquote> 
+                    loop<br> 
+                    drop<br> 
+                    tempselect @
+                </blockquote> 
+                ;
+            </code>
+        </div>
+        <p>
+            completeselect est un mot qui existe dans votre package 'web'. Libre à vous d'en créer d'autres suivant le besoin de votre
+            projet. Par exemple, vous pouvez avoir besoin d'un objet 'card' comme c'est la mode en ce moment dans les sites web.
+        </p>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset et htmlcontent, ...)</h3></a>
 
