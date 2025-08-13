@@ -14,7 +14,7 @@ form1 fa addcontent
 form1 br addcontent
 form1 "submit" "Valider" button addcontent
 
-html @ .cr cr
+( html @ .cr cr )
 
 html @ generate cls
 
