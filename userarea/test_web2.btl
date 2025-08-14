@@ -28,7 +28,7 @@ form1 br addcontent
 form1 cars addcontent
 
 form1 br addcontent
-"button" "Valider" button var valider drop
+"Valider" "button" button var valider drop
 valider "onclick" "alert("Hello world!")" addattr
 form1 valider addcontent
 
