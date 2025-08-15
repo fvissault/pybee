@@ -1556,9 +1556,6 @@
             </code>
         </div>
 
-
-
-
         <p>Ce bout de code donne ceci :</p>
         <img src="images/test_web2.png" width="350"/>
         <p>'webreset' est un mot qui vous permet de créer une page simple rapidement. Ce qui n'est pas le cas du mot 'layout'</p>
@@ -1567,8 +1564,108 @@
         <p>
             Les variables que layout va vous mettre à disposition sont : <b>html, head, body, title, laystyle</b>
         </p>
+        <p>Un exemple complet :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                "pagetest" 4 layout ( <b>4 zones dans notre layout. Son nom est renseigné</b> )<br>
+                "template-columns" "200px repeat(4, 1fr)" layoutgrid ( <b>horizontalement, une colonne fixe de 200px et 4 colonnes de une frame</b> )<br>
+                "template-rows" "50px 500px 50px" layoutgrid ( <b>verticalement, 3 lignes de 50px, 500px et 50px</b> )<br>
+                "column-gap" "1px" layoutgrid ( <b>le gap entre les colonnes est de 1px</b> )<br>
+                "row-gap" "1px" layoutgrid ( <b>le gap entre les lignes est de 1 px</b> )<br>
+                "other" "background-color: indianred" layoutgrid ( <b>la couleur de fond de notre layout est indianred</b> )<br>
+                "other" "padding:10px" layoutgrid ( <b>sur l'ensemble du layout, un entourage de 10px est positionné</b> )<br>
+                <br>
+                ( <b>le formalisme utilisé ici est le suivant : n° de ligne de départ / n° de colonne de départ / n° de ligne d'arrivée / n° de colonne d'arrivée</b> )<br>
+                "area" 0 "1 / 1 / 2 / 6" layoutarea ( <b>la première zone s'étend de la frame (1,1) à la frame (2,6)</b> )<br>
+                "area" 1 "2 / 1 / 3 / 2" layoutarea ( <b>la deuxième zone s'étend de la frame (2,1) à la frame (3,2)</b> )<br>
+                "area" 2 "2 / 2 / 3 / 6" layoutarea ( <b>la troisième zone s'étend de la frame (2,2) à la frame (3,6)</b> )<br>
+                "area" 3 "3 / 1 / 4 / 6" layoutarea ( <b>la quatrième zone s'étend de la frame (3,1) à la frame (4,6)</b> )<br>
+                "other" 0 "background-color:white" layoutarea ( <b>pour la zone 0, la couleur du fond est blanc</b> )<br>
+                "other" 0 "display: grid" layoutarea ( <b>pour utiliser l'instruction suivante, il faut déclarer la zone comme étant une grid</b> )<br>
+                "other" 0 "place-items: start center" layoutarea ( <b>pour la zone 0, le contenu sera placé au début horizontalement et au centre verticalement</b> )<br>
+                "other" 1 "background-color:white" layoutarea ( <b>pour la zone 1, la couleur du fond est blanc</b> )<br>
+                "other" 2 "background-color:white" layoutarea ( <b>pour la zone 2, la couleur du fond est blanc</b> )<br>
+                "other" 3 "background-color:white" layoutarea ( <b>pour la zone 3, la couleur du fond est blanc</b> )<br>
+                "other" 3 "display: grid" layoutarea ( <b>pour utiliser l'instruction suivante, il faut déclarer la zone comme étant une grid</b> )<br>
+                "other" 3 "place-items: end center" layoutarea ( <b>pour la zone 3, le contenu sera placé à la fin horizontalement et au centre verticalement</b> )<br>
+                grouplaystyle ( <b>on regroupe les définitions css définies plus haut</b> )<br>
+                "outlinestyle" savelaystyle ( <b>on sauve les définitions css dans un fichier</b> )<br>
+                <br>
+                z0 "1" addcontent<br>
+                z1 "2" addcontent<br>
+                z2 "3" addcontent<br>
+                z3 "4" addcontent<br>
+                title "Ceci est une page test" addcontent<br>
+                <br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+
         <p>Ce bout de code donne ceci :</p>
         <img src="images/test_web3.png" width="800"/>
+
+        <p>
+            Pour arriver à réaliser cela, nous avons eu besoin de 4 mots : <b>layoutgrid</b>, <b>layoutarea</b>, <b>grouplaystyle</b> et 
+            <b>savelaystyle</b>
+        </p>
+
+        <h4><u>Mot 'layoutgrid'</u></h4>
+        <p>Description : ce mot vous permet de renseigner le css général de votre layout. Ce css se retrouve dans la variable <b>laystyle</b>.</p>
+        <p>
+            Paramètres : "nom_de_la_ressource_css" "valeur_de_la_ressource" : ce sont des chaines de caractères
+            <ul>
+                <li>
+                    Le nom_de_la_ressource_css peut prendre les valeurs suivantes : <b>template-columns</b>, <b>template-rows</b>, 
+                    <b>column-gap</b>, <b>row-gap</b> ou <b>other</b><br>
+                    Dans tous les cas sauf pour <b>other</b>, Beetle ajoute 'grid-' avant le paramètre dans le css. Cela permet à Beetle
+                    de contrôler un minimum de cohérence dans le nom de l'attribut css<br>
+                    Pour <b>other</b>, cela vous permet de renseigner du css général au layout. Dans ce cas-la, il faut préciser la 
+                    ressource et sa valeur que vous souhaitez affecter
+                </li>
+                <li>valeur_de_la_ressource représente la valeur de nom_de_la_ressource_css. C'est ce que vous avez besoin que ce soit</li>
+            </ul>
+        </p>
+        <p>Syntaxes :</p>
+        <div class="div_code">
+            <code>
+                <i>"nom_de_la_ressource_css" "valeur_de_la_ressource"</i> <b>layoutgrid</b><br><br>
+                <b>"other"</b> <i>"nom_de_la_ressource_css: valeur_de_la_ressource"</i> <b>layoutgrid</b>
+            </code>
+        </div>
+        <p>Exemple :</p>
+        <div class="div_code">
+            <code>
+                "template-columns" "200px repeat(4, 1fr)" layoutgrid ( <b>va créer la ressource css : <i>grid-template-columns</i> avec la 
+                valeur <i>200px repeat(4, 1fr)</i></b> )<br>
+                "template-rows" "50px 500px 50px" layoutgrid ( <b>va créer la ressource css : <i>grid-template-rows</i> avec la 
+                valeur <i>50px 500px 50px</i></b> )<br>
+                "column-gap" "1px" layoutgrid ( <b>va créer la ressource css : <i>grid-column-gap</i> avec la 
+                valeur <i>1px</i></b> )<br>
+                "row-gap" "1px" layoutgrid<br>
+                "other" "background-color: indianred" layoutgrid ( <b>va créer la ressource css : <i>background-color: indianred</i></b> )<br>
+                "other" "padding:10px" layoutgrid ( <b>va créer la ressource css : <i>padding:10px</i></b> )<br>
+            </code>
+        </div>
+
+        <h4><u>Mot 'layoutarea'</u></h4>
+        <p>Description :</p>
+        <p>Paramètres :</p>
+        <p>Syntaxe :</p>
+        <p>Exemple :</p>
+
+        <h4><u>Mot 'grouplaystyle'</u></h4>
+        <p>Description :</p>
+        <p>Paramètres :</p>
+        <p>Syntaxe :</p>
+        <p>Exemple :</p>
+
+        <h4><u>Mot 'savelaystyle'</u></h4>
+        <p>Description :</p>
+        <p>Paramètres :</p>
+        <p>Syntaxe :</p>
+        <p>Exemple :</p>
 
         <h4><u>Mot 'htmlcontent'</u></h4> 
         <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
