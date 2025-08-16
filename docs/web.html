@@ -1650,16 +1650,45 @@
         </div>
 
         <h4><u>Mot 'layoutarea'</u></h4>
-        <p>Description :</p>
-        <p>Paramètres :</p>
+        <p>Description : vous permet de définir le css de chaque zone de votre layout</p>
+        <p>Paramètres : "nom_de_la_ressource_css" numéro_de_la_zone "valeur_de_la_ressource"</p>
         <p>Syntaxe :</p>
+        <div class="div_code">
+            <code>
+                <b>"area"</b> <i>numéro_de_la_zone "valeur_de_la_ressource"</i> <b>layoutarea</b><br><br>
+                <b>"other"</b> <i>numéro_de_la_zone "nom_de_la_ressource_css: valeur_de_la_ressource"</i> <b>layoutarea</b>
+            </code>
+        </div>
         <p>Exemple :</p>
+        <div class="div_code">
+            <code>
+                "area" 0 "1 / 1 / 2 / 6" layoutarea ( <b>va créer la ressource <i>grid-area</i> avec la valeur <i>1 / 1 / 2 / 6</i> pour la zone 0</b> )<br>
+                "area" 1 "2 / 1 / 3 / 2" layoutarea<br>
+                "area" 2 "2 / 2 / 3 / 6" layoutarea<br>
+                "area" 3 "3 / 1 / 4 / 6" layoutarea<br>
+                "other" 0 "background-color:white" layoutarea ( <b>va créer la ressource <i>background-color:white</i> pour la zone 0</b> )<br>
+                "other" 0 "display: grid" layoutarea<br>
+                "other" 0 "place-items: start center" layoutarea<br>
+                "other" 1 "background-color:white" layoutarea<br>
+                "other" 2 "background-color:white" layoutarea<br>
+                "other" 3 "background-color:white" layoutarea<br>
+                "other" 3 "display: grid" layoutarea<br>
+                "other" 3 "place-items: end center" layoutarea
+            </code>
+        </div>
 
         <h4><u>Mot 'grouplaystyle'</u></h4>
-        <p>Description :</p>
-        <p>Paramètres :</p>
+        <p>
+            Description : permet de regrouper les définitions css qui ont les mêmes sélecteurs. ce mot peut être utilisé à tout moment.<br>
+            Si vous n'utilisez pas ce mot, vos définitions css vont fonctionner quand même.
+        </p>
+        <p>Paramètres : pas de paramètre</p>
         <p>Syntaxe :</p>
-        <p>Exemple :</p>
+        <div class="div_code">
+            <code>
+                <b>grouplaystyle</b>
+            </code>
+        </div>
 
         <h4><u>Mot 'savelaystyle'</u></h4>
         <p>Description :</p>
