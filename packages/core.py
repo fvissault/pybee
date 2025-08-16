@@ -58,6 +58,7 @@ class core(base_module):
                            '2>r' : ' swap >r >r',
                            '2r>' : 'r> r> swap', 
                            'import' : self.import_instr, 
+                           'detach' : self.detach_instr, 
                            'help' : self.help_instr, 
                            'emit' : self.emit_instr,
                            'cr' : self.cr_instr, 
@@ -453,6 +454,17 @@ class core(base_module):
                 return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
         return 'nobreak'
 
+    '''
+    Instruction detach : détache le dictionnaire d'un package du dictionnaire principal 
+    '''
+    def detach_instr(self):
+        if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
+            return core_errors.error_import_name_missing.print_error('detach', self.interpreter.output)
+        packname = self.pop_sequence()
+        if packname in self.interpreter.packages.keys():
+            del self.interpreter.packages[packname]
+        return 'nobreak'
+    
     '''
     Instruction drop : supprime l'élément qui se trouve en haut de la pile de travail
     '''
