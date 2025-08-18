@@ -1477,7 +1477,7 @@
         </div>
         <p>Ce petit bout de code donne ceci :</p>
         <img src="images/test_form.png" width="350"/>
-        <p>Autre exemple complet :</p>
+        <p>Autre exemple complet ( code de 'test_web2.btl' ):</p>
         <div class="div_code">
             <code>
                 &lt;?btl<br>
@@ -1562,13 +1562,14 @@
 
         <h4><u>Mot 'layout'</u></h4> 
         <p>
-            Les variables que layout va vous mettre à disposition sont : <b>html, head, body, title, laystyle</b>
+            Les variables que layout va vous mettre à disposition sont : <b>html, head, body, title, laystyle</b>. Dans le body de votre
+            page, 'layout' va créer les zones que vous souhaitez voir en les numérotant de 0 à n
         </p>
         <p>Un exemple complet :</p>
         <div class="div_code">
             <code>
                 &lt;?btl<br>
-                "pagetest" 4 layout ( <b>4 zones dans notre layout. Son nom est renseigné</b> )<br>
+                "pagetest" 4 layout ( <b>4 zones dans notre layout numérotés de 0 à 3. Son nom est renseigné</b> )<br>
                 "template-columns" "200px repeat(4, 1fr)" layoutgrid ( <b>horizontalement, une colonne fixe de 200px et 4 colonnes de une frame</b> )<br>
                 "template-rows" "50px 500px 50px" layoutgrid ( <b>verticalement, 3 lignes de 50px, 500px et 50px</b> )<br>
                 "column-gap" "1px" layoutgrid ( <b>le gap entre les colonnes est de 1px</b> )<br>
@@ -1590,7 +1591,7 @@
                 "other" 3 "display: grid" layoutarea ( <b>pour utiliser l'instruction suivante, il faut déclarer la zone comme étant une grid</b> )<br>
                 "other" 3 "place-items: end center" layoutarea ( <b>pour la zone 3, le contenu sera placé à la fin horizontalement et au centre verticalement</b> )<br>
                 grouplaystyle ( <b>on regroupe les définitions css définies plus haut</b> )<br>
-                "outlinestyle" savelaystyle ( <b>on sauve les définitions css dans un fichier</b> )<br>
+                "infile" savelaystyle ( <b>on sauve les définitions css dans un fichier</b> )<br>
                 <br>
                 z0 "1" addcontent<br>
                 z1 "2" addcontent<br>
@@ -1650,7 +1651,7 @@
         </div>
 
         <h4><u>Mot 'layoutarea'</u></h4>
-        <p>Description : vous permet de définir le css de chaque zone de votre layout</p>
+        <p>Description : vous permet de définir le css de chaque zone de votre layout. Ce css se retrouve dans la variable <b>laystyle</b>.</p>
         <p>Paramètres : "nom_de_la_ressource_css" numéro_de_la_zone "valeur_de_la_ressource"</p>
         <p>Syntaxe :</p>
         <div class="div_code">
@@ -1691,10 +1692,18 @@
         </div>
 
         <h4><u>Mot 'savelaystyle'</u></h4>
-        <p>Description :</p>
-        <p>Paramètres :</p>
-        <p>Syntaxe :</p>
-        <p>Exemple :</p>
+        <p>
+            Description : permet de sauver vos définitions css. Il est judicieux de l'utiliser quand l'ensemble de vos définitions css pour
+            votre page est défini.
+        </p>
+        <p>Paramètres : "lieu_de_sauvegarde"</p>
+        <p>Syntaxe : </p>
+        <div class="div_code">
+            <code>
+                <b>"inlinestyle" savelaystyle</b> ( <b>positionne le css dans un tag style</b> )<br><br>
+                <b>"outlinestyle" savelaystyle</b> ( <b>sauvegarde le css dans un fichier dont le nom correspond au nom de votre layout </b> )
+            </code>
+        </div>
 
         <h4><u>Mot 'htmlcontent'</u></h4> 
         <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
@@ -1706,17 +1715,137 @@
         <p>Cela indique à votre navigateur qu'il va devoir afficher une page HTML.</p>
         
         <a name="generate"><h3>6. La génération du HTML : (generate)</h3></a>
-        <p>My first paragraph.</p>
+        <p>
+            A partir de la structure définie ci-dessus, le mot 'generate' va générer le code HTML et l'envoyer sur la sortie standard.<br>
+            Ceci a un avantage car vous pouvez générer n'importe quelle partie de votre page afin de la tester. C'est à peu près tout!
+        </p>
+        <p>La syntaxe de ce mot est simplissime :</p>
+        <div class="div_code">
+            <code> 
+                <i>nom_de_variable</i> @ <b>generate</b>
+            </code>
+        </div>
+        <p>Voici un exemple de code HTML généré sur le code de 'test_web2.btl' :</p>
+        <div class="div_code">
+            <code> 
+                Content-type: text/html;charset=UTF-8<br><br>
+
+                &lt;!DOCTYPE html><br>
+                &lt;html lang='en'><br>
+                <blockquote>
+                    &lt;head>
+                    <blockquote>
+                        &lt;title>Ceci est une page test&lt;/title><br>
+                        &lt;link href='userarea/css/file.css' rel='stylesheet'/><br>
+                        &lt;script src='userarea/js/file.js'>&lt;/script><br>
+                        &lt;style>
+                        <blockquote>
+                            textarea { background-color: DarkSalmon; color: white; }
+                        </blockquote>
+                        &lt;/style>
+                    </blockquote>
+                    &lt;/head><br>
+                    &lt;body><br>
+                    <blockquote>
+                        &lt;form action='http://localhost/pybee/browser.py?file=myaction&path=default' method='post'>
+                        <blockquote>
+                            &lt;div id='division'>
+                            <blockquote>
+                                &lt;label for='mydiv'>Ceci est mon label :&lt;/label><br>
+                                &lt;input type='text' value='test' id='mydiv' name='mydiv'/>
+                            </blockquote>
+                            &lt;/div><br>
+                            &lt;img src='userarea/img/bb.jpeg' width='300'/><br>
+                            &lt;br/><br>
+                            &lt;textarea id='ta'>&lt;/textarea><br>
+                            &lt;br/><br>
+                            &lt;select id='cars'><br>
+                            <blockquote>
+                                &lt;option value='volvo'>Volvo&lt;/option><br>
+                                &lt;option selected='y' value='saab'>Saab&lt;/option><br>
+                                &lt;option value='mercedes'>Mercedes&lt;/option><br>
+                                &lt;option value='audi'>Audi&lt;/option>
+                            </blockquote>
+                            &lt;/select><br>
+                            &lt;br/><br>
+                            &lt;button type='button' onclick='alert("Hello world!")'>Valider&lt;/button>
+                        </blockquote>
+                        &lt;/form><br>
+                        &lt;a href='http://www.yahoo.fr'>yahoo&lt;/a><br>
+                        &lt;h1>Test de titre 1&lt;/h1><br>
+                        &lt;p>Ceci est mon premier paragraph avec Beetle&lt;/p><br>
+                        &lt;h2>Test de titre 2&lt;/h2><br>
+                        &lt;h3>Test de titre 3&lt;/h3><br>
+                        &lt;h4>Test de titre 4&lt;/h4><br>
+                        &lt;h5>Test de titre 5&lt;/h5><br>
+                        &lt;abbr title='WHO'>World Health Organization&lt;/abbr><br>
+                        &lt;br/><br>
+                        &lt;img src='userarea/img/planets.gif' width='145' height='126' usemap='#planetmap'/><br>
+                        &lt;map name='planetmap'>
+                        <blockquote>
+                            &lt;area shape='rect' coords='0,0,82,126' href='sun.htm'/><br>
+                            &lt;area shape='circle' coords='90,58,3' href='mercur.htm'/><br>
+                            &lt;area shape='circle' coords='124,58,8' href='venus.htm'/>
+                        </blockquote>
+                        &lt;/map><br>
+                        &lt;br/><br>
+                        &lt;audio controls src='userarea/img/horse.ogg'>&lt;/audio><br>
+                        &lt;br/>
+                    </blockquote>
+                    &lt;/body>
+                </blockquote>
+                &lt;/html>
+            </code>
+        </div>
+
         
         <a name="posted"><h3>7. Le passage de paramètres entre les pages : (posted)</h3></a>
-        <p>My first paragraph.</p>
-        
+        <p>
+            Il est indispensable de pouvoir transférer des paramètres d'une page contenant un formulaire à une autre page. Ce mot (posted) vous
+            permet de faire cela.
+        </p>
+        <p>
+            De quelle manière cela peut-il se faire?<br>Voici un formulaire dans le fichier 'test_form.btl' qui comporte un champ texte ou 
+            vous pouvez taper votre propre nom :
+        </p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                webreset<br>
+                body form1 addcontent<br>
+                title "Page test de passage de paramètres dans un formulaire" addcontent<br>
+                form1 "action" "test_form_result.btl" addattr<br>
+                html "lang" "en" addattr<br>
+                head "UTF-8" charset addcontent<br>
+                head "userarea/css/file.css" headlink addcontent<br>
+                form1 "Ceci est mon label : " "mydiv" label addcontent<br>
+                "mydiv" "fred" "text" fieldarea var fa drop<br>
+                form1 fa addcontent<br>
+                form1 br addcontent<br>
+                form1 "submit" "Valider" button addcontent<br>
+                html @ generate cls<br>
+                forget fa<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici la page qui va recevoir notre paramètre dans le fichier 'test_form_result.btl':</p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                htmlcontent<br>
+                "mydiv" posted var myname @ .<br>
+                ?>
+            </code>
+        </div>
+
+        <p>Qui affiche simplement 'fred' dans la page. Vous pouvez voir que c'est le contenu du textfield de la page précédente.</p>
+        <p>C'est aussi simple que ça!</p>
+
         <a name="sessions"><h3>8. La gestion des sessions : (session, getsession, setsessionduration, ...)</h3></a>
         <p>My first paragraph.</p>
 
-        <div class="div_code">
-            <code>: test . cr ;</code>
-        </div>
+        <a name="redirection"><h3>9. Les redirections : (redirect et session)</h3></a>
+        <p>My first paragraph.</p>
 
         <p><a href="math.html">Précédent : XII.5. Packages:Module 'mysqldb'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a></p>
     </body>
