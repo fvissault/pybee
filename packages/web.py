@@ -204,6 +204,9 @@ class web(base_module):
         print("Content-type: text/html;charset=UTF-8\n")
         return 'nobreak'
 
+    '''
+    Instruction session : créer une session
+    '''
     def session_instr(self):
         if len(self.work) > 1:
             name = str(self.pop_work())
@@ -237,6 +240,9 @@ class web(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
         return 'nobreak'
 
+    '''
+    Instruction getsession : charge les variables de session si elle existe
+    '''
     def getsession_instr(self):
         if len(self.work) > 0:
             name = str(self.pop_work())
@@ -253,6 +259,9 @@ class web(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter.output)
         return 'nobreak'
 
+    '''
+    Instruction setsessvar : créer une variable de session
+    '''
     def setsessvar_instr(self):
         if len(self.work) > 1:
             value = self.pop_work()
@@ -262,6 +271,9 @@ class web(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
         return 'nobreak'
 
+    '''
+    Instruction getsessvar : positionne la valeur d'une variable de session sur la pile de travail si elle existe
+    '''
     def getsessvar_instr(self):
         if len(self.work) > 0:
             key = self.pop_work()
@@ -270,6 +282,9 @@ class web(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
         return 'nobreak'
 
+    '''
+    Instruction usecookie? : positionne sur la pile de travail si une session a été créée
+    '''
     def usecookies_instr(self):
         if self.usecookies == True:
             self.work.appendleft(1)
@@ -277,6 +292,9 @@ class web(base_module):
             self.work.appendleft(0)
         return 'nobreak'
 
+    '''
+    Instruction setsessduration : fixe la durée de validitaé d'une session : par défaut c'est 30 minutes et la minute est l'unité
+    '''
     def setsessduration_instr(self):
         if len(self.work) > 0:
             duration = int(self.pop_work())
@@ -285,6 +303,9 @@ class web(base_module):
             return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
         return 'nobreak'
     
+    '''
+    Instruction sessduration? : positionne sur la pile de travail la durée de validité des sessions : par défaut ce sera 30 minutes
+    '''
     def sessduration_instr(self):
         self.work.appendleft(self.sessionduration)
         return 'nobreak'
