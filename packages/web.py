@@ -142,7 +142,7 @@ class web(base_module):
         self.sessionvars = {"auth" : 1}
         self.sessionduration = 30
         self.usecookies = False
-        self.version = 'v1.3.2'
+        self.version = 'v1.3.5'
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
@@ -254,9 +254,20 @@ class web(base_module):
         return 'nobreak'
 
     def setsessvar_instr(self):
+        if len(self.work) > 1:
+            value = self.pop_work()
+            key = self.pop_work()
+            self.sessionvars[key] = value
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
         return 'nobreak'
 
     def getsessvar_instr(self):
+        if len(self.work) > 0:
+            key = self.pop_work()
+            self.work.appendleft(self.sessionvars[key])
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
         return 'nobreak'
 
     def usecookies_instr(self):
