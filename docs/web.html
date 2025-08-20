@@ -1881,6 +1881,98 @@
                 <li>Un fichier coté serveur portant le nom de la session et contenant les variables de sessions que vous aurez définies</li>
             </ol>
         </p>
+        <p>
+            Le mot '<b>session</b>' est le seul mot vous permettant de créer une session. Il va créer un cookie au niveau du client et un fichier
+            de session sur le serveur contenant les variables de sessions.<br>
+            Par exemple, pour indiquer qu'une authentification est réussie dans votre application, vous devrez utiliser les variables de 
+            session.<br>
+            Si vous n'avez pas de variable de session à positionner dans votre application, le fichier de session contiendra '{}'<br>
+            Le cookie coté client possède une date de validité qui est fixée à 30 minutes à partir de sa création et contient pour sa 
+            valeur un identifiant de session qui est utilisé pour le nom du fichier de session. Cela permet de pouvoir supprimer l'ancien
+            fichier de session s'il existe pour en créer un nouveau. Ce mécanisme est en place pour éviter de stocker tous les fichiers 
+            de session même ceux des sessions périmées.
+        </p>
+        <p>La syntaxe du mot 'session' est la suivante :</p>
+        <div class="div_code">
+            <code> 
+                "noredirect | redirect" "nom_de_session" <b>session</b>
+            </code>
+        </div>
+        <p>
+            Pour pouvoir faire une redirection après la création d'une session, vous devrez utiliser le paramètre 'redirect'. L'entête 
+            de la réponse du serveur n'est pas la même que pour une page classique.
+        </p>
+        <p>
+            Du coup, pour faire une redirection, ce sera le mot '<b>redirect</b>' qui vous permettra de le faire.<br>Attention : il ne
+            faut rien faire après la redirection au risque d'empêcher le serveur de répondre correctement à votre requête HTTP.
+        </p>
+        <p>La syntaxe du mot 'redirect' est la plus simple possible :</p>
+        <div class="div_code">
+            <code> 
+                "url_de_redirection" <b>redirect</b>
+            </code>
+        </div>
+        <p>
+            Maintenant, il vous faut pouvoir récupérer la session valide en cours. Pour cela, nous avons un autre mot '<b>getsession</b>' 
+            dont la syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code> 
+                "nom_de_session" <b>getsession</b>
+            </code>
+        </div>
+        <p>
+            Voici un exemple pour illustrer tout cela :<br>
+            Le point de départ de notre exemple est le contenu de notre fichier 'test_form.btl' qui contient un formulaire.
+        </p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                webreset<br>
+                body form1 addcontent<br>
+                title "Page test de passage de paramètres dans un formulaire" addcontent<br>
+                form1 "action" "test_form_result.btl" addattr<br>
+                html "lang" "en" addattr<br>
+                head "UTF-8" charset addcontent<br>
+                head "userarea/css/file.css" headlink addcontent<br>
+                form1 "Ceci est mon label : " "mydiv" label addcontent<br>
+                "mydiv" "fred" "text" fieldarea var fa drop<br>
+                form1 fa addcontent<br>
+                form1 br addcontent<br>
+                form1 "submit" "Valider" button addcontent<br>
+                html @ generate cls<br>
+                forget fa<br>
+                ?>
+            </code>
+        </div>
+        <p>L'action de notre formulaire pointe sur le fichier 'test_form_result.btl' qui contient :</p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                "redirect" "beetle" session ( <b>création d'une session qui se nomme 'beetle'</b> )<br>
+                "http://localhost/pybee/test_session.btl" redirect ( <b>redirection vers 'test_session.btl'</b> )<br>
+                ?>
+            </code>
+        </div>
+        <p>Et 'test_session.btl' récupère la session et affiche le tableau des variables de session :</p>
+        <div class="div_code">
+            <code> 
+                &lt;?btl<br>
+                htmlcontent ( <b>c'est une simple page et donc on affiche la bonne entête</b> )<br>
+                "beetle" getsession . ( <b>récupère la session 'beetle' et affiche les variables de session</b> )<br>
+                ?>
+            </code>
+        </div>
+        <p>
+            Concernant les sessions, quelques mots supplémentaires vous sont mis à disposition : 
+            <ul>
+                <li><b>session?</b> : vous indique qu'une session à été créée</li>
+                <li><b>setsessvar</b> : vous permet de positionner une variable de session</li>
+                <li><b>getsessvar</b> : vous permet de lire une variable de session</li>
+                <li><b>setsessduration</b> : positionne une durée de validité pour votre session - 30 minutes par défaut</li>
+                <li><b>sessduration?</b> : vous indique la durée de validité d'une session - information non persistante</li>
+            </ul>
+        </p>
 
         <p><a href="math.html">Précédent : XII.5. Packages:Module 'mysqldb'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a></p>
     </body>
