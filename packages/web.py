@@ -207,12 +207,17 @@ class web(base_module):
     def session_instr(self):
         if len(self.work) > 1:
             name = str(self.pop_work())
+            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+            if name in cookie:
+                session_cookie = cookie.get(name).value
+                if os.path.isfile(f"userarea/tmp/s{session_cookie}"):
+                    os.remove(f"userarea/tmp/s{session_cookie}")
             param = self.pop_work()
             valeur = json.dumps(self.sessionvars)
             session_id = str(uuid.uuid4())
             expiredate = (datetime.now() + timedelta(minutes=self.sessionduration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
             self.usecookies = True
-            with open(f"userarea/tmp/session_{name}", "w") as f:
+            with open(f"userarea/tmp/s{session_id}", "w") as f:
                 f.write(valeur)
                 f.close()            
             if param == 'redirect':
@@ -235,10 +240,10 @@ class web(base_module):
     def getsession_instr(self):
         if len(self.work) > 0:
             name = str(self.pop_work())
-            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE", ""))
-            session_cookie = cookie.get(name)
-            if session_cookie:
-                with open(f"userarea/tmp/session_{name}", "r") as f:
+            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+            if name in cookie:
+                session_cookie = cookie.get(name).value
+                with open(f"userarea/tmp/s{session_cookie}", "r") as f:
                     sessionvars = f.read()
                     self.sessionvars = json.loads(sessionvars)
                     f.close()
