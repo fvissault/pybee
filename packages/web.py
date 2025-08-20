@@ -134,13 +134,12 @@ class web(base_module):
                            'getsession' : self.getsession_instr,
                            'setsessvar' : self.setsessvar_instr,
                            'getsessvar' : self.getsessvar_instr,
-                           'usecookies?' : self.usecookies_instr,
+                           'session?' : self.usecookies_instr,
                            'setsessduration' : self.setsessduration_instr,
                            'sessduration?' : self.sessduration_instr
                            }
         self.help = web_help(self.interpreter.output)
-        self.sessionvars = {"auth" : 1}
-        self.sessionduration = 30
+        self.sessionvars = {'session_duration':30}
         self.usecookies = False
         self.version = 'v1.3.5'
 
@@ -218,7 +217,11 @@ class web(base_module):
             param = self.pop_work()
             valeur = json.dumps(self.sessionvars)
             session_id = str(uuid.uuid4())
-            expiredate = (datetime.now() + timedelta(minutes=self.sessionduration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
+            if 'session_duration' in self.sessionvars:
+                duration = self.sessionvars['session_duration']
+            else:
+                duration = 30
+            expiredate = (datetime.now() + timedelta(minutes=duration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
             self.usecookies = True
             with open(f"userarea/tmp/s{session_id}", "w") as f:
                 f.write(valeur)
@@ -231,7 +234,7 @@ class web(base_module):
             cookie[name] = session_id
             cookie[name]["path"] = "/"
             cookie[name]["httponly"] = True
-            cookie[name]["Max-Age"] = str(self.sessionduration * 60)
+            cookie[name]["Max-Age"] = str(duration * 60)
             cookie[name]["Expires"] = expiredate
             print(cookie.output())
             if param != 'redirect':
@@ -298,7 +301,7 @@ class web(base_module):
     def setsessduration_instr(self):
         if len(self.work) > 0:
             duration = int(self.pop_work())
-            self.sessionduration = duration
+            self.sessionvars['session_duration'] = duration
         else:
             return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
         return 'nobreak'
@@ -307,5 +310,5 @@ class web(base_module):
     Instruction sessduration? : positionne sur la pile de travail la durée de validité des sessions : par défaut ce sera 30 minutes
     '''
     def sessduration_instr(self):
-        self.work.appendleft(self.sessionduration)
+        self.work.appendleft(self.sessionvars['session_duration'])
         return 'nobreak'
