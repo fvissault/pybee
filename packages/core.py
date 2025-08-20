@@ -192,11 +192,7 @@ class core(base_module):
                            'values' : self.values_instr,
                            '>md5' : self.md5_instr,
                            '>json' : self.jsonencode_instr,
-                           'json>' : self.jsondecode_instr,
-                           'testcond' : '50 = if "égal" . else "pas egal" . then',
-                           'testloop' : '1000 local i 1500 i do i @ emit loop cr',
-                           'testfib' : '2 local i 1 0 2.s reverse i do 2dup + .s bl rot drop loop 2drop',
-                           'test' : '123'}
+                           'json>' : self.jsondecode_instr}
         self.variables = ['path']
         self.interpreter.immediate.append('test')
         self.interpreter.userdefinitions['true'] = deque(['@'])
