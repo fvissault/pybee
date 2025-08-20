@@ -1966,11 +1966,32 @@
         <p>
             Concernant les sessions, quelques mots supplémentaires vous sont mis à disposition : 
             <ul>
-                <li><b>session?</b> : vous indique qu'une session à été créée</li>
-                <li><b>setsessvar</b> : vous permet de positionner une variable de session</li>
-                <li><b>getsessvar</b> : vous permet de lire une variable de session</li>
-                <li><b>setsessduration</b> : positionne une durée de validité pour votre session - 30 minutes par défaut</li>
-                <li><b>sessduration?</b> : vous indique la durée de validité d'une session - information non persistante</li>
+                <li><b>session?</b> : vous indique qu'une session à été créée (mot sans paramètre)</li>
+                <li>
+                    <b>setsessvar</b> : vous permet de positionner une variable de session dont la syntaxe est :
+                    <div class="div_code">
+                        <code> 
+                            "key" "value" <b>setsessvar</b>
+                        </code>
+                    </div>
+                </li>
+                <li>
+                    <b>getsessvar</b> : vous permet de lire une variable de session dont la syntaxe est :
+                    <div class="div_code">
+                        <code> 
+                            "key" <b>getsessvar</b>
+                        </code>
+                    </div>
+                </li>
+                <li>
+                    <b>setsessduration</b> : positionne une durée de validité pour votre session - 30 minutes par défaut dont la syntaxe est :
+                    <div class="div_code">
+                        <code> 
+                            duration <b>setsessduration</b>
+                        </code>
+                    </div>
+                </li>
+                <li><b>sessduration?</b> : vous indique la durée de validité d'une session (mot sans paramètre)</li>
             </ul>
         </p>
 
