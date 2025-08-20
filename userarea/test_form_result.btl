@@ -1,7 +1,6 @@
 <?btl
-( "redirect" "beetle" session
-"http://localhost/pybee/test_session.btl" redirect )
+"noredirect" "beetle" session
+( "http://localhost/pybee/test_session.btl" redirect )
 ( "http://www.yahoo.fr" redirect )
-htmlcontent
 "mydiv" posted var myname @ .
 ?>
