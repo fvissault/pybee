@@ -1,0 +1,87 @@
+:root {
+    --flip-card-space : 5px;
+    --flip-card-general-height : 200px;
+    --flip-card-general-width : 300px;
+    --flip-card-transition-duration : 1.0s;
+    --flip-card-front-background-color : lightblue;
+    --flip-card-back-background-color : lightgreen;
+    --flip-card-color : grey;
+    --flip-card-front-color : black;
+    --flip-card-back-color : grey;
+}
+/***********************************************
+    flip-card
+************************************************/
+.flip-card {
+    background-color: transparent;
+    width: var(--flip-card-general-width);
+    height: var(--flip-card-general-height);
+    border-radius:calc(var(--flip-card-space) * 2);
+    margin-left:calc(var(--flip-card-space) * 3); 
+    margin-top:calc(var(--flip-card-space) * 2 + 1px); 
+    perspective: 1000px;
+    float:left;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-radius:calc(var(--flip-card-space) * 2);
+    transition: transform var(--flip-card-transition-duration);
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    color:var(--flip-card-color);
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateX(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.flip-card-front {
+    border-radius:calc(var(--flip-card-space) * 2);
+    background-color: var(--flip-card-front-background-color);
+    color:var(--flip-card-front-color);
+    overflow:scroll;
+}
+
+.flip-card-back {
+    border-radius:calc(var(--flip-card-space) * 2);
+    background-color: var(--flip-card-back-background-color);
+    color:var(--flip-card-back-color);
+    transform: rotateX(180deg);
+    overflow:scroll;
+}
+
+.flip-card button {
+    border: none;
+    border-radius:0px 0px calc(var(--flip-card-space) * 2) calc(var(--flip-card-space) * 2);
+    outline: 0;
+    padding: 6px;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+.flip-card button:hover, .flip-card a:hover {
+    color: white;
+    background-color: black;
+}
+
+.flip-card a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
