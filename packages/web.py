@@ -15,10 +15,10 @@ class web(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
         #print(interpreter)
-        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if usecookies? invert if htmlcontent then "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
+        self.dictionary = {'generate' : '''dup "tag" cell@ local tag dup "content" cell@ local content dup "attrs" cell@ local attrs "container" cell@ local container 0 local item 0 local i 0 local k 0 local v tag @ "comment" = if "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr else tag @ "html" = if session? invert if htmlcontent then "<!DOCTYPE html>" .cr then "<<#0#>" [ tag @ ] format . attrs @ cells 0 > if attrs @ keys k ! attrs @ values v ! k @ cells i do k @ i @ cell@ v @ i @ cell@ = if " <#0#>" [ k @ i @ cell@ ] format . else " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . then loop then container @ "y" = if ">" .cr 0 i ! content @ cells i do content @ i @ cell@ item ! item @ ?str if item @ .cr else item @ generate then loop else "/>" .cr then container @ "y" = if "</<#0#>>" [ tag @ ] format .cr then then''',
                            'webreset' : '''"html" ?var if forget html then "head" ?var if forget head then "title" ?var if forget title then "body" ?var if forget body then "form1" ?var if forget form1 then { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body html head addcontent html body addcontent { tag : "title" , content : [ ] , attrs : { } , container : "y" } var title head title addcontent { tag : "form" , content : [ ] , attrs : { action : "" , method : "post" } , container : "y" } var form1 cls''',
-                           'addcontent' : '''dup ?var dup ?local or if @ then "content" reverse cell+''',
-                           'addattr' : '''rot @ "attrs" cell@ cell+''',
+                           'addcontent' : '''local toadd local where toadd @ ?array invert if toadd @ ?var toadd @ ?local or if toadd @ @ toadd ! then then "content" toadd @ where @ cell+ drop''',
+                           'addattr' : '''rot @ "attrs" cell@ cell+ drop''',
                            'fieldarea' : '''{ } local attrs local fatype local favalue local faid "type" fatype @ attrs cell+ drop "value" favalue @ attrs cell+ drop "id" faid @ attrs cell+ drop "name" faid @ attrs cell+ drop { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'div' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'label' : '''{ } local attrs "for" swap attrs cell+ drop local content { tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }''',
@@ -30,7 +30,6 @@ class web(base_module):
                            'select' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "select" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'option' : '''{ } local attrs dup "y" = if "selected" swap attrs cell+ then drop "value" swap attrs cell+ drop local cont { tag : "option" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'a' : '''{ } local attrs "href" swap attrs cell+ drop local cont { tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
-                           'completeselect' : '''select local tempselect 0 local i 0 local item 0 local opt dup cells i do dup i @ cell@ item ! item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! "content" opt @ tempselect cell+ drop loop drop tempselect @''',
                            'button' : '''{ } local attrs local buttontype local cont "type" buttontype @ attrs cell+ drop { tag : "button" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'header' : '''{ tag : "header" , content : [ ] , attrs : { } , container : "y" }''',
                            'footer' : '''{ tag : "footer" , content : [ ] , attrs : { } , container : "y" }''',
@@ -136,7 +135,12 @@ class web(base_module):
                            'getsessvar' : self.getsessvar_instr,
                            'session?' : self.usecookies_instr,
                            'setsessduration' : self.setsessduration_instr,
-                           'sessduration?' : self.sessduration_instr
+                           'sessduration?' : self.sessduration_instr,
+                           'completeselect' : '''select local tempselect 0 local i 0 local item 0 local opt dup cells i do dup i @ cell@ item ! item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! "content" opt @ tempselect cell+ drop loop drop tempselect @''',
+                           'card' : '''local name "card<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "simple-card" addattr drop newname @''',
+                           #'flipcard' : '''''',
+                           'profilecard' : '''''',
+                           'productcard' : ''''''
                            }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
