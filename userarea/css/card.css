@@ -1,0 +1,80 @@
+:root {
+    --simple-card-space : 5px;
+    --simple-card-general-height : 150px;
+    --simple-card-general-width : 200px;
+    --simple-card-background-color : yellow;
+    --simple-card-border : 1px solid grey;
+    --simple-card-title-color : black;
+    --simple-card-body-color : black;
+    --simple-card-bottom-color : black;
+}
+/***********************************************
+    simple-card
+************************************************/
+.simple-card {
+    float:left; 
+    position:relative; 
+    border:var(--simple-card-border); 
+    border-radius:calc(var(--simple-card-space) * 2);
+    width:var(--simple-card-general-width); 
+    height:var(--simple-card-general-height); 
+    margin-left:calc(var(--simple-card-space) * 3); 
+    margin-top:calc(var(--simple-card-space) * 2); 
+    background-color:var(--simple-card-background-color); 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
+}
+
+.simple-card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.simple-card-title {
+    margin-top:var(--simple-card-space); 
+    margin-left:var(--simple-card-space); 
+    margin-right:var(--simple-card-space);
+    color:var(--simple-card-title-color); 
+    overflow:hidden; 
+    font-weight:bold;
+}
+
+.simple-card-body {
+    margin-top:var(--simple-card-space); 
+    margin-left:var(--simple-card-space); 
+    margin-right:var(--simple-card-space); 
+    color:var(--simple-card-body-color); 
+    height:calc(var(--simple-card-general-height) - 49px - 3 * var(--simple-card-space)); 
+    overflow:scroll;
+}
+
+.simple-card-bottom {
+    margin:var(--simple-card-space); 
+    position:absolute; 
+    bottom:0px; 
+    height:23px; 
+    overflow:hidden;
+    color:var(--simple-card-bottom-color); 
+}
+
+.simple-card button {
+    border: none;
+    border-radius:0px 0px calc(var(--simple-card-space) * 2) calc(var(--simple-card-space) * 2);
+    outline: 0;
+    padding: 6px;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+.simple-card button:hover, .simple-card a:hover {
+    color: white;
+    background-color: black;
+}
+
+.simple-card a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
