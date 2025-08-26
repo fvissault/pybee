@@ -1,0 +1,42 @@
+<?btl
+( : addcontent
+    local toadd 
+    local where 
+    toadd @ ?array invert 
+    if 
+        toadd @ ?var toadd @ ?local or 
+        if
+            toadd @ @ toadd !
+        then 
+    then 
+    "content" toadd @ where @ cell+ drop
+; 
+
+: card
+    local name
+    "card<#0#>" [ name @ ] format local newname
+    name @ div "var <#0#>" [ newname @ ] format evaluate
+    newname @ "class" "simple-card" addattr drop 
+    newname @
+; )
+
+: flipcard
+    local name
+    name @ div local flipcard
+    flipcard "class" "flip-card" addattr
+    flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent
+    cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent
+    cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent
+    flipcard @
+;
+
+webreset
+title "Ceci est une page pour tester les cards" addcontent
+html "lang" "en" addattr
+head "userarea/css/card.css" headlink addcontent
+body "test1" card addcontent
+body "test2" card addcontent
+body "test3" card addcontent
+
+html @ generate cls
+?>
