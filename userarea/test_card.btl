@@ -34,9 +34,52 @@ webreset
 title "Ceci est une page pour tester les cards" addcontent
 html "lang" "en" addattr
 head "userarea/css/card.css" headlink addcontent
+
 body "test1" card addcontent
+"titletest1" div var titlecardtest1
+titlecardtest1 "class" "simple-card-title" addattr
+titlecardtest1 "titre1" addcontent
+cardtest1 titlecardtest1 addcontent
+forget titlecardtest1
+
+"bodytest1" div var bodycardtest1
+bodycardtest1 "class" "simple-card-body" addattr
+bodycardtest1 "corps1" addcontent
+cardtest1 bodycardtest1 addcontent
+forget bodycardtest1
+
+cardtest1 "Add to cart" "button" button addcontent
+
 body "test2" card addcontent
+"titletest2" div var titlecardtest2
+titlecardtest2 "class" "simple-card-title" addattr
+titlecardtest2 "titre2" addcontent
+cardtest2 titlecardtest2 addcontent
+forget titlecardtest2
+
+"bodytest2" div var bodycardtest2
+bodycardtest2 "class" "simple-card-body" addattr
+bodycardtest2 "corps2" addcontent
+cardtest2 bodycardtest2 addcontent
+forget bodycardtest2
+
+cardtest2 "Add to cart" "button" button addcontent
+
 body "test3" card addcontent
+"titletest3" div var titlecardtest3
+titlecardtest3 "class" "simple-card-title" addattr
+titlecardtest3 "titre3" addcontent
+cardtest3 titlecardtest3 addcontent
+forget titlecardtest3
+
+"bodytest3" div var bodycardtest3
+bodycardtest3 "class" "simple-card-body" addattr
+bodycardtest3 "corps3" addcontent
+cardtest3 bodycardtest3 addcontent
+forget bodycardtest3
+
+cardtest3 "Add to cart" "button" button addcontent
+
 
 html @ generate cls
 ?>
