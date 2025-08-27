@@ -21,7 +21,9 @@
     margin-left:calc(var(--simple-card-space) * 3); 
     margin-top:calc(var(--simple-card-space) * 2); 
     background-color:var(--simple-card-background-color); 
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    font-family:tahoma,arial; 
+    font-size: 16px;
 }
 
 .simple-card:hover {
@@ -67,7 +69,7 @@
     width: 100%;
     font-size: 18px;
     position:absolute; 
-    bottom:0px; 
+    bottom:0px;
 }
 
 .simple-card button:hover, .simple-card a:hover {
