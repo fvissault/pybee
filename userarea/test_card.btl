@@ -4,8 +4,11 @@
     name @ div local flipcard
     flipcard "class" "flip-card" addattr
     flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent
+    cardinner "class" "flip-card-inner" addattr
     cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent
+    "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr
     cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent
+    "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr
     flipcard @
 ;
 
@@ -13,6 +16,7 @@ webreset
 title "Ceci est une page pour tester les cards" addcontent
 html "lang" "en" addattr
 head "userarea/css/card.css" headlink addcontent
+head "userarea/css/flipcard.css" headlink addcontent
 
 body "test1" card addcontent
 cardtest1 "titre1" addcardtitle
@@ -28,6 +32,15 @@ body "test3" card addcontent
 cardtest3 "titre3" addcardtitle
 cardtest3 "corps3" addcardbody
 cardtest3 "Add to cart" "button" button addcontent
+
+body "flip1" flipcard addcontent
+fcfflip1 1 "Recto" maintitle addcontent
+fcbflip1 1 "Verso" maintitle addcontent
+fcbflip1 "Add to cart" "button" button addcontent
+
+body "flip2" flipcard addcontent
+fcfflip2 1 "Recto" maintitle addcontent
+fcbflip2 1 "Verso" maintitle addcontent
 
 html @ generate cls
 ?>
