@@ -138,6 +138,8 @@ class web(base_module):
                            'sessduration?' : self.sessduration_instr,
                            'completeselect' : '''select local tempselect 0 local i 0 local item 0 local opt dup cells i do dup i @ cell@ item ! item @ 2 cell@ item @ 1 cell@ item @ 0 cell@ option opt ! "content" opt @ tempselect cell+ drop loop drop tempselect @''',
                            'card' : '''local name "card<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "simple-card" addattr drop newname @''',
+                           'addcardtitle' : '''local content local container "title<#0#>" [ container @ ] format div local titlecontainer titlecontainer "class" "simple-card-title" addattr titlecontainer content @ addcontent container @ titlecontainer addcontent''',
+                           'addcardbody' : '''local content local container "body<#0#>" [ container @ ] format div local bodycontainer bodycontainer "class" "simple-card-body" addattr bodycontainer content @ addcontent container @ bodycontainer addcontent''',
                            #'flipcard' : '''''',
                            'profilecard' : '''''',
                            'productcard' : ''''''
