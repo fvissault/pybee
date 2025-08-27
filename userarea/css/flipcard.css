@@ -62,7 +62,7 @@
     overflow:scroll;
 }
 
-.flip-card button {
+.flip-card-front button, .flip-card-back button {
     border: none;
     border-radius:0px 0px calc(var(--flip-card-space) * 2) calc(var(--flip-card-space) * 2);
     outline: 0;
