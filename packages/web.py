@@ -140,7 +140,7 @@ class web(base_module):
                            'card' : '''local name "card<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "simple-card" addattr drop newname @''',
                            'addcardtitle' : '''local content local container "title<#0#>" [ container @ ] format div local titlecontainer titlecontainer "class" "simple-card-title" addattr titlecontainer content @ addcontent container @ titlecontainer addcontent''',
                            'addcardbody' : '''local content local container "body<#0#>" [ container @ ] format div local bodycontainer bodycontainer "class" "simple-card-body" addattr bodycontainer content @ addcontent container @ bodycontainer addcontent''',
-                           #'flipcard' : '''''',
+                           'flipcard' : '''local name name @ div local flipcard flipcard "class" "flip-card" addattr flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent cardinner "class" "flip-card-inner" addattr cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr flipcard @''',
                            'profilecard' : '''''',
                            'productcard' : ''''''
                            }
