@@ -1,17 +1,4 @@
 <?btl
-: flipcard
-    local name
-    name @ div local flipcard
-    flipcard "class" "flip-card" addattr
-    flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent
-    cardinner "class" "flip-card-inner" addattr
-    cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent
-    "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr
-    cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent
-    "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr
-    flipcard @
-;
-
 webreset
 title "Ceci est une page pour tester les cards" addcontent
 html "lang" "en" addattr
