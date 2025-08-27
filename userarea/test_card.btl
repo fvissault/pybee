@@ -39,8 +39,14 @@ fcbflip1 1 "Verso" maintitle addcontent
 fcbflip1 "Add to cart" "button" button addcontent
 
 body "flip2" flipcard addcontent
-fcfflip2 1 "Recto" maintitle addcontent
-fcbflip2 1 "Verso" maintitle addcontent
+1 "Recto" maintitle var rectotext
+rectotext "style" "line-height:150px;" addattr ( centrage vertical du texte )
+fcfflip2 rectotext addcontent
+1 "Verso" maintitle var versotext
+versotext "style" "line-height:150px;" addattr ( centrage vertical du texte )
+fcbflip2 versotext addcontent
+forget rectotext
+forget versotext
 
 html @ generate cls
 ?>
