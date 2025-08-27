@@ -19,17 +19,18 @@
         <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
         <p>
             L'ensemble des mots qui composent ce package est le suivant : <br>
-            <b><a href="#a">a</a> <a href="#abbr">abbr</a> <a href="#principaux">addattr</a> <a href="#principaux">addcontent</a> 
+            <b><a href="#a">a</a> <a href="#abbr">abbr</a> <a href="#principaux">addattr</a> <a href="#simplecard">addcardbody</a> 
+            <a href="#simplecard">addcardtitle</a> <a href="#simplecard">addcardbottom</a> <a href="#principaux">addcontent</a> 
             <a href="#address">address</a> <a href="#area">area</a> 
             <a href="#article">article</a> <a href="#aside">aside</a> <a href="#audio">audio</a> <a href="#bdo">bdo</a> 
             <a href="#blockquote">blockquote</a> <a href="#bold">bold</a> <a href="#br">br</a> <a href="#button">button</a> 
-            <a href="#canvas">canvas</a> <a href="#caption">caption</a> <a href="#charset">charset</a> <a href="#cite">cite</a> 
+            <a href="#canvas">canvas</a> <a href="#caption">caption</a> <a href="#simplecard">card</a> <a href="#charset">charset</a> <a href="#cite">cite</a> 
             <a href="#code">code</a> <a href="#col">col</a> <a href="#colgroup">colgroup</a> <a href="#comment">comment</a> 
             <a href="#complexwidget">completeselect</a> <a href="#data">data</a> <a href="#datalist">datalist</a> <a href="#dd">dd</a> <a href="#del">del</a> 
             <a href="#details">details</a> <a href="#dfn">dfn</a> <a href="#dialog">dialog</a> <a href="#div">div</a> 
             <a href="#dl">dl</a> <a href="#dloption">dloption</a> <a href="#dt">dt</a> <a href="#em">em</a> 
             <a href="#fieldarea">fieldarea</a> <a href="#fieldset">fieldset</a> <a href="#figcaption">figcaption</a> 
-            <a href="#figure">figure</a> <a href="#footer">footer</a> <a href="#form">form</a> generate getsession getsessvar 
+            <a href="#figure">figure</a> flipcard <a href="#footer">footer</a> <a href="#form">form</a> generate getsession getsessvar 
             grouplaystyle <a href="#header">header</a> <a href="#headlink">headlink</a> <a href="#headscriptfile">headscriptfile</a> 
             <a href="#hr">hr</a> htmlcontent <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
             <a href="#ins">ins</a> <a href="#italic">italic</a> <a href="#kbd">kbd</a> <a href="#label">label</a> 
@@ -38,7 +39,7 @@
             <a href="#meta">meta</a> <a href="#meter">meter</a> <a href="#nav">nav</a> <a href="#noscript">noscript</a> 
             <a href="#optgroup">optgroup</a> <a href="#option">option</a> <a href="#orderlist">orderlist</a> 
             <a href="#paragraph">paragraph</a> posted <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> <a href="#pre">pre</a> 
-            <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> <a href="#select">select</a> 
+            productcard profilecard <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> <a href="#select">select</a> 
             sessduration? session setsessduration setsessvar <a href="#small">small</a> <a href="#source">source</a> 
             <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> <a href="#sub">sub</a> 
             <a href="#summary">summary</a> <a href="#sup">sup</a> <a href="#svg">svg</a> <a href="#svgcircle">svgcircle</a> 
@@ -1406,6 +1407,11 @@
 
         <a name="complexwidget"><h3>4. La construction du HTML : widgets complexes</h3></a>
         <p>
+            Dans cette section, vous trouverez quelques exemples de widgets complexes dont vous pourrez vous inspirer pour fabriquer les
+            votres.
+        </p>
+        <a name="completeselect"><h4>4.1. le widget 'completeselect'</h3></a>
+        <p>
             Vous avez à disposition plus d'une centaine de widgets simples. Voir le chapitre précédent pour en avoir une liste exhaustive.
             Mais Beetle vous offre la possibilité de créer des widgets plus complexe. Cela dépend du besoin de votre projet. Donc je vais 
             vous expliquer comment créer de nouveaux widgets au travers d'un exemple.<br>
@@ -1449,8 +1455,9 @@
             </code>
         </div>
         <p>
-            completeselect est un mot qui existe dans votre package 'web'. Libre à vous d'en créer d'autres suivant le besoin de votre
-            projet. Par exemple, vous pouvez avoir besoin d'un objet 'card' comme c'est la mode en ce moment dans les sites web.
+            'completeselect' est un mot qui existe dans votre package 'web'. Libre à vous d'en créer d'autres suivant le besoin de votre
+            projet. Par exemple, vous pouvez avoir besoin d'un objet 'card' comme c'est la mode en ce moment dans les sites web. <b>Je vous
+            donne la solution plus bas.</b>
         </p>
         <p>
             Beetle vous offre également la possibilité de créer vos nouveaux widgets :
@@ -1465,6 +1472,52 @@
                 </li>
             </ul>
         </p>
+        <a name="simplecard"><h4>4.2. le widget 'card'</h3></a>
+        <p>
+            Pour réaliser ce type de widget (un peu plus complexe que 'completeselect'), il vous faut connaitre la manière dont il a été
+            conçu.<br>
+            Tout d'abord, il est basé sur un fichier css (que vous trouverez dans le répertoire css de userarea) : '<i>userarea/css/card.css</i>'.
+            Ceci est évidemment important car c'est ce code css qui vous permet de façonner vos cartes. Le fichier css commence par une
+            section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez modifier à votre guise pour obtenir les cartes
+            qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour comprendre un peu mieux.<br>
+            Les cartes sont uniquement des divisions de la classe css : '<b>simple-card</b>' qui contiennent ce que vous souhaitez.<br>
+            Toutefois, Beetle vous permet de séparer en 3 parties vos cartes à votre guise avec les mots : '<b>addcardtitle</b>', 
+            '<b>addcardbody</b>' et '<b>addcardbottom</b>'<br>
+            Pour pouvoir ajouter du contenu à vos cartes, Beetle va créer une variable qui contient votre carte. La nomenclature du nom
+            de cette variable est simple : 'card[<i>nom_de_la_carte</i>]'. Dans l'exemple ci-dessous, pour la carte que j'ai nommé 
+            'test1', Beetle créé une variable qui s'appelle 'cardtest1' et ainsi de suite. 
+        </p>
+        <p>Voici un exemple complet (car c'est plus parlant) ou nous créons 3 cartes simples :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Ceci est une page pour tester les cards" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/card.css" headlink addcontent<br><br>
+                ( <b>première carte que j'appelle 'test1'</b> )<br>
+                body "test1" <b>card</b> addcontent<br>
+                cardtest1 "titre1" <b>addcardtitle</b><br>
+                cardtest1 "corps1" <b>addcardbody</b><br>
+                cardtest1 "Add to cart" "button" button addcontent<br><br>
+                ( <b>deuxième carte que j'appelle 'test2'</b> )<br>
+                body "test2" <b>card</b> addcontent<br>
+                cardtest2 "titre2" <b>addcardtitle</b><br>
+                cardtest2 "corps2" <b>addcardbody</b><br>
+                cardtest2 "Add to cart" "button" button addcontent<br><br>
+                ( <b>troisième carte que j'appelle 'test3'</b> )<br>
+                body "test3" <b>card</b> addcontent<br>
+                cardtest3 "titre3" <b>addcardtitle</b><br>
+                cardtest3 "corps3" <b>addcardbody</b><br>
+                cardtest3 "Add to cart" "button" button addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/simplecard.png" width="500"/>
+
+        <a name="flipcard"><h4>4.3. le widget 'flipcard'</h3></a>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
