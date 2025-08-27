@@ -57,7 +57,7 @@
 
 .simple-card button {
     border: none;
-    border-radius:0px 0px calc(var(--simple-card-space) * 2) calc(var(--simple-card-space) * 2);
+    border-radius:0px 0px calc(var(--simple-card-space) * 2 - 2px) calc(var(--simple-card-space) * 2 - 2px);
     outline: 0;
     padding: 6px;
     color: white;
