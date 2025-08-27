@@ -66,6 +66,8 @@
     cursor: pointer;
     width: 100%;
     font-size: 18px;
+    position:absolute; 
+    bottom:0px; 
 }
 
 .simple-card button:hover, .simple-card a:hover {
