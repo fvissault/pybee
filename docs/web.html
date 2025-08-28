@@ -1516,8 +1516,89 @@
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <img src="images/simplecard.png" width="500"/>
+        <p>A titre d'exemple, voici le code du mot '<b>card</b>' :</p>
+        <div class="div_code">
+            <code>
+                : card<br>
+                <blockquote>
+                    local name ( <b>on récupère le nom de la carte</b> )<br> 
+                    "card<#0#>" [ name @ ] format local newname ( <b>on modifie le nom du widget</b> )<br> 
+                    name @ div "var <#0#>" [ newname @ ] format evaluate ( <b>on créé la division qui va bien</b> )<br> 
+                    newname @ "class" "simple-card" addattr drop ( <b>on ajoute le bon attribut class à la division</b> )<br> 
+                    newname @
+                </blockquote>
+                ;
+            </code>
+        </div>
 
         <a name="flipcard"><h4>4.3. le widget 'flipcard'</h3></a>
+        <p>
+            Ce widget est conçu de la même manière que pour les cartes simples.<br>
+            Il est basé sur un fichier css (que vous trouverez dans le répertoire css de userarea) : '<i>userarea/css/flipcard.css</i>'.
+            Le fichier css commence par une section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez 
+            modifier à votre guise pour obtenir les cartes qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour 
+            comprendre un peu mieux.<br>
+            Les cartes sont uniquement des divisions de la classe css : '<b>flip-card</b>' qui contiennent une autre division transparente
+            pour vous don la classe css est 'flip-card-inner'. Cette division existe pour implémenter les transitions et l'effet 3D du
+            widget. A l'intérieur de cette nouvelle division, vous allez retrouver 2 sections : une qui représente le devant de la cartes
+            et l'autre qui présente l'arrière de la carte. ce sont ces 2 divisions que vous allez utiliser et remplir des objets qui
+            vous interresse de voir.<br>
+            Toutefois, Beetle vous permet de mélanger les objets d'une carte simple avec une flip card en utilisant les divisions mises
+            à disposition pour 'card' avec les mots : '<b>addcardtitle</b>', '<b>addcardbody</b>' et '<b>addcardbottom</b>'<br>
+            Pour pouvoir ajouter du contenu à vos cartes, Beetle va créer 2 variables pour le devant et l'arrière de votre carte. 
+            La nomenclature du nom
+            de ces variables est simple : 'fcf[<i>nom_de_la_carte</i>]' pour le devant et 'fcb[<i>nom_de_la_carte</i>]' pour l'arrière. 
+            Dans l'exemple ci-dessous, pour la carte que j'ai nommé 'flip1', Beetle créé 2 variables qui s'appellent 'fcfflip1' et
+            'fcbflip1'. 
+        </p>
+        <p>Voici un exemple complet (car c'est plus parlant) ou nous créons 3 cartes simples :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Ceci est une page pour tester les cards" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/flipcard.css" headlink addcontent<br><br>
+                ( <b>première carte que j'appelle 'flip1'</b> )<br>
+                body "flip1" flipcard addcontent<br>
+                fcfflip1 1 "Recto" maintitle addcontent<br>
+                fcbflip1 1 "Verso" maintitle addcontent<br>
+                fcbflip1 "Add to cart" "button" button addcontent<br><br>
+                ( <b>première carte que j'appelle 'flip2'</b> )<br>
+                body "flip2" flipcard addcontent<br>
+                1 "Recto" maintitle var rectotext<br>
+                rectotext "style" "line-height:150px;" addattr ( centrage vertical du texte )<br>
+                fcfflip2 rectotext addcontent<br>
+                1 "Verso" maintitle var versotext<br>
+                versotext "style" "line-height:150px;" addattr ( centrage vertical du texte )<br>
+                fcbflip2 versotext addcontent<br>
+                forget rectotext<br>
+                forget versotext<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/flipcard.png" width="500"/>
+        <p>A titre d'exemple, voici le code du mot '<b>flipcard</b>' :</p>
+        <div class="div_code">
+            <code>
+                : flipcard<br>
+                <blockquote>
+                    local name<br> 
+                    name @ div local flipcard<br>
+                    flipcard "class" "flip-card" addattr<br> 
+                    flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent<br> 
+                    cardinner "class" "flip-card-inner" addattr<br> 
+                    cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent<br> 
+                    "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr<br> 
+                    cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent<br> 
+                    "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr<br> 
+                    flipcard @
+                </blockquote>
+                ;
+            </code>
+        </div>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
