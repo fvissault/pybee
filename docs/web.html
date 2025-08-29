@@ -30,7 +30,8 @@
             <a href="#details">details</a> <a href="#dfn">dfn</a> <a href="#dialog">dialog</a> <a href="#div">div</a> 
             <a href="#dl">dl</a> <a href="#dloption">dloption</a> <a href="#dt">dt</a> <a href="#em">em</a> 
             <a href="#fieldarea">fieldarea</a> <a href="#fieldset">fieldset</a> <a href="#figcaption">figcaption</a> 
-            <a href="#figure">figure</a> flipcard <a href="#footer">footer</a> <a href="#form">form</a> generate getsession getsessvar 
+            <a href="#figure">figure</a> <a href="#flipcard">flipcard</a> <a href="#footer">footer</a> <a href="#form">form</a> 
+            <a href="#generate">generate</a> <a href="#sessions">getsession</a> <a href="#sessions">getsessvar</a> 
             grouplaystyle <a href="#header">header</a> <a href="#headlink">headlink</a> <a href="#headscriptfile">headscriptfile</a> 
             <a href="#hr">hr</a> htmlcontent <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
             <a href="#ins">ins</a> <a href="#italic">italic</a> <a href="#kbd">kbd</a> <a href="#label">label</a> 
@@ -38,19 +39,20 @@
             <a href="#maintitle">maintitle</a> <a href="#map">map</a> <a href="#mark">mark</a> <a href="#menu">menu</a> 
             <a href="#meta">meta</a> <a href="#meter">meter</a> <a href="#nav">nav</a> <a href="#noscript">noscript</a> 
             <a href="#optgroup">optgroup</a> <a href="#option">option</a> <a href="#orderlist">orderlist</a> 
-            <a href="#paragraph">paragraph</a> posted <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> <a href="#pre">pre</a> 
-            productcard profilecard <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> <a href="#select">select</a> 
-            sessduration? session setsessduration setsessvar <a href="#small">small</a> <a href="#source">source</a> 
-            <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> <a href="#sub">sub</a> 
-            <a href="#summary">summary</a> <a href="#sup">sup</a> <a href="#svg">svg</a> <a href="#svgcircle">svgcircle</a> 
-            <a href="#svgellipse">svgellipse</a> <a href="#svgimage">svgimage</a> <a href="#svgline">svgline</a> 
-            <a href="#svglineargradient">svglineargradient</a> <a href="#svgmarker">svgmarker</a> <a href="#svgpath">svgpath</a> 
-            <a href="#svgpattern">svgpattern</a> <a href="#svgpolygon">svgpolygon</a> <a href="#svgpolyline">svgpolyline</a> 
-            <a href="#svgradialgradient">svgradialgradient</a> <a href="#svgrect">svgrect</a> <a href="#svgtext">svgtext</a> 
-            <a href="#svgtextpath">svgtextpath</a> <a href="#table">table</a> <a href="#tablecell">tablecell</a> 
-            <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> <a href="#textarea">textarea</a> 
-            <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> <a href="#urlbase">urlbase</a> 
-            usecookies? <a href="#video">video</a> webreset</b>
+            <a href="#paragraph">paragraph</a> <a href="#posted">posted</a> <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> 
+            <a href="#pre">pre</a> productcard profilecard <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> 
+            <a href="#select">select</a> <a href="#sessions">sessduration?</a> <a href="#sessions">session</a> 
+            <a href="#sessions">setsessduration</a> <a href="#sessions">setsessvar</a> <a href="#small">small</a> 
+            <a href="#source">source</a> <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> 
+            <a href="#sub">sub</a> <a href="#summary">summary</a> <a href="#sup">sup</a> <a href="#svg">svg</a> 
+            <a href="#svgcircle">svgcircle</a> <a href="#svgellipse">svgellipse</a> <a href="#svgimage">svgimage</a> 
+            <a href="#svgline">svgline</a> <a href="#svglineargradient">svglineargradient</a> <a href="#svgmarker">svgmarker</a> 
+            <a href="#svgpath">svgpath</a> <a href="#svgpattern">svgpattern</a> <a href="#svgpolygon">svgpolygon</a> 
+            <a href="#svgpolyline">svgpolyline</a> <a href="#svgradialgradient">svgradialgradient</a> <a href="#svgrect">svgrect</a> 
+            <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#table">table</a> 
+            <a href="#tablecell">tablecell</a> <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> 
+            <a href="#textarea">textarea</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
+            <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> webreset</b>
         </p>
 
         <a name="generalprinciple"><h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3></a>
@@ -1551,7 +1553,7 @@
             Dans l'exemple ci-dessous, pour la carte que j'ai nommé 'flip1', Beetle créé 2 variables qui s'appellent 'fcfflip1' et
             'fcbflip1'. 
         </p>
-        <p>Voici un exemple complet (car c'est plus parlant) ou nous créons 3 cartes simples :</p>
+        <p>Voici un exemple complet ou nous créons 2 flip cartes que je nomme 'flip1' et 'flip2' :</p>
         <div class="div_code">
             <code>
                 &lt;?btl<br>
