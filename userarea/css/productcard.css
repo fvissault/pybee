@@ -1,0 +1,57 @@
+:root {
+    --product-card-space : 5px;
+    --product-card-general-height : 150px;
+    --product-card-general-width : 200px;
+    --product-card-background-color : #eee;
+    --product-card-border : 1px solid grey;
+}
+/***********************************************
+    profile-card
+************************************************/
+.product-card {
+    float:left; 
+    position:relative; 
+    border:var(--product-card-border); 
+    border-radius:calc(var(--product-card-space) * 2);
+    width:var(--product-card-general-width); 
+    height:var(--product-card-general-height); 
+    margin-left:calc(var(--product-card-space) * 3); 
+    margin-top:calc(var(--product-card-space) * 2); 
+    background-color:var(--product-card-background-color); 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    font-family:tahoma,arial; 
+    font-size: 16px;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.product-card-avatar {
+    width:var(--product-card-general-width); 
+}
+
+.product-card button {
+    border: none;
+    outline: 0;
+    padding: 6px;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    position:absolute; 
+    bottom:0px;
+}
+
+.product-card button:hover, .product-card a:hover {
+    color: white;
+    background-color: black;
+}
+
+.product-card a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
