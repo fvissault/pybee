@@ -44,7 +44,7 @@
     margin-left:var(--simple-card-space); 
     margin-right:var(--simple-card-space); 
     color:var(--simple-card-body-color); 
-    height:calc(var(--simple-card-general-height) - 49px - 3 * var(--simple-card-space)); 
+    height:calc(var(--simple-card-general-height) - 48px - 3 * var(--simple-card-space)); 
     overflow:scroll;
 }
 
