@@ -1,0 +1,57 @@
+:root {
+    --profile-card-space : 5px;
+    --profile-card-general-height : 150px;
+    --profile-card-general-width : 200px;
+    --profile-card-background-color : #eee;
+    --profile-card-border : 1px solid grey;
+}
+/***********************************************
+    profile-card
+************************************************/
+.profile-card {
+    float:left; 
+    position:relative; 
+    border:var(--profile-card-border); 
+    border-radius:calc(var(--profile-card-space) * 2);
+    width:var(--profile-card-general-width); 
+    height:var(--profile-card-general-height); 
+    margin-left:calc(var(--profile-card-space) * 3); 
+    margin-top:calc(var(--profile-card-space) * 2); 
+    background-color:var(--profile-card-background-color); 
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    font-family:tahoma,arial; 
+    font-size: 16px;
+}
+
+.profile-card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.profile-card-avatar {
+    width:var(--profile-card-general-width); 
+}
+
+.profile-card button {
+    border: none;
+    outline: 0;
+    padding: 6px;
+    color: white;
+    background-color: grey;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    position:absolute; 
+    bottom:0px;
+}
+
+.profile-card button:hover, .profile-card a:hover {
+    color: white;
+    background-color: black;
+}
+
+.profile-card a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+}
