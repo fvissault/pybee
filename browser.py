@@ -45,7 +45,7 @@ i.lastseqnumber = -1
 i.currentseqnumber = 0
 
 split = content.split(' ')
-i.string_treatment_for_load_file(split)
+i.string_treatment(split)
 i.set_sequence(i.instructions.copy())
 #print(i.print_sequence_numbers())
 i.interpret()
