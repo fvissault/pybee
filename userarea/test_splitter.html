@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Splitter HTML/CSS/JS</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+    }
+
+    /* La zone gauche */
+    #left {
+      width: 250px; /* largeur initiale */
+      min-width: 100px;
+      background: #eee;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+
+    /* La barre séparatrice */
+    #divider {
+      width: 10px;
+      background: #888;
+      cursor: col-resize;
+    }
+
+    /* La zone droite */
+    #right {
+      flex: 1;
+      background: #ddd;
+      padding: 1em;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div id="left">Zone gauche</div>
+  <div id="divider"></div>
+  <div id="right">Zone droite</div>
+
+  <script>
+    const divider = document.getElementById("divider");
+    const left = document.getElementById("left");
+    let isResizing = false;
+
+    divider.addEventListener("mousedown", (e) => {
+      isResizing = true;
+      document.body.style.cursor = "col-resize";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isResizing) return;
+      let newWidth = e.clientX; // position de la souris
+      if (newWidth < 100) newWidth = 100; // limite min
+      left.style.width = newWidth + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isResizing = false;
+      document.body.style.cursor = "default";
+    });
+  </script>
+</body>
+</html>
