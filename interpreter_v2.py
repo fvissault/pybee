@@ -50,7 +50,7 @@ class interpreter:
             content = content.replace('"" .', '')
             content = ' '.join(content.split())
             split = content.split(' ')
-            self.string_treatment_for_load_file(split)
+            self.string_treatment(split)
             self.set_sequence(self.instructions)
             self.instructions.clear()
             f.close()
@@ -180,12 +180,6 @@ class interpreter:
             self.decreaselastseqnumber()
         self.from_instr = ''
 
-    def search_in_core(self, instr):
-        if instr in self.core_instr.dictionary.keys():
-            return True
-        else:
-            return False
-
     def search_in_pack(self, instr):
         for p in self.packages:
             if instr in self.packages[p].dictionary.keys():
@@ -215,7 +209,7 @@ class interpreter:
                     instr_body = instr_body.replace('\n', ' ')
                     split = instr_body.split(' ')
                     if instr_body != '':
-                        self.string_treatment_for_load_file(split)
+                        self.string_treatment(split)
                     self.from_instr = instr
                     self.set_sequence(self.instructions)
                     self.interpret('last_sequence')
@@ -231,7 +225,7 @@ class interpreter:
                     self.from_instr = ''
                     return ret
 
-    def string_treatment_for_load_file(self, split):
+    def string_treatment(self, split):
         s = ''
         sbfound = False
         sefound = False
