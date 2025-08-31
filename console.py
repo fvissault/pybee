@@ -20,7 +20,7 @@ class console:
             self.response = self.input_line_treatment()
             split = self.response.split(' ')
             if self.response != '':
-                self.i.string_treatment_for_load_file(split)
+                self.i.string_treatment(split)
 
             # clean de l'interprète
             self.i.sequences.clear()
