@@ -569,7 +569,7 @@ class core(base_module):
         content = ' '.join(content.split())
 
         split = content.split(' ')
-        self.interpreter.string_treatment_for_load_file(split)
+        self.interpreter.string_treatment(split)
         self.interpreter.sequences[self.interpreter.lastseqnumber] = self.interpreter.instructions.copy()
         self.interpreter.instructions.clear()
         f.close()
@@ -2547,7 +2547,7 @@ class core(base_module):
             instrs = self.pop_work()
             if instrs != '':
                 split = instrs.split(' ')
-                self.interpreter.string_treatment_for_load_file(split)
+                self.interpreter.string_treatment(split)
                 self.interpreter.set_sequence(self.interpreter.instructions.copy())
                 ret = self.interpreter.interpret('last_sequence')
                 self.interpreter.decreaselastseqnumber()
