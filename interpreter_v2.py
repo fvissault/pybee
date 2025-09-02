@@ -22,7 +22,7 @@ class interpreter:
         self.does = deque()
         self.output = output
         self.params = None
-        self.version = 'v2.4.1'
+        self.version = 'v2.4.2'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
         self.preload()
@@ -228,44 +228,33 @@ class interpreter:
     def string_treatment(self, split):
         s = ''
         sbfound = False
-        sefound = False
         self.instructions.clear()
         for item in split:
-            if sbfound and not sefound and item == '':
+            if sbfound and item == '': # au mileu de la chaine item vide
                 s += ' '
                 continue
-            if item == '"':
-                if sbfound:
-                    self.instructions.append('"' + s + '"')
+            if sbfound and not '"' in item:
+                s += ' ' + item
+                continue
+            if sbfound and item.endswith('"'): # fin de la chaine
+                if not item.endswith('\\"'):
+                    s += ' ' + item[:-1]
+                    self.instructions.append('"' + s.replace('\\"', '"') + '"')
                     sbfound = False
-                    sefound = False
                     s = ''
                 else:
-                    sbfound = True
-                    s += ' '
+                    s += ' ' + item
                 continue  
-            if len(item) > 0 and item[0] == '"':
+            if not sbfound and len(item) > 0 and item[0] == '"': # le début de la chaine
                 sbfound = True
                 if item[-1] == '"' and len(item) > 1:
-                    s += item[1:-1]
-                    self.instructions.append('"' + s + '"')
+                    self.instructions.append(item.replace('\\"', '"'))
                     sbfound = False
-                    sefound = False
                     s = ''
                     continue
                 else:
-                    s += item[1:] + ' '
+                    s += item[1:]
                     continue
-            if sbfound and not sefound and item[-1] == '"' and item[-2:] != '\\"':
-                s += item[:-1]
-                self.instructions.append('"' + s + '"')
-                sbfound = False
-                sefound = False
-                s = ''
-                continue
-            if sbfound and not sefound:
-                s += item + ' '
-                continue
             if self.core_instr.isinteger(item):
                 self.instructions.append(int(item))
                 continue
@@ -273,10 +262,9 @@ class interpreter:
                 self.instructions.append(float(item))
                 continue
             self.instructions.append(item)
-        if sbfound != sefound:
-            core_errors.error_string_invalid.print_error('string', self.output)
+        if sbfound == True:
+            core_errors.error_string_invalid.print_error('string ' +s, self.output)
             self.instructions.clear()
         else:
             sbfound = False
-            sefound = False
             s = ''
