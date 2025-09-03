@@ -2,63 +2,68 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Splitter HTML/CSS/JS</title>
+  <title>IDE style VS Code</title>
+  <link rel="stylesheet" href="css/splitter.css">
   <style>
     body {
       margin: 0;
       height: 100vh;
       display: flex;
     }
-
-    /* La zone gauche */
-    #left {
-      width: 250px; /* largeur initiale */
-      min-width: 100px;
-      background: #eee;
-      padding: 1em;
-      box-sizing: border-box;
-    }
-
-    /* La barre séparatrice */
-    #divider {
-      width: 5px;
-      background: #888;
-      cursor: col-resize;
-    }
-
-    /* La zone droite */
-    #right {
-      flex: 1;
-      background: #ddd;
-      padding: 1em;
-      box-sizing: border-box;
-    }
   </style>
 </head>
 <body>
-  <div id="left">Zone gauche</div>
-  <div id="divider"></div>
-  <div id="right">Zone droite</div>
+  <div id="split1left" class="splitleft">📂 Explorer</div>
+  <div id="split1divider" class="splitverticaldivider"></div>
+  <div id="split1right" class="splitright">
+    <div id="split2top" class="splittop">💻 Éditeur de code</div>
+    <div id="split2divider" class="splithorizontaldivider"></div>
+    <div id="split2bottom" class="splitbottom">🖥 Console</div>
+  </div>
 
   <script>
-    const divider = document.getElementById("divider");
-    const left = document.getElementById("left");
-    let isResizing = false;
+    // === Splitter vertical ===
+    const split1divider = document.getElementById("split1divider");
+    const split1left = document.getElementById("split1left");
+    let resizingV = false;
 
-    divider.addEventListener("mousedown", (e) => {
-      isResizing = true;
+    split1divider.addEventListener("mousedown", () => {
+      resizingV = true;
       document.body.style.cursor = "col-resize";
     });
 
     document.addEventListener("mousemove", (e) => {
-      if (!isResizing) return;
-      let newWidth = e.clientX; // position de la souris
-      if (newWidth < 100) newWidth = 100; // limite min
-      left.style.width = newWidth + "px";
+      if (!resizingV) return;
+      let newWidth = e.clientX;
+      if (newWidth < 100) newWidth = 100;
+      split1left.style.width = newWidth + "px";
     });
 
     document.addEventListener("mouseup", () => {
-      isResizing = false;
+      resizingV = false;
+      document.body.style.cursor = "default";
+    });
+
+    // === Splitter horizontal ===
+    const split2divider = document.getElementById("split2divider");
+    const split2top = document.getElementById("split2top");
+    let resizingH = false;
+
+    split2divider.addEventListener("mousedown", () => {
+      resizingH = true;
+      document.body.style.cursor = "row-resize";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!resizingH) return;
+      let newHeight = e.clientY - split1left.offsetTop; // ajuster hauteur relative
+      if (newHeight < 100) newHeight = 100;
+      split2top.style.height = newHeight + "px";
+      split2top.style.flex = "none"; // fixe la hauteur pour ne plus être flexible
+    });
+
+    document.addEventListener("mouseup", () => {
+      resizingH = false;
       document.body.style.cursor = "default";
     });
   </script>
