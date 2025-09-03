@@ -1,0 +1,85 @@
+:root {
+    --vertical-splitter-left-width : 200px;
+    --vertical-splitter-left-min-width : 100px;
+    --vertical-splitter-left-background-color : #2d2d2d;
+    --vertical-splitter-left-color : white;
+    --vertical-splitter-left-overflow : scroll;
+
+    --vertical-splitter-right-background-color : #2d2d2d;
+    --vertical-splitter-right-color : white;
+    --vertical-splitter-right-overflow : scroll;
+
+    --vertical-splitter-divider-width : 5px;
+    --vertical-splitter-divider-background-color : #555;
+
+    --horizontal-splitter-top-min-height : 100px;
+    --horizontal-splitter-top-background-color : #2d2d2d;
+    --horizontal-splitter-top-color : white;
+    --horizontal-splitter-top-overflow : scroll;
+
+    --horizontal-splitter-divider-height : 5px;
+    --horizontal-splitter-divider-background-color : #555;
+
+    --horizontal-splitter-bottom-min-height : 100px;
+    --horizontal-splitter-bottom-background-color : #2d2d2d;
+    --horizontal-splitter-bottom-color : white;
+    --horizontal-splitter-bottom-overflow : scroll;
+}
+
+/*
+    vertical splitter
+*/
+.splitleft {
+    width: var(--vertical-splitter-left-width);
+    min-width: var(--vertical-splitter-left-min-width);
+    background: var(--vertical-splitter-left-background-color);
+    color: var(--vertical-splitter-left-color);
+    padding: 1em;
+    box-sizing: border-box;
+    overflow:var(--vertical-splitter-left-overflow);
+}
+
+.splitverticaldivider {
+    width: var(--vertical-splitter-divider-width);
+    background: var(--vertical-splitter-divider-background-color);
+    cursor: col-resize;
+}
+
+.splitright {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--vertical-splitter-right-background-color);
+    color: var(--vertical-splitter-right-color);
+    overflow:var(--vertical-splitter-right-overflow);
+}
+
+/*
+    horizontal splitter
+*/
+.splittop {
+    flex: 1;
+    min-height: var(--horizontal-splitter-top-min-height);
+    background: var(--horizontal-splitter-top-background-color);
+    color: var(--horizontal-splitter-top-color);
+    padding: 1em;
+    box-sizing: border-box;
+    overflow:var(--horizontal-splitter-top-overflow);
+}
+
+.splithorizontaldivider {
+    height: var(--horizontal-splitter-divider-height);
+    background: var(--horizontal-splitter-divider-background-color);
+    cursor: row-resize;
+}
+
+.splitbottom {
+    flex: 1;
+    min-height: var(--horizontal-splitter-bottom-min-height);
+    background: var(--horizontal-splitter-bottom-background-color);
+    color: var(--horizontal-splitter-bottom-color);
+    padding: 1em;
+    box-sizing: border-box;
+    font-family: monospace;
+    overflow:var(--horizontal-splitter-bottom-overflow);
+}
