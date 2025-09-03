@@ -143,7 +143,9 @@ class web(base_module):
                            'addcardbottom' : '''local content local container "bottom<#0#>" [ container @ ] format div local bottomcontainer bottomcontainer "class" "simple-card-bottom" addattr bottomcontainer content @ addcontent container @ bottomcontainer addcontent''',
                            'flipcard' : '''local name name @ div local flipcard flipcard "class" "flip-card" addattr flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent cardinner "class" "flip-card-inner" addattr cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr flipcard @''',
                            'profilecard' : '''local name "profile<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "profile-card" addattr drop newname @''',
-                           'productcard' : '''local name "product<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "product-card" addattr drop newname @'''
+                           'productcard' : '''local name "product<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "product-card" addattr drop newname @''',
+                           'versplitter' : '''''',
+                           'horsplitter' : ''''''
                            }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
