@@ -4,18 +4,22 @@
     --vertical-splitter-left-background-color : #2d2d2d;
     --vertical-splitter-left-color : white;
     --vertical-splitter-left-overflow : scroll;
+    --vertical-splitter-left-fontfamily : tahoma;
 
     --vertical-splitter-right-background-color : #2d2d2d;
     --vertical-splitter-right-color : white;
     --vertical-splitter-right-overflow : scroll;
+    --vertical-splitter-right-fontfamily : tahoma;
 
     --vertical-splitter-divider-width : 5px;
     --vertical-splitter-divider-background-color : #555;
 
     --horizontal-splitter-top-min-height : 100px;
+    --horizontal-splitter-top-height : 80%;
     --horizontal-splitter-top-background-color : #2d2d2d;
     --horizontal-splitter-top-color : white;
     --horizontal-splitter-top-overflow : scroll;
+    --horizontal-splitter-top-fontfamily : tahoma;
 
     --horizontal-splitter-divider-height : 5px;
     --horizontal-splitter-divider-background-color : #555;
@@ -24,6 +28,7 @@
     --horizontal-splitter-bottom-background-color : #2d2d2d;
     --horizontal-splitter-bottom-color : white;
     --horizontal-splitter-bottom-overflow : scroll;
+    --horizontal-splitter-bottom-fontfamily : monospace;
 }
 
 /*
@@ -37,6 +42,7 @@
     padding: 1em;
     box-sizing: border-box;
     overflow:var(--vertical-splitter-left-overflow);
+    font-family: var(--vertical-splitter-left-fontfamily);
 }
 
 .splitverticaldivider {
@@ -52,19 +58,21 @@
     background: var(--vertical-splitter-right-background-color);
     color: var(--vertical-splitter-right-color);
     overflow:var(--vertical-splitter-right-overflow);
+    font-family: var(--vertical-splitter-right-fontfamily);
 }
 
 /*
     horizontal splitter
 */
 .splittop {
-    flex: 1;
+    height: var(--horizontal-splitter-top-height);
     min-height: var(--horizontal-splitter-top-min-height);
     background: var(--horizontal-splitter-top-background-color);
     color: var(--horizontal-splitter-top-color);
     padding: 1em;
     box-sizing: border-box;
     overflow:var(--horizontal-splitter-top-overflow);
+    font-family: var(--horizontal-splitter-top-fontfamily);
 }
 
 .splithorizontaldivider {
@@ -80,6 +88,6 @@
     color: var(--horizontal-splitter-bottom-color);
     padding: 1em;
     box-sizing: border-box;
-    font-family: monospace;
+    font-family: var(--horizontal-splitter-bottom-fontfamily);
     overflow:var(--horizontal-splitter-bottom-overflow);
 }
