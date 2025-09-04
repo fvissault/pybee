@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>IDE style VS Code</title>
   <link rel="stylesheet" href="css/splitter.css">
+  <script src="js/splitter.js"></script>
   <style>
     body {
       margin: 0;
@@ -19,53 +20,12 @@
     <div id="split2top" class="splittop">💻 Éditeur de code</div>
     <div id="split2divider" class="splithorizontaldivider"></div>
     <div id="split2bottom" class="splitbottom">🖥 Console</div>
+    <script defer>
+      const split2 = new Splitter("split2divider", "split2top", "horizontal");  
+    </script>
   </div>
-
-  <script>
-    // === Splitter vertical ===
-    const split1divider = document.getElementById("split1divider");
-    const split1left = document.getElementById("split1left");
-    let resizingV = false;
-
-    split1divider.addEventListener("mousedown", () => {
-      resizingV = true;
-      document.body.style.cursor = "col-resize";
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!resizingV) return;
-      let newWidth = e.clientX;
-      if (newWidth < 100) newWidth = 100;
-      split1left.style.width = newWidth + "px";
-    });
-
-    document.addEventListener("mouseup", () => {
-      resizingV = false;
-      document.body.style.cursor = "default";
-    });
-
-    // === Splitter horizontal ===
-    const split2divider = document.getElementById("split2divider");
-    const split2top = document.getElementById("split2top");
-    let resizingH = false;
-
-    split2divider.addEventListener("mousedown", () => {
-      resizingH = true;
-      document.body.style.cursor = "row-resize";
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!resizingH) return;
-      let newHeight = e.clientY - split1left.offsetTop; // ajuster hauteur relative
-      if (newHeight < 100) newHeight = 100;
-      split2top.style.height = newHeight + "px";
-      split2top.style.flex = "none"; // fixe la hauteur pour ne plus être flexible
-    });
-
-    document.addEventListener("mouseup", () => {
-      resizingH = false;
-      document.body.style.cursor = "default";
-    });
+  <script defer>
+    const split1 = new Splitter("split1divider", "split1left", "vertical");  
   </script>
 </body>
 </html>
