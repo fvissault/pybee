@@ -1,15 +1,26 @@
 // Classe générique pour gérer un splitter
 class Splitter {
-    constructor(name, element, target, orientation = "vertical") {
-        this.name = name;
-        this.element = element;
-        this.target = target;
+    constructor(element, target, orientation = "vertical") {
+        this.element = document.getElementById(element);
+        this.target = document.getElementById(target);
         this.orientation = orientation;
         this.isResizing = false;
         this.initEvents();
     }
 
     initEvents() {
+        if (this.orientation === "vertical") {
+            const savedWidth = localStorage.getItem("leftWidth");
+            if (savedWidth) {
+                this.target.style.width = savedWidth + "px";
+            }
+        } else {
+            const savedHeight = localStorage.getItem("topHeight");
+            if (savedHeight) {
+                this.target.style.height = savedHeight + "px";
+            }
+        }
+
         this.element.addEventListener("mousedown", () => {
             this.isResizing = true;
             document.body.style.cursor =
@@ -22,10 +33,12 @@ class Splitter {
             let newWidth = e.clientX;
             if (newWidth < 100) newWidth = 100;
             this.target.style.width = newWidth + "px";
+            localStorage.setItem("leftWidth", newWidth);
         } else {
             let newHeight = e.clientY - this.target.offsetTop;
             if (newHeight < 100) newHeight = 100;
             this.target.style.height = newHeight + "px";
+            localStorage.setItem("topHeight", newHeight);
         }
     });
 
