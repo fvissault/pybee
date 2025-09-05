@@ -1,0 +1,32 @@
+<?btl
+: versplitter
+    local name 
+    local container
+    "<#0#>left" [ name @ ] format local leftid
+    "<#0#>right" [ name @ ] format local rigthid
+    "<#0#>divider" [ name @ ] format local dividerid
+    leftid @ div "var <#0#>" [ leftid @ ] format evaluate
+    leftid @ "class" "splitleft" addattr
+    rigthid @ div "var <#0#>" [ rigthid @ ] format evaluate
+    rigthid @ "class" "splitright" addattr
+    dividerid @ div "var <#0#>" [ dividerid @ ] format evaluate
+    dividerid @ "class" "splitverticaldivider" addattr
+    container @ leftid @ addcontent 
+    container @ dividerid @ addcontent
+    container @ rigthid @ addcontent 
+    container @ "defer" "const split2 = new Splitter(\"<#0#>\",\"<#1#>\",\"vertical\");" [ dividerid @ , leftid @ ] format script addcontent
+;
+
+
+webreset
+title "Page pour tester les splitters" addcontent
+html "lang" "en" addattr
+head "userarea/css/splitter.css" headlink addcontent
+head "userarea/js/splitter.js" headscriptfile addcontent
+head "body { margin: 0; height: 100vh; display: flex; }" style addcontent
+body "vsplit" versplitter
+vsplitleft "left zone" addcontent
+vsplitright "right zone" addcontent
+
+html @ generate cls
+?>
