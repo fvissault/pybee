@@ -59,6 +59,7 @@
     color: var(--vertical-splitter-right-color);
     overflow:var(--vertical-splitter-right-overflow);
     font-family: var(--vertical-splitter-right-fontfamily);
+    padding: 1em;
 }
 
 /*
