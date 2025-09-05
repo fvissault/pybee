@@ -1538,12 +1538,9 @@ class core(base_module):
         for var in self.variables:
             if mystr != '':
                 mystr += '\n'
-            if self.interpreter.search_in_core(var):
-                mystr += var + ' = ' + str(self.dictionary[var]) + ' ;'
-            else:
-                pack = self.interpreter.search_in_pack(var)
-                if pack != False:
-                    mystr += var + ' = ' + str(self.interpreter.packages[pack].dictionary[var]) + ' ;'
+            pack = self.interpreter.search_in_pack(var)
+            if pack != False:
+                mystr += var + ' = ' + str(self.interpreter.packages[pack].dictionary[var]) + ' ;'
         if mystr != '':
             print(mystr)
         return 'nobreak'
