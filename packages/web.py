@@ -23,7 +23,8 @@ class web(base_module):
                            'div' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'label' : '''{ } local attrs "for" swap attrs cell+ drop local content { tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }''',
                            'headlink' : '''{ } local attrs "href" swap attrs cell+ drop "rel" "stylesheet" attrs cell+ drop { tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }''',
-                           'headscriptfile' : '''{ } local attrs "src" swap attrs cell+ drop { tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'headscriptfile' : '''local src { } local attrs "src" src @ attrs cell+ drop { tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'script': '''local cont local mode { } local attrs mode @ "defer" = if "defer" mode @ attrs cell+ drop then mode @ "async" = if "async" mode @ attrs cell+ drop then { tag : "script" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'img' : '''{ } local attrs "src" swap attrs cell+ drop { tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'textarea' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'br' : '''{ tag : "br" , content : [ ] , attrs : [ ] , container : "n" }''',
@@ -144,7 +145,7 @@ class web(base_module):
                            'flipcard' : '''local name name @ div local flipcard flipcard "class" "flip-card" addattr flipcard "fci<#0#>" [ name @ ] format div local cardinner cardinner @ addcontent cardinner "class" "flip-card-inner" addattr cardinner "fcf<#0#>" [ name @ ] format div "var fcf<#0#>" [ name @ ] format evaluate @ addcontent "fcf<#0#>" [ name @ ] format "class" "flip-card-front" addattr cardinner "fcb<#0#>" [ name @ ] format div "var fcb<#0#>" [ name @ ] format evaluate @ addcontent "fcb<#0#>" [ name @ ] format "class" "flip-card-back" addattr flipcard @''',
                            'profilecard' : '''local name "profile<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "profile-card" addattr drop newname @''',
                            'productcard' : '''local name "product<#0#>" [ name @ ] format local newname name @ div "var <#0#>" [ newname @ ] format evaluate newname @ "class" "product-card" addattr drop newname @''',
-                           'versplitter' : '''''',
+                           #'versplitter' : '''local name''',
                            'horsplitter' : ''''''
                            }
         self.help = web_help(self.interpreter.output)
