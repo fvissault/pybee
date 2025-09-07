@@ -39,7 +39,6 @@
     min-width: var(--vertical-splitter-left-min-width);
     background: var(--vertical-splitter-left-background-color);
     color: var(--vertical-splitter-left-color);
-    padding: 1em;
     box-sizing: border-box;
     overflow:var(--vertical-splitter-left-overflow);
     font-family: var(--vertical-splitter-left-fontfamily);
@@ -59,7 +58,6 @@
     color: var(--vertical-splitter-right-color);
     overflow:var(--vertical-splitter-right-overflow);
     font-family: var(--vertical-splitter-right-fontfamily);
-    padding: 1em;
 }
 
 /*
@@ -70,7 +68,6 @@
     min-height: var(--horizontal-splitter-top-min-height);
     background: var(--horizontal-splitter-top-background-color);
     color: var(--horizontal-splitter-top-color);
-    padding: 1em;
     box-sizing: border-box;
     overflow:var(--horizontal-splitter-top-overflow);
     font-family: var(--horizontal-splitter-top-fontfamily);
@@ -87,7 +84,6 @@
     min-height: var(--horizontal-splitter-bottom-min-height);
     background: var(--horizontal-splitter-bottom-background-color);
     color: var(--horizontal-splitter-bottom-color);
-    padding: 1em;
     box-sizing: border-box;
     font-family: var(--horizontal-splitter-bottom-fontfamily);
     overflow:var(--horizontal-splitter-bottom-overflow);
