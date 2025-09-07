@@ -2038,7 +2038,7 @@ class core(base_module):
     '''
     Instruction format : formatte une chaine de caractères
     string array FORMAT --> formatted string with array on work stack
-    marqueur dans la chaine de caractères <!!>
+    marqueur dans la chaine de caractères <#...#>
     '''
     def format_instr(self):
         if len(self.work) > 1:
@@ -2061,11 +2061,11 @@ class core(base_module):
             try:
                 content = content.format(*tab)
             except(IndexError):
-                return core_errors.error_index_on_array_invalid.print_error('1format', self.interpreter.output)
+                return core_errors.error_index_on_array_invalid.print_error('format', self.interpreter.output)
             except(ValueError):
-                return core_errors.error_string_invalid.print_error('2format', self.interpreter.output)
+                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
             except(KeyError):
-                return core_errors.error_string_invalid.print_error('3format', self.interpreter.output)
+                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
             content = content.replace('<<', '{')
             content = content.replace('>>', '}')
             self.work.appendleft(content)
