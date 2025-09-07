@@ -25,26 +25,26 @@ class Splitter {
             this.isResizing = true;
             document.body.style.cursor =
             this.orientation === "vertical" ? "col-resize" : "row-resize";
-    });
+        });
 
-    document.addEventListener("mousemove", (e) => {
-        if (!this.isResizing) return;
-        if (this.orientation === "vertical") {
-            let newWidth = e.clientX;
-            if (newWidth < 100) newWidth = 100;
-            this.target.style.width = newWidth + "px";
-            localStorage.setItem("leftWidth", newWidth);
-        } else {
-            let newHeight = e.clientY - this.target.offsetTop;
-            if (newHeight < 100) newHeight = 100;
-            this.target.style.height = newHeight + "px";
-            localStorage.setItem("topHeight", newHeight);
-        }
-    });
+        document.addEventListener("mousemove", (e) => {
+            if (!this.isResizing) return;
+            if (this.orientation === "vertical") {
+                let newWidth = e.clientX;
+                if (newWidth < 100) newWidth = 100;
+                this.target.style.width = newWidth + "px";
+                localStorage.setItem("leftWidth", newWidth);
+            } else {
+                let newHeight = e.clientY - this.target.offsetTop;
+                if (newHeight < 100) newHeight = 100;
+                this.target.style.height = newHeight + "px";
+                localStorage.setItem("topHeight", newHeight);
+            }
+        });
 
-    document.addEventListener("mouseup", () => {
-        this.isResizing = false;
-        document.body.style.cursor = "default";
-    });
+        document.addEventListener("mouseup", () => {
+            this.isResizing = false;
+            document.body.style.cursor = "default";
+        });
     }
 }
