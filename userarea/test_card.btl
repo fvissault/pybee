@@ -5,27 +5,27 @@ html "lang" "en" addattr
 head "userarea/css/card.css" headlink addcontent
 head "userarea/css/flipcard.css" headlink addcontent
 
-body "test1" card addcontent
+body "test1" card
 cardtest1 "titre1" addcardtitle
 cardtest1 "corps1" addcardbody
 cardtest1 "Add to cart" "button" button addcontent
 
-body "test2" card addcontent
+body "test2" card
 cardtest2 "titre2" addcardtitle
 cardtest2 "corps2" addcardbody
 cardtest2 "Add to cart" "button" button addcontent
 
-body "test3" card addcontent
+body "test3" card
 cardtest3 "titre3" addcardtitle
 cardtest3 "corps3" addcardbody
 cardtest3 "Add to cart" "button" button addcontent
 
-body "flip1" flipcard addcontent
+body "flip1" flipcard
 fcfflip1 1 "Recto" maintitle addcontent
 fcbflip1 1 "Verso" maintitle addcontent
 fcbflip1 "Add to cart" "button" button addcontent
 
-body "flip2" flipcard addcontent
+body "flip2" flipcard
 1 "Recto" maintitle var rectotext
 rectotext "style" "line-height:150px;" addattr ( centrage vertical du texte )
 fcfflip2 rectotext addcontent
