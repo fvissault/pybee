@@ -1602,6 +1602,45 @@
             </code>
         </div>
 
+        <a name="splitter"><h4>4.4. le widget 'splitter'</h3></a>
+        <p>
+            Dans le même principe que pour les widgets précédents, ce composant est basé sur un fichier css et un fichier 
+            javascript (js) (que vous trouverez dans le répertoire css de userarea) : '<i>userarea/css/splitter.css</i>' et
+            '<i>userarea/js/splitter.js</i>'.<br>Ces fichiers doivent être impérativement dans les pages qui utilisent ce 
+            widget.<br>
+            Le fichier css commence par une section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez 
+            modifier à votre guise pour obtenir les splitters qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour 
+            comprendre un peu mieux.<br>
+            Vous pouvez obtenir 2 types de splitters : les splitters verticaux et les splitters horizontaux qui sont définis
+            par les mots : '<b>versplitter</b>' et '<b>horsplitter</b>'. Vous pouvez utiliser plusieurs types de splitters dans
+            la même page. Un exempl vous est présenté plus bas.<br>
+            Les splitters sont directement ajoutés au container de votre choix.<br>
+            La position des splitters est mémorisée dans le 'local storage' de votre navigateur. Ceci vous permet lors d'un
+            rechargement de la page de retrouver vos splitters à l'endroit ou vous les avez laissé.
+        </p>
+        <p>Voici un exemple de ce que cela donne en enchainant un splitter vertical et un splitter horizontal :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les splitters" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/splitter.css" headlink addcontent<br>
+                head "userarea/js/splitter.js" headscriptfile addcontent<br>
+                head "body { margin: 0; height: 100vh; display: flex; }" style addcontent ( <b>ceci est indispensable pour obtenir
+                le visuel montré plus bas</b> )<br><br>
+                body "vsplit" <b>versplitter</b><br>
+                vsplitleft "left zone" addcontent<br><br>
+                vsplitright "hsplit" <b>horsplitter</b><br>
+                hsplittop "top zone" addcontent<br>
+                hsplitbottom "bottom zone" addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/splitters.png" width="1200"/>
+
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
             Maintenant que vous connaissez le moyen de créer des widgets simples et complexe, Beetle vous met en place un ensemble de
