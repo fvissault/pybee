@@ -2,6 +2,7 @@ from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.core import core
 import os
+import re
 
 class interpreter:
     def __init__(self, output = 'console'):
@@ -233,28 +234,28 @@ class interpreter:
             if sbfound and item == '': # au mileu de la chaine item vide
                 s += ' '
                 continue
-            if sbfound and not '"' in item:
+            if sbfound and self.valide(item):
                 s += ' ' + item
                 continue
             if sbfound and item.endswith('"'): # fin de la chaine
-                if not item.endswith('\\"'):
-                    s += ' ' + item[:-1]
-                    self.instructions.append('"' + s.replace('\\"', '"') + '"')
-                    sbfound = False
-                    s = ''
-                else:
-                    s += ' ' + item
+                #if not item.endswith('\\"'):
+                s += ' ' + item[:-1]
+                self.instructions.append('"' + s + '"')
+                sbfound = False
+                s = ''
+                continue
+            elif sbfound:
+                s += ' ' + item
                 continue  
-            if not sbfound and len(item) > 0 and item[0] == '"': # le début de la chaine
+            if not sbfound and item[0] == '"': # le début de la chaine
                 sbfound = True
                 if item[-1] == '"' and len(item) > 1:
                     self.instructions.append(item.replace('\\"', '"'))
                     sbfound = False
                     s = ''
-                    continue
                 else:
                     s += item[1:]
-                    continue
+                continue
             if self.core_instr.isinteger(item):
                 self.instructions.append(int(item))
                 continue
@@ -268,3 +269,9 @@ class interpreter:
         else:
             sbfound = False
             s = ''
+
+    def valide(self, s: str) -> bool:
+        # ^ début de chaîne, $ fin de chaîne
+        # (?:\\.|[^"]) : soit un caractère échappé (\.), soit un caractère qui n’est pas "
+        pattern = r'^(?:\\.|[^"])*$'
+        return re.match(pattern, s) is not None
