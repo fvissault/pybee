@@ -1,30 +1,49 @@
 :root {
-    --divider-border-size : 3px;
-    --divider-border-color : #bbb;
+    --dashed-divider-border-size : 3px;
+    --dashed-divider-border-color : blue;
 
-    --rounded-divider-border-size : 8px;
-    --rounded-divider-border-color : #bbb;
+    --dotted-divider-border-size : 3px;
+    --dotted-divider-border-color : red;
+
+    --double-divider-border-size : 3px;
+    --double-divider-border-color : yellow;
+
+    --solid-divider-border-size : 3px;
+    --solid-divider-border-color : gray;
+
+    --rounded-divider-border-size : 4px;
+    --rounded-divider-border-color : green;
     --rounded-divider-border-radius : 5px;
 }
 
 
 /* Dashed border */
 .dashed-divider {
-  border-top: var(--divider-border-size) dashed var(--divider-border-color);
+  border-top: var(--dashed-divider-border-size) dashed var(--dashed-divider-border-color);
+  border-bottom: none;
 }
 
 /* Dotted border */
 .dotted-divider {
-  border-top: var(--divider-border-size)  dotted var(--divider-border-color);
+  border-top: var(--dotted-divider-border-size)  dotted var(--dotted-divider-border-color);
+  border-bottom: none;
+}
+
+/* Double border */
+.double-divider {
+  border-top: var(--double-divider-border-size)  double var(--double-divider-border-color);
+  border-bottom: none;
 }
 
 /* Solid border */
 .solid-divider {
-  border-top: var(--divider-border-size)  solid var(--divider-border-color);
+  border-top: var(--solid-divider-border-size)  solid var(--solid-divider-border-color);
+  border-bottom: none;
 }
 
 /* Rounded border */
 .rounded-divider {
   border-top: var(--rounded-divider-border-size) solid var(--rounded-divider-border-color);
   border-radius: var(--rounded-divider-border-radius);
+  border-bottom: var(--rounded-divider-border-size) solid var(--rounded-divider-border-color);
 } 
