@@ -1,0 +1,14 @@
+<?btl
+webreset
+title "Page pour tester les dividers" addcontent
+html "lang" "en" addattr
+head "userarea/css/divider.css" headlink addcontent
+
+body "sep1" "double" divider
+body "sep2" "dashed" divider
+body "sep3" "dotted" divider
+body "sep4" "solid" divider
+body "sep5" "rounded" divider
+
+html @ generate cls
+?>
