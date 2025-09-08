@@ -1,0 +1,14 @@
+<?btl
+webreset
+title "Page pour tester les overlays" addcontent
+html "lang" "en" addattr
+head "userarea/css/overlay.css" headlink addcontent
+
+"o1" overlay
+"text" div var overlaydiv
+overlaydiv "class" "overlay-centered-content" addattr
+overlaydiv "Contenu du texte" addcontent
+o1overlay overlaydiv addcontent
+
+html @ generate cls
+?>
