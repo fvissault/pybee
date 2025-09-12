@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test html de tab</title>
+  <link rel="stylesheet" href="css/toptab.css">
+  <script src="js/toptab.js"></script>
+</head>
+<body onload="showDefault()">
+    <div id="toto" class="tab">
+        <button type="button" class="tablinks defaultOpen" onclick="openTab(event,'tototab1', this, '#bbb')">Londres</button>
+        <button type="button" class="tablinks" onclick="openTab(event,'tototab2', this, '#ccc')">Paris</button>
+        <button type="button" class="tablinks" onclick="openTab(event,'tototab3', this, '#ddd')">Tokyo</button>
+    </div>
+
+    <!-- Tab content -->
+    <div id="tototab1" class="tabcontent">
+        Pour la ville de Londres
+    </div>
+
+    <div id="tototab2" class="tabcontent">
+        Pour la ville de Paris
+    </div>
+
+    <div id="tototab3" class="tabcontent">
+        Pour la ville de Tokyo
+    </div>
+</body>
+</html>
