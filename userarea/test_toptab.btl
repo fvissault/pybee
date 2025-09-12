@@ -1,0 +1,14 @@
+<?btl
+webreset
+title "Page pour tester les tabs" addcontent
+html "lang" "en" addattr
+head "userarea/css/toptab.css" headlink addcontent
+head "userarea/js/toptab.js" headscriptfile addcontent
+
+body [ [ "London" "#bbb" ] [ "Paris" "#ccc" ] [ "Tokyo" "#ddd" ] ] 0 "tt1" toptab
+tt1tab0 "Onglet de la ville de Londres" addcontent
+tt1tab1 "Onglet de la ville de Paris" addcontent
+tt1tab2 "Onglet de la ville de Tokyo" addcontent
+
+html @ generate cls
+?>
