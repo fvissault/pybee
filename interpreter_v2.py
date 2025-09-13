@@ -231,6 +231,8 @@ class interpreter:
         sbfound = False
         self.instructions.clear()
         for item in split:
+            if item == '':
+                continue
             if sbfound and item == '': # au mileu de la chaine item vide
                 s += ' '
                 continue
