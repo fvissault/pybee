@@ -22,6 +22,7 @@ class error:
             else:
                 return 'nobreak'
         if output == 'web':
+            print("Content-type: text/html;charset=UTF-8\n")
             if self.type == 'warning':
                 print(prefix + ' ' + self.type + ' : ' + self.message)
             if self.type == 'error':
