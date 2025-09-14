@@ -1,0 +1,20 @@
+<?btl
+webreset
+title "Page pour tester les tabs" addcontent
+html "lang" "en" addattr
+head "userarea/css/tab.css" headlink addcontent
+head "userarea/js/tab.js" headscriptfile addcontent
+
+body [ [ "#bbb" "London" ] [ "#ccc" "Paris" ] [ "#ddd" "Tokyo" ] [ "salmon" "Berlin" ] ] 0 "tt1" "top" tab
+tt1tab0 "Onglet de la ville de Londres" addcontent
+tt1tab1 "Onglet de la ville de Paris" addcontent
+tt1tab2 "Onglet de la ville de Tokyo" addcontent
+tt1tab3 "Onglet de la ville de Berlin" addcontent
+body [ [ "green" "Dacia Duster" ] [ "red" "Audi" ] [ "blue" "Volvo" ] [ "yellow" "Renault" ] ] 0 "tt2" "left" tab
+tt2tab0 "Onglet des Dacia" addcontent
+tt2tab1 "Onglet des Audi" addcontent
+tt2tab2 "Onglet des Volvo" addcontent
+tt2tab3 "Onglet des Renault" addcontent
+
+html @ generate cls
+?>
