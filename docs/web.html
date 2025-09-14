@@ -1611,13 +1611,12 @@
             Le fichier css commence par une section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez 
             modifier à votre guise pour obtenir les splitters qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour 
             comprendre un peu mieux.<br>
-            Vous pouvez obtenir 2 types de splitters : les splitters verticaux et les splitters horizontaux qui sont définis
-            par les mots : '<b>versplitter</b>' et '<b>horsplitter</b>'. Vous pouvez utiliser plusieurs types de splitters dans
-            la même page. Un exemple vous est présenté plus bas.<br>
+            Vous pouvez utiliser plusieurs types de splitters dans la même page. Un exemple vous est présenté plus bas.<br>
             Les splitters sont directement ajoutés au container de votre choix.<br>
             La position des splitters est mémorisée dans le 'local storage' de votre navigateur. Ceci vous permet lors d'un
             rechargement de la page de retrouver vos splitters à l'endroit ou vous les avez laissé.
         </p>
+        <p></p>
         <p>Voici un exemple de ce que cela donne en enchainant un splitter vertical et un splitter horizontal :</p>
         <div class="div_code">
             <code>
@@ -1629,9 +1628,9 @@
                 head "userarea/js/splitter.js" headscriptfile addcontent<br>
                 head "body { margin: 0; height: 100vh; display: flex; }" style addcontent ( <b>ceci est indispensable pour obtenir
                 le visuel montré plus bas</b> )<br><br>
-                body "vsplit" <b>versplitter</b><br>
+                body "vsplit" "vertical" <b>splitter</b><br>
                 vsplitleft "left zone" addcontent<br><br>
-                vsplitright "hsplit" <b>horsplitter</b><br>
+                vsplitright "hsplit" "horizontal" <b>splitter</b><br>
                 hsplittop "top zone" addcontent<br>
                 hsplitbottom "bottom zone" addcontent<br><br>
                 html @ generate cls<br>
@@ -1640,6 +1639,10 @@
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <img src="images/splitters.png" width="1200"/>
+
+        <a name="divider"><h4>4.5. le widget 'divider'</h3></a>
+        <a name="overlay"><h4>4.6. le widget 'overlay'</h3></a>
+        <a name="tab"><h4>4.7. le widget 'tab'</h3></a>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
