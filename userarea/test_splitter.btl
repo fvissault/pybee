@@ -6,10 +6,10 @@ head "userarea/css/splitter.css" headlink addcontent
 head "userarea/js/splitter.js" headscriptfile addcontent
 head "body { margin: 0; height: 100vh; display: flex; }" style addcontent
 
-body "vsplit" versplitter
+body "vsplit" "vertical" splitter
 vsplitleft "left zone" addcontent
 
-vsplitright "hsplit" horsplitter
+vsplitright "hsplit" "horizontal" splitter
 hsplittop "top zone" addcontent
 hsplitbottom "bottom zone" addcontent
 
