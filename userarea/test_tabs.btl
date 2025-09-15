@@ -3,7 +3,7 @@ webreset
 title "Page pour tester les tabs" addcontent
 html "lang" "en" addattr
 head "userarea/css/tab.css" headlink addcontent
-head "userarea/js/tab.js" headscriptfile addcontent
+head "sync" "userarea/js/tab.js" headscriptfile addcontent
 
 body [ [ "#bbb" "London" ] [ "#ccc" "Paris" ] [ "#ddd" "Tokyo" ] [ "salmon" "Berlin" ] ] 0 "tt1" "top" tab
 tt1tab0 "Onglet de la ville de Londres" addcontent
