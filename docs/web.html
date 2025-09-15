@@ -28,12 +28,12 @@
             <a href="#code">code</a> <a href="#col">col</a> <a href="#colgroup">colgroup</a> <a href="#comment">comment</a> 
             <a href="#complexwidget">completeselect</a> <a href="#data">data</a> <a href="#datalist">datalist</a> <a href="#dd">dd</a> <a href="#del">del</a> 
             <a href="#details">details</a> <a href="#dfn">dfn</a> <a href="#dialog">dialog</a> <a href="#div">div</a> 
-            divider <a href="#dl">dl</a> <a href="#dloption">dloption</a> <a href="#dt">dt</a> <a href="#em">em</a> 
+            <a href="#divider">divider</a> <a href="#dl">dl</a> <a href="#dloption">dloption</a> <a href="#dt">dt</a> <a href="#em">em</a> 
             <a href="#fieldarea">fieldarea</a> <a href="#fieldset">fieldset</a> <a href="#figcaption">figcaption</a> 
             <a href="#figure">figure</a> <a href="#flipcard">flipcard</a> <a href="#footer">footer</a> <a href="#form">form</a> 
             <a href="#generate">generate</a> <a href="#sessions">getsession</a> <a href="#sessions">getsessvar</a> 
             grouplaystyle <a href="#header">header</a> <a href="#headlink">headlink</a> <a href="#headscriptfile">headscriptfile</a> 
-            <a href="#splitter">horsplitter</a> <a href="#hr">hr</a> htmlcontent <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
+            <a href="#hr">hr</a> htmlcontent <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
             <a href="#ins">ins</a> <a href="#italic">italic</a> <a href="#kbd">kbd</a> <a href="#label">label</a> 
             layout layoutarea layoutgrid <a href="#legend">legend</a> <a href="#listitem">listitem</a> <a href="#main">main</a> 
             <a href="#maintitle">maintitle</a> <a href="#map">map</a> <a href="#mark">mark</a> <a href="#menu">menu</a> 
@@ -43,7 +43,7 @@
             <a href="#pre">pre</a> productcard profilecard <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> 
             <a href="#select">select</a> <a href="#sessions">sessduration?</a> <a href="#sessions">session</a> 
             <a href="#sessions">setsessduration</a> <a href="#sessions">setsessvar</a> <a href="#small">small</a> 
-            <a href="#source">source</a> <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> 
+            <a href="#source">source</a> <a href="#span">span</a> <a href="#splitter">splitter</a> <a href="#strong">strong</a> <a href="#style">style</a> 
             <a href="#sub">sub</a> <a href="#summary">summary</a> <a href="#sup">sup</a> <a href="#svg">svg</a> 
             <a href="#svgcircle">svgcircle</a> <a href="#svgellipse">svgellipse</a> <a href="#svgimage">svgimage</a> 
             <a href="#svgline">svgline</a> <a href="#svglineargradient">svglineargradient</a> <a href="#svgmarker">svgmarker</a> 
@@ -52,7 +52,7 @@
             <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#table">table</a> 
             <a href="#tablecell">tablecell</a> <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> 
             <a href="#textarea">textarea</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
-            <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#splitter">versplitter</a> <a href="#video">video</a> webreset</b>
+            <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> webreset</b>
         </p>
 
         <a name="generalprinciple"><h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3></a>
@@ -1616,7 +1616,12 @@
             La position des splitters est mémorisée dans le 'local storage' de votre navigateur. Ceci vous permet lors d'un
             rechargement de la page de retrouver vos splitters à l'endroit ou vous les avez laissé.
         </p>
-        <p></p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>nom_du_splitter</i>" "vertical | horizontal" <b>splitter</b>
+            </code>
+        </div>
         <p>Voici un exemple de ce que cela donne en enchainant un splitter vertical et un splitter horizontal :</p>
         <div class="div_code">
             <code>
@@ -1641,6 +1646,45 @@
         <img src="images/splitters.png" width="1200"/>
 
         <a name="divider"><h4>4.5. le widget 'divider'</h3></a>
+        <p>
+            Un divider est une séparation de type hr uniquement. Ce mot vous propose plusieurs séparations possibles dont les
+            caractéristiques sont les suivantes :
+        </p>
+        <ul>
+            <li>double</li>
+            <li>dashed</li>
+            <li>dotted</li>
+            <li>solid</li>
+            <li>rounded</li>
+        </ul>
+        <p>La syntaxe du mot 'divider'est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>nom_du_divider</i>" "<i>caractéristique</i>" <b>divider</b>
+            </code>
+        </div>
+        <p>
+            Un fichier css (<i>divider.css</i>) est à disposition qui regroupe ces caractéristiques. Voici un exemple :
+        </p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les dividers" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/divider.css" headlink addcontent<br><br>
+                body "sep1" "double" <b>divider</b><br>
+                body "sep2" "dashed" <b>divider</b><br>
+                body "sep3" "dotted" <b>divider</b><br>
+                body "sep4" "solid" <b>divider</b><br>
+                body "sep5" "rounded" <b>divider</b><br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/dividers.png" width="1200"/>
+
         <a name="overlay"><h4>4.6. le widget 'overlay'</h3></a>
         <a name="tab"><h4>4.7. le widget 'tab'</h3></a>
 
