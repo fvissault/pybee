@@ -23,7 +23,7 @@ class web(base_module):
                            'div' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "div" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'label' : '''{ } local attrs "for" swap attrs cell+ drop local content { tag : "label" , content : [ content @ ] , attrs : attrs @ , container : "y" }''',
                            'headlink' : '''{ } local attrs "href" swap attrs cell+ drop "rel" "stylesheet" attrs cell+ drop { tag : "link" , content : [ ] , attrs : attrs @ , container : "n" }''',
-                           'headscriptfile' : '''local src { } local attrs "src" src @ attrs cell+ drop { tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }''',
+                           'headscriptfile' : '''local src local mode { } local attrs "src" src @ attrs cell+ drop mode @ "defer" = if "defer" mode @ attrs cell+ drop then mode @ "async" = if "async" mode @ attrs cell+ drop then { tag : "script" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'script': '''local cont local mode { } local attrs mode @ "defer" = if "defer" mode @ attrs cell+ drop then mode @ "async" = if "async" mode @ attrs cell+ drop then { tag : "script" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'img' : '''{ } local attrs "src" swap attrs cell+ drop { tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }''',
                            'textarea' : '''{ } local attrs "id" swap attrs cell+ drop { tag : "textarea" , content : [ ] , attrs : attrs @ , container : "y" }''',
