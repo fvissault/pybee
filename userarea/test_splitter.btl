@@ -3,7 +3,7 @@ webreset
 title "Page pour tester les splitters" addcontent
 html "lang" "en" addattr
 head "userarea/css/splitter.css" headlink addcontent
-head "userarea/js/splitter.js" headscriptfile addcontent
+head "normal" "userarea/js/splitter.js" headscriptfile addcontent
 head "body { margin: 0; height: 100vh; display: flex; }" style addcontent
 
 body "vsplit" "vertical" splitter
