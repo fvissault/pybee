@@ -1,31 +1,9 @@
 <?btl
-: accordion
-    local name
-    local sections
-    local container
-    0 local i
-    0 local panelname
-    0 local item
-    0 local bouton
-    0 local panel
-    sections @ cells i
-    do
-        sections @ i @ cell@ item !
-        item @ "button" button bouton !
-        bouton "class" "accordion" addattr
-        container @ bouton @ addcontent
-        "<#0#>panel<#1#>" [ name @ i @ ] format panelname !
-        panelname @ div "var <#0#>" [ panelname @ ] format evaluate
-        panelname @ "class" "panel" addattr
-        container @ panelname @ addcontent
-    loop
-;
-
 webreset
 title "Page pour tester les accordéons" addcontent
 html "lang" "en" addattr
-head "userarea/css/accordeon.css" headlink addcontent
-head "defer" "userarea/js/accordeon.js" headscriptfile addcontent
+head "userarea/css/accordion.css" headlink addcontent
+head "defer" "userarea/js/accordion.js" headscriptfile addcontent
 
 body [ "Section 1" "Section 2" "Section 3" ] "acc1" accordion
 acc1panel0 "Contenu de la section 1" addcontent
