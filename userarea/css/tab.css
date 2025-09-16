@@ -102,7 +102,7 @@
 /* Style the tab content */
 .lefttabcontent {
     float: left;
-    width: calc(var(--left-tabcontent-width) - var(--tabcontent-padding-left) - var(--tabcontent-padding-right) - 4px);
+    width: calc(var(--left-tabcontent-width) - var(--tabcontent-padding-left) - var(--tabcontent-padding-right));
     height: calc(var(--tabcontent-height) - var(--tabcontent-padding-top) - var(--tabcontent-padding-bottom));
     display: none;
     padding-top: var(--tabcontent-padding-top);
