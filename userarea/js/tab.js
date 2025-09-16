@@ -6,7 +6,7 @@ function openTab(evt, name, element, color, dir) {
         tabcontent[i].style.display = "none";
     }
 
-    tablinks = document.getElementsByClassName("tablinks");
+    tablinks = document.getElementsByClassName(dir + "tablinks");
     for (i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
         tablinks[i].style.backgroundColor = "";
