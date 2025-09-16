@@ -2,7 +2,6 @@
     --tab-background-color : white;
     --tab-button-initial-background-color : #eee;
     --tab-button-padding : 10px;
-    --tab-button-border-radius : 5px;
     --tab-button-hover-background-color : #ddd;
     --tab-button-active-background-color : #ccc;
 
@@ -10,7 +9,6 @@
     --tabcontent-padding-right : 12px;
     --tabcontent-padding-bottom : 6px;
     --tabcontent-padding-left : 12px;
-    --tabcontent-border : 1px solid gray;
     --tabcontent-animation : fadeEffect 1s;
     --tabcontent-height : 300px;
 
@@ -25,19 +23,18 @@
 .toptab {
     overflow: scroll;
     background-color: var(--tab-background-color);
-    border-bottom: 1px solid gray;
+    /*border-bottom: 1px solid gray;*/
 }
 
 /* Style the buttons that are used to open the tab content */
 .toptab button {
     background-color: var(--tab-button-initial-background-color);
     float: left;
-    border-bottom:none;
+    border:none;
     outline: none;
     cursor: pointer;
     padding: var(--tab-button-padding) var(--tab-button-padding);
     transition: 0.3s;
-    border-radius: var(--tab-button-border-radius) var(--tab-button-border-radius) 0 0;
     font-family:tahoma,arial;
     font-size:15px;
 }
@@ -60,9 +57,6 @@
     padding-right: var(--tabcontent-padding-right);
     padding-bottom: var(--tabcontent-padding-bottom);
     padding-left: var(--tabcontent-padding-left);
-    border-left: var(--tabcontent-border);
-    border-right: var(--tabcontent-border);
-    border-bottom: var(--tabcontent-border);
     animation: var(--tabcontent-animation);
     font-family:tahoma,arial;
     font-size:15px;
@@ -74,7 +68,6 @@
 /* Style the lefttab */
 .lefttab {
     float: left;
-    border-right: 1px solid #ccc;
     overflow: scroll;
     background-color: var(--tab-background-color);
     width: var(--left-tab-width);
@@ -116,7 +109,6 @@
     padding-right: var(--tabcontent-padding-right);
     padding-bottom: var(--tabcontent-padding-bottom);
     padding-left: var(--tabcontent-padding-left);
-    border: var(--tabcontent-border);
     animation: var(--tabcontent-animation);
     font-family:tahoma,arial;
     font-size:15px;
