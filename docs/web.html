@@ -19,7 +19,7 @@
         <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
         <p>
             L'ensemble des mots qui composent ce package est le suivant : <br>
-            <b><a href="#a">a</a> <a href="#abbr">abbr</a> <a href="#principaux">addattr</a> <a href="#simplecard">addcardbody</a> 
+            <b><a href="#a">a</a> <a href="#abbr">abbr</a> <a href="#accordion">accordion</a> <a href="#principaux">addattr</a> <a href="#simplecard">addcardbody</a> 
             <a href="#simplecard">addcardtitle</a> <a href="#simplecard">addcardbottom</a> <a href="#principaux">addcontent</a> 
             <a href="#address">address</a> <a href="#area">area</a> 
             <a href="#article">article</a> <a href="#aside">aside</a> <a href="#audio">audio</a> <a href="#bdo">bdo</a> 
@@ -39,7 +39,7 @@
             <a href="#maintitle">maintitle</a> <a href="#map">map</a> <a href="#mark">mark</a> <a href="#menu">menu</a> 
             <a href="#meta">meta</a> <a href="#meter">meter</a> <a href="#nav">nav</a> <a href="#noscript">noscript</a> 
             <a href="#optgroup">optgroup</a> <a href="#option">option</a> <a href="#orderlist">orderlist</a> 
-            overlay <a href="#paragraph">paragraph</a> <a href="#posted">posted</a> <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> 
+            <a href="#overlay">overlay</a> <a href="#paragraph">paragraph</a> <a href="#posted">posted</a> <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> 
             <a href="#pre">pre</a> productcard profilecard <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> 
             <a href="#select">select</a> <a href="#sessions">sessduration?</a> <a href="#sessions">session</a> 
             <a href="#sessions">setsessduration</a> <a href="#sessions">setsessvar</a> <a href="#small">small</a> 
@@ -49,7 +49,7 @@
             <a href="#svgline">svgline</a> <a href="#svglineargradient">svglineargradient</a> <a href="#svgmarker">svgmarker</a> 
             <a href="#svgpath">svgpath</a> <a href="#svgpattern">svgpattern</a> <a href="#svgpolygon">svgpolygon</a> 
             <a href="#svgpolyline">svgpolyline</a> <a href="#svgradialgradient">svgradialgradient</a> <a href="#svgrect">svgrect</a> 
-            <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#table">table</a> 
+            <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#tab">tab</a> <a href="#table">table</a> 
             <a href="#tablecell">tablecell</a> <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> 
             <a href="#textarea">textarea</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
             <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> webreset</b>
@@ -1630,7 +1630,7 @@
                 title "Page pour tester les splitters" addcontent<br>
                 html "lang" "en" addattr<br>
                 head "userarea/css/splitter.css" headlink addcontent<br>
-                head "userarea/js/splitter.js" headscriptfile addcontent<br>
+                head "sync" "userarea/js/splitter.js" headscriptfile addcontent<br>
                 head "body { margin: 0; height: 100vh; display: flex; }" style addcontent ( <b>ceci est indispensable pour obtenir
                 le visuel montré plus bas</b> )<br><br>
                 body "vsplit" "vertical" <b>splitter</b><br>
@@ -1686,7 +1686,93 @@
         <img src="images/dividers.png" width="1200"/>
 
         <a name="overlay"><h4>4.6. le widget 'overlay'</h3></a>
+
         <a name="tab"><h4>4.7. le widget 'tab'</h3></a>
+        <p>
+            Ce composant est basé sur un fichier css et un fichier javascript (js) (que vous trouverez dans le répertoire css de userarea) : 
+            '<i>userarea/css/tab.css</i>' et '<i>userarea/js/tab.js</i>'.<br>
+            Ces fichiers doivent être impérativement dans les pages qui utilisent ce widget. Le fichier js doit également être chargé avec l'attribut 'sync'
+            car le code js n'a pas besoin d'être exécuté après le chargement du html.<br>
+            Le fichier css commence par une section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez 
+            modifier à votre guise pour obtenir les tabs qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour 
+            comprendre un peu mieux.<br>
+            Vous pouvez utiliser plusieurs types de tabs dans la même page. Un exemple vous est présenté plus bas.<br>
+            Les tabs sont directement ajoutés au container de votre choix.<br>
+            Pour pouvoir ajouter du contenu à vos tabs, Beetle va créer une variable pour chaque panneau de votre 'tab'. La nomenclature du nom
+            de ces variables est simple : '[<i>nom_du_tab</i>]tab[<i>0|1|...</i>]'. 
+            Dans l'exemple ci-dessous, pour le tab que j'ai nommé 'tt1' qui comporte 4 panneaux, Beetle créé 4 variables qui s'appellent 
+            'tt1tab0', 'tt1tab1', 'tt1tab2' et 'tt1tab3'. 
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> [ [ "<i>active_color</i>" "<i>texte_de_l'onglet</i>" ] ... ] <i>Numéro_de_l'onglet_ouvert</i> "<i>nom_du_composant</i>" "top | left" <b>tab</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne en enchainant un 'tab' top et un 'tab' left :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les tabs" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/tab.css" headlink addcontent<br>
+                head "sync" "userarea/js/tab.js" headscriptfile addcontent<br><br>
+                body [ [ "#bbb" "London" ] [ "#ccc" "Paris" ] [ "#ddd" "Tokyo" ] [ "salmon" "Berlin" ] ] 0 "tt1" "top" <b>tab</b> ( <b>les onglets se retrouvent en haut</b> )<br>
+                tt1tab0 "Onglet de la ville de Londres" addcontent<br>
+                tt1tab1 "Onglet de la ville de Paris" addcontent<br>
+                tt1tab2 "Onglet de la ville de Tokyo" addcontent<br>
+                tt1tab3 "Onglet de la ville de Berlin" addcontent<br>
+                body [ [ "green" "Dacia Duster" ] [ "red" "Audi" ] [ "blue" "Volvo" ] [ "yellow" "Renault" ] ] 0 "tt2" "left" <b>tab</b> ( <b>les onglets se retrouvent à gauche</b> )<br>
+                tt2tab0 "Onglet des Dacia" addcontent<br>
+                tt2tab1 "Onglet des Audi" addcontent<br>
+                tt2tab2 "Onglet des Volvo" addcontent<br>
+                tt2tab3 "Onglet des Renault" addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/tabs.png" width="1200"/>
+
+        <a name="accordion"><h4>4.8. le widget 'accordion'</h3></a>
+        <p>
+            Le but du mot 'accordion' est de vous permettre d'intégrer un accordéon dans vos page html.<br>
+            Ce composant est basé sur un fichier css et un fichier javascript (js) (que vous trouverez dans le répertoire css de userarea) : 
+            '<i>userarea/css/accordion.css</i>' et '<i>userarea/js/accordion.js</i>'.<br>Ces fichiers doivent être impérativement dans les pages 
+            qui utilisent ce widget. Le fichier js doit également être chargé avec l'attribut 'defer'. Ceci est important car le code javascript
+            doit être exécuté après le chargement de votre page html.<br>
+            Le fichier css commence par une section <b>.root</b> qui regroupe un certain nombre de variables css que vous pouvez 
+            modifier à votre guise pour obtenir les accordéons qui vous conviennent. Je vous laisse aller voir le contenu de ce fichier pour 
+            comprendre un peu mieux.<br>
+            Vous pouvez utiliser plusieurs accordéons dans la même page. Les accordéons sont directement ajoutés au container de votre choix.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> [ "<i>section 1</i>" ... ] "nom_de_l'accordéon" <b>accordion</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne en enchainant un splitter vertical et un splitter horizontal :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les accordéons" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/accordion.css" headlink addcontent<br>
+                head <b>"defer"</b> "userarea/js/accordion.js" headscriptfile addcontent ( <b>l'exécution de ce fichier doit être reportée à la fin du chargement du html</b> )<br><br>
+                body [ "Section 1" "Section 2" "Section 3" ] "acc1" <b>accordion</b><br>
+                acc1panel0 "Contenu de la section 1" addcontent<br>
+                acc1panel1 "Contenu de la section 2" addcontent<br>
+                acc1panel2 "Contenu de la section 3" addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/accordion.png" width="1200"/>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
