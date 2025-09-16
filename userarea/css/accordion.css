@@ -1,0 +1,60 @@
+:root {
+  --accordion-background-color : #eee;
+  --accordion-color : #444;
+  --accordion-padding : 18px;
+  --accordion-width : 100%;
+  --accordion-font-family : tahoma,arial;
+  --accordion-font-size : 15px;
+  --accordion-transition : 0.4s;
+  --accordion-active-background-color : teal;
+  --accordion-active-color : white;
+  --accordion-hover-background-color : #ccc;
+
+  --panel-background-color : white;
+  --panel-color : black;
+  --panel-font-family : tahoma,arial;
+  --panel-font-size : 15px;
+  --panel-overflow : scroll;
+  --panel-padding : 18px;
+  --panel-height : 300px;
+  --panel-border : 1px solid gray;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: var(--accordion-background-color);
+  color: var(--accordion-color);
+  cursor: pointer;
+  padding: var(--accordion-padding);
+  width: var(--accordion-width);
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: var(--accordion-transition);
+  font-family: var(--accordion-font-family);
+  font-size: var(--accordion-font-size);
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active {
+  background-color: var(--accordion-active-background-color);
+  color: var(--accordion-active-color);
+}
+
+.accordion:hover {
+  background-color: var(--accordion-hover-background-color);
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  padding: var(--panel-padding);
+  background-color: var(--panel-background-color);
+  color: var(--panel-color);
+  font-family: var(--panel-font-family);
+  font-size: var(--panel-font-size);
+  display: none;
+  overflow: var(--panel-overflow);
+  height: var(--panel-height);
+  border: var(--panel-border);
+  border-top: none;
+} 
