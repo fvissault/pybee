@@ -1734,7 +1734,7 @@
         </div>
 
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
-        <img src="images/tabs.png" width="1200"/>
+        <img src="images/tabs.png" width="800"/>
 
         <a name="accordion"><h4>4.8. le widget 'accordion'</h3></a>
         <p>
@@ -1773,6 +1773,37 @@
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <img src="images/accordion.png" width="1200"/>
+
+        <a name="sidenav_push"><h4>4.9. le widget 'sidenav_push'</h3></a>
+
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "nom_du_sidenav" <b>sidenav-push</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les sidenav push" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/sidenav_push.css" headlink addcontent<br>
+                head "normal" "userarea/js/sidenav_push.js" headscriptfile addcontent<<br><br>
+                body "snp" <b>sidenav-push</b><br>
+                snpsidenav "About" "#" a addcontent<br>
+                snpsidenav "Services" "#" a addcontent<br>
+                snpsidenav "Clients" "#" a addcontent<br>
+                snpsidenav "Contact" "#" a addcontent<br>
+                snpmain "Sidenav Push Main content" addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/closed_sidenav.png" width="600"/>
+        <img src="images/opened_sidenav.png" width="625"/>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
