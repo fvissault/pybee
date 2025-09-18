@@ -1,0 +1,55 @@
+.sidenav {
+  height: 100%;
+  width: 40px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #444;
+  overflow-x: hidden;
+  transition: 0.8s;
+  padding-top: 40px;
+}
+
+.sidenav a {
+  padding: 4px 4px 4px 40px;
+  text-decoration: none;
+  font-family: tahoma, arial;
+  font-size: 15px;
+  color: white;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #aaa;
+}
+
+.sidenav .closebtn {
+  display: none;
+  position: absolute;
+  top: -3px;
+  right: 4px;
+  font-size: 34px;
+  margin-left: 50px;
+}
+
+.sidenav .openbtn {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 4px;
+  font-size: 26px;
+  margin-left: 50px;
+}
+
+#main {
+  font-family: tahoma, arial;
+  transition: margin-left 0.8s;
+  padding: 16px;
+  margin-left:40px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav a {font-size: 11px;}
+}
