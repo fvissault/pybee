@@ -1,0 +1,16 @@
+<?btl
+webreset
+title "Page pour tester les sidenav push" addcontent
+html "lang" "en" addattr
+head "userarea/css/sidenav.css" headlink addcontent
+head "normal" "userarea/js/sidenav.js" headscriptfile addcontent
+
+body "overlay" "snp" sidenav
+snpsidenav "About" "#" a addcontent
+snpsidenav "Services" "#" a addcontent
+snpsidenav "Clients" "#" a addcontent
+snpsidenav "Contact" "#" a addcontent
+snpmain "Sidenav Push Main content" addcontent
+
+html @ generate cls
+?>
