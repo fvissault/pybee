@@ -5,7 +5,7 @@
   --sidenav-open-close-transition : 0.8s;
   --sidenav-padding-top : 40px;
 
-  --sidenav-anchor-padding : 4px 10px 4px 10px;
+  --sidenav-anchor-padding : 4px 10px 4px 10px; /* top, right, bottom, left */
   --sidenav-anchor-margin-left : 30px;
   --sidenav-anchor-margin-right : 30px;
   --sidenav-anchor-font-family : tahoma, arial;
