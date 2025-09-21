@@ -5,7 +5,7 @@ html "lang" "en" addattr
 head "userarea/css/sidenav.css" headlink addcontent
 head "normal" "userarea/js/sidenav.js" headscriptfile addcontent
 
-body "overlay" "snp" sidenav
+body "push" "snp" sidenav
 snpsidenav "About" "#" a addcontent
 snpsidenav "Services" "#" a addcontent
 snpsidenav "Clients" "#" a addcontent
