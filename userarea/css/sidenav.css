@@ -1,55 +1,108 @@
+:root {
+  --sidenav-height : 100%;
+  --sidenav-width-close : 40px;
+  --sidenav-background-color : #444;
+  --sidenav-open-close-transition : 0.8s;
+  --sidenav-padding-top : 40px;
+
+  --sidenav-anchor-padding : 4px 10px 4px 10px;
+  --sidenav-anchor-margin-left : 30px;
+  --sidenav-anchor-margin-right : 30px;
+  --sidenav-anchor-font-family : tahoma, arial;
+  --sidenav-anchor-font-size : 15px;
+  --sidenav-anchor-color : white;
+  --sidenav-anchor-transition : 0.3s;
+
+  --sidenav-anchor-hover-color : #aaa;
+  --sidenav-anchor-hover-background-color : teal;
+
+  --sidenav-openbtn-hover-color : #aaa;
+  --sidenav-openbtn-hover-background-color : aquamarine;
+  --sidenav-openbtn-margin-left : 0px;
+  --sidenav-openbtn-margin-right : 0px;
+  --sidenav-openbtn-font-size : 26px;
+
+  --sidenav-closebtn-hover-color : #aaa;
+  --sidenav-closebtn-hover-background-color : indianred;
+  --sidenav-closebtn-margin-left : 0px;
+  --sidenav-closebtn-margin-right : 0px;
+  --sidenav-closebtn-font-size : 34px;
+
+  --sidenav-main-font-family : tahoma, arial;
+  --sidenav-main-transition : margin-left 0.8s;
+  --sidenav-main-padding : 16px;
+  --sidenav-main-margin-left : 40px;
+
+  --sidenav-responsive-font-size : 11px;
+}
+
 .sidenav {
-  height: 100%;
-  width: 40px;
+  height: var(--sidenav-height);
+  width: var(--sidenav-width-close);
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #444;
+  background-color: var(--sidenav-background-color);
   overflow-x: hidden;
-  transition: 0.8s;
-  padding-top: 40px;
+  transition: var(--sidenav-open-close-transition);
+  padding-top: var(--sidenav-padding-top);
 }
 
 .sidenav a {
-  padding: 4px 4px 4px 40px;
+  padding: var(--sidenav-anchor-padding);
+  margin-left : var(--sidenav-anchor-margin-left);
+  margin-right : var(--sidenav-anchor-margin-right);
   text-decoration: none;
-  font-family: tahoma, arial;
-  font-size: 15px;
-  color: white;
+  font-family: var(--sidenav-anchor-font-family);
+  font-size: var(--sidenav-anchor-font-size);
+  color: var(--sidenav-anchor-color);
   display: block;
-  transition: 0.3s;
+  transition: var(--sidenav-anchor-transition);
 }
 
 .sidenav a:hover {
-  color: #aaa;
+  color: var(--sidenav-anchor-hover-color);
+  background-color:var(--sidenav-anchor-hover-background-color);
+}
+
+.sidenav .openbtn:hover {
+  color: var(--sidenav-openbtn-hover-color);
+  background-color:var(--sidenav-openbtn-hover-background-color);
+}
+
+.sidenav .closebtn:hover {
+  color: var(--sidenav-closebtn-hover-color);
+  background-color: var(--sidenav-closebtn-hover-background-color);
 }
 
 .sidenav .closebtn {
+  margin-left : var(--sidenav-closebtn-margin-left);
+  margin-right : var(--sidenav-closebtn-margin-right);
   display: none;
   position: absolute;
   top: -3px;
-  right: 4px;
-  font-size: 34px;
-  margin-left: 50px;
+  right: -2px;
+  font-size: var(--sidenav-closebtn-font-size);
 }
 
 .sidenav .openbtn {
+  margin-left : var(--sidenav-openbtn-margin-left);
+  margin-right : var(--sidenav-openbtn-margin-right);
   display: block;
   position: absolute;
   top: 0;
-  right: 4px;
-  font-size: 26px;
-  margin-left: 50px;
+  right: -2px;
+  font-size: var(--sidenav-openbtn-font-size);
 }
 
 #main {
-  font-family: tahoma, arial;
-  transition: margin-left 0.8s;
-  padding: 16px;
-  margin-left:40px;
+  font-family: var(--sidenav-main-font-family);
+  transition: var(--sidenav-main-transition);
+  padding: var(--sidenav-main-padding);
+  margin-left: var(--sidenav-main-margin-left);
 }
 
 @media screen and (max-height: 450px) {
-  .sidenav a {font-size: 11px;}
+  .sidenav a {font-size: var(--sidenav-responsive-font-size);}
 }
