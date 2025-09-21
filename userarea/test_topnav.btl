@@ -1,0 +1,11 @@
+<?btl
+webreset
+title "Page pour tester les menus" addcontent
+html "lang" "en" addattr
+head "userarea/css/topnav.css" headlink addcontent
+head "defer" "userarea/js/topnav.js" headscriptfile addcontent
+
+body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "notfixed" 0 "tn" topnav
+
+html @ generate cls
+?>
