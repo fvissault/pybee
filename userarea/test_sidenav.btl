@@ -5,12 +5,8 @@ html "lang" "en" addattr
 head "userarea/css/sidenav.css" headlink addcontent
 head "normal" "userarea/js/sidenav.js" headscriptfile addcontent
 
-body "push" "snp" sidenav
-snpsidenav "About" "#" a addcontent
-snpsidenav "Services" "#" a addcontent
-snpsidenav "Clients" "#" a addcontent
-snpsidenav "Contact" "#" a addcontent
-snpmain "Sidenav Push Main content" addcontent
+body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "push" "snp" sidenav
+snpmain "Sidenav Main content" addcontent
 
 html @ generate cls
 ?>
