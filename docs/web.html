@@ -51,7 +51,7 @@
             <a href="#svgpolyline">svgpolyline</a> <a href="#svgradialgradient">svgradialgradient</a> <a href="#svgrect">svgrect</a> 
             <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#tab">tab</a> <a href="#table">table</a> 
             <a href="#tablecell">tablecell</a> <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> 
-            <a href="#textarea">textarea</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
+            <a href="#textarea">textarea</a> <a href="#topnav">topnav</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
             <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> webreset</b>
         </p>
 
@@ -1779,7 +1779,7 @@
         <p>La syntaxe de ce mot est la suivante :</p>
         <div class="div_code">
             <code>
-                <i>container</i> "type_de_sidenav" "nom_du_sidenav" <b>sidenav</b>
+                <i>container</i> [ [ "<i>href</i>" "<i>texte_de_l'item</i>" ] ... ] "type_de_sidenav" "nom_du_sidenav" <b>sidenav</b>
             </code>
         </div>
         <p>Voici un exemple de ce que cela donne :</p>
@@ -1791,11 +1791,7 @@
                 html "lang" "en" addattr<br>
                 head "userarea/css/sidenav.css" headlink addcontent<br>
                 head "normal" "userarea/js/sidenav.js" headscriptfile addcontent<<br><br>
-                body "push" "snp" <b>sidenav</b><br>
-                snpsidenav "About" "#" a addcontent<br>
-                snpsidenav "Services" "#" a addcontent<br>
-                snpsidenav "Clients" "#" a addcontent<br>
-                snpsidenav "Contact" "#" a addcontent<br>
+                body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "push" "snp" sidenav<br>
                 snpmain "Sidenav Main content" addcontent<br><br>
                 html @ generate cls<br>
                 ?>
@@ -1804,6 +1800,31 @@
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <img src="images/closed_sidenav.png" width="600"/>
         <img src="images/opened_sidenav.png" width="625"/>
+
+        <a name="topnav"><h4>4.10. le widget 'topnav'</h3></a>
+
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> [ [ "<i>href</i>" "<i>texte_de_l'item</i>" ] ... ] "fixed | notfixed" <i>index_item_par_défault</i> "<i>nom_du_topnav</i>" <b>topnav</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les menus" addcontent<br>
+                html "lang" "en" addattr<br>
+                head "userarea/css/topnav.css" headlink addcontent<br>
+                head "defer" "userarea/js/topnav.js" headscriptfile addcontent<br><br>
+                body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "notfixed" 0 "tn" topnav<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <img src="images/topnav.png" width="800"/>
 
         <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
         <p>
