@@ -16,6 +16,9 @@
   --sidenav-anchor-hover-color : #aaa;
   --sidenav-anchor-hover-background-color : teal;
 
+  --sidenav-anchor-active-color : #aaa;
+  --sidenav-anchor-active-background-color : teal;
+
   --sidenav-openbtn-hover-color : #aaa;
   --sidenav-openbtn-hover-background-color : aquamarine;
   --sidenav-openbtn-margin-left : 0px;
@@ -64,6 +67,11 @@
 .sidenav a:hover {
   color: var(--sidenav-anchor-hover-color);
   background-color:var(--sidenav-anchor-hover-background-color);
+}
+
+.sidenav a.active {
+  background-color: var(--sidenav-anchor-active-background-color);
+  color: var(--sidenav-anchor-active-color);
 }
 
 .sidenav .openbtn:hover {
