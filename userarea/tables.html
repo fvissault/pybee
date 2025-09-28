@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'/>
+        <meta name='viewport' content='width=device-width,initial-scale=1.0'/>
+        <title>Page pour tester les menus</title>
+        <link href='css/tables.css' rel='stylesheet'/>
+        <script src='js/tables.js'></script>
+    </head>
+    <body>
+        <table id="myTable">
+            <caption>
+                Alien football stars
+            </caption>
+            <tr>
+                <th scope="col">Player<br><input type="text" onkeyup="filter('myTable', this, 0)" placeholder="filter.."></th>
+                <th scope="col">Gloobles<br><input type="text" onkeyup="filter('myTable', this, 1)" placeholder="filter.."></th>
+                <th scope="col">Za'taak<br><input type="text" onkeyup="filter('myTable', this, 2)" placeholder="filter.."></th>
+            </tr>
+            <tr>
+                <th scope="row">TR-7</th>
+                <td>7</td>
+                <td>4,569</td>
+            </tr>
+            <tr>
+                <th scope="row">Khiresh Odo</th>
+                <td>7</td>
+                <td>7,223</td>
+            </tr>
+            <tr>
+                <th scope="row">Mia Oolong</th>
+                <td>9</td>
+                <td>6,219</td>
+            </tr>
+        </table>
+    </body>
+</html>
