@@ -1,0 +1,26 @@
+<?btl
+: filteredlist
+    local name
+    local itemlist
+    local container
+    name @ unorderlist local ulist
+    ulist "class" "unorderedlist" addattr
+    0 local i
+    itemlist @ cells i
+    do
+        ulist itemlist @ i @ cell@ listitem addcontent
+    loop
+
+    container @ ulist @ addcontent
+;
+
+webreset
+title "Page pour tester les listes avec filtre" addcontent
+html "lang" "en" addattr
+head "userarea/css/filteredlist.css" headlink addcontent
+head "sync" "userarea/js/filteredlist.js" headscriptfile addcontent
+
+body [ "Bleu"  "Blanc" "Rouge" "Jaune" "Vert" "Noir" "Gris" ] "ulist" filteredlist
+
+html @ generate cls
+?>
