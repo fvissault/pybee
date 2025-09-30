@@ -1,34 +1,71 @@
-th, td {
-  border: 1px solid rgb(160 160 160);
-  padding: 8px 10px;
+:root {
+  --table-border-type : collapse;
+  --table-border : 2px solid rgb(140 140 140);
+  --table-font-family : tahoma, arial, sans-serif;
+  --table-font-size : 0.8rem;
+  --table-letter-spacing : 2px;
+  --table-caption-side : bottom;
+  --table-caption-padding : 10px;
+
+  --cell-border : 1px solid rgb(160 160 160);
+  --cell-padding : 8px 10px;
+  --cell-text-align : center;
+
+  --headcell-col-background-color : #ddd;
+  --headcell-col-color : #444;
+
+  --headcell-row-background-color : #d6ecd4;
+  --headcell-row-color : #444;
+
+  --alternative-color : #eee;
+
+  --filterinput-width : 100px;
+  --filterinput-font-family : tahoma, arial, sans-serif;
+  --filterinput-font-size : 13px;
+  --filterinput-padding : 3px;
+  --filterinput-border : 1px solid #888;;
 }
 
-th[scope="col"] {
-  background-color: #ddd;
-  color: #444;
+.tablehead, .tablecell {
+  border: var(--cell-border);
+  padding: var(--cell-padding);
 }
 
-th[scope="row"] {
-  background-color: #d6ecd4;
+.tablehead[scope="col"] {
+  background-color: var(--headcell-col-background-color);
+  color: var(--headcell-col-color);
 }
 
-td {
-  text-align: center;
+.tablehead[scope="row"] {
+  background-color: var(--headcell-row-background-color);
+  color : var(--headcell-row-color);
+}
+
+.tablecell {
+  text-align: var(--cell-text-align);
 }
 
 tr:nth-of-type(even) {
-  background-color: #eee;
+  background-color: var(--alternative-color);
 }
 
-table {
-  border-collapse: collapse;
-  border: 2px solid rgb(140 140 140);
-  font-family: sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
+.tableall {
+  border-collapse: var(--table-border-type);
+  border: var(--table-border);
+  font-family: var(--table-font-family);
+  font-size: var(--table-font-size);
+  letter-spacing: var(--table-letter-spacing);
 }
 
-caption {
-  caption-side: bottom;
-  padding: 10px;
+.tablecaption {
+  caption-side: var(--table-caption-side);
+  padding: var(--table-caption-padding);
+}
+
+.filterinput {
+  width: var(--filterinput-width);
+  font-family: var(--filterinput-font-family);
+  font-size: var(--filterinput-font-size);
+  padding: var(--filterinput-padding);
+  border: var(--filterinput-border);
 }
