@@ -1,106 +1,4 @@
 <?btl
-: fieldarea
-    { } local attrs 
-    local fatype 
-    local favalue 
-    local faid 
-    "type" fatype @ attrs cell+ drop
-    favalue @ "" <>
-    if 
-        "value" favalue @ attrs cell+ drop
-    then
-    faid @ "" <>
-    if 
-        "id" faid @ attrs cell+ drop 
-        "name" faid @ attrs cell+ drop 
-    then
-    { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }
-;
-
-: th
-    local tableid
-    local colnum
-    local properties
-    properties @ 0 cell@ local cont
-    properties @ 1 cell@ local scope
-    properties @ 2 cell@ local filter
-    properties @ 3 cell@ local sort
-    properties @ cells 6 =
-    if
-        properties @ 4 cell@ local rowspan
-        properties @ 5 cell@ local colspan
-    then 
-    { } local attrs 
-    scope @ "col" = scope @ "row" = or 
-    if
-        "scope" scope @ attrs cell+ drop
-    then
-    properties @ cells 6 = 
-    if
-        rowspan @ 1 >
-        if
-            "rowspan" rowspan @ attrs cell+ drop
-        then
-        colspan @ 1 >
-        if
-            "colspan" colspan @ attrs cell+ drop
-        then
-    then
-    { tag : "th" , content : [ cont @ ] , attrs : attrs @ , container : "y" } local tag
-    filter @ "filter" =
-    if
-        tag br addcontent
-        "mytablef<#0#>" [ colnum @ ] format "" "text" fieldarea local fa
-        fa "onkeyup" "filter(\"<#0#>\", this, <#1#>)" [ tableid @ colnum @ ] format addattr
-        fa "placeholder" "Filter..." addattr
-        tag fa @ addcontent
-    then
-    tag @
-;
-
-: td
-    local properties
-    properties @ 0 cell@ local cont 
-    properties @ cells 3 =
-    if
-        properties @ 1 cell@ local rowspan
-        properties @ 2 cell@ local colspan 
-    then
-    { } local attrs 
-    properties @ cells 3 =
-    if
-        rowspan @ 1 >
-        if
-            "rowspan" rowspan @ attrs cell+ drop
-        then
-        colspan @ 1 >
-        if
-            "colspan" colspan @ attrs cell+ drop
-        then
-    then
-    { tag : "td" , content : [ cont @ ] , attrs : attrs @ , container : "y" }
-;
-
-: row
-    local properties
-    local container
-    container @ "attrs" cell@ "id" cell@ local tableid
-    0 local i
-    0 local item
-    tablerow local tr
-    properties @ cells i
-    do
-        properties @ i @ cell@ item !
-        item @ cells 4 = item @ cells 6 = or
-        if
-            tr item @ i @ tableid @ th addcontent
-        else
-            tr item @ td addcontent
-        then
-    loop
-    container @ tr @ addcontent
-;
-
 webreset
 title "Page pour tester les tables ou listes" addcontent
 html "lang" "en" addattr
@@ -108,7 +6,7 @@ head "userarea/css/tables.css" headlink addcontent
 head "defer" "userarea/js/tables.js" headscriptfile addcontent
 
 "mytable" table var t
-t [ [ "nosort" "filter" "col" "cell1" ] [ "nosort" "filter" "col" "cell2" ] [ "nosort" "filter" "col" "cell3" ] ] row
+t [ [ "sort" "filter" "col" "cell1" ] [ "nosort" "filter" "col" "cell2" ] [ "nosort" "filter" "col" "cell3" ] ] row
 t [ [ "nosort" "nofilter" "row" "cell4" ] [ "cell5" ] [ "cell6" ] ] row
 t [ [ 2 0 "nosort" "nofilter" "row" "cell7" ] [ "cell8" ] ] row
 t [ [ "cell9" ] [ "cell10" ] [ "cell11" ] ] row
