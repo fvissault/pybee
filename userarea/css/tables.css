@@ -4,8 +4,8 @@ th, td {
 }
 
 th[scope="col"] {
-  background-color: #505050;
-  color: #fff;
+  background-color: #ddd;
+  color: #444;
 }
 
 th[scope="row"] {
