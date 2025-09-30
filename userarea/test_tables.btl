@@ -1,11 +1,15 @@
 <?btl
 webreset
-title "Page pour tester les tables ou listes" addcontent
+title "Page pour tester les tables avec filtres et tris" addcontent
 html "lang" "en" addattr
 head "userarea/css/tables.css" headlink addcontent
 head "defer" "userarea/js/tables.js" headscriptfile addcontent
 
-"mytable" table var t
+"t1" table var t
+t "class" "tableall" addattr
+"Ceci est la légende de mon tableau" caption var c
+c "class" "tablecaption" addattr
+t c addcontent 
 t [ [ "sort" "filter" "col" "cell1" ] [ "nosort" "filter" "col" "cell2" ] [ "nosort" "filter" "col" "cell3" ] ] row
 t [ [ "nosort" "nofilter" "row" "cell4" ] [ "cell5" ] [ "cell6" ] ] row
 t [ [ 2 0 "nosort" "nofilter" "row" "cell7" ] [ "cell8" ] ] row
