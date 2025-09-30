@@ -25,7 +25,7 @@ function filter(idtable, elt, columnnum) {
 /*******************************************************
  * Tri d'un tableau
  *******************************************************/
-function sort(idtable, n) {
+function sort(idtable, elt, n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(idtable);
   switching = true;
@@ -41,12 +41,14 @@ function sort(idtable, n) {
       x = rows[i].querySelectorAll("td, th")[n];
       y = rows[i + 1].querySelectorAll("td, th")[n];
       if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        elt.src = "userarea/img/sort-up-solid-full.svg";
+        if (String(x.innerHTML).toLowerCase() > String(y.innerHTML).toLowerCase()) {
           shouldSwitch = true;
           break;
         }
       } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+        elt.src = "userarea/img/sort-down-solid-full.svg";
+        if (String(x.innerHTML).toLowerCase() < String(y.innerHTML).toLowerCase()) {
           shouldSwitch = true;
           break;
         }
@@ -55,7 +57,7 @@ function sort(idtable, n) {
     if (shouldSwitch) {
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
-      switchcount ++;
+      switchcount++;
     } else {
       if (switchcount == 0 && dir == "asc") {
         dir = "desc";
