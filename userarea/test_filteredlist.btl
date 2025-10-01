@@ -10,7 +10,11 @@
     do
         ulist itemlist @ i @ cell@ listitem addcontent
     loop
-
+    "<#0#>_filter" [ name @ ] format "" "text" fieldarea local fa
+    fa "class" "filterinput" addattr
+    fa "placeholder" "Filter..." addattr
+    fa "onkeyup" "listfilter(\"<#0#>\", this);" [ name @ ] format addattr
+    container @ fa @ addcontent
     container @ ulist @ addcontent
 ;
 
