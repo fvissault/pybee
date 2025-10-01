@@ -1,23 +1,4 @@
 <?btl
-: filteredlist
-    local name
-    local itemlist
-    local container
-    name @ unorderlist local ulist
-    ulist "class" "unorderedlist" addattr
-    0 local i
-    itemlist @ cells i
-    do
-        ulist itemlist @ i @ cell@ listitem addcontent
-    loop
-    "<#0#>_filter" [ name @ ] format "" "text" fieldarea local fa
-    fa "class" "filterinput" addattr
-    fa "placeholder" "Filter..." addattr
-    fa "onkeyup" "listfilter(\"<#0#>\", this);" [ name @ ] format addattr
-    container @ fa @ addcontent
-    container @ ulist @ addcontent
-;
-
 webreset
 title "Page pour tester les listes avec filtre" addcontent
 html "lang" "en" addattr
