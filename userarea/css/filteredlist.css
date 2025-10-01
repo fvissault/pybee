@@ -1,32 +1,59 @@
-.filterinput {
-    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
-    background-position: 10px 12px; /* Position the search icon */
-    background-repeat: no-repeat; /* Do not repeat the icon image */
-    width: 100%; /* Full-width */
-    font-size: 16px; /* Increase font-size */
-    padding: 12px 20px 12px 40px; /* Add some padding */
-    border: 1px solid #ddd; /* Add a grey border */
-    margin-bottom: 12px; /* Add some space below the input */
+:root {
+  --filterinput-width : 150px;
+  --filterinput-font-family : tahoma, arial, sans-serif;
+  --filterinput-font-size : 13px;
+  --filterinput-padding : 5px;
+  --filterinput-border : 1px solid #888;
+
+  --ulist-style-type : none;
+  --ulist-padding : 0;
+  --ulist-margin : 0;
+  --ulist-font-family : tahoma, arial;
+  --ulist-font-size : 15px;
+  --ulist-text-align : start;
+
+  --ulist-listitem-border : 1px solid #ddd;
+  --ulist-listitem-margin-top : -1px;
+  --ulist-listitem-padding : 12px;
+  --ulist-listitem-width : 136px;
+  --ulist-listitem-background-color : #f6f6f6;
+  --ulist-listitem-color : black;
+  --ulist-listitem-textdecoration : none;
+  --ulist-listitem-display : block;
+  --ulist-listitem-hover-background-color : #eee;
+
+  --ulist-listitem-position : none;
 }
 
 .unorderedlist {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    font-family: tahoma, arial;
-    font-size: 15px;
+    list-style-type: var(--ulist-style-type);
+    padding: var(--ulist-padding);
+    margin: var(--ulist-margin);
+    font-family: var(--ulist-font-family);
+    font-size: var(--ulist-font-size);
+    text-align : var(--ulist-text-align);
 }
 
 .unorderedlist li {
-    border: 1px solid #ddd;
-    margin-top: -1px;
-    background-color: #f6f6f6;
-    padding: 12px;
-    text-decoration: none;
-    color: black;
-    display: block;
+    border: var(--ulist-listitem-border);
+    margin-top: var(--ulist-listitem-margin-top);
+    background-color: var(--ulist-listitem-background-color);
+    padding: var(--ulist-listitem-padding);
+    text-decoration: var(--ulist-listitem-textdecoration);
+    color: var(--ulist-listitem-color);
+    display: var(--ulist-listitem-display);
+    float : var(--ulist-listitem-position);
+    width : var(--ulist-listitem-width);
 }
 
 .unorderedlist li:hover:not(.header) {
-    background-color: #eee;
+    background-color: var(--ulist-listitem-hover-background-color);
+}
+
+.filterinput {
+  width: var(--filterinput-width);
+  font-family: var(--filterinput-font-family);
+  font-size: var(--filterinput-font-size);
+  padding: var(--filterinput-padding);
+  border: var(--filterinput-border);
 }
