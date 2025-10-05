@@ -1,0 +1,12 @@
+<?btl
+webreset
+title "Page pour tester les modales" addcontent
+html "lang" "en" addattr
+head "userarea/css/modal.css" headlink addcontent
+head "sync" "userarea/js/modal.js" headscriptfile addcontent
+
+body "Open Modal" "Titre de la modale" "myModal" modal
+myModalcontent "Un peu de texte dans cette modale..." paragraph addcontent
+
+html @ generate cls
+?>
