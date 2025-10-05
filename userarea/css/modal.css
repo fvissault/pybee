@@ -1,0 +1,82 @@
+:root {
+    --modal-content-font-family : tahoma, Arial;
+    --modal-content-font-size : 15px;
+    --modal-content-background-color : #fefefe;
+    --modal-content-color : gray;
+    --modal-content-border : 1px solid #888;
+    --modal-content-width : 500px;
+
+    --modal-title-background-color : gray;
+    --modal-title-color : white;
+    --modal-title-font-family : tahoma, Arial;
+    --modal-title-font-size : 17px;
+    --modal-title-height : 28px;
+    --modal-title-width : calc(var(--modal-content-width) - var(--modal-title-padding-left) - 1.41 * var(--modal-close-font-size));
+    --modal-title-padding-top : 6px;
+    --modal-title-padding-left : 5px;
+
+    --modal-close-font-size : 25px;
+    --modal-close-font-family : tahoma, Arial;
+    --modal-close-font-weight : bold;
+    --modal-close-height : 34px;
+    --modal-close-background-color : indianred;
+    --modal-close-color : #aaa;
+    --modal-close-hover-color : #000;
+
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.modalcontent {
+    font-family: var(--modal-content-font-family);
+    font-size: var(--modal-content-font-size);
+    background-color: var(--modal-content-background-color);
+    color: var(--modal-content-color);
+    margin: auto;
+    border: var(--modal-content-border);
+    width: var(--modal-content-width);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+.modaltitle {
+    background-color:var(--modal-title-background-color);
+    color: var(--modal-title-color);
+    font-family: var(--modal-title-font-family);
+    font-size: var(--modal-title-font-size);
+    font-weight: bold;
+    height: var(--modal-title-height);
+    width: var(--modal-title-width);
+    padding-top: var(--modal-title-padding-top);
+    padding-left: var(--modal-title-padding-left);
+    display:inline-block;
+}
+
+.modalclose {
+    background-color: var(--modal-close-background-color);
+    color: var(--modal-close-color);
+    font-family: var(--modal-close-font-family);
+    font-size: var(--modal-close-font-size);
+    font-weight: var(--modal-close-font-weight);
+    float:right;
+    height: var(--modal-close-height);
+}
+
+.modalclose:hover, .modalclose:focus {
+    color: var(--modal-close-hover-color);
+    text-decoration: none;
+    cursor: pointer;
+}
