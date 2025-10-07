@@ -39,7 +39,7 @@
             <a href="#meta">meta</a> <a href="#meter">meter</a> <a href="#nav">nav</a> <a href="#noscript">noscript</a> 
             <a href="#optgroup">optgroup</a> <a href="#option">option</a> <a href="#orderlist">orderlist</a> 
             <a href="#paragraph">paragraph</a> <a href="#posted">posted</a> <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> 
-            <a href="#pre">pre</a> <a href="#quote">quote</a> redirect savelaystyle <a href="#section">section</a> 
+            <a href="#pre">pre</a> <a href="#quote">quote</a> redirect savelaystyle <a href="#script">script</a> <a href="#section">section</a> 
             <a href="#select">select</a> <a href="#sessions">sessduration?</a> <a href="#sessions">session</a> 
             <a href="#sessions">setsessduration</a> <a href="#sessions">setsessvar</a> <a href="#small">small</a> 
             <a href="#source">source</a> <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> 
@@ -1096,6 +1096,20 @@
                 <i>"content"</i> <b>quote</b><br><br>
                 --> {'tag':'q', 'content':['content'], 'attrs':{}, 'container':'y'} est positionné sur la pile<br>
                 --> &lt;q>content&lt;/q>
+            </code>
+        </div>
+
+        <a name="script"></a><h4><u>Mot 'script'</u></h4> 
+        <p>Tag : <b>&lt;script></b></p>
+        <p>Attributs obligatoires : <b>mode</b></p>
+        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Container? : <b>oui</b></p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code> 
+                <i>"mode"</i> <i>"content"</i> <b>script</b><br><br>
+                --> {'tag':'script', 'content':['content'], 'attrs':{ 'defer'|'async' }, 'container':'y'} est positionné sur la pile<br>
+                --> &lt;script defer|async>content&lt;/section>
             </code>
         </div>
 
