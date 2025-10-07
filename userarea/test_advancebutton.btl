@@ -1,0 +1,42 @@
+<?btl
+: advancebutton
+    local name
+    local content
+    local type
+    local look 
+    local container
+    look @ "fullsuccess" = look @ "fullinfo" = or look @ "fullwarning" = or look @ "fulldanger" = or look @ "fulldefault" = or
+    look @ "outlinesuccess" = or look @ "outlineinfo" = or look @ "outlinewarning" = or look @ "outlinedanger" = or look @ "outlinedefault" = or
+    if
+        type @ "button" = type @ "reset" = or type @ "submit" = or
+        if 
+            
+        else
+            container @ "Bad type for your button : only button, reset, submit are allowed" addcontent
+        then
+    else
+        container @ "Bad look for your button : only fullsuccess, fullinfo, fullwarning, fulldanger, fulldefault, outlinesuccess, outlineinfo, outlinewarning, outlinedanger, outlinedefault are allowed" addcontent    
+    then
+;
+
+webreset
+title "Page pour tester les boutons avancés" addcontent
+html "lang" "en" addattr
+head "userarea/css/advancebutton.css" headlink addcontent
+
+body "fullsuccess" "button" "Success" "b1" advancebutton
+body "fullinfo" "button" "Info" "b2" advancebutton
+body "fullwarning" "button" "Warning" "b3" advancebutton
+body "fulldanger" "button" "Danger" "b4" advancebutton
+body "fulldefault" "button" "Default" "b5" advancebutton
+
+body br addcontent
+
+body "outlinesuccess" "button" "Success" "b6" advancebutton
+body "outlineinfo" "button" "Info" "b7" advancebutton
+body "outlinewarning" "button" "Warning" "b8" advancebutton
+body "outlinedanger" "button" "Danger" "b9" advancebutton
+body "outlinedefault" "button" "Default" "b10" advancebutton
+
+html @ generate cls
+?>
