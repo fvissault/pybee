@@ -1,0 +1,96 @@
+.fullbtn {
+  border: none; 
+  color: white; 
+  padding: 14px 28px; 
+  cursor: pointer; 
+  border-radius: 10px;
+}
+
+.fullsuccess {
+    background-color: #04AA6D;
+}
+.fullsuccess:hover {
+    background-color: #46a049;
+}
+
+.fullinfo {
+    background-color: #2196F3;
+}
+.fullinfo:hover {
+    background: #0b7dda;
+}
+
+.fullwarning {
+    background-color: #ff9800;
+}
+.fullwarning:hover {
+    background: #e68a00;
+}
+
+.fulldanger {
+    background-color: #f44336;
+}
+.fulldanger:hover {
+    background: #da190b;
+}
+
+.fulldefault {
+    background-color: #e7e7e7; 
+    color: black;
+}
+.fulldefault:hover {
+    background: #ddd;
+}
+
+.outlinebtn {
+  border: 2px solid black;
+  background-color: white;
+  color: black;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.outlinesuccess {
+  border-color: #04AA6D;
+  color: green;
+}
+.outlinesuccess:hover {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.outlineinfo {
+  border-color: #2196F3;
+  color: dodgerblue
+}
+.outlineinfo:hover {
+  background: #2196F3;
+  color: white;
+}
+
+.outlinewarning {
+  border-color: #ff9800;
+  color: orange;
+}
+.outlinewarning:hover {
+  background: #ff9800;
+  color: white;
+}
+
+.outlinedanger {
+  border-color: #f44336;
+  color: red
+}
+.outlinedanger:hover {
+  background: #f44336;
+  color: white;
+}
+
+.outlinedefault {
+  border-color: #e7e7e7;
+  color: black;
+}
+.outlinedefault:hover {
+  background: #e7e7e7;
+}
