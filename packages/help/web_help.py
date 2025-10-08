@@ -145,5 +145,6 @@ class web_help(help):
             'sidenav' : '''''',
             'topnav' : '''''',
             'filteredlist' : '''''',
-            'modal' : ''''''
+            'modal' : '''''',
+            'advancebutton' : ''''''
         }
