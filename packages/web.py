@@ -76,7 +76,7 @@ class web(base_module):
                            'colgroup': '''{ tag : "colgroup" , content : [ ] , attrs : { } , container : "y" }''',
                            'data': '''local value local cont { } local attrs "value" value @ attrs cell+ drop { tag : "data" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
                            'datalist': '''local id { } local attrs "id" id @ attrs cell+ drop { tag : "datalist" , content : [ ] , attrs : attrs @ , container : "y" }''',
-                           'dloption': '''local value { } local attrs "value" value @ attrs cell+ drop { tag : "option" , content : [ ] , attrs : attrs @ , container : "n" }''',
+                           'dloption': '''local value { } local attrs "value" value @ attrs cell+ drop { tag : "option" , content : [ ] , attrs : attrs @ , container : "y" }''',
                            'dl': '''{ tag : "dl" , content : [ ] , attrs : { } , container : "y" }''',
                            'dt': '''local cont { tag : "dt" , content : [ cont @ ] , attrs : { } , container : "y" }''',
                            'dd': '''local cont { tag : "dd" , content : [ cont @ ] , attrs : { } , container : "y" }''',
