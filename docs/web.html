@@ -483,14 +483,14 @@
         <p>
             Si open = 'open' alors l'attribut open apparaitra dans les attributs du tag sinon il n'apparait pas<br>
         </p>
-        <p>Contenu : <b>chaine de caractères</b></p>
+        <p>Contenu : <b>chaine de caractères</b> : contenu du summary qui se trouve dans le tag &lt;details>. Le contenu du détails doit être ajouté par la mot addcontent.</p>
         <p>Container? : <b>oui</b></p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code> 
-                <i>"open_attribut"</i> <b>details</b><br><br>
+                <i>"summary_content"</i> <i>"open_attribut"</i> <b>details</b><br><br>
                 --> {'tag':'details', 'content':[{'tag':'summary', 'content':['content'], 'attrs':{}, 'container':'y'}], 'attrs':{'open':'open_attribut'}, 'container':'y'} est positionné sur la pile<br>
-                --> &lt;details[ open]>&lt;summary>content&lt;summay>&lt;/details>
+                --> &lt;details[ open]>&lt;summary>content&lt;summary>&lt;/details>
             </code>
         </div>
 
