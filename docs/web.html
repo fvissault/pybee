@@ -31,15 +31,15 @@
             <a href="#fieldarea">fieldarea</a> <a href="#fieldset">fieldset</a> <a href="#figcaption">figcaption</a> 
             <a href="#figure">figure</a> <a href="#footer">footer</a> <a href="#form">form</a> 
             <a href="#generate">generate</a> <a href="#sessions">getsession</a> <a href="#sessions">getsessvar</a> 
-            grouplaystyle <a href="#header">header</a> <a href="#headlink">headlink</a> <a href="#headscriptfile">headscriptfile</a> 
-            <a href="#hr">hr</a> htmlcontent <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
+            <a href="#grouplaystyle">grouplaystyle</a> <a href="#header">header</a> <a href="#headlink">headlink</a> <a href="#headscriptfile">headscriptfile</a> 
+            <a href="#hr">hr</a> <a href="#htmlcontent">htmlcontent</a> <a href="#httpequiv">httpequiv</a> <a href="#iframe">iframe</a> <a href="#img">img</a> 
             <a href="#ins">ins</a> <a href="#italic">italic</a> <a href="#kbd">kbd</a> <a href="#label">label</a> 
-            layout layoutarea layoutgrid <a href="#legend">legend</a> <a href="#listitem">listitem</a> <a href="#main">main</a> 
+            <a href="#layout">layout</a> <a href="#layoutarea">layoutarea</a> <a href="#layoutgrid">layoutgrid</a> <a href="#legend">legend</a> <a href="#listitem">listitem</a> <a href="#main">main</a> 
             <a href="#maintitle">maintitle</a> <a href="#map">map</a> <a href="#mark">mark</a> <a href="#menu">menu</a> 
             <a href="#meta">meta</a> <a href="#meter">meter</a> <a href="#nav">nav</a> <a href="#noscript">noscript</a> 
             <a href="#optgroup">optgroup</a> <a href="#option">option</a> <a href="#orderlist">orderlist</a> 
             <a href="#paragraph">paragraph</a> <a href="#posted">posted</a> <a href="#pictsrc">pictsrc</a> <a href="#picture">picture</a> 
-            <a href="#pre">pre</a> <a href="#quote">quote</a> redirect savelaystyle <a href="#script">script</a> <a href="#section">section</a> 
+            <a href="#pre">pre</a> <a href="#quote">quote</a> redirect <a href="#savelaystyle">savelaystyle</a> <a href="#script">script</a> <a href="#section">section</a> 
             <a href="#select">select</a> <a href="#sessions">sessduration?</a> <a href="#sessions">session</a> 
             <a href="#sessions">setsessduration</a> <a href="#sessions">setsessvar</a> <a href="#small">small</a> 
             <a href="#source">source</a> <a href="#span">span</a> <a href="#strong">strong</a> <a href="#style">style</a> 
@@ -51,7 +51,7 @@
             <a href="#svgtext">svgtext</a> <a href="#svgtextpath">svgtextpath</a> <a href="#tab">tab</a> <a href="#table">table</a> 
             <a href="#tablecell">tablecell</a> <a href="#tablehead">tablehead</a> <a href="#tablerow">tablerow</a> 
             <a href="#textarea">textarea</a> <a href="#underline">underline</a> <a href="#unorderlist">unorderlist</a> 
-            <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> webreset</b>
+            <a href="#urlbase">urlbase</a> <a href="#sessions">session?</a> <a href="#video">video</a> <a href="#webreset">webreset</a></b>
         </p>
 
         <a name="generalprinciple"><h3>2. Principe général : structure de données et mots principaux (addattr, addcontent)</h3></a>
@@ -1419,13 +1419,13 @@
             </code>
         </div>
 
-        <a name="layout"><h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3></a>
+        <h3>5. La construction du HTML : (layout, webreset, htmlcontent, ...)</h3>
         <p>
             Maintenant que vous connaissez le moyen de créer des widgets simples et complexe, Beetle vous met en place un ensemble de
             variables (html, head, body, title, ...) pour vous faciliter la conception de vos pages. Les mots qui vous permettent de faire cela
             sont : <b>layout</b> et <b>webreset</b>
         </p>
-        <h4><u>Mot 'webreset'</u></h4>
+        <a name="webreset"><h4><u>Mot 'webreset'</u></h4></a>
         <p>
             Les variables que webreset va vous mettre à disposition sont : <b>html, head, body, title, form1</b> et vous allez les utiliser
             souvent. Vous pouvez me croire...
@@ -1536,7 +1536,7 @@
         <img src="images/test_web2.png" width="350"/>
         <p>'webreset' est un mot qui vous permet de créer une page simple rapidement. Ce qui n'est pas le cas du mot 'layout'</p>
 
-        <h4><u>Mot 'layout'</u></h4> 
+        <a name="layout"><h4><u>Mot 'layout'</u></h4></a>
         <p>
             Les variables que layout va vous mettre à disposition sont : <b>html, head, body, title, laystyle</b>. Dans le body de votre
             page, 'layout' va créer les zones que vous souhaitez voir en les numérotant de 0 à n
@@ -1588,7 +1588,7 @@
             <b>savelaystyle</b>
         </p>
 
-        <h4><u>Mot 'layoutgrid'</u></h4>
+        <a name="layoutgrid"><h4><u>Mot 'layoutgrid'</u></h4></a>
         <p>Description : ce mot vous permet de renseigner le css général de votre layout. Ce css se retrouve dans la variable <b>laystyle</b>.</p>
         <p>
             Paramètres : "nom_de_la_ressource_css" "valeur_de_la_ressource" : ce sont des chaines de caractères
@@ -1626,7 +1626,7 @@
             </code>
         </div>
 
-        <h4><u>Mot 'layoutarea'</u></h4>
+        <a name="layoutarea"><h4><u>Mot 'layoutarea'</u></h4></a>
         <p>Description : vous permet de définir le css de chaque zone de votre layout. Ce css se retrouve dans la variable <b>laystyle</b>.</p>
         <p>Paramètres : "nom_de_la_ressource_css" numéro_de_la_zone "valeur_de_la_ressource"</p>
         <p>Syntaxe :</p>
@@ -1654,7 +1654,7 @@
             </code>
         </div>
 
-        <h4><u>Mot 'grouplaystyle'</u></h4>
+        <a name="grouplaystyle"><h4><u>Mot 'grouplaystyle'</u></h4></a>
         <p>
             Description : permet de regrouper les définitions css qui ont les mêmes sélecteurs. ce mot peut être utilisé à tout moment.<br>
             Si vous n'utilisez pas ce mot, vos définitions css vont fonctionner quand même.
@@ -1667,7 +1667,7 @@
             </code>
         </div>
 
-        <h4><u>Mot 'savelaystyle'</u></h4>
+        <a name="savelaystyle"><h4><u>Mot 'savelaystyle'</u></h4></a>
         <p>
             Description : permet de sauver vos définitions css. Il est judicieux de l'utiliser quand l'ensemble de vos définitions css pour
             votre page est défini.
@@ -1681,7 +1681,7 @@
             </code>
         </div>
 
-        <h4><u>Mot 'htmlcontent'</u></h4> 
+        <a name="htmlcontent"><h4><u>Mot 'htmlcontent'</u></h4></a>
         <p>Cette instruction positionne la chaine suivante sur la sortie standard :</p>
         <div class="div_code">
             <code> 
