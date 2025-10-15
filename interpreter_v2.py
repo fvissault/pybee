@@ -23,7 +23,7 @@ class interpreter:
         self.does = deque()
         self.output = output
         self.params = None
-        self.version = 'v2.4.2'
+        self.version = 'v2.4.3'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
         self.preload()
@@ -98,6 +98,8 @@ class interpreter:
                 self.lastseqnumber -= 1
 
     def isemptylastsequence(self):
+        if len(self.sequences) == 0:
+            return True
         if len(self.sequences[self.lastseqnumber]) == 0:
             return True
         else:
