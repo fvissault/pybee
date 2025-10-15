@@ -201,7 +201,7 @@ class core(base_module):
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.7.0'
+        self.version = 'v1.7.1'
 
     '''
     Instruction bye : quitte l'interpreteur Beetle
@@ -251,7 +251,7 @@ class core(base_module):
         if len(self.work) > 0:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
-            print(temp, end='')
+            print(temp, end=' ')
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('.', self.interpreter.output)
