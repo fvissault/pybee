@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Ceci est une page pour tester les cards" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/card.css" headlink addcontent
 head "userarea/css/flipcard.css" headlink addcontent
 
