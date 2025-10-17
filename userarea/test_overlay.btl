@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les overlays" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/overlay.css" headlink addcontent
 
 "o1" overlay
