@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les accordéons" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/accordion.css" headlink addcontent
 head "defer" "userarea/js/accordion.js" headscriptfile addcontent
 
