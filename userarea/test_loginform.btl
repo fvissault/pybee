@@ -1,0 +1,12 @@
+<?btl
+webreset
+title "Page pour tester le formulaire de login" addcontent
+html "lang" lang? addattr
+head "userarea/css/loginform.css" headlink addcontent
+head "defer" "userarea/js/loginform.js" headscriptfile addcontent
+
+
+
+html @ generate cls
+
+?>
