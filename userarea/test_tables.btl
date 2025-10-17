@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les tables avec filtres et tris" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/tables.css" headlink addcontent
 head "defer" "userarea/js/tables.js" headscriptfile addcontent
 
