@@ -33,7 +33,7 @@ class console:
             self.i.interpret()
             self.i.instructions.clear()
             if str(self.i.instr).lower() != 'bye':
-                print(termcolors.GREEN + 'ok' + termcolors.NORMAL)
+                print(termcolors.GREEN + '\nok' + termcolors.NORMAL)
             else:
                 print(termcolors.GREEN + 'Have a good day! See you later...' + termcolors.NORMAL, end='')
 
