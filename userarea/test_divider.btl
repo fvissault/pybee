@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les dividers" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/divider.css" headlink addcontent
 
 body "sep1" "double" divider
