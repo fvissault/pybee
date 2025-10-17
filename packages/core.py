@@ -246,7 +246,7 @@ class core(base_module):
         if self.interpreter.output == 'web':
             print(mystr, end='')
         else:
-            print(mystr.strip(), end='\n')
+            print(mystr.strip(), end='')
         return 'nobreak'
            
     '''
@@ -256,7 +256,7 @@ class core(base_module):
         if len(self.work) > 0:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
-            print(temp + ' ', end='')
+            print(temp, end='')
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('.', self.interpreter.output)
@@ -597,7 +597,7 @@ class core(base_module):
         if self.interpreter.output == 'web':
             content = content.replace('\n', '<br>')
             content = content.replace(' ', '&nbsp;')
-        print(content)
+        print(content, end='')
         f.close()
         return 'nobreak'
 
@@ -1657,9 +1657,9 @@ class core(base_module):
                         if def_name in self.interpreter.compile.keys():
                             print(rettab + 'does> ' + list(self.interpreter.compile[def_name])[0])
                         if def_name in self.interpreter.immediate:
-                            print('; immediate')
+                            print('; immediate', end='')
                         else:
-                            print(';')
+                            print(';', end='')
                         return 'nobreak'
                     else:
                         core_errors.error_native_definition.print_error('see ' + def_name, self.interpreter.output)
