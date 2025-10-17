@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les boutons avancés" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/advancebutton.css" headlink addcontent
 
 body "fullsuccess" "button" "Success" "b1" advancebutton
