@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les tabs" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/tab.css" headlink addcontent
 head "sync" "userarea/js/tab.js" headscriptfile addcontent
 
