@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les modales" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/modal.css" headlink addcontent
 head "sync" "userarea/js/modal.js" headscriptfile addcontent
 
