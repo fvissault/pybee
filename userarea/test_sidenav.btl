@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les sidenav push" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/sidenav.css" headlink addcontent
 head "normal" "userarea/js/sidenav.js" headscriptfile addcontent
 
