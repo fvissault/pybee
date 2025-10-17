@@ -51,8 +51,8 @@ class console:
         print('oooooooooooooooooo //   /  //      //         //    //        //     oooooooooooooooooooooo')
         print('ooooooooooooooooo //___/  //____  //____     //    //_____   //____ ooooooooooooooooooooooo')
         print('ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo')
-        print('---- Interpreter version : ' + self.i.version + ' -- Console version : ' + self.version + ' -- Core version : ' + self.i.core_instr.version + ' ----')
-        print('---- Current date : ' + now.strftime("%m/%d/%Y %H:%M:%S") + ' ---------------------------------------------------')
+        print('oooo Interpreter version : ' + self.i.version + ' -- Console version : ' + self.version + ' -- Core version : ' + self.i.core_instr.version + ' oooo')
+        print('oooo Current date : ' + now.strftime("%m/%d/%Y %H:%M:%S") + ' ---------------------------------------------- oooo')
         print('ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo' + termcolors.NORMAL)
 
     def set_prompt(self, prompt):
