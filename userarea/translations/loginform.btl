@@ -1,0 +1,30 @@
+<?btl
+{ 
+    fr : { 
+        identification : "Identification" , 
+        email : "Email" ,
+        enteremail : "Renseignez votre email" , 
+        password : "Mot de passe" , 
+        enterpassword : "Renseignez votre mot de passe" ,
+        login : "Valider" , 
+        rememberme : "Souvenez-vous de moi" , 
+        forgot : "Vous avez oublié " , 
+        pass? : "votre mot de passe?" 
+    } , 
+    en : { 
+        identification : "Authentication" , 
+        email : "Email" , 
+        enteremail : "Enter email" , 
+        password : "Password" , 
+        enterpassword : "Enter password" ,
+        login : "Login" , 
+        rememberme : "Remember me" , 
+        forgot : "Forgot " , 
+        pass? : "password?" 
+    } 
+} var loginform-translate drop
+
+: _loginform
+    local key loginform-translate @ lang? cell@ key @ cell@ 
+;
+?>
