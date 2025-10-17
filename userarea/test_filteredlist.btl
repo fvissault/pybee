@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les listes avec filtre" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/filteredlist.css" headlink addcontent
 head "sync" "userarea/js/filteredlist.js" headscriptfile addcontent
 
