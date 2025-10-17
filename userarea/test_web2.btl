@@ -3,7 +3,7 @@ webreset
 body form1 addcontent
 title "Ceci est une page test" addcontent
 form1 "action" "http://localhost/pybee/browser.py?file=myaction&path=default" addattr
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/file.css" headlink addcontent
 head "userarea/js/file.js" headscriptfile addcontent
 head "textarea { background-color: DarkSalmon; color: white; }" style addcontent
