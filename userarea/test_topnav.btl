@@ -1,7 +1,7 @@
 <?btl
 webreset
 title "Page pour tester les menus" addcontent
-html "lang" "en" addattr
+html "lang" lang? addattr
 head "userarea/css/topnav.css" headlink addcontent
 head "defer" "userarea/js/topnav.js" headscriptfile addcontent
 
