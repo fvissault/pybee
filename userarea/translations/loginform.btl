@@ -7,9 +7,9 @@
         password : "Mot de passe" , 
         enterpassword : "Renseignez votre mot de passe" ,
         login : "Valider" , 
-        rememberme : " Souvenez-vous de moi" , 
-        forgot : "Vous avez oublié " , 
-        pass? : "votre mot de passe?" 
+        rememberme : " Souviens toi de moi" , 
+        forgot : "Mot de passe " , 
+        pass? : "oublié?" 
     } , 
     en : { 
         identification : "Authentication" , 
