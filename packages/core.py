@@ -5,6 +5,7 @@ import keyboard
 import hashlib
 import json
 import locale
+import re
 from collections import deque
 from packages.errors.core_errors import core_errors
 from packages.base_module import base_module
@@ -563,19 +564,21 @@ class core(base_module):
             f = open(filename)
         except(FileNotFoundError):
             return core_errors.error_no_such_file.print_error('load ' + filename, self.interpreter.output)
-        content = f.read().encode('mbcs').decode()
+        content = f.read().encode('utf-8').decode()
         content = content.replace('"', '\\"')
         content = '"' + content + '" .'
         content = content.replace('\\"', '"')
         content = content.replace('<?btl', '" . ')
         content = content.replace('?>', ' "')
-        content = content.replace('\n', ' ')
         content = content.replace('"" .', '')
         content = ' '.join(content.split())
 
         split = content.split(' ')
         self.interpreter.string_treatment(split)
-        self.interpreter.sequences[self.interpreter.lastseqnumber] = self.interpreter.instructions.copy()
+        self.interpreter.set_sequence(self.interpreter.instructions.copy())
+        ret = self.interpreter.interpret('last_sequence')
+        self.interpreter.decreaselastseqnumber()
+
         self.interpreter.instructions.clear()
         f.close()
         return 'nobreak'
