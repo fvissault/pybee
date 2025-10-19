@@ -24,10 +24,10 @@ else:
 filename = '{0}/{1}.btl'.format(dir, filename)
 #print(filename)
 try:
-    f = open(filename)
+    f = open(filename, encoding="utf-8")
 except(FileNotFoundError):
     core_errors.error_no_such_file.print_error('load ' + filename, i.output)
-content = f.read().encode('utf8').decode()
+content = f.read() #.encode('utf-8').decode()
 content = content.replace('"', '\\"')
 content = '"' + content + '" .'
 content = content.replace('\\"', '"')
@@ -37,6 +37,7 @@ content = content.replace('"" .', '')
 content = ' '.join(content.split())
 f.close()
 
+#print("Content-type: text/html;charset=UTF-8\n")
 #print(content)
 # clean de l'interprète
 i.sequences.clear()
