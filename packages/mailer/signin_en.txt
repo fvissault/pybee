@@ -1,0 +1,3 @@
+{'subject':'Congratulations on signing up for Pygen',
+'body':'<html><body><div>Hello [name],<br>We are happy to have you among us!<br>Your login identifier is the email you provided when registering: [email]<br>If you have forgot your password, Pygen allows you to reset your password at the time of authentication.<br>The Pygen team</div></body></html>',
+'text':'Hello [name],\nWe are happy to have you among us!\nYour login identifier is the email you provided when registering: [email]\nIf you have forgot your password, Pygen allows you to reset your password at the time of authentication.\nThe Pygen team'}
