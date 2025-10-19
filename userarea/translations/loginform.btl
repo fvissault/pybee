@@ -7,7 +7,7 @@
         password : "Mot de passe" , 
         enterpassword : "Renseignez votre mot de passe" ,
         login : "Valider" , 
-        rememberme : "Souvenez-vous de moi" , 
+        rememberme : " Souvenez-vous de moi" , 
         forgot : "Vous avez oublié " , 
         pass? : "votre mot de passe?" 
     } , 
@@ -18,10 +18,43 @@
         password : "Password" , 
         enterpassword : "Enter password" ,
         login : "Login" , 
-        rememberme : "Remember me" , 
+        rememberme : " Remember me" , 
         forgot : "Forgot " , 
         pass? : "password?" 
-    } 
+    } ,
+    it : {
+        identification : "Autenticazione" ,
+        email : "Email" ,
+        enteremail : "Inserisci la tua email" ,
+        password : "Password" ,
+        enterpassword : "Inserisci la tua password" ,
+        login : "Conferma" ,
+        rememberme : " Ricordami" ,
+        forgot : "Hai dimenticato " ,
+        pass? : "la tua password?"
+    } ,
+    de : {
+        identification : "Anmeldung" ,
+        email : "E-Mail" ,
+        enteremail : "Geben Sie Ihre E-Mail ein" ,
+        password : "Passwort" ,
+        enterpassword : "Geben Sie Ihr Passwort ein" ,
+        login : "Bestätigen" ,
+        rememberme : " Angemeldet bleiben" ,
+        forgot : "Haben Sie " ,
+        pass? : "Ihr Passwort vergessen?"
+    } ,
+    es : {
+        identification : "Identificación" ,
+        email : "Correo electrónico" ,
+        enteremail : "Introduce tu correo electrónico" ,
+        password : "Contraseña" ,
+        enterpassword : "Introduce tu contraseña" ,
+        login : "Validar" ,
+        rememberme : " Recuérdame" ,
+        forgot : "¿Olvidaste " ,
+        pass? : "tu contraseña?"
+    }
 } var loginform-translate drop
 
 : _loginform
