@@ -1,41 +1,47 @@
- /* Bordered form */
+:root {
+    --form-border : 3px solid #f1f1f1;
+    --form-width : 400px;
+    --form-font-family : tahoma, arial;
+    --form-font-size : 15px;
+    --form-padding : 16px;
+    --form-button-background-color : #04AA6D;
+    --form-button-color : white;
+    --form-button-border : none;
+}
+
 form {
-  border: 3px solid #f1f1f1;
-  width: 550px;
+    border: var(--form-border);
+    width: var(--form-width);
 }
 
-/* Full-width inputs */
 input[type=email], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
-  color: white;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
+    background-color: var(--form-button-background-color);
+    color: var(--form-button-color);
+    margin: 8px 0;
+    border: var(--form-button-border);
+    cursor: pointer;
+    width: 100%;
 }
 
-/* Add a hover effect for buttons */
 button:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
-/* Add padding to containers */
 .container {
-  padding: 16px;
-  font-family: tahoma, arial;
+    padding: var(--form-padding);
+    font-family: var(--form-font-family);
+    font-size: var(--form-font-size);
 }
 
-/* The "Forgot password" text */
 span.psw {
-  float: right;
+    float: right;
 }
