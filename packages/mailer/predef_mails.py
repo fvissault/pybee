@@ -4,7 +4,7 @@ class predef_mails:
 
     def get_named_mail(self, name:str, lang:str, toreplace:dict) -> dict:
         filename = name + '_' + lang + '.txt'
-        with open(filename, 'r', encoding='utf8') as file:
+        with open(filename, 'r', encoding='utf-8') as file:
             file_content = file.read()
         self.mail = eval(file_content)
         for key, value in toreplace.items():
