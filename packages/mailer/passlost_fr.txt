@@ -1,3 +1,0 @@
-{'subject':'Réinitialisation de votre mot de passe',
-'body':'<html><body><div>Bonjour [name],<br>Vous souhaitez réinitialiser votre mot de passe.<br>Veuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : <a href=\'[link]\'>ici</a><br>L\'équipe</div></body></html>',
-'text':'Bonjour [name],\nVous souhaitez réinitialiser votre mot de passe.\nVeuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : [link] ici\nL\'équipe'}
