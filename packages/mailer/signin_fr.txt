@@ -1,3 +1,0 @@
-{'subject':'Félicitations pour votre inscription',
-'body':'<html><body><div>Bonjour [name],<br>Nous sommes heureux de vous compter parmi nous!<br>Votre identifiant pour vous connecter est l\'email que vous avez renseigné lors de votre inscription : [email]<br>Si vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l\'authentification.<br>L\'équipe</div></body></html>',
-'text':'Bonjour [name],\nNous sommes heureux de vous compter parmi nous!\nVotre identifiant pour vous connecter est l\'email que vous avez renseigné lors de votre inscription : [email]\nSi vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l\'authentification.\nL\'équipe'}
