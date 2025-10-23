@@ -1,4 +1,4 @@
 <?btl
-import file
+import mail
 import web
 ?>
