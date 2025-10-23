@@ -561,10 +561,10 @@ class core(base_module):
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         filename = '{0}/{1}.btl'.format(self.dictionary['path'], filename)
         try:
-            f = open(filename)
+            f = open(filename, encoding="utf-8")
         except(FileNotFoundError):
             return core_errors.error_no_such_file.print_error('load ' + filename, self.interpreter.output)
-        content = f.read().encode('utf-8').decode()
+        content = f.read()
         content = content.replace('"', '\\"')
         content = '"' + content + '" .'
         content = content.replace('\\"', '"')
@@ -593,10 +593,10 @@ class core(base_module):
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         filename = '{0}/{1}.btl'.format(self.dictionary['path'], filename)
         try:
-            f = open(filename)
+            f = open(filename, encoding="utf-8")
         except(FileNotFoundError):
             return core_errors.error_no_such_file.print_error('list ' + filename, self.interpreter.output)
-        content = f.read().encode('mbcs').decode()
+        content = f.read()
         if self.interpreter.output == 'web':
             content = content.replace('\n', '<br>')
             content = content.replace(' ', '&nbsp;')
