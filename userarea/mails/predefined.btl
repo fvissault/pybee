@@ -1,0 +1,64 @@
+<?btl
+{
+    fr : {
+        passlost : {
+            subject : "Réinitialisation de votre mot de passe" ,
+            body : "<html><body><div>Bonjour [name],<br>Vous souhaitez réinitialiser votre mot de passe.<br>Veuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : <a href='[link]'>ici</a><br>L'équipe</div></body></html>" ,
+            text : "Bonjour [name],\nVous souhaitez réinitialiser votre mot de passe.\nVeuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : [link] ici\nL'équipe"
+        } , 
+        signin : {
+            subject : "Félicitations pour votre inscription" ,
+            body : "<html><body><div>Bonjour [name],<br>Nous sommes heureux de vous compter parmi nous!<br>Votre identifiant pour vous connecter est l'email que vous avez renseigné lors de votre inscription : [email]<br>Si vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l'authentification.<br>L'équipe</div></body></html>" ,
+            text : "Bonjour [name],\nNous sommes heureux de vous compter parmi nous!\nVotre identifiant pour vous connecter est l'email que vous avez renseigné lors de votre inscription : [email]\nSi vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l'authentification.\nL'équipe"
+        }
+    } , 
+    en : {
+        passlost : {
+            subject : "Resetting your password" ,
+            body : "<html><body><div>Hi [name],<br>You wish reinitialize your password.<br>>Please click on the following link to reset your password : <a href='[link]'>here</a><br>The team</div></body></html>" ,
+            text : "Hi [name],\nYou wish reinitialize your password.\nPlease click on the following link to reset your password : [link] here\nThe team"
+        } , 
+        signin : {
+            subject : "Congratulations on signing up" ,
+            body : "<html><body><div>Hello [name],<br>We are happy to have you among us!<br>Your login identifier is the email you provided when registering: [email]<br>If you have forgot your password, your application allows you to reset your password at the time of authentication.<br>The team</div></body></html>" ,
+            text : "Hello [name],\nWe are happy to have you among us!\nYour login identifier is the email you provided when registering: [email]\nIf you have forgot your password, your application allows you to reset your password at the time of authentication.\nThe team"
+        }
+    } ,
+    de : {
+        passlost : {
+            subject : "Zurücksetzen Ihres Passworts" ,
+            body : "<html><body><div>Hallo [name],<br>Sie möchten Ihr Passwort zurücksetzen.<br>Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: <a href='[link]'>hier</a><br>Das Team</div></body></html>" ,
+            text : "Hallo [name],\nSie möchten Ihr Passwort zurücksetzen.\nBitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: [link] hier\nDas Team"
+        } ,
+        signin : {
+            subject : "Herzlichen Glückwunsch zu Ihrer Anmeldung" ,
+            body : "<html><body><div>Hallo [name],<br>Wir freuen uns, Sie bei uns begrüßen zu dürfen!<br>Ihr Benutzername zum Anmelden ist die E-Mail-Adresse, die Sie bei der Registrierung angegeben haben: [email]<br>Wenn Sie Ihr Passwort vergessen haben, können Sie es während der Anmeldung in Ihrer Anwendung zurücksetzen.<br>Das Team</div></body></html>" ,
+            text : "Hallo [name],\nWir freuen uns, Sie bei uns begrüßen zu dürfen!\nIhr Benutzername zum Anmelden ist die E-Mail-Adresse, die Sie bei der Registrierung angegeben haben: [email]\nWenn Sie Ihr Passwort vergessen haben, können Sie es während der Anmeldung in Ihrer Anwendung zurücksetzen.\nDas Team"
+        }
+    } ,
+    it : {
+        passlost : {
+            subject : "Reimpostazione della tua password" ,
+            body : "<html><body><div>Ciao [name],<br>Hai richiesto di reimpostare la tua password.<br>Fai clic sul seguente link per reimpostare la tua password: <a href='[link]'>qui</a><br>Il team</div></body></html>" ,
+            text : "Ciao [name],\nHai richiesto di reimpostare la tua password.\nFai clic sul seguente link per reimpostare la tua password: [link] qui\nIl team"
+        } ,
+        signin : {
+            subject : "Congratulazioni per la tua registrazione" ,
+            body : "<html><body><div>Ciao [name],<br>Siamo felici di averti tra noi!<br>Il tuo identificativo per accedere è l'email che hai fornito durante la registrazione: [email]<br>Se hai dimenticato la tua password, l'applicazione ti permette di reimpostarla al momento dell'autenticazione.<br>Il team</div></body></html>" ,
+            text : "Ciao [name],\nSiamo felici di averti tra noi!\nIl tuo identificativo per accedere è l'email che hai fornito durante la registrazione: [email]\nSe hai dimenticato la tua password, l'applicazione ti permette di reimpostarla al momento dell'autenticazione.\nIl team"
+        }
+    } ,
+    es : {
+        passlost : {
+            subject : "Restablecimiento de tu contraseña" ,
+            body : "<html><body><div>Hola [name],<br>Has solicitado restablecer tu contraseña.<br>Por favor, haz clic en el siguiente enlace para restablecer tu contraseña: <a href='[link]'>aquí</a><br>El equipo</div></body></html>" ,
+            text : "Hola [name],\nHas solicitado restablecer tu contraseña.\nPor favor, haz clic en el siguiente enlace para restablecer tu contraseña: [link] aquí\nEl equipo"
+        } ,
+        signin : {
+            subject : "Felicidades por tu registro" ,
+            body : "<html><body><div>Hola [name],<br>¡Nos alegra darte la bienvenida!<br>Tu identificador para iniciar sesión es el correo electrónico que proporcionaste al registrarte: [email]<br>Si has olvidado tu contraseña, tu aplicación te permite restablecerla en el momento de la autenticación.<br>El equipo</div></body></html>" ,
+            text : "Hola [name],\n¡Nos alegra darte la bienvenida!\nTu identificador para iniciar sesión es el correo electrónico que proporcionaste al registrarte: [email]\nSi has olvidado tu contraseña, tu aplicación te permite restablecerla en el momento de la autenticación.\nEl equipo"
+        }
+    }
+} var predefinedmails
+?>
