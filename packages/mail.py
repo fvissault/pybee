@@ -3,9 +3,10 @@ from packages.errors.mail_errors import mail_errors
 from packages.base_module import base_module
 from packages.help.mail_help import mail_help
 from collections import deque
-import smtplib, ssl
+import smtplib, ssl, os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 
 class mail(base_module):
     def __init__(self, interpreter):
@@ -13,16 +14,17 @@ class mail(base_module):
         self.dictionary = {
             'sendmail' : self.sendmail_instr,
             'initmailer' : '''load mails/config load mails/predefined''',
-            'preparemail' : self.preparemail_instr
+            'preparemail' : self.preparemail_instr,
+            'addattachment' : self.addattachment_instr
         }
         self.help = mail_help(self.interpreter.output)
-        self.version = 'v1.0.1'
+        self.version = 'v1.0.2'
 
     '''
     Instruction sendmail : envoie d'un mail 
     '''
     def sendmail_instr(self):
-        if len(self.work) > 1:
+        if len(self.work) > 0:
             sendto = self.pop_work()
             mailcontent = self.pop_work()
             if "mailconfig" in self.interpreter.core_instr.dictionary:
@@ -46,6 +48,14 @@ class mail(base_module):
                     message.attach(part1)
                     message.attach(part2)
 
+                    if "attachments" in mailcontent:
+                        for filepath in mailcontent["attachments"]:
+                            if os.path.exists(filepath):
+                                with open(filepath, "rb") as f:
+                                    part = MIMEApplication(f.read(), Name=os.path.basename(filepath))
+                                    part['Content-Disposition'] = f'attachment; filename="{os.path.basename(filepath)}"'
+                                    message.attach(part)
+                                
                     # Create secure connection with server and send email
                     try:
                         context = ssl.create_default_context()
@@ -85,12 +95,12 @@ class mail(base_module):
                         mail['subject'] = pminlang[mailname]["subject"]
                         mail['body'] = pminlang[mailname]["body"]
                         mail['text'] = pminlang[mailname]["text"]
+                        mail['attachments'] = []
                     else:
                         return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter.output)
                 else:
                     return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter.output)
             else:
-                # mail error : la variable predefinedmails n'existe pas
                 return mail_errors.error_predefinedmails_dont_exists.print_error('preparemail', self.interpreter.output)
 
             # formater le mail à envoyer
@@ -102,3 +112,23 @@ class mail(base_module):
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('preparemail', self.interpreter.output)
+
+    '''
+    Instruction addattachment : ajoute une pièce jointe à un mail
+    '''
+    def addattachment_instr(self):
+        if len(self.work) > 0:
+            filepath = self.pop_work()
+            mailcontent = self.pop_work()
+
+            if not isinstance(mailcontent, dict):
+                return core_errors.error_bad_type.print_error('addattachment', self.interpreter.output)
+
+            if "attachments" not in mailcontent:
+                mailcontent["attachments"] = []
+
+            mailcontent["attachments"].append(filepath)
+            self.work.appendleft(mailcontent)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('addattachment', self.interpreter.output)
