@@ -4,8 +4,11 @@
 # On Linux -> #! usr/bin/python3
 
 # -*- coding: utf8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 
 import cgi
+import re
 from interpreter_v2 import interpreter
 from packages.errors.core_errors import core_errors
 sess = cgi.FieldStorage()
@@ -27,14 +30,14 @@ try:
     f = open(filename, encoding="utf-8")
 except(FileNotFoundError):
     core_errors.error_no_such_file.print_error('load ' + filename, i.output)
-content = f.read() #.encode('utf-8').decode()
+content = f.read()
 content = content.replace('"', '\\"')
 content = '"' + content + '" .'
 content = content.replace('\\"', '"')
 content = content.replace('<?btl', '" . ')
 content = content.replace('?>', ' "')
 content = content.replace('"" .', '')
-content = ' '.join(content.split())
+content = re.sub(r'\s+', ' ', content)
 f.close()
 
 #print("Content-type: text/html;charset=UTF-8\n")
@@ -45,8 +48,8 @@ i.locals.clear()
 i.lastseqnumber = -1
 i.currentseqnumber = 0
 
-split = content.split(' ')
-i.string_treatment(split)
+sp = content.split(' ')
+i.string_treatment(sp)
 i.set_sequence(i.instructions.copy())
 #print(i.print_sequence_numbers())
 i.interpret()
