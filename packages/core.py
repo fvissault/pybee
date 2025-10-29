@@ -571,10 +571,9 @@ class core(base_module):
         content = content.replace('<?btl', '" . ')
         content = content.replace('?>', ' "')
         content = content.replace('"" .', '')
-        content = ' '.join(content.split())
-
-        split = content.split(' ')
-        self.interpreter.string_treatment(split)
+        content = re.sub(r'\s+', ' ', content)
+        sp = content.split(' ')
+        self.interpreter.string_treatment(sp)
         self.interpreter.set_sequence(self.interpreter.instructions.copy())
         ret = self.interpreter.interpret('last_sequence')
         self.interpreter.decreaselastseqnumber()
