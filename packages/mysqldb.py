@@ -28,7 +28,9 @@ class mysqldb(base_module):
                            '|drop>' : self.drop_instr,
                            '|truncate>' : self.truncate_instr,
                            '|alter>' : self.alter_instr,
-                           '>|' : self.endreq_instr}
+                           '>|' : self.endreq_instr,
+                           'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate'''
+                           }
         self.db = None
         self.cursor = None
         self.help = mysqldb_help(interpreter.output)
@@ -37,6 +39,29 @@ class mysqldb(base_module):
         self.interpreter.core_instr.variables.append('username')
         self.interpreter.core_instr.variables.append('userpass')
         self.version = 'v0.3.9'
+
+    def ensure_connection(self):
+        """S’assure que self.db et self.cursor sont valides"""
+        if self.db is None or self.cursor is None:
+            try:
+                self.db = mysql.connector.connect(
+                    host=self.dictionary['hostname'],
+                    user=self.dictionary['username'],
+                    password=self.dictionary['userpass']
+                )
+                self.cursor = self.db.cursor(dictionary=True)
+                self.work.appendleft(1)
+            except:
+                self.cursor = None
+                self.db = None
+                self.work.appendleft(0)
+                return mysqldb_errors.error_connection_failed.print_error('connect', self.interpreter.output)
+
+    def auto_connect(func):
+        def wrapper(self, *args, **kwargs):
+            self.ensure_connection()
+            return func(self, *args, **kwargs)
+        return wrapper
 
     '''
     Instruction dbparam : affiche les paramètres de connection : DBPARAM
@@ -60,8 +85,8 @@ class mysqldb(base_module):
             self.work.appendleft(1)
             return 'nobreak'
         except:
-            self.cursor = ''
-            self.db = ''
+            self.cursor = None
+            self.db = None
             self.work.appendleft(0)
             return mysqldb_errors.error_connection_failed.print_error('connect', self.interpreter.output)
 
@@ -88,6 +113,7 @@ class mysqldb(base_module):
     '''
     Instruction disconnect : ferme le lien entre beetle et la base de données : DISCONNECT
     '''
+    @auto_connect
     def disconnect_instr(self):
         if self.db != None:
             if self.cursor != None:
@@ -100,6 +126,7 @@ class mysqldb(base_module):
     '''
     Instruction close : ferme le lien entre beetle et la base de données : CLOSE
     '''
+    @auto_connect
     def close_instr(self):
         if self.cursor != None:
             self.cursor.close()
@@ -107,24 +134,26 @@ class mysqldb(base_module):
         return 'nobreak'
     
     '''
-    Instruction |<create : action de création : |<CREATE (DATABASE|TABLE) name [option] >|
+    Instruction |create> : action de création : |create> (DATABASE|TABLE) name [option] >|
     '''
+    @auto_connect
     def create_instr(self):
         sql = 'create'
         type = self.seq_next()
         if type == None:
-            return mysqldb_errors.error_action_type.print_error('create', self.interpreter.output)
+            return mysqldb_errors.error_action_type.print_error('|create>', self.interpreter.output)
         type = type.lower()
         if type != 'database' and type != 'table':
-            return mysqldb_errors.error_action_type.print_error('create', self.interpreter.output)
+            return mysqldb_errors.error_action_type.print_error('|create>', self.interpreter.output)
         sql += ' ' + type
         name = self.seq_next()
         if name == None:
-            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
+            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+        name = name.strip().strip('"').strip("'")
         if type == 'database':
-            sql += ' if not exists ' + name
+            sql += f' if not exists `{name}`'
         else:
-            sql += ' if not exists ' + name + ' (`id` int(11) not null auto_increment, primary key (`id`))'
+            sql += f' if not exists `{name}` (`id` int(11) not null auto_increment, primary key (`id`)'
         # options sequence
         next = self.seq_next()
         next = next.lower()
@@ -132,54 +161,51 @@ class mysqldb(base_module):
             sql += ' like'
             old_table = self.seq_next()
             if old_table == None:
-                return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
+                return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
             sql += old_table
         else:
             if next != None:
                 while next != '>|':
                     if next == 'charset':
-                        sql += ' character set'
                         cs = self.seq_next()
                         if cs == None:
-                            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
-                        sql += '=' + cs
+                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                        sql += f" CHARACTER SET {cs}"
                     elif next == 'collate' and type == 'database':
-                        sql += ' collate'
                         co = self.seq_next()
                         if co == None:
-                            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
-                        sql += '=' + co
+                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                        sql += f" COLLATE {co}"
                     elif next == 'encryption' and type == 'database':
-                        sql += ' encryption'
                         encrypt = self.seq_next()
                         if encrypt == None:
-                            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
-                        sql += '=' + encrypt
+                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                        sql += f" encryption={encrypt}"
                     elif next == 'ai' and type == 'table':
-                        sql += ' auto_increment'
                         ai = self.seq_next()
                         if ai == None:
-                            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
+                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
                         if not self.isinteger(ai):
-                            return core_errors.error_integer_expected.print_error('create', self.interpreter.output)
+                            return core_errors.error_integer_expected.print_error('|create>', self.interpreter.output)
                         if int(ai) < 0:
-                            return mysqldb_errors.error_integer_superior_to_0.print_error('create auto_increment', self.interpreter.output)
-                        sql += '=' + str(ai)
+                            return mysqldb_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter.output)
+                        sql += f' auto_increment={ai}'
                     elif next == 'engine' and type == 'table':
-                        sql += ' engine'
                         engine = self.seq_next()
                         if engine == None:
-                            return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
-                        sql += '=' + engine
+                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                        sql += f' engine={engine}'
                     next = self.seq_next()
                     if next == None:
-                        return mysqldb_errors.error_name_expected.print_error('create', self.interpreter.output)
+                        return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
                     next = next.lower()
             else:
                 return mysqldb_errors.error_request_malformed.print_error(sql, self.interpreter.output)
         try:
+            #self.connect_instr()
             self.cursor.execute(sql)
             self.db.commit()
+            #self.disconnect_instr()
         except:
             return mysqldb_errors.error_request_dont_work.print_error(sql, self.interpreter.output)
         return 'nobreak'
@@ -189,6 +215,7 @@ class mysqldb(base_module):
     '''
     Instruction use : précise la base qui doit être utilisée pour la suite : USE dbname
     '''
+    @auto_connect
     def use_instr(self):
         name = self.seq_next()
         if name == None:
@@ -201,7 +228,7 @@ class mysqldb(base_module):
         return 'nobreak'
 
     '''
-    Instruction |<show : |<SHOW [databases|tables from dbname|fields from database.tablename|status|global status] >|
+    Instruction |show> : |SHOW> [databases|tables from dbname|fields from database.tablename|status|global status] >|
 
     show databases
     show tables from dbname
@@ -209,36 +236,37 @@ class mysqldb(base_module):
     show status
     show global status
     '''
+    @auto_connect
     def show_instr(self):
         sql = 'show'
         what = self.seq_next()
         if what == None:
-            return mysqldb_errors.error_name_expected.print_error('show', self.interpreter.output)
+            return mysqldb_errors.error_name_expected.print_error('|show>', self.interpreter.output)
         what = what.lower()
         if what == 'databases' or what == 'tables' or what == 'fields' or what == 'status' or what == 'global':
             sql += ' ' + what
             if what == 'tables':
                 from_instr = self.seq_next()
                 if from_instr.lower() != 'from':
-                    return mysqldb_errors.error_request_malformed.print_error('show', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
                 sql += ' ' + from_instr
                 dbname = self.seq_next()
                 sql += ' ' + dbname
             if what == 'fields':
                 from_instr = self.seq_next()
                 if from_instr.lower() != 'from':
-                    return mysqldb_errors.error_request_malformed.print_error('show', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
                 sql += ' ' + from_instr
                 field_name = self.seq_next()
                 sql += ' ' + field_name
             if what == 'global':
                 status = self.seq_next()
                 if status.lower() != 'status':
-                    return mysqldb_errors.error_request_malformed.print_error('show', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
                 sql += ' ' + status
             endreq = self.seq_next()
             if endreq == None or endreq != '>|':
-                return mysqldb_errors.error_request_malformed.print_error('show', self.interpreter.output)
+                return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
             try:
                 self.cursor.execute(sql)
                 result = self.cursor.fetchall()
@@ -246,19 +274,20 @@ class mysqldb(base_module):
             except:
                 return mysqldb_errors.error_request_dont_work.print_error(sql, self.interpreter.output)
         else:
-            return mysqldb_errors.error_action_type.print_error('show', self.interpreter.output)
+            return mysqldb_errors.error_action_type.print_error('|show>', self.interpreter.output)
         return 'nobreak'
 
     '''
-    Instruction |<select : |<SELECT * FROM table WHERE clause >|
+    Instruction |select> : |SELECT> * FROM table WHERE clause >|
 
     select selector_list from table_list where clause_where
     '''
+    @auto_connect
     def select_instr(self):
         sql = 'select'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<select', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|select>', self.interpreter.output)
         if next != None:
             while next.lower() != 'from':
                 sql += ' ' + next
@@ -281,9 +310,9 @@ class mysqldb(base_module):
                 sql += ' ' + next
                 next = self.seq_next()
                 if next == None:
-                    return mysqldb_errors.error_request_malformed.print_error('|<select', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|select>', self.interpreter.output)
         if next == None or next != '>|':
-            return mysqldb_errors.error_request_malformed.print_error('|<select', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|select>', self.interpreter.output)
         try:
             self.cursor.execute(sql)
             result = self.cursor.fetchall()
@@ -293,34 +322,35 @@ class mysqldb(base_module):
         return 'nobreak'
 
     '''
-    Instruction |<insert : |<INSERT tablename ( col1, col2, ... ) VALUES ( value1, value2, ... ) >|
+    Instruction |insert> : |INSERT> tablename ( col1, col2, ... ) VALUES ( value1, value2, ... ) >|
 
     insert into tablename ( col1, col2, ... ) values ( value1, value2, ... ), ( ... )
     '''
+    @auto_connect
     def insert_instr(self):
         sql = 'insert into'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<insert', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
         # tablename
         sql += ' ' + next
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<insert', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
         while next.lower() != 'values' :
             sql += ' ' + next
             next = self.seq_next()
             if next == None:
-                return mysqldb_errors.error_request_malformed.print_error('|<insert', self.interpreter.output)
+                return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
         sql += ' values'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<insert', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
         while next != '>|' :
             sql += ' ' + next
             next = self.seq_next()
             if next == None:
-                return mysqldb_errors.error_request_malformed.print_error('|<insert', self.interpreter.output)
+                return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
         try:
             self.cursor.execute(sql)
             self.work.appendleft(self.cursor.lastrowid)
@@ -330,29 +360,30 @@ class mysqldb(base_module):
         return 'nobreak'
 
     '''
-    Instruction |<update : |<update tablename set col1=value1, col2=value2, ... [where where_condition] >|
+    Instruction |update> : |update> tablename set col1=value1, col2=value2, ... [where where_condition] >|
     '''
+    @auto_connect
     def update_instr(self):
         sql = 'update'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<update', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|update>', self.interpreter.output)
         # tablename
         sql += ' ' + next
         next = self.seq_next()
         if next == None and next.lower() != 'set':
-            return mysqldb_errors.error_request_malformed.print_error('|<update', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|update>', self.interpreter.output)
         # contenu du set
         while next.lower() != 'where' and next != '>|':
             sql += ' ' + next
             next = self.seq_next()
             if next == None:
-                return mysqldb_errors.error_request_malformed.print_error('|<update', self.interpreter.output)
+                return mysqldb_errors.error_request_malformed.print_error('|update>', self.interpreter.output)
         if next.lower() == 'where':
             sql += ' where'
             next = self.seq_next()
             if next == None:
-                return mysqldb_errors.error_request_malformed.print_error('|<update', self.interpreter.output)
+                return mysqldb_errors.error_request_malformed.print_error('|update>', self.interpreter.output)
             while next != '>|' :
                 sql += ' ' + next
                 next = self.seq_next()
@@ -366,16 +397,17 @@ class mysqldb(base_module):
         return 'nobreak'
 
     '''
-    Instruction |<delete : |<DELETE tablename [ WHERE where_condition ] >| 
+    Instruction |delete> : |DELETE> tablename [ WHERE where_condition ] >| 
 
     delete from tablename
     delete from tablename where where_condition
     '''
+    @auto_connect
     def delete_instr(self):
         sql = 'delete from'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<delete', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|delete>', self.interpreter.output)
         # tablename
         sql += ' ' + next
         next = self.seq_next()
@@ -384,12 +416,12 @@ class mysqldb(base_module):
                 sql += ' where'
                 next = self.seq_next()
                 if next == None:
-                    return mysqldb_errors.error_request_malformed.print_error('|<delete', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|delete>', self.interpreter.output)
                 while next != '>|' :
                     sql += ' ' + next
                     next = self.seq_next()
                     if next == None:
-                        return mysqldb_errors.error_request_malformed.print_error('|<delete', self.interpreter.output)
+                        return mysqldb_errors.error_request_malformed.print_error('|delete>', self.interpreter.output)
         try:
             self.cursor.execute(sql)
             self.db.commit()
@@ -398,20 +430,21 @@ class mysqldb(base_module):
         return 'nobreak'
 
     '''
-    Instruction |<truncate : |<TRUNCATE tablename >| 
+    Instruction |truncate> : |TRUNCATE> tablename >| 
 
     truncate table tablename
     '''
+    @auto_connect
     def truncate_instr(self):
         sql = 'truncate table'
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('|<truncate', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|truncate>', self.interpreter.output)
         # tablename
         sql += ' ' + next
         next = self.seq_next()
         if next == None or next != '>|':
-            return mysqldb_errors.error_request_malformed.print_error('|<truncate', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|truncate>', self.interpreter.output)
         try:
             self.cursor.execute(sql)
             self.db.commit()
@@ -419,25 +452,26 @@ class mysqldb(base_module):
             return mysqldb_errors.error_request_malformed.print_error(sql, self.interpreter.output)
 
     '''
-    Instruction |<drop : |<drop table { tablename { restrict | cascade } |database dbname }
+    Instruction |drop> : |drop> table { tablename { restrict | cascade } |database dbname }
     '''
+    @auto_connect
     def drop_instr(self):
         sql = 'drop'
         type = self.seq_next()
         if type == None:
-            return mysqldb_errors.error_action_type.print_error('drop', self.interpreter.output)
+            return mysqldb_errors.error_action_type.print_error('|drop>', self.interpreter.output)
         type = type.lower()
         if type != 'database' and type != 'table':
-            return mysqldb_errors.error_action_type.print_error('drop', self.interpreter.output)
+            return mysqldb_errors.error_action_type.print_error('|drop>', self.interpreter.output)
         sql += ' ' + type
         name = self.seq_next()
         if name == None:
-            return mysqldb_errors.error_name_expected.print_error('drop', self.interpreter.output)
+            return mysqldb_errors.error_name_expected.print_error('|drop>', self.interpreter.output)
         sql += ' if exists ' + name
         # options sequence
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_name_expected.print_error('drop', self.interpreter.output)
+            return mysqldb_errors.error_name_expected.print_error('|drop>', self.interpreter.output)
         if type == 'table': 
             next = next.lower()
             if next == 'restrict' or next == 'cascade':
@@ -462,7 +496,7 @@ class mysqldb(base_module):
         core_errors.error_invalid_instruction.print_error('>|', self.interpreter.output)
 
     '''
-    Instruction alter : |<alter ... >|
+    Instruction alter : |alter> ... >|
 
     ALTER TABLE tablename ADD ( col_name col_def , ... ) [ FIRST | AFTER col_name ]
     ALTER TABLE tablename ADD {INDEX | KEY} ( col_name col_def , ... ) [ FIRST | AFTER col_name ]
@@ -478,11 +512,12 @@ class mysqldb(base_module):
 
     ALTER DATABASE dbname { CHARACTER SET charset_name | COLLATE ollation_name | ENCRYPTION { 'Y' | 'N' } | ... }
     '''
+    @auto_connect
     def alter_instr(self):
         sql = 'alter'
         next = self.seq_next()
         if next.lower() != 'table' and next.lower() != 'database':
-            return mysqldb_errors.error_request_malformed.print_error('|<alter', self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|alter>', self.interpreter.output)
         sql += ' ' + next.lower()
         if next.lower() == 'table':
             next = self.seq_next()
@@ -497,7 +532,7 @@ class mysqldb(base_module):
                     sql += ' ' + next
                     next = self.seq_next()
                     if next == None:
-                        return mysqldb_errors.error_request_malformed.print_error('|<alter', self.interpreter.output)
+                        return mysqldb_errors.error_request_malformed.print_error('|alter>', self.interpreter.output)
         if next.lower() == 'database':
             # nom de la base
             next = self.seq_next()
@@ -508,7 +543,7 @@ class mysqldb(base_module):
                 sql += ' ' + next
                 next = self.seq_next()
                 if next == None:
-                    return mysqldb_errors.error_request_malformed.print_error('|<alter', self.interpreter.output)
+                    return mysqldb_errors.error_request_malformed.print_error('|alter>', self.interpreter.output)
         if next == '>|':
             try:
                 self.cursor.execute(sql)
