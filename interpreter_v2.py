@@ -40,8 +40,8 @@ class interpreter:
     def preload(self):
         filename = '{0}/preload.btl'.format(self.core_instr.dictionary['path'])
         if os.path.exists(filename):
-            f = open(filename)
-            content = f.read().encode('mbcs').decode()
+            f = open(filename, encoding="utf-8")
+            content = f.read()
             content = content.replace('"', '\\"')
             content = '"' + content + '" .'
             content = content.replace('\\"', '"')
@@ -49,9 +49,9 @@ class interpreter:
             content = content.replace('?>', ' "')
             content = content.replace('\n', ' ')
             content = content.replace('"" .', '')
-            content = ' '.join(content.split())
-            split = content.split(' ')
-            self.string_treatment(split)
+            content = re.sub(r'\s+', ' ', content)
+            sp = content.split(' ')
+            self.string_treatment(sp)
             self.set_sequence(self.instructions)
             self.instructions.clear()
             f.close()
