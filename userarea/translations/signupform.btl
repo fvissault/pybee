@@ -1,0 +1,88 @@
+<?btl
+{ 
+    en : { 
+        recommend : "Please fill in this form to create an account." , 
+        firstname : "Firstname" , 
+        enterfn : "Enter firstname" , 
+        lastname : "Lastname" , 
+        enterln : "Enter lastname" ,
+        email : "Email" , 
+        enteremail : "Enter Email" , 
+        password : "Password" , 
+        enterpassword : "Enter Password" ,
+        repeat : "Repeat Password" , 
+        rememberme : " Remember me" ,
+        agree : "By creating an account you agree to our " , 
+        tandp : "Terms & Privacy" ,
+        signup : "Sign Up"
+    } ,
+    fr : { 
+        recommend : "Veuillez remplir ce formulaire pour créer un compte." , 
+        firstname : "Prénom" , 
+        enterfn : "Entrez votre prénom" , 
+        lastname : "Nom" , 
+        enterln : "Entrez votre nom" , 
+        email : "Email" , 
+        enteremail : "Entrez votre email" , 
+        password : "Mot de passe" , 
+        enterpassword : "Entrez votre mot de passe" , 
+        repeat : "Répétez le mot de passe" , 
+        rememberme : "Se souvenir de moi" , 
+        agree : "En créant un compte, vous acceptez nos " , 
+        tandp : "Conditions et confidentialité" , 
+        signup : "S’inscrire" 
+    } ,
+    de : { 
+        recommend : "Bitte füllen Sie dieses Formular aus, um ein Konto zu erstellen." , 
+        firstname : "Vorname" , 
+        enterfn : "Vornamen eingeben" , 
+        lastname : "Nachname" , 
+        enterln : "Nachnamen eingeben" , 
+        email : "E-Mail" , 
+        enteremail : "E-Mail eingeben" , 
+        password : "Passwort" , 
+        enterpassword : "Passwort eingeben" , 
+        repeat : "Passwort wiederholen" , 
+        rememberme : "Angemeldet bleiben" , 
+        agree : "Mit der Erstellung eines Kontos stimmen Sie unseren " , 
+        tandp : "Bedingungen und Datenschutzbestimmungen" , 
+        signup : "Registrieren" 
+    } ,
+    it : { 
+        recommend : "Compila questo modulo per creare un account." , 
+        firstname : "Nome" , 
+        enterfn : "Inserisci il nome" , 
+        lastname : "Cognome" , 
+        enterln : "Inserisci il cognome" , 
+        email : "Email" , 
+        enteremail : "Inserisci l'email" , 
+        password : "Password" , 
+        enterpassword : "Inserisci la password" , 
+        repeat : "Ripeti la password" , 
+        rememberme : "Ricordami" , 
+        agree : "Creando un account accetti i nostri " , 
+        tandp : "Termini e Privacy" , 
+        signup : "Registrati" 
+    } ,
+    es : { 
+        recommend : "Por favor, complete este formulario para crear una cuenta." , 
+        firstname : "Nombre" , 
+        enterfn : "Ingrese su nombre" , 
+        lastname : "Apellido" , 
+        enterln : "Ingrese su apellido" , 
+        email : "Correo electrónico" , 
+        enteremail : "Ingrese su correo electrónico" , 
+        password : "Contraseña" , 
+        enterpassword : "Ingrese su contraseña" , 
+        repeat : "Repita la contraseña" , 
+        rememberme : "Recuérdame" , 
+        agree : "Al crear una cuenta, aceptas nuestros " , 
+        tandp : "Términos y privacidad" , 
+        signup : "Registrarse" 
+    }
+} var signup-translate drop
+
+: _signup
+    local key signup-translate @ lang? cell@ key @ cell@ 
+;
+?>
