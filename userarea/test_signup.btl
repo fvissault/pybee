@@ -42,7 +42,8 @@
     contdiv "class" "container" addattr 
     contdiv 1 "Signup" maintitle addcontent 
     contdiv "recommend" _signup paragraph addcontent 
-    
+    contdiv hr addcontent 
+    contdiv "firstname" _signup bold "firstname" label addcontent
 
     formulaire contdiv @ addcontent 
     container @ formulaire @ addcontent
