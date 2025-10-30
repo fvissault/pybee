@@ -28,6 +28,6 @@ form.addEventListener('submit', function(e) {
     const repeat = document.getElementById('repeat').value;
     if (password !== repeat) {
         e.preventDefault();
-        alert("Les mots de passe ne correspondent pas !");
+        alert(form.dataset.msgPasswordmismatch);
     }
 });
