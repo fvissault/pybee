@@ -14,7 +14,8 @@
         rememberme : " Remember me" ,
         agree : "By creating an account you agree to our " , 
         tandp : "Terms & Privacy" ,
-        signup : "Sign Up"
+        signup : "Sign Up" ,
+        passwordmismatch : "Passwords do not match!"
     } ,
     fr : { 
         recommend : "Veuillez remplir ce formulaire pour créer un compte." , 
@@ -30,7 +31,8 @@
         rememberme : "Se souvenir de moi" , 
         agree : "En créant un compte, vous acceptez nos " , 
         tandp : "Conditions et confidentialité" , 
-        signup : "S’inscrire" 
+        signup : "S’inscrire" ,
+        passwordmismatch : "Les mots de passe ne correspondent pas !"
     } ,
     de : { 
         recommend : "Bitte füllen Sie dieses Formular aus, um ein Konto zu erstellen." , 
@@ -46,7 +48,8 @@
         rememberme : "Angemeldet bleiben" , 
         agree : "Mit der Erstellung eines Kontos stimmen Sie unseren " , 
         tandp : "Bedingungen und Datenschutzbestimmungen" , 
-        signup : "Registrieren" 
+        signup : "Registrieren" ,
+        passwordmismatch : "Die Passwörter stimmen nicht überein!"
     } ,
     it : { 
         recommend : "Compila questo modulo per creare un account." , 
@@ -62,7 +65,8 @@
         rememberme : "Ricordami" , 
         agree : "Creando un account accetti i nostri " , 
         tandp : "Termini e Privacy" , 
-        signup : "Registrati" 
+        signup : "Registrati" ,
+        passwordmismatch : "Le password non corrispondono!"
     } ,
     es : { 
         recommend : "Por favor, complete este formulario para crear una cuenta." , 
@@ -78,7 +82,8 @@
         rememberme : "Recuérdame" , 
         agree : "Al crear una cuenta, aceptas nuestros " , 
         tandp : "Términos y privacidad" , 
-        signup : "Registrarse" 
+        signup : "Registrarse" ,
+        passwordmismatch : "¡Las contraseñas no coinciden!"
     }
 } var signup-translate drop
 
