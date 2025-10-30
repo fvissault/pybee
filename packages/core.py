@@ -439,22 +439,40 @@ class core(base_module):
     '''
     def import_instr(self):
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
-            return core_errors.error_import_name_missing.print_error('import', self.interpreter.output)
+            return core_errors.error_import_name_missing.print_error('import', self.interpreter.output)        
         packname = self.pop_sequence()
-        if packname in self.interpreter.packages.keys():
-            return core_errors.error_package_already_loaded.print_error(packname + ' import package', self.interpreter.output)
-        # import du package contenu dans packname dans le répertoire packpath
-        if packname not in self.interpreter.packages.keys():
-            packpath = 'packages.'
-            try:
-                module = importlib.import_module(packpath + packname, package=None)
-                # we subscribe the class in globals class
-                self.interpreter.packages[packname] = eval('module.' + packname)(self.interpreter)
-            except AttributeError:
-                return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
-            except ModuleNotFoundError:
-                return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
+        self.__import_recursive(packname)
         return 'nobreak'
+
+
+    def __import_recursive(self, packname, imported=None):
+        if imported is None:
+            imported = set()
+        if packname in imported:
+            return
+        imported.add(packname)
+        result = self.__importonepack(packname)
+        if isinstance(result, str) and result.startswith("error"):
+            return result
+        pack = self.interpreter.packages.get(packname)
+        if not pack:
+            return
+        if hasattr(pack, 'packuse') and pack.packuse:
+            for subpack in pack.packuse:
+                self.__import_recursive(subpack, imported)
+
+    def __importonepack(self, packname):
+        if packname not in self.interpreter.packages.keys():
+            if packname not in self.interpreter.packages.keys():
+                packpath = 'packages.'
+                try:
+                    module = importlib.import_module(packpath + packname, package=None)
+                    self.interpreter.packages[packname] = eval('module.' + packname)(self.interpreter)
+                except AttributeError:
+                    return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
+                except ModuleNotFoundError:
+                    return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
+
 
     '''
     Instruction detach : détache le dictionnaire d'un package du dictionnaire principal 
