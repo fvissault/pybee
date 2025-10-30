@@ -22,3 +22,12 @@ form.addEventListener('submit', (e) => {
         localStorage.removeItem('rememberedUser');
     }
 });
+
+form.addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const repeat = document.getElementById('repeat').value;
+    if (password !== repeat) {
+        e.preventDefault();
+        alert("Les mots de passe ne correspondent pas !");
+    }
+});
