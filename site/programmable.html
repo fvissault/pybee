@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Programmable et introspectif</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>🧩 Programmable et introspectif</h1>
+  <p>Beetle peut se modifier lui-même : séquences, instructions et packages sont dynamiquement manipulables.</p>
+</header>
+
+<section>
+  <h2>Un langage vivant</h2>
+  <p>
+    Vous pouvez créer ou redéfinir des séquences à l'exécution.  
+    Cela permet d'écrire des interpréteurs spécialisés, des extensions dynamiques ou des langages internes.
+  </p>
+  <pre><code>&lt;btl
+defer greet
+:noname  "Hello" . ; is greet
+greet ( -> Affiche 'Hello' )
+:noname "Hi there !" . ; is greet
+greet ( -> Affiche 'Hi there !' )
+?>
+</code></pre>
+</section>
+
+<section>
+  <h2>Inspection dynamique</h2>
+  <p>
+    L'introspection permet d'examiner l'état interne du langage : pile, variables, séquences, etc.  
+    Beetle est totalement transparent sur ce qu'il exécute.
+  </p>
+</section>
+
+<section class="cta">
+  <a href="presentation.html">⬅ Retour à la présentation</a>
+</section>
+
+<footer>
+  🪲 Beetle — un langage simple, logique et élégant.
+</footer>
+
+</body>
+</html>
