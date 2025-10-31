@@ -1,0 +1,3 @@
+keyboard
+legacy-cgi
+mysql-connector-python
