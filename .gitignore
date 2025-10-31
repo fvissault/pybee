@@ -1,2 +1,17 @@
-__pycache__
-__pycache__/*.pyc
+# Fichiers Python compilés
+*.pyc
+*.pyo
+__pycache__/
+
+# Fichiers temporaires / sauvegardes
+*.swp
+*.swo
+*.tmp
+
+# Environnements virtuels
+venv/
+env/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
