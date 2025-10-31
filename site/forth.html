@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Héritier de Forth</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🏛️ Héritier de Forth</h1>
+    <p>Beetle s'inspire directement du langage Forth, créé dans les années 1970 par Charles H. Moore : un langage minimaliste, modulaire et orienté pile.</p>
+  </header>
+
+  <section>
+    <h2>Forth : un langage pionnier</h2>
+    <p>
+      En 1958, un jeune informaticien nommé Charles Moore, chargé de calculer des trajectoires de satellites, entreprend, pour faciliter son travail quotidien, la construction d'une boîte à outils sous la forme d'un interpréteur de commandes. D'année en année, cet interpréteur est amélioré et rendu indépendant de la machine hôte. En 1968, il prend le nom de Forth, et en 1970, il est suffisamment mûr pour faire l'objet d'une première publication comme « Langage pour calcul interactif ».<br>
+      Forth a été conçu pour être simple, efficace et auto-suffisant.  
+      Il ne dépendait d'aucune machine particulière et permettait d'écrire aussi bien des systèmes d'exploitation que du code applicatif.
+    </p>
+    <pre><code>: square ( n -- n² )
+  dup *
+;
+</code></pre>
+    <p>
+      Cette syntaxe concise, fondée sur la pile, a influencé de nombreux langages modernes — dont Beetle.
+    </p>
+  </section>
+
+  <section>
+    <h2>De Forth à Beetle</h2>
+    <p>
+      Et voici Beetle qui est donc un langage de plus haut niveau qu'à l'origine Forth puisque nous n'appliquerons que les concepts généraux de Forth. Le but de Beetle est aussi d'apporter des outils simples pour la création de page web, ce qui n'existe pas vraiment dans les versions antérieures de Forth qui est fortement axé sur la génération de code assembleur et l'automatisation.
+      Beetle reprend cette logique séquentielle et cette philosophie minimaliste.  
+      Mais il la transpose dans le monde du web et de Python : fichiers <i>.btl</i>, séquences dynamiques, packages extensibles.
+    </p>
+    <pre><code>&lt;?btl
+: welcome
+  "Bienvenue sur Beetle !" .
+;
+welcome
+?></code></pre>
+    <p>
+      Là où Forth pilotait du matériel, Beetle pilote des applications web.  
+      Même esprit, nouvel environnement.
+    </p>
+  </section>
+
+  <section class="cta">
+    <a href="presentation.html">⬅ Retour à la présentation</a>
+  </section>
+
+  <footer>
+    🪲 Beetle — la philosophie Forth, revisitée pour le web.
+  </footer>
+
+</body>
+</html>
