@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Le langage Forth moderne pour le Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🪲 Beetle — Le langage Forth moderne pour le Web</h1>
+    <p>Un langage minimaliste et modulaire, conçu pour créer des pages web dynamiques et automatiser vos tâches sans complexité.</p>
+  </header>
+
+  <section>
+    <h2>🚀 Un langage minimaliste. Une puissance maximale.</h2>
+    <p>
+      Inspiré de Forth et propulsé par Python, <strong>Beetle</strong> combine la simplicité d’un langage à pile avec la flexibilité du web moderne.
+      Son approche séquentielle rend le code prévisible, lisible et extensible — parfait pour les générateurs de contenu, les outils internes ou les applications légères.
+    </p>
+  </section>
+
+  <section>
+    <h2>💡 Pourquoi Beetle ?</h2>
+    <div class="grid">
+        <a href="simple.html" class="card">
+        <h3>🧠 Simple par conception</h3>
+        <p>Chaque mot exécute une seule action. Une logique séquentielle claire et élégante qui facilite la lecture et la maintenance du code.</p>
+        </a>
+        <a href="modulaire.html" class="card">
+        <h3>🔗 Modulaire et extensible</h3>
+        <p>Chargez des packages et combinez-les pour étendre le langage à votre guise : formulaires, traduction, e-mails, base de données, etc.</p>
+        </a>
+        <a href="multilingue.html" class="card">
+        <h3>🌍 Multilingue natif</h3>
+        <p>Intégrez vos traductions directement dans le code. Beetle choisit automatiquement la langue adaptée à l’utilisateur.</p>
+        </a>
+        <a href="web.html" class="card">
+        <h3>⚙️ Fait pour le Web</h3>
+        <p>Grâce à son interpréteur Python, Beetle génère du HTML, gère des formulaires et automatise vos flux web en toute légèreté.</p>
+        </a>
+        <a href="programmable.html" class="card">
+        <h3>🧩 Programmable et introspectif</h3>
+        <p>Manipulez les séquences, instructions et packages dynamiquement. Beetle peut se modifier et s’étendre lui-même, depuis l’intérieur.</p>
+        </a>
+        <a href="robuste.html" class="card">
+        <h3>🔒 Précis et robuste</h3>
+        <p>Un système d’erreurs clair et structuré : chaque module sait signaler précisément ses problèmes, pour un débogage simple et efficace.</p>
+        </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>🧩 Un exemple vaut mille mots</h2>
+    <pre><code>&lt;?btl
+webreset
+title "Page de connexion" addcontent
+html "lang" lang? addattr
+head "userarea/css/loginform.css" headlink addcontent
+head "defer" "userarea/js/loginform.js" headscriptfile addcontent
+body "action_page.btl" "forgotpassword.btl" loginform
+html @ generate cls
+?&gt;
+</code></pre>
+    <p>➡️ En quelques lignes, Beetle crée une page web multilingue complète et fonctionnelle.</p>
+  </section>
+
+  <section>
+    <h2>⚡ Ce qui fait la différence</h2>
+    <table>
+      <tr><th>Atout</th><th>Description</th></tr>
+      <tr><td>🪶 Léger</td><td>Aucune dépendance lourde — tout est modulaire et rapide à charger.</td></tr>
+      <tr><td>🧩 Extensible</td><td>Ajoutez vos propres packages ou intégrez du code Python facilement.</td></tr>
+      <tr><td>🌐 Web-native</td><td>Génère directement du HTML et gère la logique multilingue.</td></tr>
+      <tr><td>🛠️ Flexible</td><td>Idéal pour les sites, scripts, ou moteurs de génération dynamique.</td></tr>
+    </table>
+  </section>
+
+  <section class="cta">
+    <h2>✨ Rejoignez la philosophie Beetle</h2>
+    <p>Créez plus avec moins. Maîtrisez votre code. Découvrez un langage simple, logique et élégant.</p>
+    <a target="_blank" href="../docs/index.html">Découvrir Beetle</a>
+  </section>
+
+  <footer>
+    🪲 Beetle — parce qu’un langage ne doit pas être lourd pour être puissant.<br>
+    © 2025 Beetle Project
+  </footer>
+
+</body>
+</html>
