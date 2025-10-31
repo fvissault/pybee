@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Simple par conception</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>🧠 Simple par conception</h1>
+  <p>Dans Beetle, chaque mot exécute une seule action. La simplicité n’est pas une contrainte, c’est une philosophie.</p>
+</header>
+
+<section>
+  <h2>Une logique séquentielle claire</h2>
+  <p>
+    Inspiré de Forth, Beetle repose sur une pile d’exécution. Chaque mot agit sur cette pile, 
+    garantissant un comportement déterministe et transparent.  
+    Il n’y a pas de syntaxes lourdes ni d’abstractions cachées : le code s’exécute dans l’ordre exact où il est écrit.
+  </p>
+  <pre><code>: addition  10 20 + . ;  ( -> Affiche 30 )</code></pre>
+</section>
+
+<section>
+  <h2>Lisible et prévisible</h2>
+  <p>
+    Beetle rend le code lisible, presque narratif : chaque ligne décrit une action claire.  
+    Cela rend l’apprentissage rapide et le débogage intuitif.
+  </p>
+  <pre><code>&lt;?btl
+webreset
+title "Bienvenue" addcontent
+body "Hello world!" addcontent
+html @ generate cls
+?></code></pre>
+</section>
+
+<section class="cta">
+  <a href="presentation.html">⬅ Retour à la présentation</a>
+</section>
+
+<footer>
+  🪲 Beetle — un langage simple, logique et élégant.
+</footer>
+
+</body>
+</html>
