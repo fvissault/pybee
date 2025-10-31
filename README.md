@@ -25,3 +25,4 @@ Il permet de créer des pages dynamiques, gérer des formulaires, traductions, e
 ```bash
 git clone https://github.com/fvissault/pybee.git
 cd pybee
+pip install -r requirements.txt
