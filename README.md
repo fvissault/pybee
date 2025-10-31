@@ -26,12 +26,14 @@ Il permet de créer des pages dynamiques, gérer des formulaires, traductions, e
 git clone https://github.com/fvissault/pybee.git
 cd pybee
 pip install -r requirements.txt
+```
 
 2. **Tester l'interpreteur**
 ```bash
 python beetle.py
+```
 
 3. **Depuis le navigateur**
 ```bash
 http://localhost/pybee/test.btl
-
+```
