@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Multilingue natif</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>🌍 Multilingue natif</h1>
+  <p>Beetle intègre la traduction directement dans son langage, sans bibliothèques externes.</p>
+</header>
+
+<section>
+  <h2>Une approche clé/valeur simple</h2>
+  <p>
+    Il suffit de définir vos textes dans un bloc JSON multilingue.  
+    Beetle sélectionne automatiquement la bonne langue selon le contexte utilisateur.
+  </p>
+  <pre><code>&lt;btl
+{
+  fr : { login : "Connexion" },
+  en : { login : "Login" },
+  de : { login : "Anmelden" }
+} var loginform-translate drop
+
+: _login
+    local key
+    loginform-translate @ lang? cell@ key @ cell@ 
+;
+?></code></pre>
+</section>
+
+<section>
+  <h2>Utilisation directe dans le code</h2>
+  <pre><code>&lt;?btl
+"login" _login .
+?></code></pre>
+  <p>➡️ Le mot affiché dépend de la langue de l’utilisateur.</p>
+</section>
+
+<section class="cta">
+  <a href="presentation.html">⬅ Retour à la présentation</a>
+</section>
+
+<footer>
+  🪲 Beetle — un langage simple, logique et élégant.
+</footer>
+
+</body>
+</html>
