@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Fait pour le Web</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>⚙️ Fait pour le Web</h1>
+  <p>Beetle a été conçu pour le web moderne, avec un interpréteur Python capable de générer du HTML dynamique.</p>
+</header>
+
+<section>
+  <h2>Génération HTML simplifiée</h2>
+  <pre><code>&lt;?btl
+webreset
+title "Formulaire d'inscription" addcontent
+html "lang" lang? addattr
+
+( Intégration du formulaire d'inscription )
+head "userarea/css/signupform.css" headlink addcontent
+head "defer" "userarea/js/signupform.js" headscriptfile addcontent
+body "action_page.btl" "term_privacy.btl" signupform
+
+html @ generate cls
+?></code></pre>
+  <p>Quelques lignes suffisent pour produire une page complète et localisée.</p>
+</section>
+
+<section>
+  <h2>Intégration naturelle</h2>
+  <p>
+    Beetle s’intègre facilement avec Python et le CGI. Il peut servir à générer des pages, 
+    automatiser des envois de formulaires, ou interagir avec des bases de données.
+  </p>
+</section>
+
+<section class="cta">
+  <a href="presentation.html">⬅ Retour à la présentation</a>
+</section>
+
+<footer>
+  🪲 Beetle — un langage simple, logique et élégant.
+</footer>
+
+</body>
+</html>
