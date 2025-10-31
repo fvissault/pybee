@@ -37,3 +37,7 @@ python beetle.py
 ```bash
 http://localhost/pybee/test.btl
 ```
+4. **Une présentation de Beetle (vous aurez accès également à la documentation de Beetle)**
+```bash
+http://localhost/pybee/site/presentation.html
+```
