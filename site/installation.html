@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Installation simple</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>⚡ Installation simple</h1>
+    <p>Beetle s’installe en quelques minutes. Une base Python, un serveur Apache, et trois dépendances suffisent.</p>
+  </header>
+
+  <section>
+    <h2>Prérequis</h2>
+    <ul>
+      <li>Python 3.10 ou plus</li>
+      <li>Apache avec support CGI activé</li>
+      <li>Les packages suivants :
+        <pre><code>pip install keyboard legacy-cgi mysql-connector-python</code></pre>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Installation rapide</h2>
+    <pre><code>git clone https://github.com/tonrepo/beetle.git
+cd beetle
+chmod +x cgi-bin/*.py
+</code></pre>
+    <p>
+      Ensuite, configure ton hôte Apache :
+    </p>
+    <pre><code>&lt;Directory "/var/www/html/cgi-bin"&gt;
+  Options +ExecCGI
+  AddHandler cgi-script .py
+&lt;/Directory&gt;
+</code></pre>
+  </section>
+
+  <section>
+    <h2>Test de fonctionnement</h2>
+    <p>Ouvre ton navigateur et accède à :</p>
+    <pre><code>http://localhost/pybee/test.btl</code></pre>
+    <p>
+      Si tout est correct, Beetle affichera une page de test.  
+      Tu peux ensuite créer tes propres fichiers <code>.btl</code> dans ton répertoire web.
+    </p>
+  </section>
+
+  <section class="cta">
+    <a href="presentation.html">⬅ Retour à la présentation</a>
+  </section>
+
+  <footer>
+    🪲 Beetle — installation rapide, exécution fluide.
+  </footer>
+
+</body>
+</html>
