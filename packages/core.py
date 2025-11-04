@@ -115,6 +115,7 @@ class core(base_module):
             'repeat' : self.repeat_instr, 
             '!' : self.exclam_instr,
             '+!' : 'dup @ rot + swap !',
+            's+!' : 'dup @ rot s+ swap !',
             '*!' : 'dup @ rot * swap !',
             'and' : self.and_instr,
             'or' : self.or_instr,
@@ -150,6 +151,7 @@ class core(base_module):
             'path' : 'userarea',
             'recurse' : self.recurse_instr,
             'format' : self.format_instr,
+            's+' : self.concat_instr,
             'base' : 10,
             'decimal' : self.decimal_instr,
             'octal' : self.octal_instr,
@@ -755,75 +757,89 @@ class core(base_module):
         return result[::-1] or "0"
 
     '''
-    Instruction + : Fait l'addition entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
+    Instruction + : Fait l'addition entre 2 nombres o vecters ou matrices du haut de la pile de travail et ajoute le résultat en haut de la pile
     '''
     def plus(self, op1, op2):
-        base = self.dictionary['base']
-        # si op1 est une liste OU op2 est une liste
-        if isinstance(op1, list) or isinstance(op2, list):
-            # si op1 est une liste ET op2 n'est pas une liste
-            if isinstance(op1, list) and not isinstance(op2, list):
-                # si op2 est un entier OU op2 est un float
-                if isinstance(op2, int) or isinstance(op2, float):
-                    op3 = []
-                    for i in range(0, len(op1)):
-                        if isinstance(op1[i], list):
-                            temp = self.plus(op1[i], op2)
-                            op3.append(temp)
-                        else:
-                            op3.append(op1[i]+op2)
-                    return op3
-                else:
-                    return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
-            elif not isinstance(op1, list) and isinstance(op2, list):
-                if isinstance(op1, int) or isinstance(op1, float):
-                    op3 = []
-                    for i in range(0, len(op2)):
-                        if isinstance(op2[i], list):
-                            temp = self.plus(op2[i], op1)
-                            op3.append(temp)
-                        else:
-                            op3.append(op2[i]+op1)
-                    return op3
-                else:
-                    return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
-            elif isinstance(op1, list) and isinstance(op2, list):
+        # si ce sont des vecteurs ou des matrices
+        if isinstance(op1, list) and not isinstance(op2, list):
+            # si op2 est un entier OU op2 est un float
+            if isinstance(op2, int) or isinstance(op2, float):
                 op3 = []
-                for i in range(min(len(op1),len(op2))):
-                    temp = self.plus(op2[i], op1[i])
-                    op3.append(temp)
-                op3 = op3 + max(op1,op2,key=len)[min(len(op1),len(op2)):]
+                for i in range(0, len(op1)):
+                    if isinstance(op1[i], list):
+                        temp = self.plus(op1[i], op2)
+                        op3.append(temp)
+                    else:
+                        op3.append(op1[i]+op2)
                 return op3
-        else:
-            if base == 10:
+            else:
+                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+        elif not isinstance(op1, list) and isinstance(op2, list):
+            if isinstance(op1, int) or isinstance(op1, float):
+                op3 = []
+                for i in range(0, len(op2)):
+                    if isinstance(op2[i], list):
+                        temp = self.plus(op2[i], op1)
+                        op3.append(temp)
+                    else:
+                        op3.append(op2[i]+op1)
+                return op3
+            else:
+                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+        elif isinstance(op1, list) and isinstance(op2, list):
+            op3 = []
+            for i in range(min(len(op1),len(op2))):
+                temp = self.plus(op2[i], op1[i])
+                op3.append(temp)
+            op3 = op3 + max(op1,op2,key=len)[min(len(op1),len(op2)):]
+            return op3
+
+        # Si ce ne sont que des nombres
+        base = self.dictionary['base']
+        if base == 10:
+            try:
                 if isinstance(op1, str):
                     op1 = float(op1)
                 if isinstance(op2, str):
                     op2 = float(op2)
                 return op1 + op2
-            else:
-                if isinstance(op1, str):
-                    try:
-                        op1 = int(op1, base)
-                    except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
-                if isinstance(op2, str):
-                    try:
-                        op2 = int(op2, base)
-                    except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
-            result = self.to_base(op1 + op2, base)
+            except ValueError:
+                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
+        else:
+            if not isinstance(op1, float) and not isinstance(op1, str):
+                baselist = self.possiblebases(str(op1), False)
+                if base not in baselist:
+                    return core_errors.error_invalid_litteral.print_error('+ ' + str(op1), self.interpreter.output)
+            if not isinstance(op2, float) and not isinstance(op2, str):
+                baselist = self.possiblebases(str(op2), False)
+                if base not in baselist:
+                    return core_errors.error_invalid_litteral.print_error('+ ' + str(op2), self.interpreter.output)
+            result = self.to_base(int(op1, base) + int(op2, base), base)
             return result
+        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
 
     def plus_instr(self):
         if len(self.work) > 1:
             op1 = self.pop_work()
             op2 = self.pop_work()
             op3 = self.plus(op1, op2)
-            self.work.appendleft(op3)
+            if op3 != "nobreak":
+                self.work.appendleft(op3)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('+', self.interpreter.output)
+
+    def possiblebases(self, s: str, exclure10=True):
+        bases = []
+        for base in range(2, 37):
+            if exclure10 and base == 10:
+                continue
+            try:
+                int(s, base)
+                bases.append(base)
+            except ValueError:
+                pass
+        return bases
 
     '''
     Instruction - : Fait la différence entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
@@ -2097,6 +2113,22 @@ class core(base_module):
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('format', self.interpreter.output)
+
+    def concat_instr(self):
+        if len(self.work) > 1:
+            op1 = self.pop_work()
+            op2 = self.pop_work()
+            if isinstance(op1, str) and (isinstance(op2, int) or isinstance(op2, float)):
+                self.work.appendleft(str(op2) + op1)
+                return 'nobreak'
+            if isinstance(op2, str) and (isinstance(op1, int) or isinstance(op1, float)):
+                self.work.appendleft(op2 + str(op1)) 
+                return 'nobreak'
+            self.work.appendleft(op2 + op1)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('s+', self.interpreter.output)
+
 
     '''
     Instruction decimal : positionne la constante base à 10
