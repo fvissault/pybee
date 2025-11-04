@@ -757,7 +757,7 @@ class core(base_module):
         return result[::-1] or "0"
 
     '''
-    Instruction + : Fait l'addition entre 2 nombres o vecters ou matrices du haut de la pile de travail et ajoute le résultat en haut de la pile
+    Instruction + : Fait l'addition entre 2 nombres ou vecteurs ou matrices du haut de la pile de travail et ajoute le résultat en haut de la pile
     '''
     def plus(self, op1, op2):
         # si ce sont des vecteurs ou des matrices
