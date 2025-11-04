@@ -8,29 +8,33 @@ import mysql.connector
 class mysqldb(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
-        self.dictionary = {'?connect' : self.isconnect_instr,
-                           'connect' : self.connect_instr,
-                           'disconnect' : self.disconnect_instr,
-                           '?close' : self.isclose_instr,
-                           'close' : self.close_instr,
-                           'hostname' : 'localhost',
-                           'dbname' : '',
-                           'username' : 'root',
-                           'userpass' : '',
-                           'dbparam' : self.param_instr,
-                           'use' : self.use_instr,
-                           '|create>' : self.create_instr,
-                           '|show>' : self.show_instr,
-                           '|select>' : self.select_instr,
-                           '|insert>' : self.insert_instr,
-                           '|update>' : self.update_instr,
-                           '|delete>' : self.delete_instr,
-                           '|drop>' : self.drop_instr,
-                           '|truncate>' : self.truncate_instr,
-                           '|alter>' : self.alter_instr,
-                           '>|' : self.endreq_instr,
-                           'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate'''
-                           }
+        self.dictionary = {
+            '?connect' : self.isconnect_instr,
+            'connect' : self.connect_instr,
+            'disconnect' : self.disconnect_instr,
+            '?close' : self.isclose_instr,
+            'close' : self.close_instr,
+            'hostname' : 'localhost',
+            'dbname' : '',
+            'username' : 'root',
+            'userpass' : '',
+            'dbparam' : self.param_instr,
+            'use' : self.use_instr,
+            '|create>' : self.create_instr,
+            '|show>' : self.show_instr,
+            '|select>' : self.select_instr,
+            '|insert>' : self.insert_instr,
+            '|update>' : self.update_instr,
+            '|delete>' : self.delete_instr,
+            '|drop>' : self.drop_instr,
+            '|truncate>' : self.truncate_instr,
+            '|alter>' : self.alter_instr,
+            '>|' : self.endreq_instr,
+            'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
+            'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
+            'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
+            'altertab' : '''local columns local tabname "|alter> table <#0#> add <#1#> >|" [ tabname @ columns @ ] format evaluate'''
+        }
         self.db = None
         self.cursor = None
         self.help = mysqldb_help(interpreter.output)
@@ -135,6 +139,17 @@ class mysqldb(base_module):
     
     '''
     Instruction |create> : action de création : |create> (DATABASE|TABLE) name [option] >|
+
+    CREATE TABLE IF NOT EXISTS `users` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+    CREATE TABLE IF NOT EXISTS `users` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `firstname` varchar(50) NOT NULL,
+        PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     '''
     @auto_connect
     def create_instr(self):
@@ -153,7 +168,7 @@ class mysqldb(base_module):
         if type == 'database':
             sql += f' if not exists `{name}`'
         else:
-            sql += f' if not exists `{name}` (`id` int(11) not null auto_increment, primary key (`id`)'
+            sql += f' if not exists `{name}` (`id` int(11) not null auto_increment, primary key (`id`))'
         # options sequence
         next = self.seq_next()
         next = next.lower()
@@ -498,7 +513,7 @@ class mysqldb(base_module):
     '''
     Instruction alter : |alter> ... >|
 
-    ALTER TABLE tablename ADD ( col_name col_def , ... ) [ FIRST | AFTER col_name ]
+    ALTER TABLE tablename ADD `col_name1` col_def1 , ... [ FIRST | AFTER col_name ]
     ALTER TABLE tablename ADD {INDEX | KEY} ( col_name col_def , ... ) [ FIRST | AFTER col_name ]
     ALTER TABLE tablename ALTER col_name { SET DEFAULT ... | SET VISIBLE | INVISIBLE | DROP DEFAULT }
     ALTER TABLE tablename CHANGE old_col_name new_col_name col_def [ FIRST | AFTER col_name ]
@@ -511,6 +526,8 @@ class mysqldb(base_module):
     ALTER TABLE tablename RENAME new_tbl_name
 
     ALTER DATABASE dbname { CHARACTER SET charset_name | COLLATE ollation_name | ENCRYPTION { 'Y' | 'N' } | ... }
+
+    ALTER TABLE `users` ADD `firstname` VARCHAR(50) NOT NULL AFTER `id`, ADD `lastname` VARCHAR(50) NOT NULL AFTER `firstname`; 
     '''
     @auto_connect
     def alter_instr(self):
