@@ -147,14 +147,6 @@ class interpreter:
                 # integer, float or list insert in work stack
                 self.work.appendleft(instr)
                 continue
-            elif base != 10 and self.instr_search(str(instr).lower()) == False:
-                try:
-                    temp = int(str(instr), base)
-                except(ValueError):
-                    core_errors.error_invalid_instruction.print_error(instr, self.output)
-                    break
-                self.work.appendleft(str(instr))
-                continue
             elif instr[0] == '"' and instr[-1] == '"':
                 # string insert in work stack
                 self.work.appendleft(instr[1:-1])
