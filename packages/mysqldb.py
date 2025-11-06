@@ -34,11 +34,13 @@ class mysqldb(base_module):
             'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
             'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
             'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! "add <#0#>" [ col @ ] format req s+! loop " >|" req s+! req @ evaluate''',
-            'addforeignkey' : '''local tabname local origtabname local cascade "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req s+! then "update" cascade @ scan if " on update cascade" req s+! then req @ evaluate''',
-            'addkey' : '''local tabname local columns local type "|alter> table <#0#> add " [ tabname @ ] format local req "index" type @ = if columns @ 0 cell@ local indexname columns @ 1 cell@ local cols "index <#0#> (<#1#>)" [ indexname @ cols @ ] format req s+! req @ evaluate then "key" type @ = if "primary key (<#0#>)" [ columns @ ] format req s+! req @ evaluate then "unique" type @ = if "unique (<#0#>)" [ columns @ ] format req s+! req @ evaluate then'''
+            'addforeignkey' : '''local tabname local origtabname local cascade "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req s+! then "update" cascade @ scan if " on update cascade" req s+! then " >|" req s+! req @ evaluate''',
+            'addkey' : '''local tabname local columns local type "|alter> table <#0#> add " [ tabname @ ] format local req "index" type @ = if columns @ 0 cell@ local indexname columns @ 1 cell@ local cols "index <#0#> (<#1#>) >|" [ indexname @ cols @ ] format req s+! req @ evaluate then "key" type @ = if "primary key (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then "unique" type @ = if "unique (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then''',
+            'changecol' : '''local tabname local oldname local local newtype newname "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate'''
         }
         # use test4
         # "users" [ "`firstname` VARCHAR(50) NOT NULL" "`lastname` VARCHAR(50) NOT NULL" ] addcolumns
+
         self.db = None
         self.cursor = None
         self.help = mysqldb_help(interpreter.output)
@@ -524,9 +526,7 @@ class mysqldb(base_module):
     ALTER TABLE tablename RENAME { INDEX | KEY } old_index_name TO new_index_name
     ALTER TABLE tablename RENAME new_tbl_name
 
-    ALTER DATABASE dbname { CHARACTER SET charset_name | COLLATE ollation_name | ENCRYPTION { 'Y' | 'N' } | ... }
-
-    ALTER TABLE `users` ADD `firstname` VARCHAR(50) NOT NULL AFTER `id`, ADD `lastname` VARCHAR(50) NOT NULL AFTER `firstname`; 
+    ALTER DATABASE dbname { CHARACTER SET charset_name | COLLATE collation_name | ENCRYPTION { 'Y' | 'N' } | ... }
     '''
     @auto_connect
     def alter_instr(self):
