@@ -52,3 +52,4 @@ class core_errors:
     error_defer_action_not_set =                error('fatal', 'deferred action not set')
     error_not_a_defer_action =                  error('fatal', 'not a defer action')
     error_nothing_to_evaluate =                 error('warning', 'nothing to evaluate')
+    error_strings_expected =                    error('error', 'strings expected')
