@@ -34,7 +34,7 @@ class mysqldb(base_module):
             'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
             'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
             'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! "add <#0#>" [ col @ ] format req s+! loop " >|" req s+! req @ evaluate''',
-            'addforeignkey' : '''local tabname local origtabname "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format evaluate'''
+            'addforeignkey' : '''local tabname local origtabname local cascade "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req s+! then "update" cascade @ scan if " on update cascade" req s+! then req @ evaluate'''
         }
         # use test4
         # "users" [ "`firstname` VARCHAR(50) NOT NULL" "`lastname` VARCHAR(50) NOT NULL" ] addcolumns
