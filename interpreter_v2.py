@@ -94,6 +94,9 @@ class interpreter:
         if len(self.sequences) > 0:
             if self.isemptysequence(self.sequences[self.lastseqnumber]):
                 del(self.sequences[self.lastseqnumber])
+                for key, value in self.locals[self.lastseqnumber].items():
+                    if key in self.locals[self.lastseqnumber - 1]:
+                        self.locals[self.lastseqnumber - 1][key] = value
                 del(self.locals[self.lastseqnumber])
                 self.lastseqnumber -= 1
 
