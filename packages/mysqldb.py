@@ -33,8 +33,11 @@ class mysqldb(base_module):
             'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
             'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
             'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
-            'altertab' : '''local columns local tabname "|alter> table <#0#> add <#1#> >|" [ tabname @ columns @ ] format evaluate'''
+            'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! "add <#0#>" [ col @ ] format req s+! loop " >|" req s+! req @ evaluate''',
+            'addforeignkey' : '''local tabname local origtabname "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format evaluate'''
         }
+        # use test4
+        # "users" [ "`firstname` VARCHAR(50) NOT NULL" "`lastname` VARCHAR(50) NOT NULL" ] addcolumns
         self.db = None
         self.cursor = None
         self.help = mysqldb_help(interpreter.output)
@@ -42,7 +45,7 @@ class mysqldb(base_module):
         self.interpreter.core_instr.variables.append('dbname')
         self.interpreter.core_instr.variables.append('username')
         self.interpreter.core_instr.variables.append('userpass')
-        self.version = 'v0.3.9'
+        self.version = 'v0.4.2'
 
     def ensure_connection(self):
         """S’assure que self.db et self.cursor sont valides"""
@@ -98,20 +101,14 @@ class mysqldb(base_module):
     Instruction ?connect : permet de savoir si la connection est effective : ( ... ) ?CONNECT ( 0|1 ... )
     '''
     def isconnect_instr(self):
-        if self.db != None:
-            self.work.appendleft(1)
-        else:
-            self.work.appendleft(0)
+        self.work.appendleft(1 if self.db else 0)
         return 'nobreak'
 
     '''
     Instruction ?close : permet de savoir si le curseur est effectif : ( ... ) ?CLOSE ( 0|1 ... )
     '''
     def isclose_instr(self):
-        if self.cursor != None:
-            self.work.appendleft(0)
-        else:
-            self.work.appendleft(1)
+        self.work.appendleft(0 if self.cursor else 1)
         return 'nobreak'
     
     '''
@@ -515,6 +512,7 @@ class mysqldb(base_module):
 
     ALTER TABLE tablename ADD `col_name1` col_def1 , ... [ FIRST | AFTER col_name ]
     ALTER TABLE tablename ADD {INDEX | KEY} ( col_name col_def , ... ) [ FIRST | AFTER col_name ]
+    ALTER TABLE tablename ADD CONSTRAINT nom_cle_etrangere FOREIGN KEY(nom_de_la_cle) REFERENCES nom_de_la_table_origine(nom_de_la_cle)
     ALTER TABLE tablename ALTER col_name { SET DEFAULT ... | SET VISIBLE | INVISIBLE | DROP DEFAULT }
     ALTER TABLE tablename CHANGE old_col_name new_col_name col_def [ FIRST | AFTER col_name ]
     ALTER TABLE tablename DROP col_name
@@ -538,7 +536,7 @@ class mysqldb(base_module):
         sql += ' ' + next.lower()
         if next.lower() == 'table':
             next = self.seq_next()
-            sql += ' ' + next.lower()
+            sql += ' `' + next.lower() + '`'
             next = self.seq_next()
             if next.lower() == 'add' or next.lower() == 'alter' or next.lower() == 'change' or next.lower() == 'drop' or next.lower() == 'modify' or next.lower() == 'rename':
                 # action
