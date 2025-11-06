@@ -18,7 +18,7 @@ class mysqldb(base_module):
             'dbname' : '',
             'username' : 'root',
             'userpass' : '',
-            'dbparam' : self.param_instr,
+            'dbconf' : self.param_instr,
             'use' : self.use_instr,
             '|create>' : self.create_instr,
             '|show>' : self.show_instr,
@@ -30,9 +30,12 @@ class mysqldb(base_module):
             '|truncate>' : self.truncate_instr,
             '|alter>' : self.alter_instr,
             '>|' : self.endreq_instr,
+            # "hostname" "username" "userpass" dbcred
+            'dbcred' : '''local upass local uname local host host @ hostname ! uname @ username ! upass @ userpass !''',
             'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
             'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
             'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
+            # "tablename" [ "`colname1` coldef1" "`colname2` coldef2" ... ] addcolumns
             'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! "add <#0#>" [ col @ ] format req s+! loop " >|" req s+! req @ evaluate''',
             'addforeignkey' : '''local tabname local origtabname local cascade "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req s+! then "update" cascade @ scan if " on update cascade" req s+! then " >|" req s+! req @ evaluate''',
             'addkey' : '''local tabname local columns local type "|alter> table <#0#> add " [ tabname @ ] format local req "index" type @ = if columns @ 0 cell@ local indexname columns @ 1 cell@ local cols "index <#0#> (<#1#>) >|" [ indexname @ cols @ ] format req s+! req @ evaluate then "key" type @ = if "primary key (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then "unique" type @ = if "unique (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then''',
