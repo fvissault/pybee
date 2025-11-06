@@ -152,6 +152,7 @@ class core(base_module):
             'recurse' : self.recurse_instr,
             'format' : self.format_instr,
             's+' : self.concat_instr,
+            'scan' : self.scan_instr,
             'base' : 10,
             'decimal' : self.decimal_instr,
             'octal' : self.octal_instr,
@@ -2114,6 +2115,9 @@ class core(base_module):
         else:
             return core_errors.error_nothing_in_work_stack.print_error('format', self.interpreter.output)
 
+    '''
+    Instruction s+ : concatène 2 chaines de caractères
+    '''
     def concat_instr(self):
         if len(self.work) > 1:
             op1 = self.pop_work()
@@ -2124,11 +2128,31 @@ class core(base_module):
             if isinstance(op2, str) and (isinstance(op1, int) or isinstance(op1, float)):
                 self.work.appendleft(op2 + str(op1)) 
                 return 'nobreak'
-            self.work.appendleft(op2 + op1)
-            return 'nobreak'
+            if isinstance(op1, str) and isinstance(op2, str):
+                self.work.appendleft(op2 + op1)
+                return 'nobreak'
+            else:
+                return core_errors.error_strings_expected.print_error('s+', self.interpreter.output)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('s+', self.interpreter.output)
 
+    '''
+    Instruction scan : savoir si une chaine de caractères est contenu dans une autre chaine de caractères
+    '''
+    def scan_instr(self):
+        if len(self.work) > 1:
+            str1 = self.pop_work()
+            str2 = self.pop_work()
+            if isinstance(str1, str) and isinstance(str2, str):
+                if str2 in str1:
+                    self.work.appendleft(1)
+                else:
+                    self.work.appendleft(0)
+                return 'nobreak'    
+            else:
+                return core_errors.error_strings_expected.print_error('sin', self.interpreter.output)
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('sin', self.interpreter.output)
 
     '''
     Instruction decimal : positionne la constante base à 10
