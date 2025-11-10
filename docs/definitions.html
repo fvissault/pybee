@@ -299,6 +299,23 @@
             </code>
         </div>
 
+        <a name="abort"><h2>j. Arrêt d'éxecution : <b>abort</b></h2></a>
+        <p>
+            Le mot 'abort' vous permet d'arrêter l'éxecution d'un programme. Ce mot est très utile pour débugguer vos programmes.
+        </p>
+
+        <div class="div_code">
+            <code>Beetle> : t local val val @ 1 = if "abort" . abort else 2 dup + . then 3 dup + . ;<br>
+                <span style="color:green;">ok</span><br>
+                Beetle> 1 t<br>
+                abort<br>
+                <span style="color:green;">ok</span><br>
+                Beetle> 2 t<br>
+                46<br>
+                <span style="color:green;">ok</span>
+            </code>
+        </div>
+
         <a href="arrays.html">Précédent : XI.2. Structures du langage - Tableaux</a> | <a href="index.html">Index</a> | <a href="conds.html">XI.4. Structures du langage - Conditionnelles</a>
 
     </body>
