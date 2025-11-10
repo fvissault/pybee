@@ -71,41 +71,7 @@ class base_module:
             return True
         except ValueError:
             return False
-        
-    def prepare_interpreter(self, sequence):
-        i = deepcopy(self.interpreter)
-        i.core_instr.dictionary.pop(':')
-        i.core_instr.dictionary.pop('words')
-        i.core_instr.dictionary.pop('dump')
-        i.core_instr.dictionary.pop('bye')
-        i.core_instr.dictionary.pop('emit')
-        i.core_instr.dictionary.pop('rdump')
-        i.core_instr.dictionary.pop('!')
-        i.core_instr.dictionary.pop('+!')
-        i.core_instr.dictionary.pop('*!')
-        i.core_instr.dictionary.pop('see')
-        i.core_instr.dictionary.pop('cls')
-        i.core_instr.dictionary.pop('clt')
-        i.core_instr.dictionary.pop('load')
-        i.core_instr.dictionary.pop('list')
-        i.core_instr.dictionary.pop('create')
-        i.core_instr.dictionary.pop('does>')
-        i.core_instr.dictionary.pop('packages')
-        i.core_instr.dictionary.pop('constants')
-        i.core_instr.dictionary.pop('variables')
-        i.core_instr.dictionary.pop('var')
-        i.core_instr.dictionary.pop('help')
-        i.core_instr.dictionary.pop('?')
-        i.sequences = []
-        i.lastseqnumber = -1
-        i.work.clear()
-        i.locals.clear()
-        #sequence.reverse()
-        i.set_sequence(sequence)
-        i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
-        i.interpret()
-        return i
-        
+                
     def exec_interpreter(self, sequence):
         db = None
         cursor = None
