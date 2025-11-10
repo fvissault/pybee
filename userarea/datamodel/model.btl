@@ -1,0 +1,17 @@
+<?btl
+( mise en place des crédentials )
+"test4" dbname !
+"localhost" "root" "" dbcred
+
+( création de la base de données si elle n'existe pas déjà )
+dbname @ createdb
+use "test4"
+
+( création de la table 'users' si elle n'existe pas déjà )
+"users" createtab
+"users" [ [ "firstname" "varchar(50) NOT NULL" ] 
+          [ "lastname" "varchar(50) NOT NULL" ] 
+          [ "email" "varchar(50) NOT NULL" ] 
+          [ "password" "varchar(32) NOT NULL" ] 
+          [ "active" "boolean NOT NULL" ] ] addcolumns
+?>
