@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact – Beetle</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6 bg-gray-50 text-gray-800">
+  <header class="mb-6">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600">🪲 Beetle</h1>
+    </div>
+    <a href="index.html" class="text-blue-600 hover:underline">← Retour à l'accueil</a>
+    <h1 class="text-3xl font-bold mt-2">Contact</h1>
+  </header>
+
+  <section class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
+    <form action="mailto:contact@beetle-lang.org" method="post" enctype="text/plain" class="space-y-5">
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nom complet</label>
+            <input type="text" name="name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Adresse e-mail</label>
+            <input type="email" name="email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <div>
+            <label class="block font-semibold text-gray-700 mb-1">Message</label>
+            <textarea name="message" rows="5" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full text-center py-3 font-semibold text-black border border-gray-300 rounded-lg shadow hover:shadow-md transition">
+        ✉️ Envoyer le message
+        </button>
+    </form>  
+  </section>
+
+  <footer class="mt-10 text-center text-sm text-gray-500">
+    © 2025 Beetle — Un langage inspiré de Forth.
+  </footer>
+</body>
+</html>
