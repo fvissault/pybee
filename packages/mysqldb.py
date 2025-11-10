@@ -36,10 +36,13 @@ class mysqldb(base_module):
             'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
             'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
             # "tablename" [ "`colname1` coldef1" "`colname2` coldef2" ... ] addcolumns
-            'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! "add <#0#>" [ col @ ] format req s+! loop " >|" req s+! req @ evaluate''',
+            'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req s+! then columns @ i @ cell@ col ! tabname @ desctab col @ 1 cell@ fexists invert if "add `<#0#>` <#1#>" [ col @ 1 cell@ col @ 0 cell@ ] format req s+! then loop " >|" req s+! req @ "add" scan if req @ evaluate then''',
             'addforeignkey' : '''local tabname local origtabname local cascade "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ tabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req s+! then "update" cascade @ scan if " on update cascade" req s+! then " >|" req s+! req @ evaluate''',
             'addkey' : '''local tabname local columns local type "|alter> table <#0#> add " [ tabname @ ] format local req "index" type @ = if columns @ 0 cell@ local indexname columns @ 1 cell@ local cols "index <#0#> (<#1#>) >|" [ indexname @ cols @ ] format req s+! req @ evaluate then "key" type @ = if "primary key (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then "unique" type @ = if "unique (<#0#>) >|" [ columns @ ] format req s+! req @ evaluate then''',
-            'changecol' : '''local tabname local oldname local local newtype newname "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate'''
+            'changecol' : '''local tabname local oldname local local newtype newname "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate''',
+            'desctab' : '''local tabname "|show> fields from <#0#> >|" [ tabname @ ] format evaluate''',
+            'fexists' : '''local field local fieldslist 0 local i 0 local rep fieldslist @ cells i do fieldslist @ i @ cell@ "Field" cell@ field @ = if 1 rep ! then loop rep @''',
+            'descdb' : '''local dbname "|show> tables from <#0#> >|" [ dbname @ ] format evaluate'''
         }
         # use test4
         # "users" [ "`firstname` VARCHAR(50) NOT NULL" "`lastname` VARCHAR(50) NOT NULL" ] addcolumns
@@ -63,11 +66,9 @@ class mysqldb(base_module):
                     password=self.dictionary['userpass']
                 )
                 self.cursor = self.db.cursor(dictionary=True)
-                self.work.appendleft(1)
             except:
                 self.cursor = None
                 self.db = None
-                self.work.appendleft(0)
                 return mysqldb_errors.error_connection_failed.print_error('connect', self.interpreter.output)
 
     def auto_connect(func):
