@@ -225,7 +225,6 @@ class core(base_module):
         if len(self.work) > 0:
             for temp in self.work:
                 print(temp, end=' ')
-            print('')
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('dump', self.interpreter.output)
@@ -2144,7 +2143,7 @@ class core(base_module):
             str1 = self.pop_work()
             str2 = self.pop_work()
             if isinstance(str1, str) and isinstance(str2, str):
-                if str2 in str1:
+                if str1 in str2:
                     self.work.appendleft(1)
                 else:
                     self.work.appendleft(0)
