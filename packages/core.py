@@ -2779,7 +2779,7 @@ class core(base_module):
             self.work.appendleft(json.dumps(val))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('>json', self.interpreter.output)
 
     '''
     Instruction jsondecode : transforme une chaine de caractères en une structure dict et list
@@ -2790,7 +2790,7 @@ class core(base_module):
             self.work.appendleft(json.loads(val))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('json>', self.interpreter.output)
 
     '''
     Instruction lang? : détection automatique de la langue utilisée
