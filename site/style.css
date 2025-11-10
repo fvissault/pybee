@@ -106,3 +106,14 @@
     .cta a:hover {
       background: #2f5fd6;
     }
+
+
+/* 📱 Responsive ajustements */
+@media (max-width: 768px) {
+  nav {
+    text-align: center;
+  }
+  .card {
+    margin-bottom: 1rem;
+  }
+}
