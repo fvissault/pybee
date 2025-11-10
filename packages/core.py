@@ -123,6 +123,7 @@ class core(base_module):
             'forget' : self.forget_instr,
             'cls' : self.clearstack_instr,
             'leave' : '',
+            'abort' : self.abort_instr,
             'see' : self.see_instr,
             'create' : self.create_instr,
             'does>' : self.does_instr,
@@ -2791,6 +2792,9 @@ class core(base_module):
         else:
             return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
 
+    '''
+    Instruction lang? : détection automatique de la langue utilisée
+    '''
     def locale_instr(self):
         lang = locale.getdefaultlocale()
         if not lang:
@@ -2798,3 +2802,13 @@ class core(base_module):
         else:
             self.work.appendleft(lang[0].split('_')[0])
         return 'nobreak'
+
+    '''
+    Instruction abort : arrête le programme complètement à l'endroit ou abort est écrit
+    '''
+    def abort_instr(self):
+        self.work.clear()
+        self.altwork.clear()
+        self.interpreter.sequences.clear()
+        self.interpreter.locals.clear()
+        return 'break'
