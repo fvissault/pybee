@@ -44,8 +44,6 @@ class mysqldb(base_module):
             'fexists' : '''local field local fieldslist 0 local i 0 local rep fieldslist @ cells i do fieldslist @ i @ cell@ "Field" cell@ field @ = if 1 rep ! then loop rep @''',
             'descdb' : '''local dbname "|show> tables from <#0#> >|" [ dbname @ ] format evaluate'''
         }
-        # use test4
-        # "users" [ "`firstname` VARCHAR(50) NOT NULL" "`lastname` VARCHAR(50) NOT NULL" ] addcolumns
 
         self.db = None
         self.cursor = None
