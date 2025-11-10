@@ -26,35 +26,103 @@
         <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
         <p>
             L'ensemble des mots qui composent ce package est le suivant : <br>
-            <b>appendtofile</b> <b>closefile</b> <b>overwritetofile</b> <b>readchar</b> <b>readfile</b> <b>readingfile</b> 
-            <b>readline</b> <b>writein</b>
+            <a href="#appendtofile"><b>appendtofile</b></a> <a href="#closefile"><b>closefile</b></a> 
+            <a href="#overwritetofile"><b>overwritetofile</b></a> <a href="#readchar"><b>readchar</b></a> 
+            <a href="#readfile"><b>readfile</b></a> <a href="#readingfile"><b>readingfile</b></a> 
+            <a href="#readline"><b>readline</b></a> <a href="#writein"><b>writein</b></a>
         </p>
 
-        <a name="openfile"><h3>2. Ouverture de fichiers</h3></a>
-        <h4>Ouverture en lecture (readingfile)</h4>
+        <a name="openfile"></a><h3>2. Ouverture de fichiers</h3>
+        <a name="readingfile"></a><h4>Ouverture en lecture (readingfile)</h4>
         <p>Pour ouvrir un fichier en <b>lecture seule</b>, le mot à utiliser est 'readingfile'</p>
         <p>La syntaxe de ce mot est :</p>
         <div class="div_code">
             <code>
-                "<i>nom_de_la_vaiable_qui_contient_le_descripteur</i>" "<i>nom_du fichier</i>" <b>readingfile</b>
+                "<i>nom_de_la_variable_qui_contient_le_descripteur</i>" "<i>nom_du fichier_a_ouvrir</i>" <b>readingfile</b>
             </code>
         </div>
         <p>
-            Dans <i>nom_de_la_vaiable_qui_contient_le_descripteur</i>, nous retrouvons le descripteur du fichier qui manipule le fichier
-            dont le nom est <i>nom_du fichier</i>
+            Dans <i>nom_de_la_variable_qui_contient_le_descripteur</i>, nous retrouvons le descripteur du fichier qui manipule le fichier
+            dont le nom est <i>nom_du fichier_a_ouvrir</i>
         </p>
 
-        <h4>Ouverture en écriture au début du fichier (overwritetofile)</h4>
-        <h4>Ouverture en écriture à la fin du fichier (appendtofile)</h4>
+        <a name="overwritetofile"></a><h4>Ouverture en écriture au début du fichier (overwritetofile)</h4>
+        <p>Pour ouvrir un fichier en <b>écriture</b> et effacer son contenu éventuel, le mot à utiliser est 'overwritetofile'</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                "<i>nom_de_la_variable_qui_contient_le_descripteur</i>" "<i>nom_du fichier_a_ouvrir</i>" <b>overwritetofile</b>
+            </code>
+        </div>
+
+        <a name="appendtofile"></a><h4>Ouverture en écriture à la fin du fichier (appendtofile)</h4>
+        <p>Pour ouvrir un fichier en <b>écriture</b> sans effacer son contenu éventuel, le mot à utiliser est 'appendtofile'</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                "<i>nom_de_la_variable_qui_contient_le_descripteur</i>" "<i>nom_du fichier_a_ouvrir</i>" <b>appendtofile</b>
+            </code>
+        </div>
 
         <a name="readwrite"><h3>3. Lecture/écriture dans un fichier</h3></a>
-        <h4>Lecture d'un caractère (readchar)</h4>
-        <h4>Lecture d'une ligne (readline)</h4>
-        <h4>Lecture d'un fichier (readfile)</h4>
-        <h4>Ecriture dans un fichier (writein)</h4>
+        <a name="readchar"></a><h4>Lecture d'un caractère (readchar)</h4>
+        <p>
+            Pour lire un caractère dans un fichier, le mot à utiliser est 'readchar'<br>
+            Le caractère lu est déposé sur la pile de travail
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <i>"variable_qui_contient_le_descripteur"</i> <b>readchar</b>
+            </code>
+        </div>
+
+        <a name="readline"></a><h4>Lecture d'une ligne (readline)</h4>
+        <p>
+            Pour lire une ligne dans un fichier délimitée par un retour chariot, le mot à utiliser est 'readline'<br>
+            La ligne lue est déposée sur la pile de travail
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <i>"variable_qui_contient_le_descripteur"</i> <b>readline</b>
+            </code>
+        </div>
+
+        <a name="readfile"></a><h4>Lecture d'un fichier (readfile)</h4>
+        <p>
+            Pour lire un fichier en entier, le mot à utiliser est 'readfile'<br>
+            Le contenu du fichier lu est déposé sur la pile de travail
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <i>"variable_qui_contient_le_descripteur"</i> <b>readfile</b>
+            </code>
+        </div>
+
+        <a name="writein"></a><h4>Ecriture dans un fichier (writein)</h4>
+        <p>
+            Pour écrire dans un fichier ouvert en écriture, le mot à utiliser est 'writein'
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <i>"contenu"</i> <i>"variable_qui_contient_le_descripteur"</i> <b>writein</b>
+            </code>
+        </div>
 
         <a name="closefile"><h3>4. Fermeture d'un fichier</h3></a>
-        <h4>Fermeture d'un fichier (writein)</h4>
+        <a name="closefile"></a><h4>Fermeture d'un fichier (closefile)</h4>
+        <p>
+            Pour fermer un fichier, le mot à utiliser est 'closefile'
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <i>"variable_qui_contient_le_descripteur"</i> <b>closefile</b>
+            </code>
+        </div>
 
         <p><a href="math.html">Précédent : XII.2. Packages:Module 'math'</a> | <a href="index.html">Index</a> | <a href="date.html">Suivant : XII.4. Packages:Module 'date'</a></p>
 
