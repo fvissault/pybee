@@ -1,6 +1,7 @@
 <?btl
 import file
 
+htmlcontent
 "myf" "test.txt" readingfile
 "myf" readchar .cr
 "myf" readline .cr
