@@ -260,7 +260,7 @@ class mysqldb(base_module):
         if what == None:
             return mysqldb_errors.error_name_expected.print_error('|show>', self.interpreter.output)
         what = what.lower()
-        if what == 'databases' or what == 'tables' or what == 'fields' or what == 'status' or what == 'global':
+        if what == 'databases' or what == 'tables' or what == 'procedure' or what == 'function' or what == 'fields' or what == 'triggers' or what == 'events' or what == 'privileges' or what == 'status' or what == 'global' or what == 'index' or what == 'keys':
             sql += ' ' + what
             if what == 'tables':
                 from_instr = self.seq_next()
@@ -276,7 +276,31 @@ class mysqldb(base_module):
                 sql += ' ' + from_instr
                 field_name = self.seq_next()
                 sql += ' ' + field_name
+            if what == 'index':
+                from_instr = self.seq_next()
+                if from_instr.lower() != 'from':
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
+                sql += ' ' + from_instr
+                field_name = self.seq_next()
+                sql += ' ' + field_name
+            if what == 'keys':
+                from_instr = self.seq_next()
+                if from_instr.lower() != 'from':
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
+                sql += ' ' + from_instr
+                field_name = self.seq_next()
+                sql += ' ' + field_name
             if what == 'global':
+                status = self.seq_next()
+                if status.lower() != 'status':
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
+                sql += ' ' + status
+            if what == 'procedure':
+                status = self.seq_next()
+                if status.lower() != 'status':
+                    return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
+                sql += ' ' + status
+            if what == 'function':
                 status = self.seq_next()
                 if status.lower() != 'status':
                     return mysqldb_errors.error_request_malformed.print_error('|show>', self.interpreter.output)
