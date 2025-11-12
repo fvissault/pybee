@@ -30,6 +30,7 @@ pip install -r requirements.txt
 
 2. **Tester l'interpreteur dans la console**
 ```bash
+cd path_to_pybee/pybee
 python beetle.py
 ```
 
