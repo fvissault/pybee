@@ -28,7 +28,7 @@ cd pybee
 pip install -r requirements.txt
 ```
 
-2. **Tester l'interpreteur**
+2. **Tester l'interpreteur dans la console**
 ```bash
 python beetle.py
 ```
@@ -39,5 +39,6 @@ http://localhost/pybee/test.btl
 ```
 4. **Une présentation de Beetle (vous aurez accès également à la documentation de Beetle)**
 ```bash
-http://localhost/pybee/site/presentation.html
+http://localhost/pybee/site/index.html
+http://localhost/pybee/docs/index.html
 ```
