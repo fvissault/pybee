@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Package 'mysqldb'</title>
+        <!--<link rel="stylesheet" href="main.css">-->
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body style="font-family:tahoma,arial;">
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>XII.5. Module 'mysqldb'</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="date.html">Précédent : XII.4. Packages : Module 'date'</a> | <a href="index.html">Index</a> | <a href="web.html">Suivant : XII.6. Packages : Module 'web'</a></p>
+
+        <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
+        <p>
+            L'ensemble des mots qui composent ce package est le suivant : <br>
+            <b>
+                <a href="#closereq">>|</a> <a href="#isclose">?close</a> <a href="#isconnect">?connect</a> 
+                <a href="#addcolumns">addcolumns</a> <a href="#addforeignkey">addforeignkey</a> <a href="#addkey">addkey</a> 
+                <a href="#changecol">changecol</a> <a href="#close">close</a> <a href="#connect">connect</a> 
+                <a href="#createdb">createdb</a> <a href="#createtab">createtab</a> <a href="#dbconf">dbconf</a> 
+                <a href="#dbcred">dbcred</a> <a href="#dbname">dbname</a> <a href="#descdb">descdb</a> <a href="#desctab">desctab</a> 
+                <a href="#disconnect">disconnect</a> <a href="#dropdb">dropdb</a> <a href="#fexists">fexists</a> 
+                <a href="#hostname">hostname</a> <a href="#use">use</a> <a href="#username">username</a> 
+                <a href="#userpass">userpass</a> <a href="#alter">|alter></a> <a href="#create">|create></a> 
+                <a href="#delete">|delete></a> <a href="#drop">|drop></a> <a href="#insert">|insert></a> 
+                <a href="#select">|select></a> <a href="#show">|show></a> <a href="#truncate">|truncate></a> <a href="#update">|update></a>
+            </b>
+        </p>
+
+        <a name="requests"></a><h3>2. Construction des requêtes : <b>>|, |alter>, |create>, |delete>, |drop>, |insert>, |select>, |show>, |truncate>, |update></b></h3>
+        <p>
+            Nous n'allons pas réécrire un langage du type SQL ici. Ce n'est pas la vocation de Beetle. Nous allons juste tenter de 
+            donner un cadre pour écrire des requêtes.
+        </p>
+
+        <a name="closereq"></a><h4><u>Terminer une requête</u></h4>
+        <p>
+            Ce mot '>|' est le marqueur de fin de requête. Utilisé seul, ce mot lève une erreur.<br>
+            La structure générale d'une requête possède la syntaxe suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                |action> ... <b>>|</b> avec action = alter | create | delete | drop | insert | select | show | truncate | update
+            </code>
+        </div>
+        <p>
+            Toutes les requêtes renvoient une structure json sur la pile de travail.
+        </p>
+
+        <a name="show"></a><h4><u>Requête show</u></h4>
+        <p>
+            La requête show vous permet connaitre la structure de votre base de données ou d'une table, etc...<br>
+            L'information récoltée est ajoutée, sous la forme d'un json, en haut de la pile de travail.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                |show> databases >|<br>
+                |show> tables from <i>dbname</i> >|<br>
+                |show> fields from <i>tablename</i> >|<br>
+                |show> global status >|<br>
+                |show> status >|<br>
+                |show> index from <i>tablename</i> >|<br>
+                |show> keys from <i>tablename</i> >|<br>
+                |show> privileges >|<br>
+                |show> events >|<br>
+                |show> triggers >|<br>
+                |show> procedure status >|<br>
+                |show> function status >|
+            </code>
+        </div>
+        <p>
+            Exemple d'éxecution d'une requête 'show' :
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> |show> fields from users >| .<br>
+[{'Field': 'id', 'Type': 'int(11)', 'Null': 'NO', 'Key': 'PRI', 'Default': None, 'Extra': 'auto_increment'}, {'Field': 'firstname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'lastname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'email', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'password', 'Type': 'varchar(32)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'active', 'Type': 'tinyint(1)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}]<br>
+                <span style="color:green;">ok</span>
+            </code>
+        </div>
+
+        <h4><u>Requête create</u></h4>
+        <h4><u>Requête drop</u></h4>
+        <h4><u>Requête truncate</u></h4>
+        <h4><u>Requête alter</u></h4>
+        <h4><u>Requête insert</u></h4>
+        <h4><u>Requête update</u></h4>
+        <h4><u>Requête select</u></h4>
+        
+
+        <a name="connectdisconnect"></a><h3>3. Connexion et déconnexion : <b>?close, ?connect, close, connect, disconnect</b></h3>
+        <a name="credentials"></a><h3>4. Credentials : <b>dbconf, dbcred, dbname, hostname, username, userpass</b></h3>
+        <a name="datamodel"></a><h3>5. Construction de modèle de données : <b>addcolumns, addforeignkey, addkey, changecol, createdb, createtab, descdb, desctab, dropdb, fexists, use</b></h3>
+
+        <p><a href="date.html">Précédent : XII.4. Packages : Module 'date'</a> | <a href="index.html">Index</a> | <a href="web.html">Suivant : XII.6. Packages : Module 'web'</a></p>
+    </body>
+</html>
