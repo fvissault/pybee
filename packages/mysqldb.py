@@ -187,17 +187,17 @@ class mysqldb(base_module):
                         cs = self.seq_next()
                         if cs == None:
                             return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
-                        sql += f" CHARACTER SET {cs}"
+                        sql += f" CHARACTER SET={cs}"
                     elif next == 'collate' and type == 'database':
                         co = self.seq_next()
                         if co == None:
                             return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
-                        sql += f" COLLATE {co}"
+                        sql += f" COLLATE={co}"
                     elif next == 'encryption' and type == 'database':
                         encrypt = self.seq_next()
                         if encrypt == None:
                             return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
-                        sql += f" encryption={encrypt}"
+                        sql += f" encryption='{encrypt}'"
                     elif next == 'ai' and type == 'table':
                         ai = self.seq_next()
                         if ai == None:
@@ -207,11 +207,6 @@ class mysqldb(base_module):
                         if int(ai) < 0:
                             return mysqldb_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter.output)
                         sql += f' auto_increment={ai}'
-                    elif next == 'engine' and type == 'table':
-                        engine = self.seq_next()
-                        if engine == None:
-                            return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
-                        sql += f' engine={engine}'
                     next = self.seq_next()
                     if next == None:
                         return mysqldb_errors.error_name_expected.print_error('|create>', self.interpreter.output)
