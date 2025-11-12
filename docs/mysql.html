@@ -88,9 +88,54 @@
         </div>
 
         <h4><u>Requête create</u></h4>
+        <p>
+            Avec la requête create, vous allez pouvoir faire plusieurs actions sur votre base de données.
+            <ol>
+                <li>Créer une nouvelle base de données</li>
+                <li>Créer une nouvelle table dans votre base de données</li>
+            </ol>
+        </p>
+        <p>
+            Pour créer une nouvelle base de données, voici les syntaxes possibles :
+        </p>
+        <div class="div_code">
+            <code>
+                |create> database <i>dbname</i> >| ( <b>création simple si votre base n'existe pas</b> )<br>
+                |create> database <i>dbname</i> charset <i>charset_name</i> collate <i>collation_name</i> encryption y|n >| ( <b>création complète si votre base n'existe pas.</b> )<br><br>
+                ( Le mot '<b>createdb</b>' implémente facilement |create> database <i>dbname</i> charset utf8mb3 >| )
+            </code>
+        </div>
+        <p>
+            Pour créer une nouvelle table dans votre base de données, voici les syntaxes possibles :
+        </p>
+        <div class="div_code">
+            <code>
+                |create> table <i>tablename</i> >| ( <b>création simple si votre base n'existe pas</b> )<br>
+                |create> table <i>tablename</i> charset <i>charset_name</i> ai <i>ai_value</i> >| ( <b>création simple avec une valeur de auto increment positionnable et un charset.</b> )<br><br>
+                ( Le mot '<b>createtab</b>' implémente facilement |create> table <i>tablename</i> charset utf8mb3 engine InnoDB >| )<br><br>
+                |create> table <i>tablename</i> like <i>other_tablename</i> >| ( <b>création à partir d'une autre table</b> )
+            </code>
+        </div>
+        <p>
+            Les créations se font uniquement si les entités n'existent pas.<br>
+            Dans le cas des tables, l'attribut "<b>`id` int(11) not null auto_increment, primary key (`id`)</b>" est systématiquement ajouté dans les tables créées.<br>
+            La requête de création ne renvoie rien.
+        </p>
+
         <h4><u>Requête drop</u></h4>
         <h4><u>Requête truncate</u></h4>
         <h4><u>Requête alter</u></h4>
+        <p>
+            Les altérations sont plus simples pour englober toutes les possibilités de la commande alter de MySql.<br>
+            Voici les syntaxes de la commande |alter> :
+        </p>
+        <div class="div_code">
+            <code>
+                |alter> database <i>dbname</i> <i>alteration</i> >| ( <b>altération d'une base de données</b> )<br>
+                |alter> table <i>tablename</i> add | alter | change | drop | modify | rename <i>alteration</i> >| ( <b>altération d'une table</b> )<br>
+            </code>
+        </div>
+
         <h4><u>Requête insert</u></h4>
         <h4><u>Requête update</u></h4>
         <h4><u>Requête select</u></h4>
