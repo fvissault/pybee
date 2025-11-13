@@ -52,7 +52,7 @@ class mysqldb(base_module):
         self.interpreter.core_instr.variables.append('dbname')
         self.interpreter.core_instr.variables.append('username')
         self.interpreter.core_instr.variables.append('userpass')
-        self.version = 'v0.4.2'
+        self.version = 'v0.5.3'
 
     def ensure_connection(self):
         """S’assure que self.db et self.cursor sont valides"""
@@ -497,24 +497,19 @@ class mysqldb(base_module):
         if type == None:
             return mysqldb_errors.error_action_type.print_error('|drop>', self.interpreter.output)
         type = type.lower()
-        if type != 'database' and type != 'table':
+        if type != 'database' and type != 'table' and type != 'procedure' and type != 'function' and type != 'trigger' and type != 'event' and type != 'user':
             return mysqldb_errors.error_action_type.print_error('|drop>', self.interpreter.output)
         sql += ' ' + type
         name = self.seq_next()
         if name == None:
             return mysqldb_errors.error_name_expected.print_error('|drop>', self.interpreter.output)
-        sql += ' if exists ' + name
-        # options sequence
+        if type == 'table':
+            sql += ' if exists ' + name
+        else:
+            sql += ' ' + name
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_name_expected.print_error('|drop>', self.interpreter.output)
-        if type == 'table': 
-            next = next.lower()
-            if next == 'restrict' or next == 'cascade':
-                sql += ' ' + next
-                next = self.seq_next()
-            elif next != '>|':
-                return mysqldb_errors.error_request_malformed.print_error(sql, self.interpreter.output)
+            return mysqldb_errors.error_request_malformed.print_error('|drop>', self.interpreter.output)
         if next == '>|':
             try:
                 self.cursor.execute(sql)
