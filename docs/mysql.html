@@ -87,7 +87,7 @@
             </code>
         </div>
 
-        <h4><u>Requête create</u></h4>
+        <a name="create"></a><h4><u>Requête create</u></h4>
         <p>
             Avec la requête create, vous allez pouvoir faire plusieurs actions sur votre base de données.
             <ol>
@@ -122,11 +122,33 @@
             La requête de création ne renvoie rien.
         </p>
 
-        <h4><u>Requête drop</u></h4>
-        <h4><u>Requête truncate</u></h4>
-        <h4><u>Requête alter</u></h4>
+        <a name="drop"></a><h4><u>Requête drop</u></h4>
         <p>
-            Les altérations sont plus simples pour englober toutes les possibilités de la commande alter de MySql.<br>
+            Le mot |drop> vous permet de supprimer des éléments de votre base de données. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |drop> :
+        </p>
+        <div class="div_code">
+            <code>
+                |drop> database <i>dbname</i> >|<br>
+                |drop> table <i>tablename</i> >| ( <b>seulement si la table tablename existe</b> )<br>
+                |drop> [ procedure | function | trigger | event | user ] <i>entityname</i> >|<br>
+            </code>
+        </div>
+
+        <a name="truncate"></a><h4><u>Requête truncate</u></h4>
+        <p>
+            Le mot |truncate> supprime toutes les lignes d'une table, sans supprimer la structure. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |truncate> :
+        </p>
+        <div class="div_code">
+            <code>
+                |truncate> <i>tablename</i> >|<br>
+            </code>
+        </div>
+
+        <a name="alter"></a><h4><u>Requête alter</u></h4>
+        <p>
+            Les altérations sont plus simples pour englober toutes les possibilités de la commande alter de MySql. La requête ne renvoie rien.<br>
             Voici les syntaxes de la commande |alter> :
         </p>
         <div class="div_code">
