@@ -42,6 +42,7 @@
                         self.dictionary = {'myinstruction' : self.my_instr, ...}<br>
                         self.help = myextension_help(interpreter.output)<br>
                         self.version = 'vx.y.z'<br>
+                        self.packuse = ['package1', 'package2', ...]<br>
                         </blockquote>
                         <br>
                     def my_instr(self):<br>
@@ -53,7 +54,13 @@
                     </blockquote>
             </code>
         </div>
-            
+
+        <p>
+            L'attribut de classe '<b>packuse</b>' vous permet de déclarer des dépendances entre ce package et les autres packages éxistants.
+            Le processus de chargement des packages est récursif. Ceci est très pratique et vous permet de ne pas vous soucier des
+            packages qui doivent être chargés systématiquement.<br>
+            Exemple : le package 'web' utilise les packages 'mysqldb' et 'mail'
+        </p>
         <p>Mais cela ne s'arrête pas la. Il vous faudra également créer 2 autres classes pour faire fonctionner votre nouveau package.</p>
         <p>Ces classes sont :</p>
         <ul>
