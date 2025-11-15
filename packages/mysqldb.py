@@ -76,13 +76,13 @@ class mysqldb(base_module):
         return wrapper
 
     '''
-    Instruction dbparam : affiche les paramètres de connection : DBPARAM
+    Instruction dbconf : affiche les paramètres de connection : DBCONF
     '''
     def param_instr(self):
         print('Database server (hostname) = ' + self.dictionary['hostname'])
         print('Database name     (dbname) = ' + self.dictionary['dbname'])
         print('User name       (username) = ' + self.dictionary['username'])
-        print('User password   (userpass) = ' + self.dictionary['userpass'])
+        print('User password   (userpass) = ' + self.dictionary['userpass'], end='')
 
     '''
     Instruction connect : se connecte à une base de données : CONNECT
