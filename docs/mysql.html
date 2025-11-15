@@ -146,6 +146,17 @@
             </code>
         </div>
 
+        <a name="delete"></a><h4><u>Requête delete</u></h4>
+        <p>
+            Le mot |delete> supprime tout ou partie des enregistrements d'une table, sans supprimer la structure. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |delete> :
+        </p>
+        <div class="div_code">
+            <code>
+                |delete> <i>tablename</i> [ where condition ] >|<br>
+            </code>
+        </div>
+
         <a name="alter"></a><h4><u>Requête alter</u></h4>
         <p>
             Les altérations sont plus simples pour englober toutes les possibilités de la commande alter de MySql. La requête ne renvoie rien.<br>
@@ -159,9 +170,39 @@
         </div>
 
         <h4><u>Requête insert</u></h4>
+        <p>
+            Pour vous permettre de créer des enregistrements dans une table, le mot |insert> est idéal. Le mot dépose sur la pile de 
+            travail l'identifiant du dernier enregistrement effectué.<br>
+            Voici les syntaxes de la commande |insert> :
+        </p>
+        <div class="div_code">
+            <code>
+                |insert> tablename (colname1, colname2, ...) values (value11, value21, ...), (value12, value22, ...), ... >| ( <b>insertion dans une table</b> )<br>
+            </code>
+        </div>
+
         <h4><u>Requête update</u></h4>
+        <p>
+            Le mot |update> vous permet de modifier les données d'un ou plusieurs enregistrements d'une table. La requête ne renvoie rien.<br>
+            Voici les syntaxes de la commande |update> :
+        </p>
+        <div class="div_code">
+            <code>
+                |update> tablename set colname1=value1, colname2=value2, ... [ where condition ] >| ( <b>modification d'enregistrements d'une table</b> )<br>
+            </code>
+        </div>
+
         <h4><u>Requête select</u></h4>
-        
+        <p>
+            Le mot |select> vous permet d'extraire des données d'une table. La requête dépose sur le haut de la pile les données
+            extraites sous la forme d'un Json.<br>
+            Voici les syntaxes de la commande |update> :
+        </p>
+        <div class="div_code">
+            <code>
+                |select> fields | * | count(*) from <i>tablenames</i> where condition >| ( <b>retourne les enregistrements d'une table</b> )<br>
+            </code>
+        </div>
 
         <a name="connectdisconnect"></a><h3>3. Connexion et déconnexion : <b>?close, ?connect, close, connect, disconnect</b></h3>
         <a name="credentials"></a><h3>4. Credentials : <b>dbconf, dbcred, dbname, hostname, username, userpass</b></h3>
