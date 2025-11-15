@@ -14,4 +14,6 @@ use "test4"
           [ "email" "varchar(50) NOT NULL" ] 
           [ "password" "varchar(32) NOT NULL" ] 
           [ "active" "boolean NOT NULL" ] ] addcolumns
+
+"users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] recordone
 ?>
