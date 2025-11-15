@@ -378,7 +378,7 @@ class mysqldb(base_module):
             next = self.seq_next()
             if next == None:
                 return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
-        sql += ' values'
+        sql += ' values '
         next = self.seq_next()
         if next == None:
             return mysqldb_errors.error_request_malformed.print_error('|insert>', self.interpreter.output)
