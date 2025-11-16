@@ -310,6 +310,154 @@
         </div>
 
         <a name="datamodel"></a><h3>5. Construction de modèle de données : <b>addcolumns, addforeignkey, addkey, changecol, createdb, createtab, descdb, desctab, dropdb, fexists, use</b></h3>
+        <p>
+            Voici quelques mots qui vont vous permettre de construire un modèle de données.<br>
+            Un exemple simple de modèle de données :
+        </p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                ( mise en place des crédentials )<br>
+                "test4" dbname !<br>
+                "localhost" "root" "" dbcred<br><br>
+
+                ( création de la base de données si elle n'existe pas déjà )<br>
+                dbname @ createdb<br>
+                use "test4"<br><br>
+
+                ( création de la table 'users' si elle n'existe pas déjà )<br>
+                "users" createtab<br>
+                "users" [ [ "firstname" "varchar(50) not null" ] [ "lastname" "varchar(50) not null" ] [ "email" "varchar(50) not null" ] [ "password" "varchar(32) not null" ] [ "active" "boolean not null" ] ] addcolumns<br>
+                ?>
+            </code>
+        </div>
+
+        <a name="addcolumns"></a><h4><u>Mot 'addcolumns'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter un ou plusieurs attributs à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ [ "columnname1" "columndef1" ] [ "columnname2" "columndef2" ] ... ] <b>addcolumns</b>
+            </code>
+        </div>
+
+        <a name="addforeignkey"></a><h4><u>Mot 'addforeignkey'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter une clé étrangère à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>desttablename</i>" "<i>origtablename</i>" "<i>cascadeinformation</i>" <b>addforeignkey</b><br>
+                cascadeinformation = "<b>delete</b>" | "<b>update</b>" | "<b>delete update</b>"
+            </code>
+        </div>
+        
+        <a name="addkey"></a><h4><u>Mot 'addkey'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter une clé (index, primaire ou unique) à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "index" [ "<i>nomindex</i>" "<i>columnsindex</i>" ] <b>addkey</b><br>
+                "<i>tablename</i>" "key|unique" "<i>columnname</i>" <b>addkey</b>
+            </code>
+        </div>
+
+        <a name="changecol"></a><h4><u>Mot 'changecol'</u></h4>
+        <p>
+            Ce mot vous permet de modifier un attribut d'une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "<i>oldcolumnname</i>" "<i>newcolumnname</i>" "<i>newcolumndef</i>" <b>changecol</b>
+            </code>
+        </div>
+
+        <a name="createdb"></a><h4><u>Mot 'createdb'</u></h4>
+        <p>
+            Ce mot vous permet de créer une base de données si elle n'existe pas.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>createdb</b>
+            </code>
+        </div>
+
+        <a name="createtab"></a><h4><u>Mot 'createtab'</u></h4>
+        <p>
+            Ce mot vous permet de créer une table dans une base de données si elle n'existe pas.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>createtab</b>
+            </code>
+        </div>
+
+        <a name="descdb"></a><h4><u>Mot 'descdb'</u></h4>
+        <p>
+            Ce mot vous renvoie sous la forme d'un Json la structure d'une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>descdb</b>
+            </code>
+        </div>
+
+        <a name="desctab"></a><h4><u>Mot 'desctab'</u></h4>
+        <p>
+            Ce mot vous renvoie sous la forme d'un Json la structure d'une table.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>desctab</b>
+            </code>
+        </div>
+
+        <a name="dropdb"></a><h4><u>Mot 'dropdb'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>dropdb</b>
+            </code>
+        </div>
+
+        <a name="fexists"></a><h4><u>Mot 'fexists'</u></h4>
+        <p>
+            Ce mot vous permet de tester l'existence d'un attribut dans une table. Vous pouvez obtenir la liste des attributs d'une
+            table avec le mot 'desctab'<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>fieldslist</i>" <i>fieldtotest</i> <b>fexists</b>
+            </code>
+        </div>
+
+        <a name="use"></a><h4><u>Mot 'use'</u></h4>
+        <p>
+            Le mot 'use' va vous permettre de sélectionner la base de données sur laquelle vous souhaitez travailler. <br>
+            Vous allez donc utiliser de mot assez souvent. Il positionne un cursor sur la base de données voulue.<br>
+            Si la base de données n'existe pas, une erreur de malformation de la requête est renvoyée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                <b>use</b> <i>dbname</i>
+            </code>
+        </div>
+
 
         <p><a href="date.html">Précédent : XII.4. Packages : Module 'date'</a> | <a href="index.html">Index</a> | <a href="web.html">Suivant : XII.6. Packages : Module 'web'</a></p>
     </body>
