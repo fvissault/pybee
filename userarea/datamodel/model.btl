@@ -15,5 +15,5 @@ use "test4"
           [ "password" "varchar(32) NOT NULL" ] 
           [ "active" "boolean NOT NULL" ] ] addcolumns
 
-"users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] recordone
+"users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] add1record
 ?>
