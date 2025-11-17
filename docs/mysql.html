@@ -22,11 +22,13 @@
             L'ensemble des mots qui composent ce package est le suivant : <br>
             <b>
                 <a href="#closereq">>|</a> <a href="#isclose">?close</a> <a href="#isconnect">?connect</a> 
-                <a href="#addcolumns">addcolumns</a> <a href="#addforeignkey">addforeignkey</a> <a href="#addkey">addkey</a> 
+                <a href="#add1record">add1record</a> <a href="#addcolumns">addcolumns</a> <a href="#addforeignkey">addforeignkey</a> 
+                <a href="#addkey">addkey</a> <a href="#addrecords">addrecords</a> 
                 <a href="#changecol">changecol</a> <a href="#close">close</a> <a href="#connect">connect</a> 
                 <a href="#createdb">createdb</a> <a href="#createtab">createtab</a> <a href="#dbconf">dbconf</a> 
                 <a href="#dbcred">dbcred</a> <a href="#credentials">dbname</a> <a href="#descdb">descdb</a> <a href="#desctab">desctab</a> 
                 <a href="#disconnect">disconnect</a> <a href="#dropdb">dropdb</a> <a href="#fexists">fexists</a> 
+                <a href="#fjoin">fjoin</a> <a href="#flist">flist</a> 
                 <a href="#credentials">hostname</a> <a href="#use">use</a> <a href="#credentials">username</a> 
                 <a href="#credentials">userpass</a> <a href="#alter">|alter></a> <a href="#create">|create></a> 
                 <a href="#delete">|delete></a> <a href="#drop">|drop></a> <a href="#insert">|insert></a> 
@@ -332,6 +334,18 @@
             </code>
         </div>
 
+        <a name="add1record"></a><h4><u>Mot 'add1record'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter un enregistrement à une table. Le mot va chercher automatiquement les attributs (sauf 'id')
+            de la table concernée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ columnvalue1 columnvalue2 ... ] <b>add1record</b>
+            </code>
+        </div>
+
         <a name="addcolumns"></a><h4><u>Mot 'addcolumns'</u></h4>
         <p>
             Ce mot vous permet d'ajouter un ou plusieurs attributs à une table. Cette action se fait par altération.<br>
@@ -364,6 +378,18 @@
             <code>
                 "<i>tablename</i>" "index" [ "<i>nomindex</i>" "<i>columnsindex</i>" ] <b>addkey</b><br>
                 "<i>tablename</i>" "key|unique" "<i>columnname</i>" <b>addkey</b>
+            </code>
+        </div>
+
+        <a name="addrecords"></a><h4><u>Mot 'addrecords'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter plusieurs enregistrements à une table. Le mot va chercher automatiquement les attributs (sauf 'id')
+            de la table concernée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ [ "columnvalue11" "columnvalue12" ... ] [ "columnvalue21" "columnvalue22" ... ] ... ] <b>addrecords</b>
             </code>
         </div>
 
@@ -442,6 +468,29 @@
         <div class="div_code">
             <code>
                 "<i>fieldslist</i>" <i>fieldtotest</i> <b>fexists</b>
+            </code>
+        </div>
+
+        <a name="fjoin"></a><h4><u>Mot 'fjoin'</u></h4>
+        <p>
+            Ce mot fait une jointure entre les éléments d'une liste et renvoie une chaine de caractère.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                [ value1 value2 ... ] <b>fjoin</b> -> "(value1,value2...)"
+            </code>
+        </div>
+
+        <a name="flist"></a><h4><u>Mot 'flist'</u></h4>
+        <p>
+            Ce mot récupère les noms des colonnes d'une table (sauf l'attribut 'id') et renvoie une liste avec ces noms de colonnes. 
+            Ce mot s'utilise facilement avec le mot '<b>desctab</b>'<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>flist</b> -> ['fieldname1', 'fieldname2', ...]
             </code>
         </div>
 
