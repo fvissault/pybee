@@ -45,7 +45,13 @@ class mysqldb(base_module):
             'changecol' : '''local newtype local newname local oldname local tabname "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate''',
             'desctab' : '''local tabname "|show> fields from <#0#> >|" [ tabname @ ] format evaluate''',
             'fexists' : '''local field local fieldslist 0 local i 0 local rep fieldslist @ cells i do fieldslist @ i @ cell@ "Field" cell@ field @ = if 1 rep ! then loop rep @''',
-            'descdb' : '''local dbname "|show> tables from <#0#> >|" [ dbname @ ] format evaluate'''
+            'descdb' : '''local dbname "|show> tables from <#0#> >|" [ dbname @ ] format evaluate''',
+            # "tablename" desctab flist -> [ 'id', 'field1', ... ]
+            'flist' : '''local fieldslist 0 local i [ ] local rep fieldslist @ cells i do fieldslist @ i @ cell@ "Field" cell@ rep cell+ loop rep @''',
+            # "tablename" desctab flist fjoin -> "(field1,field2,...)"
+            'fjoin' : '''local fieldslist 0 local i "(" local rep 0 local tmp fieldslist @ cells i do fieldslist @ i @ cell@ tmp ! "id" tmp @ <> if i @ 1 > if "," rep s+! then tmp @ rep s+! then loop ")" rep s+! rep @''',
+            'add1record' : '''local record local tabname 0 local tmp tabname @ desctab flist fjoin local fieldsnamelist "|insert> <#0#> <#1#> values (" [ tabname @ fieldsnamelist @ ] format local req 0 local i record @ cells i do i @ 0 > if "," req s+! then record @ i @ cell@ tmp ! tmp @ ?int if tmp @ req s+! else "'" tmp @ s+ "'" s+ req s+! then loop ") >|" req s+! req @ evaluate''',
+            'addrecords' : ''''''
         }
 
         self.db = None
