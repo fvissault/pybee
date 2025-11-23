@@ -115,7 +115,6 @@ class core(base_module):
             'repeat' : self.repeat_instr, 
             '!' : self.exclam_instr,
             '+!' : 'dup @ rot + swap !',
-            's+!' : 'dup @ rot s+ swap !',
             '*!' : 'dup @ rot * swap !',
             'and' : self.and_instr,
             'or' : self.or_instr,
@@ -565,10 +564,10 @@ class core(base_module):
     Instruction cr : permet d'afficher un retour chariot dans la console
     '''
     def cr_instr(self):
-        if self.interpreter.output == 'web':
-            print('<br>')
-        else:
-            print('')
+        #if self.interpreter.output == 'web':
+        #    print('<br>')
+        #else:
+        print('')
         return 'nobreak'
 
 
@@ -1380,7 +1379,6 @@ class core(base_module):
                 self.work.popleft()
                 begin = self.interpreter.locals[self.interpreter.lastseqnumber][varname]
             elif varname in self.variables:
-                # begin = Récupérer la valeur de la variable
                 self.work.popleft()
                 # begin = Récupérer la valeur de la variable
                 begin = self.dictionary[varname]
@@ -1400,6 +1398,11 @@ class core(base_module):
                         self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
+
+                    for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                        if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                            self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                     self.interpreter.decreaselastseqnumber()
                     if ret == 'leave':
                         break
@@ -1409,6 +1412,11 @@ class core(base_module):
                 while compteur < limit:
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
+
+                    for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                        if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                            self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                     self.interpreter.decreaselastseqnumber()
                     if ret == 'leave':
                         instructions.clear()
@@ -1449,6 +1457,11 @@ class core(base_module):
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
                 ret = self.interpreter.interpret('last_sequence')
+
+                for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                    if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                        self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                 self.interpreter.decreaselastseqnumber()
                 if ret == 'leave':
                     firstzone.clear()
@@ -1458,6 +1471,11 @@ class core(base_module):
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
                 ret = self.interpreter.interpret('last_sequence')
+
+                for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                    if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                        self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                 self.interpreter.decreaselastseqnumber()
                 if ret == 'leave':
                     firstzone.clear()
@@ -1473,6 +1491,11 @@ class core(base_module):
             while True:
                 self.interpreter.set_sequence(firstzone.copy())
                 ret = self.interpreter.interpret('last_sequence')
+
+                for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                    if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                        self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                 self.interpreter.decreaselastseqnumber()
                 if ret == 'leave':
                     firstzone.clear()
@@ -1487,6 +1510,11 @@ class core(base_module):
                     break
                 self.interpreter.set_sequence(secondzone.copy())
                 ret = self.interpreter.interpret('last_sequence')
+
+                for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
+                    if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
+                        self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
+
                 self.interpreter.decreaselastseqnumber()
                 if ret == 'leave':
                     firstzone.clear()
@@ -1870,7 +1898,9 @@ class core(base_module):
         instr = str(self.pop_sequence())
         while instr != ']':
             if instr == '[':
-                result.append(self.search_brakets())
+                ret = self.search_brakets()
+                ret.reverse()
+                result.append(ret)
                 if self.interpreter.isemptylastsequence():
                     return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
                 instr = str(self.pop_sequence())
@@ -1930,10 +1960,13 @@ class core(base_module):
     def cellarobase_instr(self):
         if len(self.work) > 1:
             position = self.pop_work()
+            #print("position = ", position)
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
                     content = self.dictionary[tab]
+                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
                 else:
                     return core_errors.error_not_a_variable.print_error('cell@', self.interpreter.output)
             elif isinstance(tab, list) or isinstance(tab, dict):
@@ -2017,6 +2050,8 @@ class core(base_module):
             if isinstance(tab, str):
                 if tab in self.variables:
                     content = self.dictionary[tab]
+                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
                 else:
                     return core_errors.error_not_a_variable.print_error('cell-', self.interpreter.output)
             elif isinstance(tab, list) or isinstance(tab, dict):
