@@ -5,7 +5,7 @@
 
 ( création de la base de données si elle n'existe pas déjà )
 dbname @ createdb
-use "test4"
+use test4
 
 ( création de la table 'users' si elle n'existe pas déjà )
 "users" createtab
@@ -15,5 +15,6 @@ use "test4"
           [ "password" "varchar(32) NOT NULL" ] 
           [ "active" "boolean NOT NULL" ] ] addcolumns
 
-"users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] add1record
+( "users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] add1record )
+"users" [ [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] [ "Brigitte" "Vissault" "brigitte.vissault@gmail.com" "password" 1 ] ] addrecords
 ?>
