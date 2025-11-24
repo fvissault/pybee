@@ -43,7 +43,7 @@ class mysqldb(base_module):
     "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
             #*********************************
             'dropdb' : '''    local dbname 
-    "|drop> database <#0#> >|" [ dbname ] format evaluate''',
+    "|drop> database <#0#> >|" [ dbname @ ] format evaluate''',
             #*********************************
             'createtab' : '''    local tabname 
     "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
@@ -221,7 +221,32 @@ class mysqldb(base_module):
         req @ ")" s+ req ! 
     loop 
     req @ " >|" s+ req ! 
-    req @ evaluate'''
+    req @ evaluate''',
+            #*********************************
+            'updaterecord' : '''''',
+            #*********************************
+            'deleterecord' : '''''',
+            #*********************************
+            'droptable' : '''    local tablename 
+    "|drop> table <#0#> >|" [ tablename @ ] format evaluate''',
+            #*********************************
+            'dropuser' : '''    local username 
+    "|drop> user <#0#> >|" [ username @ ] format evaluate''',
+            #*********************************
+            'dropproc' : '''    local procname 
+    "|drop> procedure <#0#> >|" [ procname @ ] format evaluate''',
+            #*********************************
+            'dropfunc' : '''   local funcname 
+    "|drop> function <#0#> >|" [ funcname @ ] format evaluate''',
+            #*********************************
+            'dropevent' : '''   local eventname 
+    "|drop> event <#0#> >|" [ eventname @ ] format evaluate''',
+            #*********************************
+            'droptrigger' : '''   local trigname 
+    "|drop> trigger <#0#> >|" [ trigname @ ] format evaluate''',
+            #*********************************
+            'trunctable' : '''   local tablename 
+    "|truncate> <#0#> >|" [ tablename @ ] format evaluate'''
         }
 
         self.db = None
@@ -231,7 +256,7 @@ class mysqldb(base_module):
         self.interpreter.core_instr.variables.append('dbname')
         self.interpreter.core_instr.variables.append('username')
         self.interpreter.core_instr.variables.append('userpass')
-        self.version = 'v0.5.3'
+        self.version = 'v0.7.5'
 
     def ensure_connection(self):
         """S'assure que self.db et self.cursor sont valides"""
