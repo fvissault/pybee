@@ -13,7 +13,8 @@ class mail(base_module):
         super().__init__(interpreter)
         self.dictionary = {
             'sendmail' : self.sendmail_instr,
-            'initmailer' : '''load mails/config load mails/predefined''',
+            'initmailer' : '''    load mails/config 
+    load mails/predefined''',
             'preparemail' : self.preparemail_instr,
             'addattachment' : self.addattachment_instr
         }
