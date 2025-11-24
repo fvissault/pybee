@@ -246,14 +246,14 @@ class web(base_module):
             'th' : '''    local tableid 
     local colnum 
     local properties 
-    properties @ 0 cell@ local cont 
-    properties @ 1 cell@ local scope 
-    properties @ 2 cell@ local filter 
-    properties @ 3 cell@ local sort 
+    properties @ 0 cell@ local sort 
+    properties @ 1 cell@ local filter 
+    properties @ 2 cell@ local scope 
+    properties @ 3 cell@ local cont 
     properties @ cells 6 = 
     if 
-        properties @ 4 cell@ local rowspan 
-        properties @ 5 cell@ local colspan 
+        properties @ 4 cell@ local colspan 
+        properties @ 5 cell@ local rowspan 
     then 
     { } local attrs 
     scope @ "col" = scope @ "row" = or 
@@ -323,7 +323,7 @@ class web(base_module):
     tablerow local tr 
     properties @ cells i 
     do 
-        properties @ i @ cell@ item ! 
+        properties @ i @ cell@ item !
         item @ cells 4 = item @ cells 6 = or 
         if 
             tr item @ i @ tableid @ th addcontent 
