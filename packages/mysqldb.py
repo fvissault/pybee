@@ -31,44 +31,149 @@ class mysqldb(base_module):
             '|alter>' : self.alter_instr,
             '>|' : self.endreq_instr,
             # "hostname" "username" "userpass" dbcred
-            'dbcred' : '''local upass local uname local host host @ hostname ! uname @ username ! upass @ userpass !''',
-            'createdb' : '''local dbname "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
-            'dropdb' : '''local dbname "|drop> database <#0#> >|" [ dbname ] format evaluate''',
-            'createtab' : '''local tabname "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
+            'dbcred' : '''    local upass 
+    local uname 
+    local host 
+    host @ hostname ! 
+    uname @ username ! 
+    upass @ userpass !''',
+            'createdb' : '''    local dbname 
+    "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
+            'dropdb' : '''    local dbname 
+    "|drop> database <#0#> >|" [ dbname ] format evaluate''',
+            'createtab' : '''    local tabname 
+    "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
             # "tablename" [ "`colname1` coldef1" "`colname2` coldef2" ... ] addcolumns
-            'addcolumns' : '''local columns local tabname "|alter> table <#0#> " [ tabname @ ] format local req 0 local i 0 local col columns @ cells i do i @ 0 > if ", " req @ s+ req ! then columns @ i @ cell@ col ! tabname @ desctab col @ 1 cell@ fexists invert if "add `<#0#>` <#1#>" [ col @ 1 cell@ col @ 0 cell@ ] format req @ s+ req ! then loop " >|" req @ s+ req ! req @ "add" scan if req @ evaluate then''',
-            'addforeignkey' : '''local cascade local origtabname local desttabname "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ desttabname @ origtabname @ ] format local req "delete" cascade @ scan if " on delete cascade" req @ s+ req ! then "update" cascade @ scan if " on update cascade" req @ s+ req ! then " >|" req @ s+ req ! req @ evaluate''',
+            'addcolumns' : '''    local columns 
+    local tabname 
+    "|alter> table <#0#> " [ tabname @ ] format local req 
+    0 local i 
+    0 local col 
+    columns @ cells i 
+    do 
+        i @ 0 > 
+        if 
+            req @ ", " s+ req ! 
+        then 
+        columns @ i @ cell@ col ! 
+        tabname @ desctab col @ 1 cell@ fexists invert 
+        if 
+            req @ "add `<#0#>` <#1#>" [ col @ 1 cell@ col @ 0 cell@ ] format s+ req ! 
+        then 
+    loop 
+    req @ " >|" s+ req ! 
+    req @ "add" scan 
+    if 
+        req @ evaluate 
+    then''',
+            'addforeignkey' : '''    local cascade 
+    local origtabname 
+    local desttabname 
+    "|alter> table <#0#> add constraint fk_<#0#>_<#1#> foreign key (id_<#1#>) references <#1#>(id)" [ desttabname @ origtabname @ ] format local req 
+    "delete" cascade @ scan 
+    if 
+        req @ " on delete cascade" s+ req ! 
+    then 
+    "update" cascade @ scan 
+    if 
+        req @ " on update cascade" s+ req ! 
+    then 
+    req @ " >|" s+ req ! 
+    req @ evaluate''',
             # "tablename" "index" [ "nomindex" "columnsindex" ] addkey
             # "tablename" "key|unique" "columnname" addkey
-            'addkey' : '''local columns local type local tabname "|alter> table <#0#> add " [ tabname @ ] format local req "index" type @ = if columns @ 0 cell@ local indexname columns @ 1 cell@ local cols "index <#0#> (<#1#>) >|" [ indexname @ cols @ ] format req @ s+ req ! req @ evaluate then "key" type @ = if "primary key (<#0#>) >|" [ columns @ ] format req @ s+ req ! req @ evaluate then "unique" type @ = if "unique (<#0#>) >|" [ columns @ ] format req @ s+ req ! req @ evaluate then''',
+            'addkey' : '''    local columns 
+    local type 
+    local tabname 
+    "|alter> table <#0#> add " [ tabname @ ] format local req 
+    "index" type @ = 
+    if 
+        columns @ 0 cell@ local indexname 
+        columns @ 1 cell@ local cols 
+        req @ "index <#0#> (<#1#>) >|" [ indexname @ cols @ ] format s+ req ! 
+        req @ evaluate 
+    then 
+    "key" type @ = 
+    if 
+        req @ "primary key (<#0#>) >|" [ columns @ ] format s+ req ! 
+        req @ evaluate 
+    then 
+    "unique" type @ = 
+    if 
+        req @ "unique (<#0#>) >|" [ columns @ ] format s+ req ! 
+        req @ evaluate 
+    then''',
             # "tablename" "oldcolumnname" "newcolumnname" "newcolumndef" changecol
-            'changecol' : '''local newtype local newname local oldname local tabname "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate''',
-            'desctab' : '''local tabname "|show> fields from <#0#> >|" [ tabname @ ] format evaluate''',
-            'fexists' : '''local field local fieldslist 0 local i 0 local rep fieldslist @ cells i do fieldslist @ i @ cell@ "Field" cell@ field @ = if 1 rep ! then loop rep @''',
-            'descdb' : '''local dbname "|show> tables from <#0#> >|" [ dbname @ ] format evaluate''',
+            'changecol' : '''    local newtype 
+    local newname 
+    local oldname 
+    local tabname 
+    "|alter> table <#0#> change <#1#> <#2#> <#3#> >|" [ tabname @ oldname @ newname @ newtype @ ] format evaluate''',
+            'desctab' : '''    local tabname 
+    "|show> fields from <#0#> >|" [ tabname @ ] format evaluate''',
+            'fexists' : '''    local field 
+    local fieldslist 
+    0 local i 
+    0 local rep 
+    fieldslist @ cells i 
+    do 
+        fieldslist @ i @ cell@ "Field" cell@ field @ = 
+        if 
+            1 rep ! 
+        then 
+    loop 
+    rep @''',
+            'descdb' : '''    local dbname 
+    "|show> tables from <#0#> >|" [ dbname @ ] format evaluate''',
             # "tablename" desctab flist -> [ 'id', 'field1', ... ]
-            'flist' : '''local fieldslist 0 local ifl [ ] local rep fieldslist @ cells ifl do fieldslist @ ifl @ cell@ "Field" cell@ rep cell+ loop rep @''',
+            'flist' : '''    local fieldslist 
+    0 local ifl 
+    [ ] local rep 
+    fieldslist @ cells ifl 
+    do 
+        fieldslist @ ifl @ cell@ "Field" cell@ rep cell+ 
+    loop 
+    rep @''',
             # "tablename" desctab flist fjoin -> "(field1,field2,...)"
-            'fjoin' : '''
-            local fieldslist
-            0 local ifj 
-            "(" local rep 
-            0 local tmp 
-            fieldslist @ cells ifj 
-            do 
-                fieldslist @ ifj @ cell@ tmp ! 
-                "id" tmp @ <> 
-                if 
-                    ifj @ 1 > 
-                    if 
-                        rep @ "," s+ rep ! 
-                    then 
-                    rep @ tmp @ s+ rep !
-                then 
-            loop 
-            rep @ ")" s+
-            ''',
-            'add1record' : '''local record local tabname 0 local tmp tabname @ desctab flist fjoin local fieldsnamelist "|insert> <#0#> <#1#> values (" [ tabname @ fieldsnamelist @ ] format local req 0 local i record @ cells i do i @ 0 > if "," req @ s+ req ! then record @ i @ cell@ tmp ! tmp @ ?int if tmp @ req @ s+ req ! else "'" tmp @ s+ "'" s+ req @ s+ req ! then loop ") >|" req @ s+ req ! req @ evaluate''',
+            'fjoin' : '''    local fieldslist
+    0 local ifj 
+    "(" local rep 
+    0 local tmp 
+    fieldslist @ cells ifj 
+    do 
+        fieldslist @ ifj @ cell@ tmp ! 
+        "id" tmp @ <> 
+        if 
+            ifj @ 1 > 
+            if 
+                rep @ "," s+ rep ! 
+            then 
+            rep @ tmp @ s+ rep !
+        then 
+    loop 
+    rep @ ")" s+''',
+            'add1record' : '''    local record 
+    local tabname 
+    0 local tmp 
+    tabname @ desctab flist fjoin local fieldsnamelist 
+    "|insert> <#0#> <#1#> values (" [ tabname @ fieldsnamelist @ ] format local req 
+    0 local i 
+    record @ cells i 
+    do 
+        i @ 0 > 
+        if 
+            req @ "," s+ req ! 
+        then 
+        record @ i @ cell@ tmp ! 
+        tmp @ ?int 
+        if 
+            req @ tmp @ s+ req ! 
+        else 
+            req @ "'" tmp @ s+ "'" s+ s+ req ! 
+        then 
+    loop 
+    req @ ") >|" s+ req ! 
+    req @ evaluate''',
             'addrecords' : '''
             local records 
             local tabname 
