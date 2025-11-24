@@ -480,7 +480,7 @@
         <p>La syntaxe de ce mot est la suivante :</p>
         <div class="div_code">
             <code>
-                <i>container</i> [ [ <i>facultatif_colspan facultatif_rowspan</i> "sort | nosort" "filter | nofilter" "<i>entête_de_colonne_ou_de_ligne?</i> col | row" "<i>contenu_de_cellule</i>" ] ... ] <b>row</b>
+                <i>container</i> [ [ "sort | nosort" "filter | nofilter" "<i>entête_de_colonne_ou_de_ligne?</i> col | row" "<i>contenu_de_cellule</i>" <i>facultatif_colspan facultatif_rowspan</i> ] ... ] <b>row</b>
             </code>
         </div>
         <p>Voici un exemple de ce que cela donne :</p>
@@ -499,7 +499,7 @@
                 t c addcontent <br>
                 t [ [ "sort" "filter" "col" "cell1" ] [ "nosort" "filter" "col" "cell2" ] [ "nosort" "filter" "col" "cell3" ] ] <b>row</b><br>
                 t [ [ "nosort" "nofilter" "row" "cell4" ] [ "cell5" ] [ "cell6" ] ] <b>row</b> ( <b>pas de rowspan, ni de colspan donc pas renseigné ici</b> )<br>
-                t [ [ 2 0 "nosort" "nofilter" "row" "cell7" ] [ "cell8" ] ] <b>row</b> ( <b>rowspan = 2, colspan = 0 les 2 valeurs sont facultatives en même temps</b> )<br>
+                t [ [ "nosort" "nofilter" "row" "cell7" 2 0 ] [ "cell8" ] ] <b>row</b> ( <b>rowspan = 2, colspan = 0 les 2 valeurs sont facultatives en même temps</b> )<br>
                 t [ [ "cell9" ] [ "cell10" ] [ "cell11" ] ] <b>row</b><br>
                 body t addcontent<br><br>
                 html @ generate cls<br>
