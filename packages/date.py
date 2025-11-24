@@ -10,44 +10,118 @@ locale.setlocale(locale.LC_TIME,'')
 class date(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
-        self.dictionary = {'now' : self.now_instr,
-                           'timestamp' : self.timestamp_instr,
-                           'year' : self.year_instr,
-                           'year=' : 'swap year =',
-                           'month' : self.month_instr,
-                           'month=' : 'swap month # =',
-                           'monthlname=' : 'swap month lname =',
-                           'monthsname=' : 'swap month sname =',
-                           'day' : self.day_instr,
-                           'day=' : 'swap day # =',
-                           'daylname=' : 'swap day lname =',
-                           'daysname=' : 'swap day sname =',
-                           'hour' : self.hour_instr,
-                           'hour=' : 'swap hour =',
-                           'minut' : self.minut_instr,
-                           'minut=' : 'swap minut =',
-                           'second' : self.second_instr,
-                           'second=' : 'swap second =',
-                           'microsecond' : self.microsecond_instr,
-                           'microsecond=' : 'swap microsecond =',
-                           'fdate' : self.date_instr,
-                           'ftime' : self.time_instr,
-                           'fdt' : self.datetime_instr,
-                           'd+' : self.dateplus_instr,
-                           'd-' : self.dateminus_instr,
-                           '#monthdays' : self.dayscount_instr,
-                           'd=' : '2dup year year= if 2dup month # month= if day # day= if true else false then else false then else false then',
-                           'd<>' : 'd= invert',
-                           'dt=' : '=',
-                           'dt<>' : '= invert',
-                           'dt<' : '<',
-                           'dt<=' : '> invert',
-                           'dt>' : '>',
-                           'dt>=' : '< invert',
-                           't=' : '2dup hour hour= if 2dup minut minut= if second minut= if true else false then else false then else false then',
-                           't<>' : 't= invert',
-                           '?leap' : '2 #monthdays 29 = if true else false then',
-                           '#week' : self.wnumber_instr}
+        self.dictionary = {
+            #*********************************
+            'now' : self.now_instr,
+             #*********************************
+           'timestamp' : self.timestamp_instr,
+            #*********************************
+            'year' : self.year_instr,
+            #*********************************
+            'year=' : '''    swap year =''',
+            #*********************************
+            'month' : self.month_instr,
+            #*********************************
+            'month=' : '''    swap month # =''',
+            #*********************************
+            'monthlname=' : '''    swap month lname =''',
+            #*********************************
+            'monthsname=' : '''    swap month sname =''',
+            #*********************************
+            'day' : self.day_instr,
+            #*********************************
+            'day=' : '''    swap day # =''',
+            #*********************************
+            'daylname=' : '''    swap day lname =''',
+            #*********************************
+            'daysname=' : '''    swap day sname =''',
+            #*********************************
+            'hour' : self.hour_instr,
+            #*********************************
+            'hour=' : '''    swap hour =''',
+            #*********************************
+            'minut' : self.minut_instr,
+            #*********************************
+            'minut=' : '''    swap minut =''',
+            #*********************************
+            'second' : self.second_instr,
+            #*********************************
+            'second=' : '''    swap second =''',
+            #*********************************
+            'microsecond' : self.microsecond_instr,
+            #*********************************
+            'microsecond=' : '''    swap microsecond =''',
+            #*********************************
+            'fdate' : self.date_instr,
+            #*********************************
+            'ftime' : self.time_instr,
+            #*********************************
+            'fdt' : self.datetime_instr,
+            #*********************************
+            'd+' : self.dateplus_instr,
+            #*********************************
+            'd-' : self.dateminus_instr,
+            #*********************************
+            '#monthdays' : self.dayscount_instr,
+            #*********************************
+            'd=' : '''    2dup year year= 
+    if 
+        2dup month # month= 
+        if 
+            day # day= 
+            if 
+                true 
+            else 
+                false 
+            then 
+        else 
+            false 
+        then 
+    else 
+        false 
+    then''',
+            #*********************************
+            'd<>' : '''    d= invert''',
+            #*********************************
+            'dt=' : '''    =''',
+            #*********************************
+            'dt<>' : '''    = invert''',
+            #*********************************
+            'dt<' : '''    <''',
+            #*********************************
+            'dt<=' : '''    > invert''',
+            #*********************************
+            'dt>' : '''    >''',
+            #*********************************
+            'dt>=' : '''    < invert''',
+            #*********************************
+            't=' : '''    2dup hour hour= 
+    if 
+        2dup minut minut= 
+        if 
+            second minut= 
+            if 
+                true 
+            else 
+                false 
+            then 
+        else 
+            false 
+        then 
+    else 
+        false 
+    then''',
+            #*********************************
+            't<>' : '''    t= invert''',
+            #*********************************
+            '?leap' : '''    2 #monthdays 29 = 
+    if 
+        true 
+    else 
+        false 
+    then''',
+            #*********************************
+            '#week' : self.wnumber_instr}
         self.help = date_help(self.interpreter.output)
         self.version = 'v1.1.6'
 
