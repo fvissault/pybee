@@ -30,6 +30,7 @@ class mysqldb(base_module):
             '|truncate>' : self.truncate_instr,
             '|alter>' : self.alter_instr,
             '>|' : self.endreq_instr,
+            #*********************************
             # "hostname" "username" "userpass" dbcred
             'dbcred' : '''    local upass 
     local uname 
@@ -37,12 +38,16 @@ class mysqldb(base_module):
     host @ hostname ! 
     uname @ username ! 
     upass @ userpass !''',
+            #*********************************
             'createdb' : '''    local dbname 
     "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
+            #*********************************
             'dropdb' : '''    local dbname 
     "|drop> database <#0#> >|" [ dbname ] format evaluate''',
+            #*********************************
             'createtab' : '''    local tabname 
     "|create> table <#0#> charset utf8mb3 engine InnoDB >|" [ tabname @ ] format evaluate''',
+            #*********************************
             # "tablename" [ "`colname1` coldef1" "`colname2` coldef2" ... ] addcolumns
             'addcolumns' : '''    local columns 
     local tabname 
@@ -66,6 +71,7 @@ class mysqldb(base_module):
     if 
         req @ evaluate 
     then''',
+            #*********************************
             'addforeignkey' : '''    local cascade 
     local origtabname 
     local desttabname 
@@ -80,6 +86,7 @@ class mysqldb(base_module):
     then 
     req @ " >|" s+ req ! 
     req @ evaluate''',
+            #*********************************
             # "tablename" "index" [ "nomindex" "columnsindex" ] addkey
             # "tablename" "key|unique" "columnname" addkey
             'addkey' : '''    local columns 
@@ -103,6 +110,7 @@ class mysqldb(base_module):
         req @ "unique (<#0#>) >|" [ columns @ ] format s+ req ! 
         req @ evaluate 
     then''',
+            #*********************************
             # "tablename" "oldcolumnname" "newcolumnname" "newcolumndef" changecol
             'changecol' : '''    local newtype 
     local newname 
@@ -123,8 +131,10 @@ class mysqldb(base_module):
         then 
     loop 
     rep @''',
+            #*********************************
             'descdb' : '''    local dbname 
     "|show> tables from <#0#> >|" [ dbname @ ] format evaluate''',
+            #*********************************
             # "tablename" desctab flist -> [ 'id', 'field1', ... ]
             'flist' : '''    local fieldslist 
     0 local ifl 
@@ -134,6 +144,7 @@ class mysqldb(base_module):
         fieldslist @ ifl @ cell@ "Field" cell@ rep cell+ 
     loop 
     rep @''',
+            #*********************************
             # "tablename" desctab flist fjoin -> "(field1,field2,...)"
             'fjoin' : '''    local fieldslist
     0 local ifj 
@@ -152,6 +163,7 @@ class mysqldb(base_module):
         then 
     loop 
     rep @ ")" s+''',
+            #*********************************
             'add1record' : '''    local record 
     local tabname 
     0 local tmp 
@@ -174,42 +186,42 @@ class mysqldb(base_module):
     loop 
     req @ ") >|" s+ req ! 
     req @ evaluate''',
-            'addrecords' : '''
-            local records 
-            local tabname 
-            [ ] local rec 
-            0 local tmp 
-            tabname @ desctab flist fjoin local fieldsnamelist
-            "|insert> <#0#> <#1#> values " [ tabname @ fieldsnamelist @ ] format local req 
-            0 local i 
-            0 local j 
-            records @ cells i 
-            do 
-                i @ 0 > 
-                if 
-                    req @ "," s+ req ! 
-                then 
-                req @ "(" s+ req ! 
-                records @ i @ cell@ rec ! 
-                0 j ! 
-                rec @ cells j 
-                do 
-                    j @ 0 > 
-                    if 
-                        req @ "," s+ req ! 
-                    then 
-                    rec @ j @ cell@ tmp ! 
-                    tmp @ ?int 
-                    if 
-                        req @ tmp @ s+ req ! 
-                    else 
-                        req @ "'" tmp @ s+ "'" s+ s+ req ! 
-                    then 
-                loop 
-                req @ ")" s+ req ! 
-            loop 
-            req @ " >|" s+ req ! 
-            req @ evaluate'''
+            #*********************************
+            'addrecords' : '''    local records 
+    local tabname 
+    [ ] local rec 
+    0 local tmp 
+    tabname @ desctab flist fjoin local fieldsnamelist
+    "|insert> <#0#> <#1#> values " [ tabname @ fieldsnamelist @ ] format local req 
+    0 local i 
+    0 local j 
+    records @ cells i 
+    do 
+        i @ 0 > 
+        if 
+            req @ "," s+ req ! 
+        then 
+        req @ "(" s+ req ! 
+        records @ i @ cell@ rec ! 
+        0 j ! 
+        rec @ cells j 
+        do 
+            j @ 0 > 
+            if 
+                req @ "," s+ req ! 
+            then 
+            rec @ j @ cell@ tmp ! 
+            tmp @ ?int 
+            if 
+                req @ tmp @ s+ req ! 
+            else 
+                req @ "'" tmp @ s+ "'" s+ s+ req ! 
+            then 
+        loop 
+        req @ ")" s+ req ! 
+    loop 
+    req @ " >|" s+ req ! 
+    req @ evaluate'''
         }
 
         self.db = None
@@ -222,7 +234,7 @@ class mysqldb(base_module):
         self.version = 'v0.5.3'
 
     def ensure_connection(self):
-        """S’assure que self.db et self.cursor sont valides"""
+        """S'assure que self.db et self.cursor sont valides"""
         if self.db is None or self.cursor is None:
             try:
                 self.db = mysql.connector.connect(
@@ -381,10 +393,8 @@ class mysqldb(base_module):
             else:
                 return mysqldb_errors.error_request_malformed.print_error(sql, self.interpreter.output)
         try:
-            #self.connect_instr()
             self.cursor.execute(sql)
             self.db.commit()
-            #self.disconnect_instr()
         except:
             return mysqldb_errors.error_request_dont_work.print_error(sql, self.interpreter.output)
         return 'nobreak'
