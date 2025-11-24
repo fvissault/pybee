@@ -12,11 +12,11 @@ class error:
     def print_error(self, prefix, output):
         if output == 'console':
             if self.type == 'warning':
-                print(termcolors.WARNING + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL)
+                print(termcolors.WARNING + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
             if self.type == 'error':
-                print(termcolors.ERROR + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL)
+                print(termcolors.ERROR + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
             if self.type == 'fatal':
-                print(termcolors.FATAL + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL)
+                print(termcolors.FATAL + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
             if self.type == 'fatal':
                 return 'break'
             else:
@@ -24,11 +24,11 @@ class error:
         if output == 'web':
             print("Content-type: text/html;charset=UTF-8\n")
             if self.type == 'warning':
-                print(prefix + ' ' + self.type + ' : ' + self.message)
+                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
             if self.type == 'error':
-                print(prefix + ' ' + self.type + ' : ' + self.message)
+                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
             if self.type == 'fatal':
-                print(prefix + ' ' + self.type + ' : ' + self.message)
+                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
             if self.type == 'fatal':
                 return 'break'
             else:
