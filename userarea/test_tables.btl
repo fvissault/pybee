@@ -12,7 +12,7 @@ c "class" "tablecaption" addattr
 t c addcontent 
 t [ [ "sort" "filter" "col" "cell1" ] [ "nosort" "filter" "col" "cell2" ] [ "nosort" "filter" "col" "cell3" ] ] row
 t [ [ "nosort" "nofilter" "row" "cell4" ] [ "cell5" ] [ "cell6" ] ] row
-t [ [ 2 0 "nosort" "nofilter" "row" "cell7" ] [ "cell8" ] ] row
+t [ [ "nosort" "nofilter" "row" "cell7" 2 0 ] [ "cell8" ] ] row
 t [ [ "cell9" ] [ "cell10" ] [ "cell11" ] ] row
 
 body t addcontent
