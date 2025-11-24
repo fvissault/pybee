@@ -1711,14 +1711,7 @@ class core(base_module):
                     if isinstance(definition, str):
                         print(': ' + def_name)
                         if definition != '':
-                            definition = definition.replace('if ', rettab + 'if' + rettab + tab)
-                            definition = definition.replace('else ', rettab + 'else' + rettab + tab)
-                            definition = definition.replace('then', rettab + 'then' + rettab)
-                            definition = definition.replace('do ', rettab + 'do' + rettab + tab)
-                            definition = definition.replace('loop ', rettab + 'loop' + rettab)
-                            definition = definition.replace('+loop ', rettab + '+loop' + rettab)
-                            definition = definition.replace('{', rettab + '{')
-                            print(tab + definition)
+                            print(definition)
                         if def_name in self.interpreter.compile.keys():
                             print(rettab + 'does> ' + list(self.interpreter.compile[def_name])[0])
                         if def_name in self.interpreter.immediate:
