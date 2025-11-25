@@ -1344,9 +1344,9 @@ class core(base_module):
                 self.interpreter.locals[self.interpreter.lastseqnumber][name] = value
             else:
                 if name in self.interpreter.userdefinitions.keys():
-                    return core_errors.error_invalid_update_constant.print_error('!', self.interpreter.output)
+                    return self.err('error_invalid_update_constant', '!')
                 if name not in self.variables:
-                    return core_errors.error_not_a_variable.print_error('!', self.interpreter.output)
+                    return self.err('error_not_a_variable', '!')
                 value = self.pop_work()
                 for pack in self.interpreter.packages.keys():
                     if name in self.interpreter.packages[pack].dictionary.keys() and name in self.variables:
@@ -1396,13 +1396,13 @@ class core(base_module):
                 # begin = Récupérer la valeur de la variable
                 begin = self.dictionary[varname]
             else:
-                return core_errors.error_not_a_variable_or_constant.print_error('do ... loop begin', self.interpreter.output)
+                return self.err('error_not_a_variable_or_constant', 'do ... loop begin')
             # limit = lire la limite de la boucle sur la pile work
             limit = self.pop_work()
             if not isinstance(begin, int) and not isinstance(begin, float):
-                return core_errors.error_integer_expected.print_error('do ... loop begin', self.interpreter.output)
+                return self.err('error_integer_expected', 'do ... loop begin')
             if not isinstance(limit, int) and not isinstance(limit, float):
-                return core_errors.error_integer_expected.print_error('do ... loop limit', self.interpreter.output)
+                return self.err('error_integer_expected', 'do ... loop limit')
             if instr == 'loop':
                 for compteur in range(begin, limit):
                     if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
@@ -1449,13 +1449,13 @@ class core(base_module):
     Instruction loop : exécute une boucle DO ... LOOP | +LOOP
     '''
     def loop_instr(self):
-        return core_errors.error_loop_invalid.print_error('loop', self.interpreter.output)
+        return self.err('error_loop_invalid', 'loop')
 
     '''
     Instruction +loop : exécute une boucle DO ... LOOP | +LOOP
     '''
     def plusloop_instr(self):
-        return core_errors.error_loop_invalid.print_error('+loop', self.interpreter.output)
+        return self.err('error_loop_invalid', '+loop')
 
     '''
     Instruction begin : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
@@ -1495,7 +1495,7 @@ class core(base_module):
                     break
                 flag = self.pop_work()
                 if not isinstance(flag, int):
-                    return core_errors.error_condition_invalid.print_error('begin ... until', self.interpreter.output)
+                    return self.err('error_condition_invalid', 'begin ... until')
                 if flag != 0:
                     firstzone.clear()
                     break
@@ -1516,7 +1516,7 @@ class core(base_module):
                     break
                 flag = self.pop_work()
                 if not isinstance(flag, int):
-                    return core_errors.error_condition_invalid.print_error('begin ... while ... repeat', self.interpreter.output)
+                    return self.err('error_condition_invalid', 'begin ... while ... repeat')
                 if flag == 0:
                     firstzone.clear()
                     secondzone.clear()
@@ -1540,25 +1540,25 @@ class core(base_module):
     Instruction until : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
     '''
     def until_instr(self):
-        return core_errors.error_loop_invalid.print_error('until', self.interpreter.output)
+        return self.err('error_loop_invalid', 'until')
 
     '''
     Instruction again : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
     '''
     def again_instr(self):
-        return core_errors.error_loop_invalid.print_error('again', self.interpreter.output)
+        return self.err('error_loop_invalid', 'again')
 
     '''
     Instruction while : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
     '''
     def while_instr(self):
-        return core_errors.error_loop_invalid.print_error('while', self.interpreter.output)
+        return self.err('error_loop_invalid', 'while')
 
     '''
     Instruction repeat : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
     '''
     def repeat_instr(self):
-        return core_errors.error_loop_invalid.print_error('repeat', self.interpreter.output)
+        return self.err('error_loop_invalid', 'repeat')
 
     '''
     Regroupe les instructions contenues entre les instructions BEGIN ... UNTIL | AGAIN | WHILE ... REPEAT dans le paramètre zone
@@ -1688,10 +1688,10 @@ class core(base_module):
     '''
     def forget_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_variable_or_definition_name_missing.print_error('forget', self.interpreter.output)
+            return self.err('error_variable_or_definition_name_missing', 'forget')
         name = self.pop_sequence()
         if name not in self.variables and name not in self.interpreter.userdefinitions.keys():
-            return core_errors.error_not_a_variable_or_definition.print_error('forget', self.interpreter.output)
+            return self.err('error_not_a_variable_or_definition', 'forget')
         if name in self.variables:
             self.variables.remove(name)
         if name in self.interpreter.userdefinitions.keys():
@@ -1710,11 +1710,8 @@ class core(base_module):
     Instruction see : affiche le contenu d'une définition quand il le peut
     '''
     def see_instr(self):
-        ret = '\n'
-        tab = '\t'
-        rettab = ret + tab
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_def_name_missing.print_error('see', self.interpreter.output)
+            return self.err('error_def_name_missing', 'see')
         def_name = self.interpreter.sequences[self.interpreter.lastseqnumber][0]
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         if def_name not in self.variables:
@@ -1726,16 +1723,16 @@ class core(base_module):
                         if definition != '':
                             print(definition)
                         if def_name in self.interpreter.compile.keys():
-                            print(rettab + 'does> ' + list(self.interpreter.compile[def_name])[0])
+                            print('does> ' + list(self.interpreter.compile[def_name])[0])
                         if def_name in self.interpreter.immediate:
                             print('; immediate', end='')
                         else:
                             print(';', end='')
                         return 'nobreak'
                     else:
-                        core_errors.error_native_definition.print_error('see ' + def_name, self.interpreter.output)
+                        return self.err('error_native_definition', 'see ' + def_name)
         else:
-            core_errors.error_definition_only.print_error('see', self.interpreter.output)
+            return self.err('error_definition_only', 'see')
 
     '''
     Instruction create : création d'une variable
@@ -1751,12 +1748,12 @@ class core(base_module):
                     self.interpreter.sequences[i].popleft()
                     break
             if var_name == '':
-                return core_errors.error_not_a_variable.print_error('create', self.interpreter.output)
+                return self.err('error_not_a_variable', 'create')
         else:
             var_name = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
             self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         if var_name in list(self.dictionary.keys()):
-            return core_errors.error_name_already_exists.print_error('create', self.interpreter.output)
+            return self.err('error_name_already_exists', 'create')
         self.dictionary[var_name] = None
         if self.interpreter.from_instr in self.interpreter.compile.keys():
             self.interpreter.userdefinitions[var_name] = self.interpreter.compile[self.interpreter.from_instr].copy()
@@ -1770,7 +1767,7 @@ class core(base_module):
     Instruction does> : définition de l'exécution d'instructions automatiques
     '''
     def does_instr(self):
-        return core_errors.error_does_invalid.print_error('does>', self.interpreter.output)
+        return self.err('error_does_invalid', 'does>')
 
     '''
     Instruction immediate : définition de l'exécution d'instructions immediate
@@ -1784,7 +1781,7 @@ class core(base_module):
     '''
     def postpone_instr(self):
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
-            return core_errors.error_variable_or_definition_name_missing.print_error('postpone', self.interpreter.output)
+            return self.err('error_variable_or_definition_name_missing', 'postpone')
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         return "nobreak"
 
@@ -1803,7 +1800,7 @@ class core(base_module):
                 self.work.appendleft(result)
                 return 'nobreak'
             else:
-                return core_errors.error_nothing_in_work_stack.print_error('array', self.interpreter.output)
+                return self.nothing_in_work('array')
         else:
             return self.nothing_in_work('array')
 
@@ -1819,20 +1816,20 @@ class core(base_module):
         return 'nobreak'
 
     def ebrace_instr(self):
-        return core_errors.error_array_invalid.print_error('}', self.interpreter.output)
+        return self.err('error_array_invalid', '}')
 
     def search_braces(self):
         result = {}
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+            return self.err('error_array_invalid', 'hash')
         instr = str(self.pop_sequence())
         while instr != '}':
             elname = instr
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                return self.err('error_array_invalid', 'hash')
             instr = str(self.pop_sequence())
             if instr != ':':
-                return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                return self.err('error_array_invalid', 'hash')
             else:
                 instr = str(self.pop_sequence())
                 elseq = []
@@ -1840,25 +1837,25 @@ class core(base_module):
                     if instr == '[':
                         elseq.append(self.search_brakets())
                         if self.interpreter.isemptylastsequence():
-                            return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                            return self.err('error_array_invalid', 'hash')
                         instr = str(self.pop_sequence())
                         continue
                     if instr == '{':
                         elseq.append(self.search_braces())
                         if self.interpreter.isemptylastsequence():
-                            return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                            return self.err('error_array_invalid', 'hash')
                         instr = str(self.pop_sequence())
                         continue
                     elif self.isinteger(instr):
                         elseq.append(int(instr))
-                        if self.interpreter.isemptylastsequence():                    
-                            return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                        if self.interpreter.isemptylastsequence():
+                            return self.err('error_array_invalid', 'hash')                    
                         instr = str(self.pop_sequence())
                         continue
                     elif self.isfloat(instr):
                         elseq.append(float(instr))
                         if self.interpreter.isemptylastsequence():
-                            return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
+                            return self.err('error_array_invalid', 'hash')
                         instr = str(self.pop_sequence())
                         continue
                     elseq.append(instr)
@@ -1893,12 +1890,12 @@ class core(base_module):
     Instruction ] : ferme la séquence de création d'un tableau : [ n1 , n2 , n3 ]
     '''
     def ebraket_instr(self):
-        return core_errors.error_array_invalid.print_error(']', self.interpreter.output)
+        return self.err('error_array_invalid', ']')
 
     def search_brakets(self):
         result = []
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+            return self.err('error_array_invalid', 'array')
         instr = str(self.pop_sequence())
         while instr != ']':
             if instr == '[':
@@ -1906,13 +1903,13 @@ class core(base_module):
                 ret.reverse()
                 result.append(ret)
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+                    return self.err('error_array_invalid', 'array')
                 instr = str(self.pop_sequence())
                 continue
             elif instr == '{':
                 result.append(self.search_braces())
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+                    return self.err('error_array_invalid', 'array')
                 instr = str(self.pop_sequence())
                 continue
             elif instr == ',':
@@ -1922,21 +1919,19 @@ class core(base_module):
                 break
             elif self.isinteger(instr):
                 result.append(int(instr))
-                if self.interpreter.isemptylastsequence():                    
-                    return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+                if self.interpreter.isemptylastsequence(): 
+                    return self.err('error_array_invalid', 'array')                   
                 instr = str(self.pop_sequence())
                 continue
             elif self.isfloat(instr):
                 result.append(float(instr))
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+                    return self.err('error_array_invalid', 'array')
                 instr = str(self.pop_sequence())
                 continue
-            '''elif instr[0] == '"' and instr[-1] == '"':
-                instr = instr[1:-1]'''
             result.append(instr)
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+                return self.err('error_array_invalid', 'array')
             instr = str(self.pop_sequence())
         i = self.exec_interpreter(deque(result))
         return list(i.work)
@@ -1950,9 +1945,9 @@ class core(base_module):
             if tab in self.variables:
                 tab = self.dictionary[tab]
                 if not isinstance(tab, list) and not isinstance(tab , dict):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('cells', self.interpreter.output)
+                    return self.err('error_get_cell_on_array_invalid', 'cells')
             if not isinstance(tab, list) and not isinstance(tab , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('cells', self.interpreter.output)
+                return self.err('error_get_cell_on_array_invalid', 'cells')
             self.work.appendleft(len(tab))
             return 'nobreak'
         else:
@@ -1972,19 +1967,19 @@ class core(base_module):
                 elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
                     content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
                 else:
-                    return core_errors.error_not_a_variable.print_error('cell@', self.interpreter.output)
+                    return self.err('error_not_a_variable', 'cell@')
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             if not isinstance(content, list) and not isinstance(content , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('cell@', self.interpreter.output)
+                return self.err('error_get_cell_on_array_invalid', 'cell@')
             if isinstance(content, dict) and position not in content.keys():
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'cell@')
             elif isinstance(position, int) and (position < 0 or position >= len(content)):
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'cell@')
             if isinstance(content, dict) and not isinstance(position, str):
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'cell@')
             elif isinstance(content, list) and not isinstance(position, int):
-                return core_errors.error_index_on_array_invalid.print_error('cell@', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'cell@')
             result = content[position]
             self.work.appendleft(result)
             return 'nobreak'
@@ -1998,13 +1993,13 @@ class core(base_module):
         if len(self.work) > 2:
             tab = self.pop_work()
             if not isinstance(tab, list) and not isinstance(tab , dict):
-                return core_errors.error_get_cell_on_array_invalid.print_error('cell!', self.interpreter.output)
+                return self.err('error_get_cell_on_array_invalid', 'cell!')
             position = self.pop_work()
             if isinstance(tab, list):
                 if not isinstance(position, int) or position < 0 or position >= len(tab):
-                    return core_errors.error_index_on_array_invalid.print_error('cell!', self.interpreter.output)
+                    return self.err('error_index_on_array_invalid', 'cell!')
             if isinstance(tab, dict) and position not in tab.keys():
-                return core_errors.error_index_on_array_invalid.print_error('cell!', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'cell!')
             value = self.pop_work()
             tab[position] = value
             self.work.appendleft(tab)
@@ -2025,13 +2020,13 @@ class core(base_module):
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             else:
-                return core_errors.error_not_a_variable.print_error('cell+', self.interpreter.output)
+                return self.err('error_not_a_variable', 'cell+')
             value = self.pop_work()
             index = None
             if isinstance(content, dict):
                 index = self.pop_work()
                 if not isinstance(index, str):
-                    return core_errors.error_index_on_array_invalid.print_error('cell+', self.interpreter.output)
+                    return self.err('error_index_on_array_invalid', 'cell+')
             if not isinstance(content, dict) and not isinstance(content, list):
                 content = [content, value]
             elif index is not None and index in content and isinstance(content[index], list):
@@ -2057,16 +2052,16 @@ class core(base_module):
                 elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
                     content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
                 else:
-                    return core_errors.error_not_a_variable.print_error('cell-', self.interpreter.output)
+                    return self.err('error_not_a_variable', 'cell-')
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             index = self.pop_work()
             if isinstance(content, list):
                 if not isinstance(index, int) or index < 0 or index >= len(tab):
-                    return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
+                    return self.err('error_index_on_array_invalid', 'cell-')
             if isinstance(content, dict):
                 if index not in content.keys():
-                    return core_errors.error_index_on_array_invalid.print_error('cell-', self.interpreter.output)
+                    return self.err('error_index_on_array_invalid', 'cell-')
             content.pop(index)
             self.work.appendleft(content)
             return 'nobreak'
@@ -2083,7 +2078,7 @@ class core(base_module):
                 if tab in self.variables:
                     arr = self.dictionary[tab]
                 else:
-                    return core_errors.error_not_a_variable.print_error('cell=', self.interpreter.output)
+                    return self.err('error_not_a_variable', 'cell=')
             elif isinstance(tab, list) or isinstance(tab, dict):
                 arr = tab
             content = self.pop_work()
@@ -2128,11 +2123,11 @@ class core(base_module):
                 if tab in self.variables:
                     tab = self.dictionary[tab]
                     if not isinstance(tab, list):
-                        return core_errors.error_get_cell_on_array_invalid.print_error('format', self.interpreter.output)
+                        return self.err('error_get_cell_on_array_invalid', 'format')
                 if not isinstance(tab, list):
-                    return core_errors.error_get_cell_on_array_invalid.print_error('format', self.interpreter.output)
+                    return self.err('error_get_cell_on_array_invalid', 'format')
             elif not isinstance(tab, list):
-                return core_errors.error_get_cell_on_array_invalid.print_error('format', self.interpreter.output)
+                return self.err('error_get_cell_on_array_invalid', 'format')
             content = self.pop_work()
 
             content = content.replace('{', '<<')
@@ -2142,11 +2137,11 @@ class core(base_module):
             try:
                 content = content.format(*tab)
             except(IndexError):
-                return core_errors.error_index_on_array_invalid.print_error('format', self.interpreter.output)
+                return self.err('error_index_on_array_invalid', 'format')
             except(ValueError):
-                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
+                return self.err('error_string_invalid', 'format')
             except(KeyError):
-                return core_errors.error_string_invalid.print_error('format', self.interpreter.output)
+                return self.err('error_string_invalid', 'format')
             content = content.replace('<<', '{')
             content = content.replace('>>', '}')
             self.work.appendleft(content)
@@ -2171,7 +2166,7 @@ class core(base_module):
                 self.work.appendleft(op2 + op1)
                 return 'nobreak'
             else:
-                return core_errors.error_strings_expected.print_error('s+', self.interpreter.output)
+                return self.err('error_strings_expected', 's+')
         else:
             return self.nothing_in_work('s+')
 
@@ -2189,7 +2184,7 @@ class core(base_module):
                     self.work.appendleft(0)
                 return 'nobreak'    
             else:
-                return core_errors.error_strings_expected.print_error('scan', self.interpreter.output)
+                return self.err('error_strings_expected', 'scan')
         else:
             return self.nothing_in_work('scan')
 
@@ -2221,7 +2216,7 @@ class core(base_module):
         if len(self.work) > 0:
             base = self.pop_work()
             if base < 2 or base > 36:
-                return core_errors.error_basenumber_invalid.print_error('base!', self.interpreter.output)
+                return self.err('error_basenumber_invalid', 'base!')
             self.dictionary['base'] = base
             return 'nobreak'
         else:
@@ -2234,11 +2229,10 @@ class core(base_module):
         if len(self.work) > 1:
             base = self.pop_work()
             if base < 2 or base > 36 or base == 10:
-                number = self.pop_work()
-                return core_errors.error_basenumber_invalid.print_error('tobase', self.interpreter.output)
+                return self.err('error_basenumber_invalid', 'tobase')
             number = self.pop_work()
             if not isinstance(number, int):
-                return core_errors.error_integer_expected.print_error('tobase', self.interpreter.output)
+                return self.err('error_integer_expected', 'tobase')
             self.work.appendleft(self.to_base(number, base))
             return 'nobreak'
         else:
@@ -2251,11 +2245,10 @@ class core(base_module):
         if len(self.work) > 1:
             base = self.pop_work()
             if base < 2 or base > 36:
-                number = self.pop_work()
-                return core_errors.error_basenumber_invalid.print_error('todecimal', self.interpreter.output)
+                return self.err('error_basenumber_invalid', 'todecimal')
             number = self.pop_work()
             if not isinstance(number, str):
-                return core_errors.error_integer_expected.print_error('todecimal', self.interpreter.output)
+                return self.err('error_integer_expected', 'todecimal')
             self.work.appendleft(int(str(number), base))
             return 'nobreak'
         else:
@@ -2386,7 +2379,7 @@ class core(base_module):
     def ispackloaded_instr(self):
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
         if len(seq) == 0:
-            return core_errors.error_import_name_missing.print_error('?pack', self.interpreter.output)
+            return self.err('error_import_name_missing', '?pack')
         packname = self.pop_sequence()
         if packname in self.interpreter.packages.keys():
             self.work.appendleft(1)
@@ -2451,7 +2444,7 @@ class core(base_module):
     '''
     def isexists_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_instruction_expected.print_error('?exists', self.interpreter.output)
+            return self.err('error_instruction_expected', '?exists')
         obj_name = self.pop_work()
         if obj_name in self.variables or obj_name in self.interpreter.userdefinitions:
             self.work.appendleft(1)
@@ -2467,15 +2460,15 @@ class core(base_module):
             left_instrs.append(str(instr).lower())
             instr = self.pop_sequence()
             if str(instr).lower() == '}t':
-                return core_errors.error_invalid_instruction.print_error('tests - }t', self.interpreter.output)
+                return self.err('error_invalid_instruction', 'tests - }t')
         instr = self.pop_sequence()
         while str(instr).lower() != '}t':
             right_instrs.append(str(instr).lower())
             instr = self.pop_sequence()
             if str(instr).lower() == '<=>':
-                return core_errors.error_invalid_instruction.print_error('tests - <=>', self.interpreter.output)
+                return self.err('error_invalid_instruction', 'tests - <=>')
             if str(instr).lower() == 't{':
-                return core_errors.error_invalid_instruction.print_error('tests - t{', self.interpreter.output)
+                return self.err('error_invalid_instruction', 'tests - t{')
         ileft = self.exec_interpreter(left_instrs)
         iright = self.exec_interpreter(right_instrs)
         ileftwork = list(ileft.work)
@@ -2491,10 +2484,10 @@ class core(base_module):
 
 
     def endtest_instr(self):
-        return core_errors.error_array_invalid.print_error('}t', self.interpreter.output)
+        return self.err('error_array_invalid', '}t')
 
     def test_instr(self):
-        return core_errors.error_array_invalid.print_error('<=>', self.interpreter.output)
+        return self.err('error_array_invalid', '<=>')
 
     def case_instr(self):
         temp_zone = deque()
@@ -2558,19 +2551,19 @@ class core(base_module):
     Instruction endcase : fin du case : ne peut pas être utilisée seule
     '''
     def endcase_instr(self):
-        return core_errors.error_invalid_instruction.print_error('endcase alone', self.interpreter.output)
+        return self.err('error_invalid_instruction', 'endcase alone')
 
     '''
     Instruction of : marque le début d'un cas de case : ne peut pas être utilisée seule
     '''
     def of_instr(self):
-        return core_errors.error_invalid_instruction.print_error('of alone', self.interpreter.output)
+        return self.err('error_invalid_instruction', 'of alone')
 
     '''
     Instruction endof : marque la fin d'un cas de case : ne peut pas être utilisée seule
     '''
     def endof_instr(self):
-        return core_errors.error_invalid_instruction.print_error('endof alone', self.interpreter.output)
+        return self.err('error_invalid_instruction', 'endof alone')
 
     '''
     Instruction defer : permet de créer un mot dans le dictionnaire sans instruction
@@ -2581,7 +2574,7 @@ class core(base_module):
         name = self.pop_sequence()
         for p in self.interpreter.packages.keys():
             if name in self.interpreter.packages[p].dictionary.keys():
-                return core_errors.error_name_already_exists.print_error('defer', self.interpreter.output)
+                return self.err('error_name_already_exists', 'defer')
         self.dictionary[name] = ''
         self.interpreter.defer.append(name)
         return 'nobreak'
@@ -2602,7 +2595,7 @@ class core(base_module):
                 self.interpreter.userdefinitions[defername] = deque()
                 return 'nobreak'
             else:
-                return core_errors.error_not_a_defer_action.print_error("is", self.interpreter.output)
+                return self.err('error_not_a_defer_action', 'is')
         else:
             return self.nothing_in_work('is')
 
@@ -2619,7 +2612,7 @@ class core(base_module):
             if name in self.interpreter.packages[p].dictionary:
                 self.work.appendleft(name)
                 return 'nobreak'
-        return core_errors.error_not_a_variable_or_definition.print_error("' (tick)", self.interpreter.output)
+        return self.err('error_not_a_variable_or_definition', '\' (tick)')
     
     '''
     Instruction :noname : permet de créer une définition qui n'a pas de nom et l'insère sur la pile de travail
@@ -2628,16 +2621,16 @@ class core(base_module):
     '''
     def noname_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
+            return self.err('error_def_end_missing', ':noname')
         instr = self.pop_sequence()
         if instr == ':':
-            return core_errors.error_twopoints_invalid.print_error(':noname', self.interpreter.output)
+            return self.err('error_twopoints_invalid', ':noname')
         comment = ''
         if instr == '(':
             # traitement du commentaire
             while instr != ')':
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
+                    return self.err('error_def_end_missing', ':noname')
                 instr = self.pop_sequence()
                 if instr != ')':
                     comment = comment + ' ' + instr
@@ -2647,10 +2640,10 @@ class core(base_module):
             defbody = defbody + ' ' + str(instr)
         while instr != ';':
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_def_end_missing.print_error(':noname', self.interpreter.output)
+                return self.err('error_def_end_missing', ':noname')
             instr = self.pop_sequence()
             if instr == ':':
-                return core_errors.error_twopoints_invalid.print_error(':noname', self.interpreter.output)
+                return self.err('error_twopoints_invalid', ':noname')
             if instr != ';':
                 defbody = defbody + ' ' + str(instr)
         self.work.appendleft(defbody.strip())
@@ -2675,7 +2668,7 @@ class core(base_module):
                 else:
                     return 'nobreak'
             else:
-                return core_errors.error_nothing_to_evaluate.print_error('evaluate', self.interpreter.output)
+                return self.err('error_nothing_to_evaluate', 'evaluate')
         else:
             return self.nothing_in_work('evaluate')
 
@@ -2698,7 +2691,7 @@ class core(base_module):
                         return 'break'
                     else:
                         return 'nobreak'
-            return core_errors.error_not_a_variable_or_definition.print_error("execute", self.interpreter.output)
+            return self.err('error_not_a_variable_or_definition', 'execute')
         else:
             return self.nothing_in_work('execute')
 
@@ -2716,11 +2709,11 @@ class core(base_module):
     '''
     def local_instr(self):
         if self.interpreter.lastseqnumber == 0:
-            return core_errors.error_local_var_only_in_def.print_error('local', self.interpreter.output)
+            return self.err('error_local_var_only_in_def', 'local')
         if len(self.work) > 0:
             val = self.pop_work()
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_local_var_name_missing.print_error('local', self.interpreter.output)
+                return self.err('error_local_var_name_missing', 'local')
             localname = self.pop_sequence()
             self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
             return 'nobreak'
@@ -2749,13 +2742,11 @@ class core(base_module):
                 content = val
             if content != None:
                 if not isinstance(content, dict):
-                    # error : ne peut s'appliquer qu'à des dictionnaires
-                    return core_errors.error_array_invalid.print_error('keys', self.interpreter.output)
+                    return self.err('error_array_invalid', 'keys')
                 self.work.appendleft(list(content.keys()))
                 return 'nobreak'
             else:
-                # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
-                return core_errors.error_name_missing.print_error('keys', self.interpreter.output)
+                return self.err('error_name_missing', 'keys')
         else:
             return self.nothing_in_work('keys')
 
@@ -2787,13 +2778,11 @@ class core(base_module):
             
             if content != None:
                 if not isinstance(content, dict):
-                    # error : ne peut s'appliquer qu'à des dictionnaires
-                    return core_errors.error_array_invalid.print_error('values', self.interpreter.output)
+                    return self.err('error_array_invalid', 'values')
                 self.work.appendleft(list(content.values()))
                 return 'nobreak'
             else:
-                # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
-                return core_errors.error_name_missing.print_error('values', self.interpreter.output)
+                return self.err('error_name_missing', 'values')
         else:
             return self.nothing_in_work('values')
 
