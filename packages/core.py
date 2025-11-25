@@ -228,7 +228,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v1.7.2'
+        self.version = 'v2.1.5'
 
     def begintest_instr(self):
         left_instrs = deque()
