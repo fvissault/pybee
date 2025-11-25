@@ -223,6 +223,18 @@ class core(base_module):
         self.version = 'v1.7.2'
 
     '''
+    Error helpers
+    '''
+    def err(self, code, context):
+        return core_errors.__dict__[code].print_error(context, self.interpreter.output)
+
+    def nothing_in_work(self, context):
+        return self.err('error_nothing_in_work_stack', context)
+
+    def nothing_in_return(self, context):
+        return self.err('error_nothing_in_return_stack', context)
+
+    '''
     Instruction bye : quitte l'interpreteur Beetle
     '''
     def bye_instr(self):
@@ -237,7 +249,7 @@ class core(base_module):
                 print(temp, end=' ')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('dump', self.interpreter.output)
+            return self.nothing_in_work('dump')
         
     '''
     Instruction words : affiche la liste des mots du dictionnaire
@@ -272,7 +284,7 @@ class core(base_module):
             print(temp, end='')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('.', self.interpreter.output)
+            return self.nothing_in_work('.')
 
     '''
     Instruction : ... ; : permet de créer de nouveaux mots et d'enrichir le dictionaire 
@@ -280,27 +292,27 @@ class core(base_module):
     def begin_def_instr(self):
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_def_name_missing.print_error('definition', self.interpreter.output)
+            return self.err('error_def_name_missing', 'definition')
         defname = seq[0]
         if defname in self.dictionary.keys():
-            return core_errors.error_def_name_already_exists.print_error('definition', self.interpreter.output)
+            return self.err('error_def_name_already_exists', 'definition')
         if defname == ':':
-            return core_errors.error_twopoints_invalid.print_error('1 definition', self.interpreter.output)
+            return self.err('error_twopoints_invalid', 'definition')
         for p in self.interpreter.packages.keys():
             if defname in self.interpreter.packages[p].dictionary.keys():
-                return core_errors.error_def_name_already_exists.print_error('definition', self.interpreter.output)
+                return self.err('error_def_name_already_exists', 'definition')
         seq.popleft()
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+            return self.err('error_def_end_missing', 'definition')
         instr = self.pop_sequence()
         if instr == ':':
-            return core_errors.error_twopoints_invalid.print_error('2 definition', self.interpreter.output)
+            return self.err('error_twopoints_invalid', 'definition')
         comment = ''
         if instr == '(':
             # traitement du commentaire
             while instr != ')':
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+                    return self.err('error_def_end_missing', 'definition')
                 instr = self.pop_sequence()
                 if instr != ')':
                     comment = comment + ' ' + instr
@@ -313,7 +325,7 @@ class core(base_module):
 
                 dictinstr = self.interpreter.get_instr_content(str(instr).lower())
                 if dictinstr == None:
-                    return core_errors.error_definition_dont_exists.print_error('definition', self.interpreter.output)
+                    return self.err('error_definition_dont_exists', 'definition')
                 if isinstance(dictinstr, str):
                     splitdictinstr = dictinstr.split()
                     postponefound = False
@@ -354,18 +366,15 @@ class core(base_module):
         while instr != ';' and str(instr).lower() != 'does>':
             self.interpreter.decreaselastseqnumber()
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_def_end_missing.print_error('definition', self.interpreter.output)
+                return self.err('error_def_end_missing', 'definition')
             instr = self.pop_sequence()
-            #if instr == ':':
-            #    print(self.interpreter.sequences[self.interpreter.lastseqnumber])
-            #    return core_errors.error_twopoints_invalid.print_error('3 definition', self.interpreter.output)
             # si l'instruction est immediate, on l'exécute tout de suite et on ne l'ajoute pas dans le corps du mot
             if str(self.interpreter.instr).lower() in self.interpreter.immediate:
                 imm = deque()
 
                 dictinstr = self.interpreter.get_instr_content(str(instr).lower())
                 if dictinstr == None:
-                    return core_errors.error_definition_dont_exists.print_error('definition', self.interpreter.output)
+                    return self.err('error_definition_dont_exists', 'definition')
                 if isinstance(dictinstr, str):
                     splitdictinstr = dictinstr.split()
                     postponefound = False
@@ -407,10 +416,10 @@ class core(base_module):
         if str(instr).lower() == 'does>':
             while instr != ';':
                 if self.interpreter.isemptylastsequence():
-                    return core_errors.error_def_end_missing.print_error('does>', self.interpreter.output)
+                    return self.err('error_def_end_missing', 'does>')
                 instr = self.pop_sequence()
                 if instr == ':':
-                    return core_errors.error_twopoints_invalid.print_error('does>', self.interpreter.output)
+                    return self.err('error_twopoints_invalid', 'does>')
                 if instr != ';':
                     does.append(str(instr))
             self.interpreter.compile[defname] = does.copy()
@@ -427,7 +436,7 @@ class core(base_module):
     Instruction : ... ; : cloture la création d'une définition 
     '''
     def pointvirg_instr(self):
-        return core_errors.error_definition_end_invalid.print_error(';', self.interpreter.output)
+        return self.err('error_definition_end_invalid', ';')
 
     '''
     Instruction ( : marque le début d'un commentaire 
@@ -436,7 +445,7 @@ class core(base_module):
         instr = self.pop_sequence()
         while instr != ')':
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_comment_invalid.print_error('( ... )', self.interpreter.output)
+                return self.err('error_comment_invalid', '( ... )')
             instr = self.pop_sequence()
         return 'nobreak'
 
@@ -444,14 +453,14 @@ class core(base_module):
     Instruction ) : marque la fin d'un commentaire. ne peut pas être utilisé sans ( 
     '''
     def ecomment_instr(self):
-        return core_errors.error_comment_invalid.print_error('( ... )', self.interpreter.output)
+        return self.err('error_comment_invalid', '( ... )')
 
     '''
     Instruction import : importe le dictionnaire d'un package dans le dictionnaire principal 
     '''
     def import_instr(self):
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
-            return core_errors.error_import_name_missing.print_error('import', self.interpreter.output)        
+            return self.err('error_import_name_missing', 'import')
         packname = self.pop_sequence()
         self.__import_recursive(packname)
         return 'nobreak'
@@ -480,10 +489,8 @@ class core(base_module):
                 try:
                     module = importlib.import_module(packpath + packname, package=None)
                     self.interpreter.packages[packname] = eval('module.' + packname)(self.interpreter)
-                except AttributeError:
-                    return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
-                except ModuleNotFoundError:
-                    return core_errors.error_package_dont_exists.print_error(packname, self.interpreter.output)
+                except (AttributeError, ModuleNotFoundError):
+                    return self.err('error_package_dont_exists', packname)
 
 
     '''
@@ -491,7 +498,7 @@ class core(base_module):
     '''
     def detach_instr(self):
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
-            return core_errors.error_import_name_missing.print_error('detach', self.interpreter.output)
+            return self.err('error_import_name_missing', 'detach')
         packname = self.pop_sequence()
         if packname in self.interpreter.packages.keys():
             del self.interpreter.packages[packname]
@@ -505,7 +512,7 @@ class core(base_module):
             self.pop_work()
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('drop', self.interpreter.output)
+            return self.nothing_in_work('drop')
 
     '''
     Instruction help : permet d'obtenir de l'aide sur un mot
@@ -544,9 +551,9 @@ class core(base_module):
                 print(chr(temp), end='')
                 return 'nobreak'
             else:
-                return core_errors.error_integer_expected.print_error('emit', self.interpreter.output)
+                return self.err('error_integer_expected', 'emit')
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('emit', self.interpreter.output)
+            return self.nothing_in_work('emit')
 
     '''
     Instruction char : met sur la pile de travail le code du premier caractère d'une chaine de caractères
@@ -556,7 +563,7 @@ class core(base_module):
             temp = self.pop_work()
             self.work.appendleft(ord(temp[0]))
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('char', self.interpreter.output)
+            return self.nothing_in_work('char')
 
 
     '''
@@ -568,15 +575,12 @@ class core(base_module):
             self.work.appendleft(len(temp))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('chars', self.interpreter.output)
+            return self.nothing_in_work('chars')
 
     '''
     Instruction cr : permet d'afficher un retour chariot dans la console
     '''
     def cr_instr(self):
-        #if self.interpreter.output == 'web':
-        #    print('<br>')
-        #else:
         print('')
         return 'nobreak'
 
@@ -586,14 +590,14 @@ class core(base_module):
     '''
     def load_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_filename_missing.print_error('load', self.interpreter.output)
+            return self.err('error_filename_missing', 'load')
         filename = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         filename = '{0}/{1}.btl'.format(self.dictionary['path'], filename)
         try:
             f = open(filename, encoding="utf-8")
         except(FileNotFoundError):
-            return core_errors.error_no_such_file.print_error('load ' + filename, self.interpreter.output)
+            return self.err('error_no_such_file', 'load' + filename)
         content = f.read()
         content = content.replace('"', '\\"')
         content = '"' + content + '" .'
@@ -617,14 +621,14 @@ class core(base_module):
     '''
     def list_instr(self):
         if self.interpreter.isemptylastsequence():
-            return core_errors.error_filename_missing.print_error('list', self.interpreter.output)
+            return self.err('error_filename_missing', 'list')
         filename = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
         filename = '{0}/{1}.btl'.format(self.dictionary['path'], filename)
         try:
             f = open(filename, encoding="utf-8")
         except(FileNotFoundError):
-            return core_errors.error_no_such_file.print_error('list ' + filename, self.interpreter.output)
+            return self.err('error_no_such_file', 'list' + filename)
         content = f.read()
         if self.interpreter.output == 'web':
             content = content.replace('\n', '<br>')
@@ -639,16 +643,16 @@ class core(base_module):
     def const_instr(self):
         if len(self.work) > 0:
             if self.interpreter.isemptylastsequence():
-                return core_errors.error_name_missing.print_error('const', self.interpreter.output)
+                return self.err('error_name_missing', 'const')
             const_name = self.interpreter.sequences[self.interpreter.lastseqnumber][0]
             if const_name in self.dictionary.keys():
-                return core_errors.error_name_already_exists.print_error('const', self.interpreter.output)
+                return self.err('error_name_already_exists', 'const')
             self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
             value = self.pop_work()
             self.dictionary[const_name] = value
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('const', self.interpreter.output)
+            return self.nothing_in_work('const')
 
     '''
     Instruction input : met en attente la console pour permettre à l'utilisateur de rentrer de l'information
@@ -665,7 +669,7 @@ class core(base_module):
                 self.work.appendleft(str(ret))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('const', self.interpreter.output)
+            return self.nothing_in_work('input')
 
     '''
     Instruction secinput : met en attente la console pour permettre à l'utilisateur de rentrer de l'information de manière sécurisée
@@ -682,7 +686,7 @@ class core(base_module):
                 self.work.appendleft(str(ret))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('secinput', self.interpreter.output)
+            return self.nothing_in_work('secinput')
 
     '''
     Instruction @ : insère dans la pile de travail la valeur d'une variable ou d'une constante
@@ -702,12 +706,12 @@ class core(base_module):
                 try:
                     self.work.appendleft(d)
                 except TypeError:
-                    return core_errors.error_integer_and_float_expected.print_error('@', self.interpreter.output)
+                    return self.err('error_integer_and_float_expected', '@')
                 return 'nobreak'
             else:
-                return core_errors.error_not_a_variable_or_constant.print_error('@', self.interpreter.output)
+                return self.err('error_not_a_variable_or_constant', '@')
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('@', self.interpreter.output)
+            return self.nothing_in_work('@')
 
     '''
     Instruction * : Fait la multiplication entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
@@ -723,13 +727,13 @@ class core(base_module):
                         self.work.appendleft([op1[i]*op2 for i in range(0, len(op1))])
                         return 'nobreak'
                     else:
-                        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+                        return self.err('error_invalid_litteral', '*')
                 elif not isinstance(op1, list) and isinstance(op2, list):
                     if isinstance(op1, int) or isinstance(op1, float):
                         self.work.appendleft([op2[i]*op1 for i in range(0, len(op2))])
                         return 'nobreak'
                     else:
-                        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+                        return self.err('error_invalid_litteral', '*')
                 elif isinstance(op1, list) and isinstance(op2, list):
                     self.work.appendleft([op1[i]*op2[i] for i in range(min(len(op1),len(op2)))]+max(op1,op2,key=len)[min(len(op1),len(op2)):])
                     return 'nobreak'
@@ -746,17 +750,17 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('*', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '*')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('*', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '*')
             result = op1 * op2
             self.work.appendleft(self.to_base(result, base))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('*', self.interpreter.output)
+            return self.nothing_in_work('*')
 
     def to_base(self, number, base):
         base_string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -783,7 +787,7 @@ class core(base_module):
                         op3.append(op1[i]+op2)
                 return op3
             else:
-                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+                return self.err('error_invalid_litteral', '+')
         elif not isinstance(op1, list) and isinstance(op2, list):
             if isinstance(op1, int) or isinstance(op1, float):
                 op3 = []
@@ -795,7 +799,7 @@ class core(base_module):
                         op3.append(op2[i]+op1)
                 return op3
             else:
-                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output) 
+                return self.err('error_invalid_litteral', '+')
         elif isinstance(op1, list) and isinstance(op2, list):
             op3 = []
             for i in range(min(len(op1),len(op2))):
@@ -814,19 +818,19 @@ class core(base_module):
                     op2 = float(op2)
                 return op1 + op2
             except ValueError:
-                return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
+                return self.err('error_invalid_litteral', '+')
         else:
             if not isinstance(op1, float) and not isinstance(op1, str):
                 baselist = self.possiblebases(str(op1), False)
                 if base not in baselist:
-                    return core_errors.error_invalid_litteral.print_error('+ ' + str(op1), self.interpreter.output)
+                    return self.err('error_invalid_litteral', '+ ' + str(op1))
             if not isinstance(op2, float) and not isinstance(op2, str):
                 baselist = self.possiblebases(str(op2), False)
                 if base not in baselist:
-                    return core_errors.error_invalid_litteral.print_error('+ ' + str(op2), self.interpreter.output)
+                    return self.err('error_invalid_litteral', '+ ' + str(op2))
             result = self.to_base(int(op1, base) + int(op2, base), base)
             return result
-        return core_errors.error_invalid_litteral.print_error('+', self.interpreter.output)
+        return self.err('error_invalid_litteral', '+')    
 
     def plus_instr(self):
         if len(self.work) > 1:
@@ -837,7 +841,7 @@ class core(base_module):
                 self.work.appendleft(op3)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('+', self.interpreter.output)
+            return self.nothing_in_work('+')
 
     def possiblebases(self, s: str, exclure10=True):
         bases = []
@@ -848,7 +852,7 @@ class core(base_module):
                 int(s, base)
                 bases.append(base)
             except ValueError:
-                pass
+                return self.err('error_invalid_litteral', '+')
         return bases
 
     '''
@@ -871,7 +875,7 @@ class core(base_module):
                             op3.append(op1[i] - op2)
                     return op3
                 else:
-                    return core_errors.error_invalid_litteral.print_error('-', self.interpreter.output) 
+                    return self.err('error_invalid_litteral', '-')
             elif not isinstance(op1, list) and isinstance(op2, list):
                 if isinstance(op1, int) or isinstance(op1, float):
                     op3 = []
@@ -883,7 +887,7 @@ class core(base_module):
                             op3.append(op2[i] - op1)
                     return op3
                 else:
-                    return core_errors.error_invalid_litteral.print_error('-', self.interpreter.output) 
+                    return self.err('error_invalid_litteral', '-')
             elif isinstance(op1, list) and isinstance(op2, list):
                 op3 = []
                 for i in range(min(len(op1),len(op2))):
@@ -903,12 +907,12 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('-', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '-')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('-', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '-')
             result = self.to_base(op1 - op2, base)
             return result
 
@@ -921,7 +925,7 @@ class core(base_module):
             self.work.appendleft(op3)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('-', self.interpreter.output)
+            return self.nothing_in_work('-')
 
     '''
     Instruction / : Division entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
@@ -932,23 +936,22 @@ class core(base_module):
             base = self.dictionary['base']
             op1 = self.pop_work()
             if op1 == 0:
-                op2 = self.pop_work()
-                return core_errors.error_division_by_zero_invalid.print_error('/', self.interpreter.output)
+                return self.err('error_division_by_zero_invalid', '/')
             op2 = self.pop_work()
             if isinstance(op1, list) or isinstance(op2, list):
-                return core_errors.error_invalid_litteral.print_error('/', self.interpreter.output)
+                return self.err('error_invalid_litteral', '/')
             if base == 10:
                 if isinstance(op1, str):
                     op1 = float(op1)
                 if isinstance(op2, str):
                     op2 = float(op2)
             else:
-                return core_errors.error_invalid_litteral.print_error('/', self.interpreter.output)
+                return self.err('error_invalid_litteral', '/')
             result = op2 / op1
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('/', self.interpreter.output)
+            return self.nothing_in_work('/')
 
     '''
     Instruction packages : Affiche la liste des packages qui ont été importés
@@ -980,19 +983,19 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '=')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '=')
             if op2 == op1:
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('=', self.interpreter.output)
+            return self.nothing_in_work('=')
 
     '''
     Instruction > : Supérieur
@@ -1007,19 +1010,19 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('>', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '>')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('>', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '>')
             if op2 > op1:
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>', self.interpreter.output)
+            return self.nothing_in_work('>')
 
     '''
     Instruction < : Inférieur
@@ -1034,19 +1037,19 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('<', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '<')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('<', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '<')
             if op2 < op1:
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('<', self.interpreter.output)
+            return self.nothing_in_work('<')
 
     '''
     Instruction >= : Supérieur ou égal
@@ -1061,19 +1064,19 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('>=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '>=')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('>=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '>=')
             if op2 >= op1:
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>=', self.interpreter.output)
+            return self.nothing_in_work('>=')
 
     '''
     Instruction <= : Inférieur ou égal
@@ -1088,19 +1091,19 @@ class core(base_module):
                     try:
                         op1 = int(op1, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('<=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '<=')
                 if isinstance(op2, str):
                     try:
                         op2 = int(op2, base)
                     except(ValueError):
-                        return core_errors.error_invalid_litteral.print_error('<=', self.interpreter.output)
+                        return self.err('error_invalid_litteral', '<=')
             if op2 <= op1:
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('<=', self.interpreter.output)
+            return self.nothing_in_work('<=')
 
     '''
     Instruction IF : Conditionnelle
@@ -1113,11 +1116,11 @@ class core(base_module):
             flag = self.pop_work()
             instr = self.search_conditional_sequence_for(truezone)
             if not instr:
-                return core_errors.error_conditional_invalid.print_error('conditional', self.interpreter.output)
+                return self.err('error_conditional_invalid', 'conditional')
             if instr == 'else':
                 instr = self.search_conditional_sequence_for(falsezone)
                 if not instr:
-                    return core_errors.error_conditional_invalid.print_error('conditional', self.interpreter.output)
+                    return self.err('error_conditional_invalid', 'conditional')
             if flag == True:
                 truezone.reverse()
                 seq.extendleft(truezone.copy())
@@ -1126,19 +1129,19 @@ class core(base_module):
                 seq.extendleft(falsezone.copy())
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('conditional', self.interpreter.output)
+            return self.nothing_in_work('conditional')
 
     '''
     Instruction ELSE : Conditionnelle
     '''
     def else_instr(self):
-        return core_errors.error_conditional_invalid.print_error('else', self.interpreter.output)
+        return self.err('error_conditional_invalid', 'else')
 
     '''
     Instruction THEN : Conditionnelle
     '''
     def then_instr(self):
-        return core_errors.error_conditional_invalid.print_error('then', self.interpreter.output)
+        return self.err('error_conditional_invalid', 'then')
 
     def search_conditional_sequence_for(self, zone):
         depth = 0
@@ -1181,10 +1184,10 @@ class core(base_module):
                         self.work.appendleft(value)
                         break                    
             else:
-                return core_errors.error_index_on_workstack_invalid.print_error('roll', self.interpreter.output)
+                return self.err('error_index_on_workstack_invalid', 'roll')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('roll', self.interpreter.output)
+            return self.nothing_in_work('roll')
 
     '''
     Instruction pick : copie le nième élément qui se trouve en haut de la pile de travail en haut de la pile de travail
@@ -1197,10 +1200,10 @@ class core(base_module):
                 value = self.work[number]
                 self.work.appendleft(value)
             else:
-                return core_errors.error_index_on_workstack_invalid.print_error('pick', self.interpreter.output)
+                return self.err('error_index_on_workstack_invalid', 'pick')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('pick', self.interpreter.output)
+            return self.nothing_in_work('pick')
 
     '''
     Instruction over : copie le 2ième élément qui se trouve en haut de la pile de travail en haut de la pile de travail
@@ -1214,7 +1217,7 @@ class core(base_module):
             self.work.appendleft(op2)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('over', self.interpreter.output)
+            return self.nothing_in_work('over')
 
     '''
     Instruction >r : supprime l'élément qui se trouve en haut de la pile de travail pour le positionner en haut de la pile de retour
@@ -1226,7 +1229,7 @@ class core(base_module):
             self.altwork.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>r', self.interpreter.output)
+            return self.nothing_in_work('>r')
 
     '''
     Instruction @r : supprime l'élément qui se trouve en haut de la pile de travail pour le positionner en haut de la pile de retour
@@ -1241,7 +1244,7 @@ class core(base_module):
                 self.altwork.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('@r', self.interpreter.output)
+            return self.nothing_in_work('@r')
 
     '''
     Instruction r> : supprime l'élément qui se trouve en haut de la pile de retour pour le positionner en haut de la pile de travail
@@ -1253,7 +1256,7 @@ class core(base_module):
             self.work.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('>r', self.interpreter.output)
+            return self.nothing_in_return('r>')
 
     '''
     Instruction r@ : supprime l'élément qui se trouve en haut de la pile de retour pour le positionner en haut de la pile de travail
@@ -1268,7 +1271,7 @@ class core(base_module):
                 self.work.appendleft(op)
             return 'nobreak'   
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('r@', self.interpreter.output)
+            return self.nothing_in_return('r@')
 
     '''
     Instruction rdrop : supprime l'élément qui se trouve en haut de la pile de retour
@@ -1278,7 +1281,7 @@ class core(base_module):
             self.altwork.popleft()
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('rdrop', self.interpreter.output)
+            return self.nothing_in_return('rdrop')
 
     '''
     Instruction rswap : échange les 2 éléments qui se trouve en haut de la pile de retour
@@ -1291,7 +1294,7 @@ class core(base_module):
             self.altwork.appendleft(op2)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('rswap', self.interpreter.output)
+            return self.nothing_in_return('rswap')
 
     '''
     Instruction rdup : dupplique l'élément qui se trouve en haut de la pile de travail alternative et l'ajoute en haut de la pile
@@ -1302,7 +1305,7 @@ class core(base_module):
             self.altwork.appendleft(temp)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('rdup', self.interpreter.output)
+            return self.nothing_in_return('rdup')
 
     '''
     Instruction rover : copie le 2ième élément qui se trouve en haut de la pile de travail alternative en haut de la pile de travail alternative
@@ -1316,7 +1319,7 @@ class core(base_module):
             self.altwork.appendleft(op2)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('rover', self.interpreter.output)
+            return self.nothing_in_return('rover')
 
     '''
     Instruction rdump : affiche le contenu de la pile de retour
@@ -1328,7 +1331,7 @@ class core(base_module):
             print('')
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_return_stack.print_error('rdump', self.interpreter.output)
+            return self.nothing_in_return('rdump')
 
     '''
     Instruction ! : affecte la valeur d'une variable uniquement
@@ -1351,7 +1354,7 @@ class core(base_module):
                         break
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('!', self.interpreter.output)
+            return self.nothing_in_work('!')
 
     '''
     Instruction force! : affecte la valeur d'une variable et d'une constante : A UTILISER AVEC PRUDENCE
@@ -1374,7 +1377,7 @@ class core(base_module):
                     break
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('force!', self.interpreter.output)
+            return self.nothing_in_work('force!')
 
     '''
     Instruction do : exécute une boucle DO ... LOOP | +LOOP
@@ -1440,7 +1443,7 @@ class core(base_module):
             instructions.clear()
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('do ... loop | +loop', self.interpreter.output)
+            return self.nothing_in_work('do ... loop | +loop')
 
     '''
     Instruction loop : exécute une boucle DO ... LOOP | +LOOP
@@ -1652,7 +1655,7 @@ class core(base_module):
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('and', self.interpreter.output)
+            return self.nothing_in_work('and')
 
     '''
     Instruction ou : ou logique
@@ -1665,7 +1668,7 @@ class core(base_module):
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('or', self.interpreter.output)
+            return self.nothing_in_work('or')
 
     '''
     Instruction xor : ou exclusif logique
@@ -1678,7 +1681,7 @@ class core(base_module):
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('xor', self.interpreter.output)
+            return self.nothing_in_work('xor')
 
     '''
     Instruction forget : supprime une variable ou un mot défini par l'utilisateur dans le dictionnaire
@@ -1802,7 +1805,7 @@ class core(base_module):
             else:
                 return core_errors.error_nothing_in_work_stack.print_error('array', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('array', self.interpreter.output)
+            return self.nothing_in_work('array')
 
     '''
     { name1 : value1 , name2 : [ 1 , 2 ] }  ==> {'name1':value1, 'name2':[1, 2]}
@@ -1816,7 +1819,7 @@ class core(base_module):
         return 'nobreak'
 
     def ebrace_instr(self):
-        pass
+        return core_errors.error_array_invalid.print_error('}', self.interpreter.output)
 
     def search_braces(self):
         result = {}
@@ -1829,9 +1832,7 @@ class core(base_module):
                 return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
             instr = str(self.pop_sequence())
             if instr != ':':
-                # error
-                print("error")
-                break
+                return core_errors.error_array_invalid.print_error('hash', self.interpreter.output)
             else:
                 instr = str(self.pop_sequence())
                 elseq = []
@@ -1892,7 +1893,7 @@ class core(base_module):
     Instruction ] : ferme la séquence de création d'un tableau : [ n1 , n2 , n3 ]
     '''
     def ebraket_instr(self):
-        return core_errors.error_array_invalid.print_error('array', self.interpreter.output)
+        return core_errors.error_array_invalid.print_error(']', self.interpreter.output)
 
     def search_brakets(self):
         result = []
@@ -1955,7 +1956,7 @@ class core(base_module):
             self.work.appendleft(len(tab))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cells', self.interpreter.output)
+            return self.nothing_in_work('cells')
 
     '''
     Instruction cell@ : écrit le contenu d'une cellule d'un tableau sur la pile de travail : (array|var_name|const_name) position CELL@
@@ -1988,7 +1989,7 @@ class core(base_module):
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cell@', self.interpreter.output)
+            return self.nothing_in_work('cell@')
 
     '''
     Instruction cell! : écrit dans le contenu d'une cellule d'un tableau : value position array CELL!
@@ -2009,7 +2010,7 @@ class core(base_module):
             self.work.appendleft(tab)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cell!', self.interpreter.output)
+            return self.nothing_in_work('cell!')
 
     '''
     Instruction cell+ : crée nombre cellules dans un tableau : index value var_name CELL+
@@ -2042,7 +2043,7 @@ class core(base_module):
             self.work.appendleft(content)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cell+', self.interpreter.output)
+            return self.nothing_in_work('cell+')
 
     '''
     Instruction cell- : détruit une cellule d'un tableau à la position position : index (array|var_name) CELL-
@@ -2070,7 +2071,7 @@ class core(base_module):
             self.work.appendleft(content)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cell-', self.interpreter.output)
+            return self.nothing_in_work('cell-')
 
     '''
     Instruction cell= : teste l'existence d'un contenu d'une cellule d'un tableau : content array CELL= --> True or False
@@ -2098,7 +2099,7 @@ class core(base_module):
                     self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cell=', self.interpreter.output)
+            return self.nothing_in_work('cell=')
 
     '''
     Instruction clt : efface le contenu de la console
@@ -2151,7 +2152,7 @@ class core(base_module):
             self.work.appendleft(content)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('format', self.interpreter.output)
+            return self.nothing_in_work('format')
 
     '''
     Instruction s+ : concatène 2 chaines de caractères
@@ -2172,7 +2173,7 @@ class core(base_module):
             else:
                 return core_errors.error_strings_expected.print_error('s+', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('s+', self.interpreter.output)
+            return self.nothing_in_work('s+')
 
     '''
     Instruction scan : savoir si une chaine de caractères est contenu dans une autre chaine de caractères
@@ -2188,9 +2189,9 @@ class core(base_module):
                     self.work.appendleft(0)
                 return 'nobreak'    
             else:
-                return core_errors.error_strings_expected.print_error('sin', self.interpreter.output)
+                return core_errors.error_strings_expected.print_error('scan', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('sin', self.interpreter.output)
+            return self.nothing_in_work('scan')
 
     '''
     Instruction decimal : positionne la constante base à 10
@@ -2224,7 +2225,7 @@ class core(base_module):
             self.dictionary['base'] = base
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('base!', self.interpreter.output)
+            return self.nothing_in_work('base!')
 
     '''
     Instruction >base : convertit un nombre en base 10 en un nombre en base n 2 <= n <= 36 : number_in_base_10 newbase >BASE
@@ -2241,7 +2242,7 @@ class core(base_module):
             self.work.appendleft(self.to_base(number, base))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('tobase', self.interpreter.output)
+            return self.nothing_in_work('tobase')
 
     '''
     Instruction >decimal : convertit un nombre en base n != 10 en un nombre en base 10 : str base >DECIMAL
@@ -2258,7 +2259,7 @@ class core(base_module):
             self.work.appendleft(int(str(number), base))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('todecimal', self.interpreter.output)
+            return self.nothing_in_work('todecimal')
 
     '''
     Instruction ?int : indique si le nombre de la pile de travail est un entier
@@ -2273,7 +2274,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?int', self.interpreter.output)
+            return self.nothing_in_work('?int')
 
     '''
     Instruction ?float : indique si le nombre de la pile de travail est un float
@@ -2288,7 +2289,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?float', self.interpreter.output)
+            return self.nothing_in_work('?float')
 
     '''
     Instruction ?def : indique si le haut de la pile de travail est un mot du dictionnaire
@@ -2303,7 +2304,7 @@ class core(base_module):
             self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?def', self.interpreter.output)
+            return self.nothing_in_work('?def')
 
     '''
     Instruction ?var : indique si le haut de la pile de travail est une variable
@@ -2318,7 +2319,7 @@ class core(base_module):
             self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?var', self.interpreter.output)
+            return self.nothing_in_work('?var')
 
     '''
     Instruction ?local : indique si le nombre de la pile de travail est une variable locale
@@ -2332,7 +2333,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?local', self.interpreter.output)
+            return self.nothing_in_work('?local')
 
     '''
     Instruction ?str : indique si le haut de la pile de travail est une chaine de caractères
@@ -2347,7 +2348,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?str', self.interpreter.output)
+            return self.nothing_in_work('?str')
 
     '''
     Instruction ?char : indique si le haut de la pile de travail est un caractère
@@ -2362,7 +2363,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?char', self.interpreter.output)
+            return self.nothing_in_work('?char')
 
     '''
     Instruction ?array : indique si l'élément de la pile de travail est un tableau
@@ -2377,7 +2378,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('?array', self.interpreter.output)
+            return self.nothing_in_work('?array')
 
     '''
     Instruction ?pack : indique si l'élément de la pile de travail est un package
@@ -2429,7 +2430,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('kpress', self.interpreter.output)
+            return self.nothing_in_work('kpress')
 
     '''
     Instruction readk : permet à l'uilisateur de controler le clavier
@@ -2443,7 +2444,7 @@ class core(base_module):
                 self.work.appendleft(0)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('readk', self.interpreter.output)
+            return self.nothing_in_work('readk')
 
     '''
     Instruction ?exists : teste l'existence d'une variable ou d'une constante
@@ -2526,7 +2527,7 @@ class core(base_module):
             return 'nobreak'
         else:
             self.get_case_sequence(temp_zone)
-            return core_errors.error_nothing_in_work_stack.print_error('case ... endcase', self.interpreter.output)
+            return self.nothing_in_work('case ... endcase')
 
     def search_case_sequence_for(self, zone:deque):
         instr = self.pop_sequence()
@@ -2603,7 +2604,7 @@ class core(base_module):
             else:
                 return core_errors.error_not_a_defer_action.print_error("is", self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('is', self.interpreter.output)
+            return self.nothing_in_work('is')
 
     '''
     Instruction ' : permet d'insérer un mot sur la pile de travail sans l'exécuter
@@ -2676,7 +2677,7 @@ class core(base_module):
             else:
                 return core_errors.error_nothing_to_evaluate.print_error('evaluate', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('evaluate', self.interpreter.output)
+            return self.nothing_in_work('evaluate')
 
     '''
     Instruction execute : execute une instruction dans Beetle. Ne peut pas exécuter un mot qui lit un mot dans la suite de la séquence
@@ -2699,7 +2700,7 @@ class core(base_module):
                         return 'nobreak'
             return core_errors.error_not_a_variable_or_definition.print_error("execute", self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('execute', self.interpreter.output)
+            return self.nothing_in_work('execute')
 
     def here_instr(self):
         if self.interpreter.recentWord != None:
@@ -2724,7 +2725,7 @@ class core(base_module):
             self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('local', self.interpreter.output)
+            return self.nothing_in_work('local')
 
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
@@ -2756,7 +2757,7 @@ class core(base_module):
                 # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
                 return core_errors.error_name_missing.print_error('keys', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('keys', self.interpreter.output)
+            return self.nothing_in_work('keys')
 
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
@@ -2794,7 +2795,7 @@ class core(base_module):
                 # error : val n'a pas été trouvé dans les variables, ni les constantes, ni les variables locales
                 return core_errors.error_name_missing.print_error('values', self.interpreter.output)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('values', self.interpreter.output)
+            return self.nothing_in_work('values')
 
     '''
     Instruction >md5 : écrit sur le haut de la pile de données le md5 du haut de la pile de données
@@ -2806,7 +2807,7 @@ class core(base_module):
             self.work.appendleft(md5.hexdigest())
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>md5', self.interpreter.output)
+            return self.nothing_in_work('>md5')
 
     '''
     Instruction jsonencode : transforme une structure dict et list en une chaine de caractères
@@ -2817,7 +2818,7 @@ class core(base_module):
             self.work.appendleft(json.dumps(val))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('>json', self.interpreter.output)
+            return self.nothing_in_work('>json')
 
     '''
     Instruction jsondecode : transforme une chaine de caractères en une structure dict et list
@@ -2828,7 +2829,7 @@ class core(base_module):
             self.work.appendleft(json.loads(val))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('json>', self.interpreter.output)
+            return self.nothing_in_work('json>')
 
     '''
     Instruction lang? : détection automatique de la langue utilisée
