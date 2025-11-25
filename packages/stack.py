@@ -241,3 +241,25 @@ class StackInstructions:
     def clearstack_instr(self):
         self.work.clear()
         return 'nobreak'
+
+    '''
+    Instruction char : met sur la pile de travail le code du premier caractère d'une chaine de caractères
+    '''
+    def char_instr(self):
+        if len(self.work) > 0:
+            temp = self.pop_work()
+            self.work.appendleft(ord(temp[0]))
+        else:
+            return self.nothing_in_work('char')
+
+
+    '''
+    Instruction chars : ajoute sur la pile de travail le nombre de caractère d'une chaine
+    '''
+    def chars_instr(self):
+        if len(self.work) > 0:
+            temp = self.pop_work()
+            self.work.appendleft(len(temp))
+            return 'nobreak'
+        else:
+            return self.nothing_in_work('chars')
