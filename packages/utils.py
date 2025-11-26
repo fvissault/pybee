@@ -118,7 +118,7 @@ class Utils:
         if self.interpreter.output == 'web':
             content = content.replace('\n', '<br>')
             content = content.replace(' ', '&nbsp;')
-        print(content, end='')
+        print(content)
         f.close()
         return 'nobreak'
 
@@ -191,7 +191,7 @@ class Utils:
                         if def_name in self.interpreter.immediate:
                             print('; immediate', end='')
                         else:
-                            print(';', end='')
+                            print(';')
                         return 'nobreak'
                     else:
                         return self.err('error_native_definition', 'see ' + def_name)
