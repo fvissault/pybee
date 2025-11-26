@@ -181,7 +181,7 @@ class Definitions:
     Instruction const : permet de créer une constante et l'ajoute au dictionnaire
     '''
     def const_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'const') == None:
             if self.interpreter.isemptylastsequence():
                 return self.err('error_name_missing', 'const')
             const_name = self.interpreter.sequences[self.interpreter.lastseqnumber][0]
@@ -191,8 +191,6 @@ class Definitions:
             value = self.pop_work()
             self.dictionary[const_name] = value
             return 'nobreak'
-        else:
-            return self.nothing_in_work('const')
 
     '''
     Instruction forget : supprime une variable ou un mot défini par l'utilisateur dans le dictionnaire
@@ -291,7 +289,7 @@ class Definitions:
         ' test is print
     '''
     def is_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'is') == None:
             wordname = self.pop_work()
             defername = self.pop_sequence()
             if defername in self.interpreter.defer:
@@ -300,8 +298,6 @@ class Definitions:
                 return 'nobreak'
             else:
                 return self.err('error_not_a_defer_action', 'is')
-        else:
-            return self.nothing_in_work('is')
     
     '''
     Instruction :noname : permet de créer une définition qui n'a pas de nom et l'insère sur la pile de travail
@@ -346,15 +342,13 @@ class Definitions:
     def local_instr(self):
         if self.interpreter.lastseqnumber == 0:
             return self.err('error_local_var_only_in_def', 'local')
-        if len(self.work) > 0:
+        if self.require_stack(1, 'local') == None:
             val = self.pop_work()
             if self.interpreter.isemptylastsequence():
                 return self.err('error_local_var_name_missing', 'local')
             localname = self.pop_sequence()
             self.interpreter.locals[self.interpreter.lastseqnumber][localname] = val
             return 'nobreak'
-        else:
-            return self.nothing_in_work('local')
 
     '''
     Instruction abort : arrête le programme complètement à l'endroit ou abort est écrit
@@ -370,7 +364,7 @@ class Definitions:
     Instruction ?def : indique si le haut de la pile de travail est un mot du dictionnaire
     '''
     def isdef_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?def') == None:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
                 if name in self.interpreter.packages[p].dictionary.keys():
@@ -378,14 +372,12 @@ class Definitions:
                     return 'nobreak'
             self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?def')
 
     '''
     Instruction ?var : indique si le haut de la pile de travail est une variable
     '''
     def isvar_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?var') == None:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
                 if name in self.interpreter.packages[p].variables:
@@ -393,19 +385,15 @@ class Definitions:
                     return 'nobreak'
             self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?var')
 
     '''
     Instruction ?local : indique si le nombre de la pile de travail est une variable locale
     '''
     def islocal_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?local') == None:
             name = self.pop_work()
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
                 self.work.appendleft(1)
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?local')
