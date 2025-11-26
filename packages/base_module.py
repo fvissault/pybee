@@ -9,6 +9,11 @@ class base_module:
         #print(interpreter.params)
         self.variables = []
 
+    def require_stack(self, n, word):
+        if len(self.work) < n:
+            return self.nothing_in_work(word)
+        return None
+
     def set_work_stack(self, work):
         self.work = work
 
