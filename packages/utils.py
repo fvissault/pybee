@@ -20,11 +20,6 @@ class Utils:
     def nothing_in_return(self, context):
         return self.err('error_nothing_in_return_stack', context)
 
-    def require_stack(self, n, word):
-        if len(self.work) < n:
-            return self.nothing_in_work(word)
-        return None
-
     '''
     Instruction bye : quitte l'interpreteur Beetle
     '''
