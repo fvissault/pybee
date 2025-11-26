@@ -7,6 +7,7 @@ class StackInstructions:
         if self.require_stack(1, 'dump') == None:
             for temp in self.work:
                 print(temp, end=' ')
+            print()
             return 'nobreak'
 
     '''
