@@ -57,9 +57,9 @@
         <p>Exemple de conditionnelle à parcours unique :</p>
         <div class="div_code">
             <code>Beetle> 1 0 < if "true zone" . then<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 1 1 = if "true zone" . then<br>
-                true zone <span style="color:green;">ok</span>
+                true zone <span style="color:green;">ready</span>
             </code>
         </div>
 
@@ -71,16 +71,16 @@
         <p>Exemple de conditionnelle à parcours unique :</p>
         <div class="div_code">
             <code>Beetle> 1 0 > if "true zone" . else "false zone" . then<br>
-                true zone <span style="color:green;">ok</span><br><br>
+                true zone <span style="color:green;">ready</span><br><br>
                 Beetle> 1 0 < if "true zone" . else "false zone" . then<br>
-                false zone <span style="color:green;">ok</span>
+                false zone <span style="color:green;">ready</span>
             </code>
         </div>
 
         <p>Il n'y a pas de restrictions à l'imbrication des conditionnelles. Exemple d'imbrication de conditionnelle :</p>
         <div class="div_code">
             <code>Beetle> 50 dup 1 >= if dup 1 = if 0 .cr drop else 1 0 2dup . . reverse 2 var fib#i do 2dup + dup . rot drop loop 2drop forget fib#i cr then else "Usage : n FIB with n > 0" .cr then<br>
-                0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 3524578 5702887 9227465 14930352 24157817 39088169 63245986 102334155 165580141 267914296 433494437 701408733 1134903170 1836311903 2971215073 4807526976 7778742049 <span style="color:green;">ok</span>
+                0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 3524578 5702887 9227465 14930352 24157817 39088169 63245986 102334155 165580141 267914296 433494437 701408733 1134903170 1836311903 2971215073 4807526976 7778742049 <span style="color:green;">ready</span>
             </code>
         </div>
 
