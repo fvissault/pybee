@@ -10,26 +10,20 @@ class error:
             self.message = message
 
     def print_error(self, prefix, output):
+        msg = prefix + ' ' + self.type + ' : ' + self.message
+
         if output == 'console':
             if self.type == 'warning':
-                print(termcolors.WARNING + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
-            if self.type == 'error':
-                print(termcolors.ERROR + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
-            if self.type == 'fatal':
-                print(termcolors.FATAL + prefix + ' ' + self.type + ' : ' + self.message + termcolors.NORMAL, end='')
-            if self.type == 'fatal':
-                return 'break'
+                print(termcolors.WARNING + msg + termcolors.NORMAL)
+            elif self.type == 'error':
+                print(termcolors.ERROR + msg + termcolors.NORMAL)
+            elif self.type == 'fatal':
+                print(termcolors.FATAL + msg + termcolors.NORMAL)
             else:
-                return 'nobreak'
+                print(msg)
+
         if output == 'web':
             print("Content-type: text/html;charset=UTF-8\n")
-            if self.type == 'warning':
-                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
-            if self.type == 'error':
-                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
-            if self.type == 'fatal':
-                print(prefix + ' ' + self.type + ' : ' + self.message, end='<br>')
-            if self.type == 'fatal':
-                return 'break'
-            else:
-                return 'nobreak'
+            print(msg, end='<br>')
+
+        return 'break' if self.type == 'fatal' else 'nobreak'
