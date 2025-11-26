@@ -227,6 +227,8 @@ class mysqldb(base_module):
             #*********************************
             'deleterecord' : '''''',
             #*********************************
+            'selectrecord' : '''''',
+            #*********************************
             'droptable' : '''    local tablename 
     "|drop> table <#0#> >|" [ tablename @ ] format evaluate''',
             #*********************************
