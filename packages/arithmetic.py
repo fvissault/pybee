@@ -4,7 +4,7 @@ class Arithmetic:
     Instruction * : Fait la multiplication entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
     '''
     def prod_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '*') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
             op2 = self.pop_work()
@@ -46,8 +46,6 @@ class Arithmetic:
             result = op1 * op2
             self.work.appendleft(self.to_base(result, base))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('*')
 
     def to_base(self, number, base):
         base_string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -120,15 +118,13 @@ class Arithmetic:
         return self.err('error_invalid_litteral', '+')    
 
     def plus_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '+') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
             op3 = self.plus(op1, op2)
             if op3 != "nobreak":
                 self.work.appendleft(op3)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('+')
 
     def possiblebases(self, s: str, exclure10=True):
         bases = []
@@ -205,21 +201,19 @@ class Arithmetic:
 
 
     def minus_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '-') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
             op3 = self.minus(op1, op2)
             self.work.appendleft(op3)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('-')
 
     '''
     Instruction / : Division entre 2 nombres du haut de la pile de travail et ajoute le résultat en haut de la pile
     La division dans une autre base que 10 n'est pas possible
     '''
     def div_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '/') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
             if op1 == 0:
@@ -237,5 +231,3 @@ class Arithmetic:
             result = op2 / op1
             self.work.appendleft(result)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('/')
