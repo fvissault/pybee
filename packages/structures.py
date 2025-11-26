@@ -6,7 +6,7 @@ class Structures:
     Instruction array : créé un tableau : n1 n2 n3 ... size array
     '''
     def array_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'array') == None:
             size = self.pop_work()
             if len(self.work) >= size:
                 result = []
@@ -18,8 +18,6 @@ class Structures:
                 return 'nobreak'
             else:
                 return self.nothing_in_work('array')
-        else:
-            return self.nothing_in_work('array')
 
     '''
     { name1 : value1 , name2 : [ 1 , 2 ] }  ==> {'name1':value1, 'name2':[1, 2]}
@@ -157,7 +155,7 @@ class Structures:
     Instruction cells : écrit la taille d'un tableau sur la pile de travail
     '''
     def cells_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'cells') == None:
             tab = self.pop_work()
             if tab in self.variables:
                 tab = self.dictionary[tab]
@@ -167,14 +165,12 @@ class Structures:
                 return self.err('error_get_cell_on_array_invalid', 'cells')
             self.work.appendleft(len(tab))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cells')
 
     '''
     Instruction cell@ : écrit le contenu d'une cellule d'un tableau sur la pile de travail : (array|var_name|const_name) position CELL@
     '''
     def cellarobase_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'cell@') == None:
             position = self.pop_work()
             #print("position = ", position)
             tab = self.pop_work()
@@ -200,14 +196,12 @@ class Structures:
             result = content[position]
             self.work.appendleft(result)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cell@')
 
     '''
     Instruction cell! : écrit dans le contenu d'une cellule d'un tableau : value position array CELL!
     '''
     def cellexclam_instr(self):
-        if len(self.work) > 2:
+        if self.require_stack(3, 'cell!') == None:
             tab = self.pop_work()
             if not isinstance(tab, list) and not isinstance(tab , dict):
                 return self.err('error_get_cell_on_array_invalid', 'cell!')
@@ -221,14 +215,12 @@ class Structures:
             tab[position] = value
             self.work.appendleft(tab)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cell!')
 
     '''
     Instruction cell+ : crée nombre cellules dans un tableau : index value var_name CELL+
     '''
     def addcell_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'cell+') == None:
             tab = self.pop_work()
             if tab in self.variables:
                 content = self.dictionary[tab]
@@ -254,14 +246,12 @@ class Structures:
                 content.append(value)
             self.work.appendleft(content)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cell+')
 
     '''
     Instruction cell- : détruit une cellule d'un tableau à la position position : index (array|var_name) CELL-
     '''
     def delcell_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'cell-') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
@@ -282,14 +272,12 @@ class Structures:
             content.pop(index)
             self.work.appendleft(content)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cell-')
 
     '''
     Instruction cell= : teste l'existence d'un contenu d'une cellule d'un tableau : content array CELL= --> True or False
     '''
     def cellequal_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'cell=') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
@@ -310,14 +298,12 @@ class Structures:
                 else:
                     self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('cell=')
 
     '''
     Instruction ?array : indique si l'élément de la pile de travail est un tableau
     '''
     def isarray_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?array') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
             if isinstance(o, list) or isinstance(o, dict):
@@ -325,14 +311,12 @@ class Structures:
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?array')
 
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
     '''
     def keys_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'keys') == None:
             content = None
             val = self.pop_work()
             if isinstance(val , str):
@@ -355,14 +339,12 @@ class Structures:
                 return 'nobreak'
             else:
                 return self.err('error_name_missing', 'keys')
-        else:
-            return self.nothing_in_work('keys')
 
     '''
-    Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
+    Instruction values : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
     '''
     def values_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'values') == None:
             content = None
             val = self.pop_work()
             if isinstance(val , str):
@@ -391,5 +373,3 @@ class Structures:
                 return 'nobreak'
             else:
                 return self.err('error_name_missing', 'values')
-        else:
-            return self.nothing_in_work('values')
