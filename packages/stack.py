@@ -92,87 +92,73 @@ class StackInstructions:
     Si l'élément est une variable, ce qui est positionné sur la pile de travail est le nom de cette variable
     '''
     def fromr_instr(self):
-        if len(self.altwork) > 0:
+        if self.require_altstack(1, 'r>') == None:
             op = self.pop_altwork()
             self.work.appendleft(op)
             return 'nobreak'   
-        else:
-            return self.nothing_in_return('r>')
 
     '''
     Instruction r@ : supprime l'élément qui se trouve en haut de la pile de retour pour le positionner en haut de la pile de travail
     Si l'élément est une variable, ce qui est positionné sur la pile de travail est la valeur de cette variable
     '''
     def rarobase_instr(self):
-        if len(self.altwork) > 0:
+        if self.require_altstack(1, 'r@') == None:
             op = self.pop_altwork()
             if op in self.variables:
                 self.work.appendleft(self.dictionary[op])
             else:
                 self.work.appendleft(op)
             return 'nobreak'   
-        else:
-            return self.nothing_in_return('r@')
 
     '''
     Instruction rdrop : supprime l'élément qui se trouve en haut de la pile de retour
     '''
     def rdrop_instr(self):
-        if len(self.altwork) > 0:
+        if self.require_altstack(1, 'rdrop') == None:
             self.altwork.popleft()
             return 'nobreak'
-        else:
-            return self.nothing_in_return('rdrop')
 
     '''
     Instruction rswap : échange les 2 éléments qui se trouve en haut de la pile de retour
     '''
     def rswap_instr(self):
-        if len(self.altwork) > 1:
+        if self.require_altstack(2, 'rswap') == None:
             op1 = self.pop_altwork()
             op2 = self.pop_altwork()
             self.altwork.appendleft(op1)
             self.altwork.appendleft(op2)
             return 'nobreak'
-        else:
-            return self.nothing_in_return('rswap')
 
     '''
     Instruction rdup : dupplique l'élément qui se trouve en haut de la pile de travail alternative et l'ajoute en haut de la pile
     '''
     def rdup_instr(self):
-        if len(self.altwork) > 0:
+        if self.require_altstack(1, 'rdup') == None:
             temp = self.altwork[0]
             self.altwork.appendleft(temp)
             return 'nobreak'
-        else:
-            return self.nothing_in_return('rdup')
 
     '''
     Instruction rover : copie le 2ième élément qui se trouve en haut de la pile de travail alternative en haut de la pile de travail alternative
     '''
     def rover_instr(self):
-        if len(self.altwork) > 1:
+        if self.require_altstack(2, 'rover') == None:
             op1 = self.pop_altwork()
             op2 = self.pop_altwork()
             self.altwork.appendleft(op2)
             self.altwork.appendleft(op1)
             self.altwork.appendleft(op2)
             return 'nobreak'
-        else:
-            return self.nothing_in_return('rover')
 
     '''
     Instruction rdump : affiche le contenu de la pile de retour
     '''
     def rdump_instr(self):
-        if len(self.altwork) > 0:
+        if self.require_altstack(1, 'rdump') == None:
             for temp in self.altwork:
                 print(temp, end=' ')
             print('')
             return 'nobreak'
-        else:
-            return self.nothing_in_return('rdump')
 
     '''
     Instruction wp? : indique l'adresse du prochain élément de la pile de travail
