@@ -58,7 +58,7 @@ class Controls:
         truezone = deque()
         falsezone = deque()
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
-        if len(self.work) > 0:
+        if self.require_stack(1, 'conditional') == None:
             flag = self.pop_work()
             instr = self.search_conditional_sequence_for(truezone)
             if not instr:
@@ -74,8 +74,6 @@ class Controls:
                 falsezone.reverse()
                 seq.extendleft(falsezone.copy())
             return 'nobreak'
-        else:
-            return self.nothing_in_work('conditional')
 
     '''
     Instruction ELSE : Conditionnelle
@@ -117,7 +115,7 @@ class Controls:
     '''
     def do_instr(self):
         instructions = deque()
-        if len(self.work) > 1:
+        if self.require_stack(2, 'do ... loop | +loop') == None:
             instr = self.search_do_loop(instructions)
             # lire le nom de la variable
             varname = self.work[0]
@@ -175,8 +173,6 @@ class Controls:
                         self.dictionary[varname] = compteur
             instructions.clear()
             return 'nobreak'
-        else:
-            return self.nothing_in_work('do ... loop | +loop')
 
     '''
     Instruction loop : exécute une boucle DO ... LOOP | +LOOP
@@ -348,7 +344,7 @@ class Controls:
 
     def case_instr(self):
         temp_zone = deque()
-        if len(self.work) > 0:
+        if self.require_stack(1, 'case ... endcase') == None:
             cond_zone = deque()
             of_zone = deque()
             def_zone = deque()
@@ -375,9 +371,6 @@ class Controls:
             of_zone.reverse()
             self.interpreter.sequences[self.interpreter.lastseqnumber].extendleft(of_zone)
             return 'nobreak'
-        else:
-            self.get_case_sequence(temp_zone)
-            return self.nothing_in_work('case ... endcase')
 
     def search_case_sequence_for(self, zone:deque):
         instr = self.pop_sequence()
