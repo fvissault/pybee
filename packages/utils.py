@@ -20,6 +20,11 @@ class Utils:
     def nothing_in_return(self, context):
         return self.err('error_nothing_in_return_stack', context)
 
+    def require_stack(self, n, word):
+        if len(self.work) < n:
+            return self.nothing_in_work(word)
+        return None
+
     '''
     Instruction bye : quitte l'interpreteur Beetle
     '''
@@ -230,52 +235,46 @@ class Utils:
     Instruction base! : positionne la constante base à une base comprise entre 2 et 36
     '''
     def baseexclam_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'base!') == None:
             base = self.pop_work()
             if base < 2 or base > 36:
                 return self.err('error_basenumber_invalid', 'base!')
             self.dictionary['base'] = base
             return 'nobreak'
-        else:
-            return self.nothing_in_work('base!')
 
     '''
     Instruction >base : convertit un nombre en base 10 en un nombre en base n 2 <= n <= 36 : number_in_base_10 newbase >BASE
     '''
     def tobase_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '>base') == None:
             base = self.pop_work()
             if base < 2 or base > 36 or base == 10:
-                return self.err('error_basenumber_invalid', 'tobase')
+                return self.err('error_basenumber_invalid', '>base')
             number = self.pop_work()
             if not isinstance(number, int):
-                return self.err('error_integer_expected', 'tobase')
+                return self.err('error_integer_expected', '>base')
             self.work.appendleft(self.to_base(number, base))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('tobase')
 
     '''
     Instruction >decimal : convertit un nombre en base n != 10 en un nombre en base 10 : str base >DECIMAL
     '''
     def todecimal_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '>decimal') == None:
             base = self.pop_work()
             if base < 2 or base > 36:
-                return self.err('error_basenumber_invalid', 'todecimal')
+                return self.err('error_basenumber_invalid', '>decimal')
             number = self.pop_work()
             if not isinstance(number, str):
-                return self.err('error_integer_expected', 'todecimal')
+                return self.err('error_integer_expected', '>decimal')
             self.work.appendleft(int(str(number), base))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('todecimal')
 
     '''
     Instruction ?int : indique si le nombre de la pile de travail est un entier
     '''
     def isint_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?int') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
             if self.isinteger(o):
@@ -283,14 +282,12 @@ class Utils:
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?int')
 
     '''
     Instruction ?float : indique si le nombre de la pile de travail est un float
     '''
     def isfloat_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?float') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
             if self.isfloat(o):
@@ -298,14 +295,12 @@ class Utils:
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?float')
 
     '''
     Instruction ?str : indique si le haut de la pile de travail est une chaine de caractères
     '''
     def isstr_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?str') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
             if isinstance(o, str):
@@ -313,14 +308,12 @@ class Utils:
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?str')
 
     '''
     Instruction ?char : indique si le haut de la pile de travail est un caractère
     '''
     def ischar_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '?char') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
             if isinstance(o, str) and len(o) == 1:
@@ -328,8 +321,6 @@ class Utils:
             else:
                 self.work.appendleft(0)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('?char')
 
     '''
     Instruction ?pack : indique si l'élément de la pile de travail est un package
@@ -386,35 +377,29 @@ class Utils:
     Instruction >md5 : écrit sur le haut de la pile de données le md5 du haut de la pile de données
     '''
     def md5_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '>md5') == None:
             val = self.pop_work()
             md5 = hashlib.md5(val.encode())
             self.work.appendleft(md5.hexdigest())
             return 'nobreak'
-        else:
-            return self.nothing_in_work('>md5')
 
     '''
     Instruction jsonencode : transforme une structure dict et list en une chaine de caractères
     '''
     def jsonencode_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, '>json') == None:
             val = self.pop_work()
             self.work.appendleft(json.dumps(val))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('>json')
 
     '''
     Instruction jsondecode : transforme une chaine de caractères en une structure dict et list
     '''
     def jsondecode_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'json>') == None:
             val = self.pop_work()
             self.work.appendleft(json.loads(val))
             return 'nobreak'
-        else:
-            return self.nothing_in_work('json>')
 
     '''
     Instruction lang? : détection automatique de la langue utilisée
@@ -433,7 +418,7 @@ class Utils:
         "2 dup" evaluate dump => 2 2
     '''
     def evaluate_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'evaluate') == None:
             instrs = self.pop_work()
             if instrs != '':
                 split = instrs.split(' ')
@@ -447,8 +432,6 @@ class Utils:
                     return 'nobreak'
             else:
                 return self.err('error_nothing_to_evaluate', 'evaluate')
-        else:
-            return self.nothing_in_work('evaluate')
 
     '''
     Instruction execute : execute une instruction dans Beetle. Ne peut pas exécuter un mot qui lit un mot dans la suite de la séquence
@@ -456,7 +439,7 @@ class Utils:
         2 ' dup execute dump => 2 2
     '''
     def execute_instr(self):
-        if len(self.work) > 0:
+        if self.require_stack(1, 'execute') == None:
             word = self.pop_work()
             for p in self.interpreter.packages.keys():
                 if word in self.interpreter.packages[p].dictionary:
@@ -470,14 +453,12 @@ class Utils:
                     else:
                         return 'nobreak'
             return self.err('error_not_a_variable_or_definition', 'execute')
-        else:
-            return self.nothing_in_work('execute')
 
     '''
     Instruction ! : affecte la valeur d'une variable uniquement
     '''
     def exclam_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, '!') == None:
             name = self.pop_work()
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
                 value = self.pop_work()
@@ -493,14 +474,12 @@ class Utils:
                         self.interpreter.packages[pack].dictionary[name] = value
                         break
             return 'nobreak'
-        else:
-            return self.nothing_in_work('!')
 
     '''
     Instruction force! : affecte la valeur d'une variable et d'une constante : A UTILISER AVEC PRUDENCE
     '''
     def forceexclam_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'force!') == None:
             name = self.work[0]
             self.work.popleft()
             value = self.pop_work()
@@ -516,8 +495,6 @@ class Utils:
                     self.work.appendleft(name)
                     break
             return 'nobreak'
-        else:
-            return self.nothing_in_work('force!')
     
     '''
     Instruction format : formatte une chaine de caractères
@@ -525,7 +502,7 @@ class Utils:
     marqueur dans la chaine de caractères <#...#>
     '''
     def format_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'format') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
                 if tab in self.variables:
@@ -554,14 +531,12 @@ class Utils:
             content = content.replace('>>', '}')
             self.work.appendleft(content)
             return 'nobreak'
-        else:
-            return self.nothing_in_work('format')
 
     '''
     Instruction s+ : concatène 2 chaines de caractères
     '''
     def concat_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 's+') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
             if isinstance(op1, str) and (isinstance(op2, int) or isinstance(op2, float)):
@@ -575,14 +550,12 @@ class Utils:
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 's+')
-        else:
-            return self.nothing_in_work('s+')
 
     '''
     Instruction scan : savoir si une chaine de caractères est contenu dans une autre chaine de caractères
     '''
     def scan_instr(self):
-        if len(self.work) > 1:
+        if self.require_stack(2, 'scan') == None:
             str1 = self.pop_work()
             str2 = self.pop_work()
             if isinstance(str1, str) and isinstance(str2, str):
@@ -593,5 +566,3 @@ class Utils:
                 return 'nobreak'    
             else:
                 return self.err('error_strings_expected', 'scan')
-        else:
-            return self.nothing_in_work('scan')
