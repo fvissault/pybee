@@ -51,19 +51,19 @@
         <p>Imaginons que nous ayons besoin d'une définition qui nous donne le carré d'un nombre n, voici comme nous pourrions procéder</p>
         <div class="div_code">
             <code>Beetle> : <b>carre</b> ( obtenir le carre de n ) dup * ;<br>
-                <span style="color:green;">ok</span></code>
+                <span style="color:green;">ready</span></code>
         </div>
         <p>Dans le vocabulaire, nous allons retrouver notre nouvelle définition.</p>
         <div class="div_code">
             <code>Beetle> words<br>
                 -------/core/ (170 words)<br>
                 ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye <b>carre</b> case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rotonall rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t<br>
-                <span style="color:green;">ok</span></code>
+                <span style="color:green;">ready</span></code>
         </div>
         <p>Et pour utiliser notre nouvelle définition, nous devrons faire comme suit :</p>
         <div class="div_code">
             <code>Beetle> 50 <b>carre</b> .<br>
-                2500 <span style="color:green;">ok</span></code>
+                2500 <span style="color:green;">ready</span></code>
         </div>
         <p>
             Allons un peu plus loin! Admettons que maintenant, nous avons besoin de la définition <b>cube</b> en utilisant la définition 
@@ -71,19 +71,19 @@
         </p>
         <div class="div_code">
             <code>Beetle> : <b>cube</b> ( obtenir le cube de n ) dup carre * ;<br>
-                <span style="color:green;">ok</span></code>
+                <span style="color:green;">ready</span></code>
         </div>
         <p>Dans le vocabulaire, nous allons retrouver notre nouvelle définition.</p>
         <div class="div_code">
             <code>Beetle> words<br>
                 -------/core/ (171 words)<br>
                 ! % ' ( ) * *! */ + +! +loop , - -> . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <> = > >= >base >decimal >r ? ?array ?char ?exists ?float ?int ?pack ?str @ @r [ ] again and arcol arget array arrow base base! begin bl bye <b>carre</b> case cell! cell+ cell- cell= cell? cell@ cells cells? char chars cls clt const constants cr create <b>cube</b> decimal defer do does> drop dump dup else emit endcase endof evaluate execute false forget format help hex if immediate import input invert is kpress leave list load loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rotonall rover rswap secinput see sp? space swap then true t{ until var variables vp? while words wp? xor { } }t<br>
-                <span style="color:green;">ok</span></code>
+                <span style="color:green;">ready</span></code>
         </div>
         <p>Et pour utiliser de nouveau le mot <b>cube</b>, nous devrons faire comme suit :</p>
         <div class="div_code">
             <code>Beetle> 50 <b>cube</b> .<br>
-                125000 <span style="color:green;">ok</span></code>
+                125000 <span style="color:green;">ready</span></code>
         </div>
         <p>Ainsi, vous pouvez imbriquer les appels de définitions indéfiniment comme vous le souhaitez.</p>
 
@@ -92,11 +92,11 @@
             <code>Beetle> <b>see</b> carre<br>
                 : carre
                         <blockquote>dup *</blockquote>
-                ; <span style="color:green;">ok</span><br><br>
+                ; <span style="color:green;">ready</span><br><br>
                 Beetle> <b>see</b> cube<br>
                 : cube
                     <blockquote>dup carre *</blockquote>
-                ; <span style="color:green;">ok</span></code>
+                ; <span style="color:green;">ready</span></code>
         </div>
 
         <a name="immediatedefs"><h2>c. Définitions immediates (immediate)</h2></a>
@@ -113,13 +113,13 @@
         <p>Voici un exemple d'utilisation du mot <b>immediate</b> qui vous donnera un aperçu de cette fonctionnalité :</p>
         <div class="div_code">
             <code>Beetle> : say-hello "Hello" . ; <b>immediate</b> ( on définit un mot 'say-hello' immediat )<br>
-            <span style="color:green;">ok</span> <i>N'affiche rien</i><br><br>
+            <span style="color:green;">ready</span> <i>N'affiche rien</i><br><br>
             Beetle> : greet say-hello "I speak Beetle" . ; ( on définit le mot 'greet' qui appelle le mot 'say-hello' immediatement )<br>
-            Hello <span style="color:green;">ok</span><br><br>
+            Hello <span style="color:green;">ready</span><br><br>
             Beetle> greet ( on appelle 'greet' seul )<br>
-            I speak Beetle <span style="color:green;">ok</span><br><br>
+            I speak Beetle <span style="color:green;">ready</span><br><br>
             Beetle> say-hello ( on appelle 'say-hello' seul )<br>
-            Hello <span style="color:green;">ok</span></code>
+            Hello <span style="color:green;">ready</span></code>
         </div>
         <p>Regardons ce que sont devenues les définitions de 'say-hello' et de 'greet'</p>
         <div class="div_code">
@@ -127,12 +127,12 @@
                 : say-hello
                         <blockquote>"Hello" .</blockquote>
                 ; immediate<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> see greet<br>
                 : greet
                         <blockquote>"I speak Beetle" .</blockquote>
                 ;<br>
-                <span style="color:green;">ok</span></code>
+                <span style="color:green;">ready</span></code>
         </div>
 
         <a name="nonamedefs"><h2>d. Définitions non nommées (:noname)</h2></a>
@@ -146,14 +146,14 @@
 
         <div class="div_code">
             <code>Beetle> defer print ( créons une définition qui n'a pas d'instruction )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> <b>:noname</b> .cr ; ( créons une définition qui n'a pas de nom )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> <b>is</b> print ( ici, on précise que cette définition nom nommée sera associée au mot 'print' )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 2 print ( nous voulons afficher 2 en utilisant 'print' )<br>
                 2<br>
-                <span style="color:green;">ok</span>
+                <span style="color:green;">ready</span>
             </code>
         </div>
         <a name="emptydefs"><h2>e. Définitions vides (defer)</h2></a>
@@ -164,14 +164,14 @@
 
         <div class="div_code">
             <code>Beetle> <b>defer</b> .3* ( créons une définition qui n'a pas d'instruction )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> :noname 3 * . ; ( créons une définition qui n'a pas de nom )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> is .3* ( ici, on précise que cette définition nom nommée sera associée au mot '.3*' )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 2 .3* ( nous voulons afficher 6 en utilisant '.3*' )<br>
                 6<br>
-                <span style="color:green;">ok</span>
+                <span style="color:green;">ready</span>
             </code>
         </div>
         <a name="globalvars"><h2>f. Définitions de variables globales (var et 2var)</h2></a>
@@ -182,27 +182,27 @@
 
         <div class="div_code">
             <code>Beetle> 30 <b>var</b> temperature ( mémoriser 30 dans la variable temperature : le mot temperature se trouve immédiatement sur la pile de travail )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 30 <b>var</b> temperature @ .( vous pouvez écrire ceci du coup pour afficher diretement le contenu de votre variable température )<br>
-                30 <span style="color:green;">ok</span><br><br>
+                30 <span style="color:green;">ready</span><br><br>
                 Beetle> 3.5 <b>var</b> secondes ( mémoriser 3.5 dans la variable secondes )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> "Une chaine de caractères" <b>var</b> chaine ( mémoriser "Une chaine de caractères" dans la variable chaine )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> [ 1 2 ] <b>var</b> tableau ( mémoriser un tableau indéxé dans la variable tableau )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> { n1 : 1 , n2 : 2 } <b>var</b> hashtable ( mémoriser une table de hachage dans la variable hashtable )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> hashtable @ . ( pour afficher le contenu de hashable )<br>
-                {'n1':1, 'n2':2} <span style="color:green;">ok</span><br><br>
+                {'n1':1, 'n2':2} <span style="color:green;">ready</span><br><br>
                 Beetle> { n3 : 3 , n4 : 4 } hashtable ! ( pour modifier le contenu de hashtable )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> forget hashtable ( pour supprimer hashtable de votre vocabulaire )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 2 3 2var a ( créé le tableau 'a' contenant 3 et 2 : l'ordre des valeurs que l'on met dans ce tableau est important )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> a @ . ( affichage du contenu de 'a' )<br>
-                [3, 2] <span style="color:green;">ok</span>
+                [3, 2] <span style="color:green;">ready</span>
             </code>
         </div>
 
@@ -221,13 +221,13 @@
         <div class="div_code">
             <code>Beetle> 5 <b>local</b> a ( ceci n'est pas autorisé : il n'est pas possible d'utiliser le mot local en dehors d'une définition )<br>
                 <span style="color:red;">local fatal : local variables are allowed in definition only</span><br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> : x <b>local</b> a 6 a ! a @ . ; ( il faut créer les variables locales dans une définition. Ici, on affecte 6 à 'a', 
                 puis on affiche le contenu de 'a'. Et 'a' est initialisée avec la valeur du haut de la pile. Tout ceci dans une 
                 définition qui s'appelle 'x'. )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 5 x ( appel de notre nouveau mot 'x' )<br>
-                6 <span style="color:green;">ok</span><br><br>
+                6 <span style="color:green;">ready</span><br><br>
             </code>
         </div>
 
@@ -237,23 +237,23 @@
 
         <div class="div_code">
             <code>Beetle> 30 <b>const</b> temperature ( mémoriser 30 dans la constante temperature )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 3.5 <b>const</b> secondes ( mémoriser 3.5 dans la constante secondes )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> "Une chaine de caractères" <b>const</b> chaine ( mémoriser "Une chaine de caractères" dans la constante chaine )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> [ 1 2 ] <b>const</b> tableau ( mémoriser un tableau indéxé dans la constante tableau )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> { n1 : 1 , n2 : 2 } <b>const</b> hashtable ( mémoriser une table de hachage dans la constante hashtable )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> hashtable . ( pour afficher le contenu de hashable : contrairement à une variable, vous ne pouvez pas modifier une constante. Vous ne pouvez pas utiliser ! )<br>
-                {'n1':1, 'n2':2} <span style="color:green;">ok</span><br><br>
+                {'n1':1, 'n2':2} <span style="color:green;">ready</span><br><br>
                 Beetle> forget hashtable ( pour supprimer hashtable de votre vocabulaire )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> 2 3 2const a ( créé le tableau 'a' contenant 3 et 2 : l'ordre des valeurs que l'on met dans ce tableau est important )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> a . ( pour les constantes, nous n'utilisons pas @ pour en voir le contenu )<br>
-                [3, 2] <span style="color:green;">ok</span>
+                [3, 2] <span style="color:green;">ready</span>
             </code>
         </div>
         
@@ -265,37 +265,37 @@
 
         <div class="div_code">
             <code>Beetle> : someword "Hello" . ; ( on définit le mot simple 'someword' )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> see someword ( voir la définition de someword )<br>
                 : sw
                     <blockquote>"Hello" .</blockquote>
                 ;<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> : imm postpone someword "I'm Beetle" . ; immediate ( créer une définition imediate contenant un postpone )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> see imm ( voir la définition de 'imm' )<br>
                 : imm<br>
                     <blockquote>someword "I'm Beetle" .</blockquote> 
                 ; immediate<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> : exemple imm ; ( créer une nouvelle définition 'exemple' )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> see exemple ( voir la définition de 'exemple' )<br>
                 : exemple<br>
                     <blockquote>someword</blockquote> 
                 ;<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> someword ( exécution de 'someword' )<br>
-                Hello <span style="color:green;">ok</span><br><br>
+                Hello <span style="color:green;">ready</span><br><br>
                 Beetle> imm ( exécution de 'imm' )<br>
-                I'm Beetle <span style="color:green;">ok</span><br><br>
+                I'm Beetle <span style="color:green;">ready</span><br><br>
                 Beetle> exemple ( exécution de 'exemple' )<br>
-                Hello <span style="color:green;">ok</span><br><br>
+                Hello <span style="color:green;">ready</span><br><br>
                 Beetle> postpone ( doit entrainer une erreur )<br>
                 <span style="color:magenta;">postpone error : variable or definition name is missing</span><br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
                 Beetle> postpone dup ( ne fait rien : du point de vue de la sémantique, c'est correct mais ça ne veut rien dire )<br>
-                <span style="color:green;">ok</span><br><br>
+                <span style="color:green;">ready</span><br><br>
             </code>
         </div>
 
@@ -306,13 +306,13 @@
 
         <div class="div_code">
             <code>Beetle> : t local val val @ 1 = if "abort" . abort else 2 dup + . then 3 dup + . ;<br>
-                <span style="color:green;">ok</span><br>
+                <span style="color:green;">ready</span><br>
                 Beetle> 1 t<br>
                 abort<br>
-                <span style="color:green;">ok</span><br>
+                <span style="color:green;">ready</span><br>
                 Beetle> 2 t<br>
                 46<br>
-                <span style="color:green;">ok</span>
+                <span style="color:green;">ready</span>
             </code>
         </div>
 
