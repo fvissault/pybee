@@ -22,7 +22,7 @@ class Definitions:
         if self.interpreter.output == 'web':
             print(mystr, end='')
         else:
-            print(mystr.strip(), end='')
+            print(mystr.strip())
         return 'nobreak'
 
     '''
