@@ -9,7 +9,7 @@ class Io:
         if self.require_stack(1, '?local') == None:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
-            print(temp, end='')
+            print(temp)
             return 'nobreak'
 
     '''
