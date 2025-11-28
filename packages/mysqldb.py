@@ -223,11 +223,19 @@ class mysqldb(base_module):
     req @ " >|" s+ req ! 
     req @ evaluate''',
             #*********************************
-            'updaterecord' : '''''',
+            'updaterecord' : '''    local wherecond 
+    local coltoupdate 
+    local tablename
+    "|update> <#0#> set <#1#> where <#2#> >|" [ tablename @ coltoupdate @ wherecond @ ] format evaluate''',
             #*********************************
-            'deleterecord' : '''''',
+            'deleterecord' : '''    local wherecond
+    local tablename
+    "|delete> <#0#> where <#1#> >|" [ tablename @ wherecond @ ] format evaluate''',
             #*********************************
-            'selectrecord' : '''''',
+            'selectrecord' : '''    local wherecond
+    local coltoselect
+    local tablename
+    "|select> <#0#> from <#1#> where <#2#> >|" [ coltoselect @ tablename @ wherecond @ ] format evaluate''',
             #*********************************
             'droptable' : '''    local tablename 
     "|drop> table <#0#> >|" [ tablename @ ] format evaluate''',
@@ -347,17 +355,6 @@ class mysqldb(base_module):
     
     '''
     Instruction |create> : action de création : |create> (DATABASE|TABLE) name [option] >|
-
-    CREATE TABLE IF NOT EXISTS `users` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-    CREATE TABLE IF NOT EXISTS `users` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `firstname` varchar(50) NOT NULL,
-        PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     '''
     @auto_connect
     def create_instr(self):
@@ -534,7 +531,7 @@ class mysqldb(base_module):
                 next = self.seq_next()
                 if next == None:
                     break
-        sql += ' from'
+        sql += ' from '
         next = self.seq_next()
         if next != None:
             while next.lower() != 'where' :
