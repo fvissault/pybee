@@ -31,6 +31,7 @@ class mysqldb(base_module):
             '|alter>' : self.alter_instr,
             '>|' : self.endreq_instr,
             'chooseengine' : self.chooseeng_instr,
+            'engine?' : self.eng_instr,
             #*********************************
             # "hostname" "username" "userpass" dbcred
             'dbcred' : '''    local upass 
@@ -798,7 +799,22 @@ class mysqldb(base_module):
             return self.request_malformed(sql)
         return 'nobreak'
 
+    '''
+    Instruction chooseengine : permet de sélectionner le type de base de données utilisé
+    '''
     def chooseeng_instr(self):
         next = self.seq_next()
         if next == None:
-            return mysqldb_errors.error_request_malformed.print_error('chooseengine', self.interpreter.output)
+            return mysqldb_errors.error_engine_expected.print_error('chooseengine', self.interpreter.output)
+        if next.lower() not in ['mysql', 'postgres']:
+            return mysqldb_errors.error_engine_expected.print_error('chooseengine', self.interpreter.output)
+        self.engine = next
+        return 'nobreak'
+
+    '''
+    Instruction : engine? : permet de savoir quelle base de données est utilisée
+    Par défaut, engine = mysql
+    '''
+    def eng_instr(self):
+        self.work.appendleft(self.engine)
+        return 'nobreak'
