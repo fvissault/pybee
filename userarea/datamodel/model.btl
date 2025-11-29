@@ -9,11 +9,7 @@ use test4
 
 ( création de la table 'users' si elle n'existe pas déjà )
 "users" createtab
-"users" [ [ "firstname" "varchar(50) NOT NULL" ] 
-          [ "lastname" "varchar(50) NOT NULL" ] 
-          [ "email" "varchar(50) NOT NULL" ] 
-          [ "password" "varchar(32) NOT NULL" ] 
-          [ "active" "boolean NOT NULL" ] ] addcolumns
+"users" [ [ "firstname" "varchar(50) NOT NULL" ] [ "lastname" "varchar(50) NOT NULL" ] [ "email" "varchar(50) NOT NULL" ] [ "password" "varchar(32) NOT NULL" ] [ "active" "boolean NOT NULL" ] ] addcolumns
 
 ( "users" [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] add1record )
 "users" [ [ "Frédéric" "Vissault" "frederic.vissault@gmail.com" "password" 1 ] [ "Brigitte" "Vissault" "brigitte.vissault@gmail.com" "password" 1 ] ] addrecords
