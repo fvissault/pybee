@@ -7,4 +7,5 @@ class mysqldb_errors:
     error_request_malformed =       error('fatal', 'request malformed')
     error_integer_superior_to_0 =   error('fatal', 'integer must be superior to 0')
     error_request_dont_work =       error('fatal', 'request don\'t work')
-    error_engine_expected =         error('error', 'engine expected : mysql or postgres')
+    error_engine_expected =         error('error', 'engine expected : mysql or postgresql')
+    error_pg_not_supported =        error('error', 'not supported on PostgreSQL')
