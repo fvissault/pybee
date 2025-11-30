@@ -85,15 +85,15 @@ class base_module:
     def exec_interpreter(self, sequence):
         db = None
         cursor = None
-        if 'mysqldb' in self.interpreter.packages:
-            db = self.interpreter.packages['mysqldb'].db
-            cursor = self.interpreter.packages['mysqldb'].cursor
-            self.interpreter.packages['mysqldb'].db = None
-            self.interpreter.packages['mysqldb'].cursor = None
+        if 'db' in self.interpreter.packages:
+            db = self.interpreter.packages['db'].db
+            cursor = self.interpreter.packages['db'].cursor
+            self.interpreter.packages['db'].db = None
+            self.interpreter.packages['db'].cursor = None
         i = deepcopy(self.interpreter)
-        if 'mysqldb' in self.interpreter.packages:
-            self.interpreter.packages['mysqldb'].db = db
-            self.interpreter.packages['mysqldb'].cursor = cursor
+        if 'db' in self.interpreter.packages:
+            self.interpreter.packages['db'].db = db
+            self.interpreter.packages['db'].cursor = cursor
         i.sequences = []
         i.lastseqnumber = -1
         i.work.clear()
