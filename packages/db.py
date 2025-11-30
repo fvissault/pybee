@@ -246,18 +246,6 @@ class db(base_module):
             'dropuser' : '''    local username 
     "|drop> user <#0#> >|" [ username @ ] format evaluate''',
             #*********************************
-            'dropproc' : '''    local procname 
-    "|drop> procedure <#0#> >|" [ procname @ ] format evaluate''',
-            #*********************************
-            'dropfunc' : '''   local funcname 
-    "|drop> function <#0#> >|" [ funcname @ ] format evaluate''',
-            #*********************************
-            'dropevent' : '''   local eventname 
-    "|drop> event <#0#> >|" [ eventname @ ] format evaluate''',
-            #*********************************
-            'droptrigger' : '''   local trigname 
-    "|drop> trigger <#0#> >|" [ trigname @ ] format evaluate''',
-            #*********************************
             'trunctable' : '''   local tablename 
     "|truncate> <#0#> >|" [ tablename @ ] format evaluate'''
         }
