@@ -1176,9 +1176,28 @@ class web(base_module):
     formulaire contdiv @ addcontent 
     container @ formulaire @ addcontent''',
             #*********************************
-            'hdropdown' : '''    local links 
+            'hdropdown' : '''    local links
+    local btncontent 
     local name
     local container
+    name @ div local dropdown
+    dropdown "class" "dropdown" addattr
+    btncontent @ "button" button local btn
+    btn "class" "dropbtn" addattr
+    dropdown btn @ addcontent
+    name @ "content" s+ div local ddcontent
+    ddcontent "class" "dropdown-content" addattr
+    dropdown ddcontent @ addcontent
+    0 local content 
+    0 local href 
+    0 local i 
+    links @ cells i 
+    do
+        links @ i @ cell@ 0 cell@ content !
+        links @ i @ cell@ 1 cell@ href !
+        ddcontent content @ href @ safeorescape a addcontent
+    loop
+    container @ dropdown @ addcontent 
     '''
         }
         self.help = web_help(self.interpreter.output)
