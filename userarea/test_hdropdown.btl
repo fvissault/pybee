@@ -1,0 +1,10 @@
+<?btl
+webreset
+title "Page pour tester les hover dropdowns" addcontent
+html "lang" lang? addattr
+head "userarea/css/hdropdown.css" headlink addcontent
+
+body "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] hdropdown
+
+html @ generate cls
+?>
