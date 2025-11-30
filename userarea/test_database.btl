@@ -1,5 +1,5 @@
 <?btl
-import mysqldb
+import db
 clt
 ( dbparam )
 connect
