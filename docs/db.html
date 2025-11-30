@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Package 'db'</title>
+        <!--<link rel="stylesheet" href="main.css">-->
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body style="font-family:tahoma,arial;">
+        <div class="div_logo">
+            <img src="images/logo.png" width="250"/>
+        </div>
+        <div class="div_title">
+            <h1>XII.5. Module 'db'</h1>
+        </div>
+        <div style="clear:both;"><hr></div>
+
+        <p><a href="date.html">Précédent : XII.4. Packages : Module 'date'</a> | <a href="index.html">Index</a> | <a href="web.html">Suivant : XII.6. Packages : Module 'web'</a></p>
+
+        <a name="wordslist"><h3>1. Ensemble des mots</h3></a>
+        <p>
+            L'ensemble des mots qui composent ce package est le suivant : <br>
+            <b>
+                <a href="#closereq">>|</a> <a href="#isclose">?close</a> <a href="#isconnect">?connect</a> 
+                <a href="#add1record">add1record</a> <a href="#addcolumns">addcolumns</a> <a href="#addforeignkey">addforeignkey</a> 
+                <a href="#addkey">addkey</a> <a href="#addrecords">addrecords</a> 
+                <a href="#changecol">changecol</a> <a href="#close">close</a> <a href="#connect">connect</a> 
+                <a href="#createdb">createdb</a> <a href="#createtab">createtab</a> <a href="#dbconf">dbconf</a> 
+                <a href="#dbcred">dbcred</a> <a href="#credentials">dbname</a> <a href="#descdb">descdb</a> <a href="#desctab">desctab</a> 
+                <a href="#disconnect">disconnect</a> <a href="#dropdb">dropdb</a> <a href="#fexists">fexists</a> 
+                <a href="#fjoin">fjoin</a> <a href="#flist">flist</a> 
+                <a href="#credentials">hostname</a> <a href="#use">use</a> <a href="#credentials">username</a> 
+                <a href="#credentials">userpass</a> <a href="#alter">|alter></a> <a href="#create">|create></a> 
+                <a href="#delete">|delete></a> <a href="#drop">|drop></a> <a href="#insert">|insert></a> 
+                <a href="#select">|select></a> <a href="#show">|show></a> <a href="#truncate">|truncate></a> <a href="#update">|update></a>
+            </b>
+        </p>
+
+        <a name="requests"></a><h3>2. Construction des requêtes : <b>>|, |alter>, |create>, |delete>, |drop>, |insert>, |select>, |show>, |truncate>, |update></b></h3>
+        <p>
+            Nous n'allons pas réécrire un langage du type SQL ici. Ce n'est pas la vocation de Beetle. Nous allons juste tenter de 
+            donner un cadre pour écrire des requêtes.
+        </p>
+
+        <a name="closereq"></a><h4><u>Terminer une requête</u></h4>
+        <p>
+            Ce mot '>|' est le marqueur de fin de requête. Utilisé seul, ce mot lève une erreur.<br>
+            La structure générale d'une requête possède la syntaxe suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                |action> ... <b>>|</b> avec action = alter | create | delete | drop | insert | select | show | truncate | update
+            </code>
+        </div>
+        <p>
+            Toutes les requêtes renvoient une structure json sur la pile de travail.
+        </p>
+
+        <a name="show"></a><h4><u>Requête show</u></h4>
+        <p>
+            La requête show vous permet connaitre la structure de votre base de données ou d'une table, etc...<br>
+            L'information récoltée est ajoutée, sous la forme d'un json, en haut de la pile de travail.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                |show> databases >|<br>
+                |show> tables from <i>dbname</i> >|<br>
+                |show> fields from <i>tablename</i> >|<br>
+                |show> global status >|<br>
+                |show> status >|<br>
+                |show> index from <i>tablename</i> >|<br>
+                |show> keys from <i>tablename</i> >|<br>
+                |show> privileges >|<br>
+                |show> events >|<br>
+                |show> triggers >|<br>
+                |show> procedure status >|<br>
+                |show> function status >|
+            </code>
+        </div>
+        <p>
+            Exemple d'éxecution d'une requête 'show' :
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> |show> fields from users >| .<br>
+[{'Field': 'id', 'Type': 'int(11)', 'Null': 'NO', 'Key': 'PRI', 'Default': None, 'Extra': 'auto_increment'}, {'Field': 'firstname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'lastname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'email', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'password', 'Type': 'varchar(32)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'active', 'Type': 'tinyint(1)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="create"></a><h4><u>Requête create</u></h4>
+        <p>
+            Avec la requête create, vous allez pouvoir faire plusieurs actions sur votre base de données.
+            <ol>
+                <li>Créer une nouvelle base de données</li>
+                <li>Créer une nouvelle table dans votre base de données</li>
+            </ol>
+        </p>
+        <p>
+            Pour créer une nouvelle base de données, voici les syntaxes possibles :
+        </p>
+        <div class="div_code">
+            <code>
+                |create> database <i>dbname</i> >| ( <b>création simple si votre base n'existe pas</b> )<br>
+                |create> database <i>dbname</i> charset <i>charset_name</i> collate <i>collation_name</i> encryption y|n >| ( <b>création complète si votre base n'existe pas.</b> )<br><br>
+                ( Le mot '<b>createdb</b>' implémente facilement |create> database <i>dbname</i> charset utf8mb3 >| )
+            </code>
+        </div>
+        <p>
+            Pour créer une nouvelle table dans votre base de données, voici les syntaxes possibles :
+        </p>
+        <div class="div_code">
+            <code>
+                |create> table <i>tablename</i> >| ( <b>création simple si votre base n'existe pas</b> )<br>
+                |create> table <i>tablename</i> charset <i>charset_name</i> ai <i>ai_value</i> >| ( <b>création simple avec une valeur de auto increment positionnable et un charset.</b> )<br><br>
+                ( Le mot '<b>createtab</b>' implémente facilement |create> table <i>tablename</i> charset utf8mb3 engine InnoDB >| )<br><br>
+                |create> table <i>tablename</i> like <i>other_tablename</i> >| ( <b>création à partir d'une autre table</b> )
+            </code>
+        </div>
+        <p>
+            Les créations se font uniquement si les entités n'existent pas.<br>
+            Dans le cas des tables, l'attribut "<b>`id` int(11) not null auto_increment, primary key (`id`)</b>" est systématiquement ajouté dans les tables créées.<br>
+            La requête de création ne renvoie rien.
+        </p>
+
+        <a name="drop"></a><h4><u>Requête drop</u></h4>
+        <p>
+            Le mot |drop> vous permet de supprimer des éléments de votre base de données. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |drop> :
+        </p>
+        <div class="div_code">
+            <code>
+                |drop> database <i>dbname</i> >|<br>
+                |drop> table <i>tablename</i> >| ( <b>seulement si la table tablename existe</b> )<br>
+                |drop> [ procedure | function | trigger | event | user ] <i>entityname</i> >|<br>
+            </code>
+        </div>
+
+        <a name="truncate"></a><h4><u>Requête truncate</u></h4>
+        <p>
+            Le mot |truncate> supprime toutes les lignes d'une table, sans supprimer la structure. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |truncate> :
+        </p>
+        <div class="div_code">
+            <code>
+                |truncate> <i>tablename</i> >|<br>
+            </code>
+        </div>
+
+        <a name="delete"></a><h4><u>Requête delete</u></h4>
+        <p>
+            Le mot |delete> supprime tout ou partie des enregistrements d'une table, sans supprimer la structure. La requête ne renvoie rien.<br>
+            Voici les syntaxes du mot |delete> :
+        </p>
+        <div class="div_code">
+            <code>
+                |delete> <i>tablename</i> [ where condition ] >|<br>
+            </code>
+        </div>
+
+        <a name="alter"></a><h4><u>Requête alter</u></h4>
+        <p>
+            Les altérations sont plus simples pour englober toutes les possibilités de la commande alter de MySql. La requête ne renvoie rien.<br>
+            Voici les syntaxes de la commande |alter> :
+        </p>
+        <div class="div_code">
+            <code>
+                |alter> database <i>dbname</i> <i>alteration</i> >| ( <b>altération d'une base de données</b> )<br>
+                |alter> table <i>tablename</i> add | alter | change | drop | modify | rename <i>alteration</i> >| ( <b>altération d'une table</b> )<br>
+            </code>
+        </div>
+
+        <h4><u>Requête insert</u></h4>
+        <p>
+            Pour vous permettre de créer des enregistrements dans une table, le mot |insert> est idéal. Le mot dépose sur la pile de 
+            travail l'identifiant du dernier enregistrement effectué.<br>
+            Voici les syntaxes de la commande |insert> :
+        </p>
+        <div class="div_code">
+            <code>
+                |insert> tablename (colname1, colname2, ...) values (value11, value21, ...), (value12, value22, ...), ... >| ( <b>insertion dans une table</b> )<br>
+            </code>
+        </div>
+
+        <h4><u>Requête update</u></h4>
+        <p>
+            Le mot |update> vous permet de modifier les données d'un ou plusieurs enregistrements d'une table. La requête ne renvoie rien.<br>
+            Voici les syntaxes de la commande |update> :
+        </p>
+        <div class="div_code">
+            <code>
+                |update> tablename set colname1=value1, colname2=value2, ... [ where condition ] >| ( <b>modification d'enregistrements d'une table</b> )<br>
+            </code>
+        </div>
+
+        <h4><u>Requête select</u></h4>
+        <p>
+            Le mot |select> vous permet d'extraire des données d'une table. La requête dépose sur le haut de la pile de travail les données
+            extraites sous la forme d'un Json.<br>
+            Voici les syntaxes de la commande |update> :
+        </p>
+        <div class="div_code">
+            <code>
+                |select> fields | * | count(*) from <i>tablenames</i> where condition >| ( <b>retourne les enregistrements d'une table</b> )<br>
+            </code>
+        </div>
+
+        <a name="connectdisconnect"></a><h3>3. Connexion et déconnexion : <b>?close, ?connect, close, connect, disconnect</b></h3>
+        <p>
+            Voici quelques mots qui vont vous aider à vous connecter et vous déconnecter d'une base de données.<br>
+            Toutefois, toutes les requêtes se connectent par un mécanisme d'auto-connection. Tous les mots qui constituent ce chapitre
+            ne sont pas nécessairement utiles sauf si vous choisissez d'adopter une autre stratégie por effectuer des requêtes SQL.
+        </p>
+
+        <a name="isclose"></a><h4><u>Mot '?close'</u></h4>
+        <p>
+            Ce mot vous permet de savoir la connexion est fermée. Ce mot dépose en haut de la pile de travail 0 ou 1.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> ?close .<br>
+                0 ( <b>la connexion n'est pas fermée</b> )<br> 
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="isconnect"></a><h4><u>Mot '?connect'</u></h4>
+        <p>
+            Ce mot vous permet de savoir si vous êtes connecté à une base de données. Ce mot dépose en haut de la pile de travail 0 ou 1.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> ?connect .<br>
+                0 ( <b>vous n'êtes pas connecté</b> )<br> 
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="close"></a><h4><u>Mot 'close'</u></h4>
+        <p>
+            Ce mot vous permet de fermer la connexion. Ce mot ne renvoie rien sur la pile de travail.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> close<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="connect"></a><h4><u>Mot 'connect'</u></h4>
+        <p>
+            Ce mot vous permet de vous connecter à une base de données. Ce mot dépose sur la pile de travail le statut de la connection.<br>
+            <ul>
+                <li>0 si la connexion n'a pas pu être réalisée</li>
+                <li>1 si la connexion a pu être réalisée</li>
+            </ul>
+            Le mot a besoin des variables : hostname, username, userpass pour établir une connexion.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> connect .<br>
+                0 ( <b>vous n'êtes pas connecté</b> )<br> 
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="disconnect"></a><h4><u>Mot 'disconnect'</u></h4>
+        <p>
+            Ce mot vous permet de vous déconnecter d'une base de données. Ce mot ne renvoie rien sur la pile de travail.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> disconnect<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="credentials"></a><h3>4. Credentials : <b>dbconf, dbcred, dbname, hostname, username, userpass</b></h3>
+        <h4><u>La variables pour se connecter à une base de données : </u></h4>
+        <ul>
+            <li><b>hostname</b> : le nom du serveur qui héberge votre base de données</li>
+            <li><b>dbname</b> : le nom de la base de données qui se trouve sur votre serveur</li>
+            <li><b>username</b> : l'utilisateur habilité à se connecter à la base de données</li>
+            <li><b>userpass</b> : le mot de passe de l'utilisateur habilité</li>
+        </ul>
+
+        <a name="dbconf"></a><h4><u>Mot 'dbconf'</u></h4>
+        <p>
+            Ce mot affiche la configuration courante.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> <b>dbconf</b><br>
+                Database server (hostname) = localhost<br>
+                Database name &nbsp;&nbsp;&nbsp;&nbsp;(dbname) =<br>
+                User name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(username) = root<br>
+                User password &nbsp;&nbsp;(userpass) =<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="dbcred"></a><h4><u>Mot 'dbcred'</u></h4>
+        <p>
+            Ce mot vous permet de positionner la configuration nécessaire à une connexion.
+        </p>
+        <div class="div_code">
+            <code>
+                Beetle> "hostname" "username" "userpass" <b>dbcred</b><br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="datamodel"></a><h3>5. Construction de modèle de données : <b>addcolumns, addforeignkey, addkey, changecol, createdb, createtab, descdb, desctab, dropdb, fexists, use</b></h3>
+        <p>
+            Voici quelques mots qui vont vous permettre de construire un modèle de données.<br>
+            Un exemple simple de modèle de données :
+        </p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                ( mise en place des crédentials )<br>
+                "test4" dbname !<br>
+                "localhost" "root" "" dbcred<br><br>
+
+                ( création de la base de données si elle n'existe pas déjà )<br>
+                dbname @ createdb<br>
+                use "test4"<br><br>
+
+                ( création de la table 'users' si elle n'existe pas déjà )<br>
+                "users" createtab<br>
+                "users" [ [ "firstname" "varchar(50) not null" ] [ "lastname" "varchar(50) not null" ] [ "email" "varchar(50) not null" ] [ "password" "varchar(32) not null" ] [ "active" "boolean not null" ] ] addcolumns<br>
+                ?>
+            </code>
+        </div>
+
+        <a name="add1record"></a><h4><u>Mot 'add1record'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter un enregistrement à une table. Le mot va chercher automatiquement les attributs (sauf 'id')
+            de la table concernée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ columnvalue1 columnvalue2 ... ] <b>add1record</b>
+            </code>
+        </div>
+
+        <a name="addcolumns"></a><h4><u>Mot 'addcolumns'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter un ou plusieurs attributs à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ [ "columnname1" "columndef1" ] [ "columnname2" "columndef2" ] ... ] <b>addcolumns</b>
+            </code>
+        </div>
+
+        <a name="addforeignkey"></a><h4><u>Mot 'addforeignkey'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter une clé étrangère à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>desttablename</i>" "<i>origtablename</i>" "<i>cascadeinformation</i>" <b>addforeignkey</b><br>
+                cascadeinformation = "<b>delete</b>" | "<b>update</b>" | "<b>delete update</b>"
+            </code>
+        </div>
+        
+        <a name="addkey"></a><h4><u>Mot 'addkey'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter une clé (index, primaire ou unique) à une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "index" [ "<i>nomindex</i>" "<i>columnsindex</i>" ] <b>addkey</b><br>
+                "<i>tablename</i>" "key|unique" "<i>columnname</i>" <b>addkey</b>
+            </code>
+        </div>
+
+        <a name="addrecords"></a><h4><u>Mot 'addrecords'</u></h4>
+        <p>
+            Ce mot vous permet d'ajouter plusieurs enregistrements à une table. Le mot va chercher automatiquement les attributs (sauf 'id')
+            de la table concernée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" [ [ "columnvalue11" "columnvalue12" ... ] [ "columnvalue21" "columnvalue22" ... ] ... ] <b>addrecords</b>
+            </code>
+        </div>
+
+        <a name="changecol"></a><h4><u>Mot 'changecol'</u></h4>
+        <p>
+            Ce mot vous permet de modifier un attribut d'une table. Cette action se fait par altération.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "<i>oldcolumnname</i>" "<i>newcolumnname</i>" "<i>newcolumndef</i>" <b>changecol</b>
+            </code>
+        </div>
+
+        <a name="createdb"></a><h4><u>Mot 'createdb'</u></h4>
+        <p>
+            Ce mot vous permet de créer une base de données si elle n'existe pas.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>createdb</b>
+            </code>
+        </div>
+
+        <a name="createtab"></a><h4><u>Mot 'createtab'</u></h4>
+        <p>
+            Ce mot vous permet de créer une table dans une base de données si elle n'existe pas.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>createtab</b>
+            </code>
+        </div>
+
+        <a name="descdb"></a><h4><u>Mot 'descdb'</u></h4>
+        <p>
+            Ce mot vous renvoie sous la forme d'un Json la structure d'une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>descdb</b>
+            </code>
+        </div>
+
+        <a name="desctab"></a><h4><u>Mot 'desctab'</u></h4>
+        <p>
+            Ce mot vous renvoie sous la forme d'un Json la structure d'une table.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>desctab</b>
+            </code>
+        </div>
+
+        <a name="dropdb"></a><h4><u>Mot 'dropdb'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>dbname</i>" <b>dropdb</b>
+            </code>
+        </div>
+
+        <a name="fexists"></a><h4><u>Mot 'fexists'</u></h4>
+        <p>
+            Ce mot vous permet de tester l'existence d'un attribut dans une table. Vous pouvez obtenir la liste des attributs d'une
+            table avec le mot 'desctab'<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>fieldslist</i>" <i>fieldtotest</i> <b>fexists</b>
+            </code>
+        </div>
+
+        <a name="fjoin"></a><h4><u>Mot 'fjoin'</u></h4>
+        <p>
+            Ce mot fait une jointure entre les éléments d'une liste et renvoie une chaine de caractère.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                [ value1 value2 ... ] <b>fjoin</b> -> "(value1,value2...)"
+            </code>
+        </div>
+
+        <a name="flist"></a><h4><u>Mot 'flist'</u></h4>
+        <p>
+            Ce mot récupère les noms des colonnes d'une table (sauf l'attribut 'id') et renvoie une liste avec ces noms de colonnes. 
+            Ce mot s'utilise facilement avec le mot '<b>desctab</b>'<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>flist</b> -> ['fieldname1', 'fieldname2', ...]
+            </code>
+        </div>
+
+        <a name="use"></a><h4><u>Mot 'use'</u></h4>
+        <p>
+            Le mot 'use' va vous permettre de sélectionner la base de données sur laquelle vous souhaitez travailler. <br>
+            Vous allez donc utiliser de mot assez souvent. Il positionne un cursor sur la base de données voulue.<br>
+            Si la base de données n'existe pas, une erreur de malformation de la requête est renvoyée.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                <b>use</b> <i>dbname</i>
+            </code>
+        </div>
+
+
+        <p><a href="date.html">Précédent : XII.4. Packages : Module 'date'</a> | <a href="index.html">Index</a> | <a href="web.html">Suivant : XII.6. Packages : Module 'web'</a></p>
+    </body>
+</html>
