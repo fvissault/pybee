@@ -23,18 +23,48 @@
             <b>
                 <a href="#closereq">>|</a> <a href="#isclose">?close</a> <a href="#isconnect">?connect</a> 
                 <a href="#add1record">add1record</a> <a href="#addcolumns">addcolumns</a> <a href="#addforeignkey">addforeignkey</a> 
-                <a href="#addkey">addkey</a> <a href="#addrecords">addrecords</a> 
-                <a href="#changecol">changecol</a> <a href="#close">close</a> <a href="#connect">connect</a> 
+                <a href="#addkey">addkey</a> <a href="#addrecords">addrecords</a> <a href="#changecol">changecol</a> 
+                <a href="#chooseengine">chooseengine</a> <a href="#close">close</a> <a href="#connect">connect</a> 
                 <a href="#createdb">createdb</a> <a href="#createtab">createtab</a> <a href="#dbconf">dbconf</a> 
-                <a href="#dbcred">dbcred</a> <a href="#credentials">dbname</a> <a href="#descdb">descdb</a> <a href="#desctab">desctab</a> 
-                <a href="#disconnect">disconnect</a> <a href="#dropdb">dropdb</a> <a href="#fexists">fexists</a> 
-                <a href="#fjoin">fjoin</a> <a href="#flist">flist</a> 
-                <a href="#credentials">hostname</a> <a href="#use">use</a> <a href="#credentials">username</a> 
+                <a href="#dbcred">dbcred</a> <a href="#credentials">dbname</a> <a href="#deleterecord">deleterecord</a> 
+                <a href="#descdb">descdb</a> <a href="#desctab">desctab</a> <a href="#disconnect">disconnect</a> 
+                <a href="#dropdb">dropdb</a> <a href="#droptable">droptable</a> <a href="#dropuser">dropuser</a> 
+                <a href="#fexists">fexists</a> <a href="#engineset">engine?</a> <a href="#fjoin">fjoin</a> <a href="#flist">flist</a> 
+                <a href="#credentials">hostname</a> <a href="#selectrecord">selectrecord</a> <a href="#trunctable">trunctable</a> 
+                <a href="#updaterecord">updaterecord</a> <a href="#use">use</a> <a href="#credentials">username</a> 
                 <a href="#credentials">userpass</a> <a href="#alter">|alter></a> <a href="#create">|create></a> 
-                <a href="#delete">|delete></a> <a href="#drop">|drop></a> <a href="#insert">|insert></a> 
-                <a href="#select">|select></a> <a href="#show">|show></a> <a href="#truncate">|truncate></a> <a href="#update">|update></a>
+                <a href="#delete">|delete></a> <a href="#drop">|drop></a> <a href="#insert">|insert></a> <a href="#select">|select></a> 
+                <a href="#show">|show></a> <a href="#truncate">|truncate></a> <a href="#update">|update></a>
             </b>
         </p>
+
+        <a name="chooseengine"></a>
+        <p>
+            Le package est unifié pour permettre des traitements sur les bases de données : MySql et PostgreSQL.<br>
+            Un paramètre vous permet de choisir le moteur de la base de données que vous souhaitez utiliser avec le mot : 
+            '<b>chooseengine</b>'.
+        </p>
+        <div class="div_code">
+            <code>
+                <b>chooseengine</b> mysql|postgresql
+            </code>
+        </div>
+        <p>
+            Par défaut, MySql sera choisi au chargement du package. Seules les valeurs 'mysql' ou 'postgresql' sont autorisées pour
+            le mot '<b>chooseengine</b>'. Dans ce cas, le mot vous renvoie un erreur non fatale et reste branché sur la base de 
+            données MySql.
+        </p>
+
+        <a name="engineset"></a>
+        <p>
+            Toutefois un mot vous permet de savoir quel moteur est utilisé : '<b>engine?</b>'. Il positionne sur le pile de données
+            le nom du moteur de base de données utilisé.
+        </p>
+        <div class="div_code">
+            <code>
+                <b>engine?</b>
+            </code>
+        </div>
 
         <a name="requests"></a><h3>2. Construction des requêtes : <b>>|, |alter>, |create>, |delete>, |drop>, |insert>, |select>, |show>, |truncate>, |update></b></h3>
         <p>
@@ -71,11 +101,6 @@
                 |show> status >|<br>
                 |show> index from <i>tablename</i> >|<br>
                 |show> keys from <i>tablename</i> >|<br>
-                |show> privileges >|<br>
-                |show> events >|<br>
-                |show> triggers >|<br>
-                |show> procedure status >|<br>
-                |show> function status >|
             </code>
         </div>
         <p>
@@ -83,7 +108,7 @@
         </p>
         <div class="div_code">
             <code>
-                Beetle> |show> fields from users >| .<br>
+                Beetle> |show> fields from users >| .cr<br>
 [{'Field': 'id', 'Type': 'int(11)', 'Null': 'NO', 'Key': 'PRI', 'Default': None, 'Extra': 'auto_increment'}, {'Field': 'firstname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'lastname', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'email', 'Type': 'varchar(50)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'password', 'Type': 'varchar(32)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}, {'Field': 'active', 'Type': 'tinyint(1)', 'Null': 'NO', 'Key': '', 'Default': None, 'Extra': ''}]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -219,7 +244,7 @@
         </p>
         <div class="div_code">
             <code>
-                Beetle> ?close .<br>
+                Beetle> ?close .cr<br>
                 0 ( <b>la connexion n'est pas fermée</b> )<br> 
                 <span style="color:green;">ready</span>
             </code>
@@ -231,7 +256,7 @@
         </p>
         <div class="div_code">
             <code>
-                Beetle> ?connect .<br>
+                Beetle> ?connect .cr<br>
                 0 ( <b>vous n'êtes pas connecté</b> )<br> 
                 <span style="color:green;">ready</span>
             </code>
@@ -259,7 +284,7 @@
         </p>
         <div class="div_code">
             <code>
-                Beetle> connect .<br>
+                Beetle> connect .cr<br>
                 0 ( <b>vous n'êtes pas connecté</b> )<br> 
                 <span style="color:green;">ready</span>
             </code>
@@ -292,6 +317,7 @@
         <div class="div_code">
             <code>
                 Beetle> <b>dbconf</b><br>
+                Engine &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= mysql<br>
                 Database server (hostname) = localhost<br>
                 Database name &nbsp;&nbsp;&nbsp;&nbsp;(dbname) =<br>
                 User name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(username) = root<br>
@@ -311,7 +337,11 @@
             </code>
         </div>
 
-        <a name="datamodel"></a><h3>5. Construction de modèle de données : <b>addcolumns, addforeignkey, addkey, changecol, createdb, createtab, descdb, desctab, dropdb, fexists, use</b></h3>
+        <a name="datamodel"></a>
+        <h3>
+            5. Construction de modèle de données : <b>addcolumns, addforeignkey, addkey, changecol, createdb, createtab, deleterecord, 
+            descdb, desctab, dropdb, droptable, dropuser, engine?, fexists, selectrecord, trunctable, updaterecord, use</b>
+        </h3>
         <p>
             Voici quelques mots qui vont vous permettre de construire un modèle de données.<br>
             Un exemple simple de modèle de données :
@@ -426,6 +456,17 @@
             </code>
         </div>
 
+        <a name="deleterecord"></a><h4><u>Mot 'deleterecord'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer les données d'une table d'une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "<i>where_condition</i>" <b>deleterecord</b>
+            </code>
+        </div>
+
         <a name="descdb"></a><h4><u>Mot 'descdb'</u></h4>
         <p>
             Ce mot vous renvoie sous la forme d'un Json la structure d'une base de données.<br>
@@ -456,6 +497,29 @@
         <div class="div_code">
             <code>
                 "<i>dbname</i>" <b>dropdb</b>
+            </code>
+        </div>
+
+        <a name="droptable"></a><h4><u>Mot 'droptable'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer une table d'une base de données. Vous devez avoir sélectionné une base de données avant
+            d'utiliser ce mot.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>droptable</b>
+            </code>
+        </div>
+
+        <a name="dropuser"></a><h4><u>Mot 'dropuser'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer un utilisateur d'une base de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>username</i>" <b>dropuser</b>
             </code>
         </div>
 
@@ -494,9 +558,59 @@
             </code>
         </div>
 
+        <a name="selectrecord"></a><h4><u>Mot 'selectrecord'</u></h4>
+        <p>
+            Ce mot vous permet d'effectuer des requêtes 'select' sur la base de données. Il positionne sur la pile de données les
+            enregistrements trouvés sous la forme d'un tableau. Si aucun enregistrement n'est trouvé, un tableau vide ([]) est 
+            positionné sur la pile de données.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "<i>columntoselect</i>" "<i>wherecondition</i>" <b>selectrecord</b>
+            </code>
+        </div>
+        <ul>
+            <li><i>tablename</i> est une chaine de caractères contenant une suite d'un ou plusieurs 'tablename'
+            séparés par une virgule.</li>
+            <li><i>columntoselect</i> est une chaine de caractères contenant une suite d'un ou plusieurs 'columnname'
+            séparés par une virgule. Vous pouvez utiliser le joker '*'. Si plusieurs tables sont positionnées dans <i>tablename</i>
+            'columnname' doit contenir le nom de la table comme ceci : 'tablename.columnname'</li>
+            <li><i>wherecondition</i> est une chaine de caractères contenant une suite d'un ou plusieurs couples 'columnname=columnvalue'
+            séparés par 'and' et/ou 'or'.</li>
+        </ul>
+
+        <a name="trunctable"></a><h4><u>Mot 'trunctable'</u></h4>
+        <p>
+            Ce mot vous permet de supprimer la structure et les données d'une table.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" <b>trunctable</b>
+            </code>
+        </div>
+
+        <a name="updaterecord"></a><h4><u>Mot 'updaterecord'</u></h4>
+        <p>
+            Ce mot vous permet de modifier les données d'un ou plusieurs enregistrements d'une table.<br>
+            Sa syntaxe est la suivante :
+        </p>
+        <div class="div_code">
+            <code>
+                "<i>tablename</i>" "<i>columntoupdate</i>" "<i>wherecondition</i>" <b>updaterecord</b>
+            </code>
+        </div>
+        <ul>
+            <li><i>columntoupdate</i> est une chaine de caractères contenant une suite d'un ou plusieurs couples 'columnname=columnvalue'
+            séparés par une virgule.</li>
+            <li><i>wherecondition</i> est une chaine de caractères contenant une suite d'un ou plusieurs couples 'columnname=columnvalue'
+            séparés par 'and' et/ou 'or'.</li>
+        </ul>
+
         <a name="use"></a><h4><u>Mot 'use'</u></h4>
         <p>
-            Le mot 'use' va vous permettre de sélectionner la base de données sur laquelle vous souhaitez travailler. <br>
+            Le mot 'use' va vous permettre de sélectionner la base de données sur laquelle vous souhaitez travailler. 
             Vous allez donc utiliser de mot assez souvent. Il positionne un cursor sur la base de données voulue.<br>
             Si la base de données n'existe pas, une erreur de malformation de la requête est renvoyée.<br>
             Sa syntaxe est la suivante :
