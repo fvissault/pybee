@@ -65,13 +65,13 @@ class web(base_module):
                 then 
             loop 
         else 
-            "/>" .cr 
+            "/>" . 
         then 
         container @ "y" = 
         if 
-            "</<#0#>>" [ tag @ ] format .cr 
+            "</<#0#>>" [ tag @ ] format . 
         then 
-    then''',
+    then cr''',
             #*********************************
             'webreset' : '''    "html" ?var 
     if 
