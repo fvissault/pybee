@@ -1173,7 +1173,7 @@ class web(base_module):
         self.sessionvars = {'session_duration':30}
         self.usecookies = False
         self.version = 'v1.3.5'
-        self.packuse = ['mysqldb', 'mail']
+        self.packuse = ['db', 'mail']
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
