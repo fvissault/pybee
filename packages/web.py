@@ -10,6 +10,8 @@ import urllib.parse
 import json
 import os
 from datetime import datetime, timedelta
+import html
+from urllib.parse import urlparse
 
 class web(base_module):
     def __init__(self, interpreter):
@@ -59,7 +61,7 @@ class web(base_module):
                 content @ i @ cell@ item ! 
                 item @ ?str 
                 if 
-                    item @ . 
+                    item @ safeorescape . 
                 else 
                     item @ generate 
                 then 
@@ -176,8 +178,8 @@ class web(base_module):
     then 
     { tag : "script" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
             #*********************************
-            'img' : '''    { } local attrs 
-    "src" swap attrs cell+ drop 
+            'img' : '''    local src { } local attrs 
+    "src" src @ safeurl escapehtml attrs cell+ drop 
     { tag : "img" , content : [ ] , attrs : attrs @ , container : "n" }''',
             #*********************************
             'textarea' : '''    { } local attrs 
@@ -202,7 +204,7 @@ class web(base_module):
             'a' : '''    local href 
     local cont 
     { } local attrs 
-    "href" href @ attrs cell+ drop 
+    "href" href @ safeurl escapehtml attrs cell+ drop 
     { tag : "a" , content : [ cont @ ] , attrs : attrs @ , container : "y" }''',
             #*********************************
             'button' : '''    { } local attrs 
@@ -277,7 +279,7 @@ class web(base_module):
     if 
         "userarea/img/sort-solid-full.svg" img local sortimage 
         sortimage "width" 16 addattr 
-        sortimage "onclick" "sort(\"<#0#>\", this, <#1#>)" [ tableid @ colnum @ ] format addattr 
+        sortimage "onclick" "sort(\"<#0#>\", this, <#1#>)" [ tableid @ colnum @ ] format safeorescape addattr 
         sortimage "style" "vertical-align:middle;" addattr 
         tag sortimage @ addcontent 
     then 
@@ -286,7 +288,7 @@ class web(base_module):
         tag br addcontent 
         "mytablef<#0#>" [ colnum @ ] format "" "text" fieldarea local fa 
         fa "class" "filterinput" addattr 
-        fa "onkeyup" "filter(\"<#0#>\", this, <#1#>)" [ tableid @ colnum @ ] format addattr 
+        fa "onkeyup" "filter(\"<#0#>\", this, <#1#>)" [ tableid @ colnum @ ] format safeorescape addattr 
         fa "placeholder" "Filter..." addattr 
         tag fa @ addcontent 
     then 
@@ -394,7 +396,7 @@ class web(base_module):
     { } local attrs 
     "shape" shape @ attrs cell+ drop 
     "coords" coords @ attrs cell+ drop 
-    "href" href @ attrs cell+ drop 
+    "href" href @ safeurl escapehtml attrs cell+ drop 
     { tag : "area" , content : [ ] , attrs : attrs @ , container : "n" }''',
             #*********************************
             'map': '''    local name 
@@ -430,7 +432,7 @@ class web(base_module):
             'source': '''    local sourcetype 
     local src 
     { } local attrs 
-    "src" src @ attrs cell+ drop 
+    "src" src @ safeurl escapehtml attrs cell+ drop 
     "type" sourcetype @ attrs cell+ drop 
     { tag : "source" , content : [ ] , attrs : attrs @ , container : "n" }''',
             #*********************************
@@ -438,7 +440,7 @@ class web(base_module):
     local media 
     { } local attrs 
     "media" media @ attrs cell+ drop 
-    "scset" srcset @ attrs cell+ drop 
+    "srcset" srcset @ safeurl escapehtml attrs cell+ drop 
     { tag : "source" , content : [ ] , attrs : attrs @ , container : "n" }''',
             #*********************************
             'bold': '''    local cont 
@@ -546,7 +548,7 @@ class web(base_module):
             'form': '''    local method 
     local action 
     { } local attrs 
-    "action" action @ attrs cell+ drop 
+    "action" action @ safeurl escapehtml attrs cell+ drop 
     "method" method @ attrs cell+ drop 
     { tag : "form" , content : [ ] , attrs : attrs @ , container : "y" }''',
             #*********************************
@@ -557,7 +559,7 @@ class web(base_module):
             #*********************************
             'iframe': '''    local src 
     { } local attrs 
-    "src" src @ attrs cell+ drop 
+    "src" src @ safeurl escapehtml attrs cell+ drop 
     { tag : "iframe" , content : [ ] , attrs : attrs @ , container : "y" }''',
             #*********************************
             'ins': '''    local cont 
@@ -736,6 +738,11 @@ class web(base_module):
             'setsessduration' : self.setsessduration_instr,
             'sessduration?' : self.sessduration_instr,
             #*********************************
+            'escapehtml' : self.escapehtml_instr,
+            'safehtml' : self.safehtml_instr,
+            'safeorescape' : self.safe_or_escape_instr,
+            'safeurl' : self.safeurl_instr,
+            #*********************************
             'completeselect' : '''    select local tempselect 
     0 local i 
     0 local item 
@@ -892,7 +899,7 @@ class web(base_module):
                 "<#0#>tablinks" [ dir @ ] format local boutonclass 
             then 
             bouton "class" boutonclass @ addattr 
-            bouton "onclick" "openTab(event,\"<#0#>\",this,\"<#1#>\",\"<#2#>\")" [ buttonid @ color @ dir @ ] format addattr 
+            bouton "onclick" "openTab(event,\"<#0#>\",this,\"<#1#>\",\"<#2#>\")" [ buttonid @ color @ dir @ ] format safeorescape addattr 
             buttondiv @ bouton @ addcontent 
         loop 
         container @ buttondiv @ addcontent 
@@ -939,24 +946,24 @@ class web(base_module):
         "sidenav" div "var <#0#>" [ snname @ ] format evaluate drop 
         snname @ "class" "sidenav" addattr 
         container @ snname @ addcontent 
-        "&times;" "#" a local closebtn 
+        "__SAFE__&times;" "#" a local closebtn 
         closebtn @ "id" "closebtn" addattr 
         closebtn @ "class" "closebtn" addattr 
         sntype @ "push" = 
         if 
-            closebtn @ "onclick" "closeNavPush()" addattr 
+            closebtn @ "onclick" "closeNavPush()" safeorescape addattr 
         else 
-            closebtn @ "onclick" "closeNavOverlay()" addattr 
+            closebtn @ "onclick" "closeNavOverlay()" safeorescape addattr 
         then 
         snname @ closebtn @ addcontent 
-        "&#9776;" "#" a local openbtn 
+        "__SAFE__&#9776;" "#" a local openbtn 
         openbtn @ "id" "openbtn" addattr 
         openbtn @ "class" "openbtn" addattr 
         sntype @ "push" = 
         if 
-            openbtn @ "onclick" "openNavPush()" addattr 
+            openbtn @ "onclick" "openNavPush()" safeorescape addattr 
         else 
-            openbtn @ "onclick" "openNavOverlay()" addattr 
+            openbtn @ "onclick" "openNavOverlay()" safeorescape addattr 
         then 
         snname @ openbtn @ addcontent 
         0 local i 
@@ -1004,18 +1011,18 @@ class web(base_module):
         links @ i @ cell@ item ! 
         item @ 1 cell@ content ! 
         item @ 0 cell@ href ! 
-        content @ href @ a link ! 
+        content @ href @ safeurl safeorescape a link ! 
         defaultopen @ i @ = 
         if 
             link "class" "navlink defaultOpen" addattr 
         else 
             link "class" "navlink" addattr 
         then 
-        link "onclick" "openLink(event)" addattr 
+        link "onclick" "openLink(event)" safeorescape addattr 
         tnname @ link @ addcontent 
     loop 
     container @ tnname @ addcontent 
-    container @ "onload" "showDefault()" addattr''',
+    container @ "onload" "showDefault()" safeorescape addattr''',
             #*********************************
             'filteredlist' : '''    local name 
     local itemlist 
@@ -1030,7 +1037,7 @@ class web(base_module):
     "<#0#>_filter" [ name @ ] format "" "text" fieldarea local fa 
     fa "class" "filterinput" addattr 
     fa "placeholder" "Filter..." addattr 
-    fa "onkeyup" "listfilter(\"<#0#>\", this);" [ name @ ] format addattr 
+    fa "onkeyup" "listfilter(\"<#0#>\", this);" [ name @ ] format safeorescape addattr 
     container @ fa @ addcontent 
     container @ ulist @ addcontent''',
             #*********************************
@@ -1041,7 +1048,7 @@ class web(base_module):
     btncontent @ "nobutton" <> 
     if 
         btncontent @ "button" button local btn 
-        btn "onclick" "openmodal(\"<#0#>\", this)" [ name @ ] format addattr 
+        btn "onclick" "openmodal(\"<#0#>\", this)" [ name @ ] format safeorescape addattr 
         container @ btn @ addcontent 
     then 
     name @ div local modtemp 
@@ -1094,7 +1101,7 @@ class web(base_module):
     local formaction 
     local container 
     load translations/loginform 
-    formaction @ "post" form local formulaire 
+    formaction @ safeorescape "post" form local formulaire 
     formulaire "id" "loginform" addattr 
     "container" div local contdiv 
     contdiv "class" "container" addattr 
@@ -1116,7 +1123,7 @@ class web(base_module):
     contdiv "rememberme" _loginform addcontent 
     "forgot" _loginform span local spanzone 
     spanzone "class" "psw" addattr 
-    spanzone "pass?" _loginform passlostaction @ a addcontent 
+    spanzone "pass?" _loginform passlostaction @ safeorescape a addcontent 
     contdiv spanzone @ addcontent 
     formulaire contdiv @ addcontent 
     container @ formulaire @ addcontent''',
@@ -1125,7 +1132,7 @@ class web(base_module):
     local action 
     local container 
     load translations/signupform 
-    action @ "post" form local formulaire 
+    action @ safeorescape "post" form local formulaire 
     formulaire "id" "signupform" addattr 
     formulaire "class" "signupform" addattr 
     formulaire "data-msg-passwordmismatch" "passwordmismatch" _signup addattr "container" div local contdiv 
@@ -1163,17 +1170,75 @@ class web(base_module):
     remembercb "checked" "checked" addattr 
     contdiv remembercb @ addcontent 
     contdiv "rememberme" _signup addcontent "agree" _signup paragraph local agree 
-    agree "tandp" _signup t&p @ a addcontent 
+    agree "tandp" _signup t&p @ safeorescape a addcontent 
     contdiv agree @ addcontent 
     contdiv 3 "signup" _signup maintitle "submit" button addcontent 
     formulaire contdiv @ addcontent 
-    container @ formulaire @ addcontent'''
+    container @ formulaire @ addcontent''',
+            #*********************************
+            'hdropdown' : '''    local links 
+    local name
+    local container
+    '''
         }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
         self.usecookies = False
         self.version = 'v1.3.5'
         self.packuse = ['db', 'mail']
+
+    def _escape_html(self, s: str) -> str:
+        if s is None:
+            return ""
+        escaped = html.escape(str(s), quote=True)
+        escaped = escaped.replace("'", "&#39;")
+        return escaped
+
+    def _safe_url(self, url: str) -> str:
+        if url is None:
+            return ""
+        parsed = urlparse(url)
+        # n'autorise que http, https, mailto ou url relatives
+        if parsed.scheme in ('http', 'https', 'mailto', ''):
+            return url
+        return "#"
+
+    def safeurl_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            self.work.appendleft(self._safe_url(val))
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter.output)
+        return 'nobreak'
+
+    def escapehtml_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            self.work.appendleft(self._escape_html(val))
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter.output)
+        return 'nobreak'
+
+    def safehtml_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            self.work.appendleft("__SAFE__" + str(val))
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter.output)
+        return 'nobreak'
+
+    def safe_or_escape_instr(self):
+        if len(self.work) > 0:
+            val = self.pop_work()
+            s = "" if val is None else str(val)
+            if s.startswith("__SAFE__"):
+                s2 = s[len("__SAFE__"):]
+            else:
+                s2 = self._escape_html(s)
+            self.work.appendleft(s2)
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter.output)
+        return 'nobreak'
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
