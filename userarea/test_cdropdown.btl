@@ -1,0 +1,11 @@
+<?btl
+webreset
+title "Page pour tester les clickable dropdowns" addcontent
+html "lang" lang? addattr
+head "userarea/css/cdropdown.css" headlink addcontent
+head "sync" "userarea/js/cdropdown.js" headscriptfile addcontent
+
+body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] cdropdown
+
+html @ generate cls
+?>
