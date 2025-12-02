@@ -1,0 +1,13 @@
+<?btl
+webreset
+title "Page pour tester les sliders" addcontent
+html "lang" lang? addattr
+head "userarea/css/slider.css" headlink addcontent
+
+body 0 100 45 "slider" "s1" slider 
+body br addcontent
+body br addcontent
+body 0 100 10 "default" "s2" slider
+
+html @ generate cls
+?>
