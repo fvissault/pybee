@@ -1222,8 +1222,19 @@ class web(base_module):
         links @ i @ cell@ 1 cell@ href !
         ddcontent content @ href @ safeorescape a addcontent
     loop
-    container @ dropdown @ addcontent 
-    '''
+    container @ dropdown @ addcontent''',
+            #*********************************
+            'slider' : '''    local name 
+    local type
+    local value
+    local maximum
+    local minimum
+    local container 
+    name @ value @ "range" fieldarea local sl
+    sl "min" minimum @ addattr
+    sl "max" maximum @ addattr
+    sl "class" type @ addattr
+    container @ sl @ addcontent'''
         }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
