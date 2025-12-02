@@ -21,9 +21,10 @@
         <p>
             L'ensemble des mots qui composent ce package est le suivant : <br>
             <a href="#accordion">accordion</a> <a href="#simplecard">addcardbody</a> <a href="#simplecard">addcardtitle</a> 
-            <a href="#simplecard">addcardbottom</a> <a href="#simplecard">card</a> <a href="#complexwidget">completeselect</a> 
-            <a href="#divider">divider</a> <a href="#flipcard">flipcard</a> <a href="#hdropdown">hdropdown</a> <a href="#overlay">overlay</a> productcard profilecard 
-            <a href="#tables">row</a> <a href="#sidenav">sidenav</a> <a href="#splitter">splitter</a> <a href="#tab">tab</a> 
+            <a href="#simplecard">addcardbottom</a> <a href="#simplecard">card</a> <a href="#cdropdown">cdropdown</a> 
+            <a href="#complexwidget">completeselect</a> <a href="#divider">divider</a> <a href="#flipcard">flipcard</a> 
+            <a href="#hdropdown">hdropdown</a> <a href="#overlay">overlay</a> productcard profilecard <a href="#tables">row</a> 
+            <a href="#sidenav">sidenav</a> <a href="#slider">slider</a> <a href="#splitter">splitter</a> <a href="#tab">tab</a> 
             <a href="#topnav">topnav</a>
         </p>
 
@@ -543,7 +544,7 @@
         
         <p>
             Ce widget vous permet de mettre en place un dropdown (petit menu) sur un bouton qui s'ouvre quand vous passez la souris 
-            dessus et qui se ferme dès que la souris sort de la zone.
+            dessus et qui se ferme dès que la souris sort de la zone. Le 'h' du mot 'hdropdown' veut dire 'hover'.
         </p>
         <p>La syntaxe de ce mot est la suivante :</p>
         <div class="div_code">
@@ -559,15 +560,71 @@
                 title "Page pour tester les hover dropdowns" addcontent<br>
                 html "lang" lang? addattr<br>
                 head "userarea/css/hdropdown.css" headlink addcontent<br><br>
-
                 body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] hdropdown<br><br>
-
                 html @ generate cls<br>
                 ?>
             </code>
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
-        <video controls muted src="images/hdropdown.mp4"/>
+        <video controls muted loop src="images/hdropdown.mp4"></video>
+
+        <a name="cdropdown"><h4>2.14. le widget 'cdropdown'</h3></a>
+        
+        <p>
+            Ce widget vous permet de mettre en place un dropdown (petit menu) sur un bouton qui s'ouvre quand vous cliquez 
+            dessus et qui se ferme quand vous cliquez n'importe où dans la page. Le 'c' du mot 'cdropdown' veut dire 'clickable'.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>nom_du_dropdown</i>" "<i>contenu_du_bouton</i>" [ [ "contenu_du_lien" "lien" ] ... ] <b>cdropdown</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les hover dropdowns" addcontent<br>
+                html "lang" lang? addattr<br>
+                head "userarea/css/cdropdown.css" headlink addcontent<br><br>
+                body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] cdropdown<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <video controls muted loop src="images/cdropdown.mp4"></video>
+
+        <a name="slider"><h4>2.15. le widget 'slider'</h3></a>
+        
+        <p>
+            Ce widget vous permet de mettre en place un slider qui va, lui, vous permettre de sélectionner une valeur.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> <i>minimum</i> <i>maximum</i> <i>initial_value</i> <i>slider_type (slider|default)</i> <i>slider_name</i> <b>slider</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les sliders" addcontent<br>
+                html "lang" lang? addattr<br>
+                head "userarea/css/slider.css" headlink addcontent<br><br>
+                body 0 100 45 "slider" "s1" slider<br>
+                body br addcontent<br>
+                body br addcontent<br>
+                body 0 100 10 "default" "s2" slider<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <video controls muted loop src="images/slider.mp4"></video>
 
         <p><a href="db.html">Précédent : XII.5. Packages:Module 'db'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a> | <a href="web.html">XII.6. Module 'web'</a></p>
     </body>
