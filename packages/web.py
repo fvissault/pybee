@@ -120,7 +120,14 @@ class web(base_module):
             'addattr' : '''    local valueattr 
     local nameattr 
     local contattrs 
-    nameattr @ valueattr @ contattrs @ "attrs" cell@ cell+ drop''',
+    nameattr @ contattrs @ "attrs" cell@ key= invert
+    if
+        nameattr @ valueattr @ contattrs @ "attrs" cell@ cell+ drop
+    else
+        nameattr @ 
+        contattrs @ "attrs" cell@ nameattr @ cell@ " " s+ valueattr @ s+ 
+        contattrs @ "attrs" cell@ cell+ drop
+    then''',
             #*********************************
             'fieldarea' : '''    { } local attrs 
     local fatype 
@@ -1234,7 +1241,36 @@ class web(base_module):
     sl "min" minimum @ addattr
     sl "max" maximum @ addattr
     sl "class" type @ addattr
-    container @ sl @ addcontent'''
+    container @ sl @ addcontent''',
+            #*********************************
+            'tooltip' : '''    local content
+    local type
+    local container
+    type @ "top" = 
+    if
+        "tooltiptext tooltip-top" type !
+    else
+        type @ "left" = 
+        if
+            "tooltiptext tooltip-left" type !
+        else
+            type @ "bottom" = 
+            if
+                "tooltiptext tooltip-bottom" type !
+            else
+                type @ "right" = 
+                if
+                    "tooltiptext tooltip-right" type !
+                else
+                    "tooltiptext tooltip-top" type !
+                then 
+            then 
+        then
+    then
+    container @ "class" "tooltip" addattr
+    content @ span local ttip
+    ttip "class" type @ addattr
+    container @ ttip @ addcontent'''
         }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
