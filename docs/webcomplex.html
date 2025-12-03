@@ -25,7 +25,7 @@
             <a href="#complexwidget">completeselect</a> <a href="#divider">divider</a> <a href="#flipcard">flipcard</a> 
             <a href="#hdropdown">hdropdown</a> <a href="#overlay">overlay</a> productcard profilecard <a href="#tables">row</a> 
             <a href="#sidenav">sidenav</a> <a href="#slider">slider</a> <a href="#splitter">splitter</a> <a href="#tab">tab</a> 
-            <a href="#topnav">topnav</a>
+            <a href="#tooltip">tooltip</a> <a href="#topnav">topnav</a>
         </p>
 
         <a name="complexwidget"><h3>2. La construction du HTML : widgets complexes</h3></a>
@@ -560,7 +560,7 @@
                 title "Page pour tester les hover dropdowns" addcontent<br>
                 html "lang" lang? addattr<br>
                 head "userarea/css/hdropdown.css" headlink addcontent<br><br>
-                body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] hdropdown<br><br>
+                body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] <b>hdropdown</b><br><br>
                 html @ generate cls<br>
                 ?>
             </code>
@@ -588,7 +588,7 @@
                 title "Page pour tester les hover dropdowns" addcontent<br>
                 html "lang" lang? addattr<br>
                 head "userarea/css/cdropdown.css" headlink addcontent<br><br>
-                body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] cdropdown<br><br>
+                body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] <b>cdropdown</b><br><br>
                 html @ generate cls<br>
                 ?>
             </code>
@@ -615,7 +615,7 @@
                 title "Page pour tester les sliders" addcontent<br>
                 html "lang" lang? addattr<br>
                 head "userarea/css/slider.css" headlink addcontent<br><br>
-                body 0 100 45 "slider" "s1" slider<br>
+                body 0 100 45 "slider" "s1" <b>slider</b><br>
                 body br addcontent<br>
                 body br addcontent<br>
                 body 0 100 10 "default" "s2" slider<br><br>
@@ -625,6 +625,39 @@
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <video controls muted loop src="images/slider.mp4"></video>
+
+        <a name="tooltip"><h4>2.16. le widget 'tooltip'</h3></a>
+        
+        <p>
+            Ce widget vous permet d'afficher au passage de la souris un tooltip (petite zone d'information)'.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>type (top, right, bottom, left)</i>" "<i>tooltip_text</i>" <b>tooltip</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les tooltips" addcontent<br>
+                html "lang" lang? addattr<br>
+                head "userarea/css/tooltip.css" headlink addcontent<br><br>
+                "divtooltip" div var divtooltip<br>
+                divtooltip "Hover over me" addcontent<br>
+                divtooltip "style" "margin-left:20px;" addattr<br><br>
+                divtooltip "top" "Tooltip text" <b>tooltip</b><br><br>
+                body br addcontent<br>
+                body br addcontent<br>
+                body divtooltip addcontent<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <video controls muted loop src="images/tooltip.mp4"></video>
 
         <p><a href="db.html">Précédent : XII.5. Packages:Module 'db'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a> | <a href="web.html">XII.6. Module 'web'</a></p>
     </body>
