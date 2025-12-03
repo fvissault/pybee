@@ -1,20 +1,32 @@
+:root {
+    --tooltip-border-bottom: 1px dotted #ccc;
+    --tooltip-color: #006080;
+    --tooltip-width: 120px;
+
+    --tooltiptext-background-color: #555;
+    --tooltiptext-font-family: Arial, Tahoma;
+    --tooltiptext-color: #fff;
+    --tooltiptext-padding: 5px 0;
+    --tooltiptext-border-radius: 6px;
+}
+
 .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted #ccc;
-    color: #006080;
+    border-bottom: var(--tooltip-border-bottom);
+    color: var(--tooltip-color);
 }
 
 .tooltip .tooltiptext {
     visibility: hidden;
     position: absolute;
-    width: 120px;
-    background-color: #555;
-    font-family: Arial, Tahoma;
-    color: #fff;
+    width: var(--tooltip-width);
+    background-color: var(--tooltiptext-background-color);
+    font-family: var(--tooltiptext-font-family);
+    color: var(--tooltiptext-color);
     text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
+    padding: var(--tooltiptext-padding);
+    border-radius: var(--tooltiptext-border-radius);
     z-index: 1;
     opacity: 0;
     transition: opacity 0.3s;
