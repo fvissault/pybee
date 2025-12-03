@@ -2,10 +2,10 @@
 .checkcontainer {
     display: block;
     position: relative;
-    padding-left: 35px;
+    padding-left: 30px;
     margin-bottom: 12px;
     cursor: pointer;
-    font-size: 22px;
+    font-size: 16px;
     font-family: Arial, Tahoma;
     -webkit-user-select: none; /* Chrome, Opera, Safari */
     -moz-user-select: none; /* Firefox 2+ */
@@ -25,8 +25,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 24px;
-    width: 24px;
+    height: 18px;
+    width: 18px;
     border: 2px solid gray;
     background-color: #eee;
 }
@@ -55,12 +55,12 @@
 
 /* Style the checkmark/indicator */
 .checkcontainer .checkmark:after {
-    left: 8px;
+    left: 5px;
     top: 2px;
-    width: 6px;
-    height: 11px;
+    width: 3px;
+    height: 7px;
     border: solid white;
-    border-width: 0 5px 5px 0;
+    border-width: 0 4px 4px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
