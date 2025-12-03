@@ -1,13 +1,25 @@
+:root {
+    --slider-width: 20%;
+    --slider-height: 20px;
+    --slider-border-radius: 5px;
+    --slider-background: #d3d3d3;
+
+    --slider-thumb-width: 25px;
+    --slider-thumb-height: 25px;
+    --slider-thumb-border-radius: 10px;
+    --slider-thumb-background: #04AA6D;
+}
+
 .default {
     width: 20%;
 }
 
 .slider {
     /*-webkit-appearance: none;*/
-    width: 20%;
-    height: 20px;
-    border-radius: 5px;
-    background: #d3d3d3;
+    width: var(--slider-width);
+    height: var(--slider-height);
+    border-radius: var(--slider-border-radius);
+    background: var(--slider-background);
     outline: none;
     opacity: 0.7;
     -webkit-transition: .2s;
@@ -21,17 +33,17 @@
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 10px;
-    background: #04AA6D;
+    width: var(--slider-thumb-width);
+    height: var(--slider-thumb-height);
+    border-radius: var(--slider-thumb-border-radius);
+    background: var(--slider-thumb-background);
     cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-    width: 25px;
+    width: var(--slider-thumb-width);
     height: 25px;
-    border-radius: 10px;
-    background: #04AA6D;
+    border-radius: var(--slider-thumb-border-radius);
+    background: var(--slider-thumb-background);
     cursor: pointer;
 }
