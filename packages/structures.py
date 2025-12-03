@@ -276,7 +276,7 @@ class Structures:
     '''
     Instruction cell= : teste l'existence d'un contenu d'une cellule d'un tableau : content array CELL= --> True or False
     '''
-    def cellequal_instr(self):
+    def valequal_instr(self):
         if self.require_stack(2, 'cell=') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
