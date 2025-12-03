@@ -1,0 +1,18 @@
+<?btl
+webreset
+title "Page pour tester les tooltips" addcontent
+html "lang" lang? addattr
+head "userarea/css/tooltip.css" headlink addcontent
+
+"divtooltip" div var divtooltip
+divtooltip "Hover over me" addcontent
+divtooltip "style" "margin-left:20px;" addattr
+
+divtooltip "top" "Tooltip text" tooltip
+
+body br addcontent
+body br addcontent
+body divtooltip addcontent 
+
+html @ generate cls
+?>
