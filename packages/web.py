@@ -133,7 +133,8 @@ class web(base_module):
     local fatype 
     local favalue 
     local faid 
-    "type" fatype @ attrs cell+ drop favalue @ "" <> 
+    "type" fatype @ attrs cell+ drop 
+    favalue @ "" <> 
     if 
         "value" favalue @ attrs cell+ drop 
     then 
@@ -1270,7 +1271,27 @@ class web(base_module):
     container @ "class" "tooltip" addattr
     content @ span local ttip
     ttip "class" type @ addattr
-    container @ ttip @ addcontent'''
+    container @ ttip @ addcontent''',
+            #*********************************
+            'checkbox' : '''    local labeltext
+    local checked
+    local checkid
+    local container
+    checkid @ "" "checkbox" fieldarea local ch
+    labeltext @ checkid @ label local l
+    checked @ "checked" =
+    if
+        ch "checked" "checked" addattr
+    then
+    l "class" "checkcontainer" addattr
+    "" span local sp
+    sp "class" "checkmark" addattr
+    l ch @ addcontent
+    l sp @ addcontent
+    container @ l @ addcontent
+    ''',
+            #*********************************
+            'radio' : ''''''
         }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
