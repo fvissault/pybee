@@ -1,0 +1,11 @@
+<?btl
+webreset
+title "Page pour tester les checkbox personnalisés" addcontent
+html "lang" lang? addattr
+head "userarea/css/radio.css" headlink addcontent
+
+body "ra1" "checked" "group" "value1" "Premier radio" radio
+body "ra2" "notchecked" "group" "value2" "Deuxième radio" radio
+
+html @ generate cls
+?>
