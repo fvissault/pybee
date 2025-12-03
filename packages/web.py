@@ -141,7 +141,10 @@ class web(base_module):
     faid @ "" <> 
     if 
         "id" faid @ attrs cell+ drop 
-        "name" faid @ attrs cell+ drop 
+        fatype @ "radio" <>
+        if
+            "name" faid @ attrs cell+ drop
+        then 
     then 
     { tag : "input" , content : [ ] , attrs : attrs @ , container : "n" }''',
             #*********************************
@@ -1288,10 +1291,27 @@ class web(base_module):
     sp "class" "checkmark" addattr
     l ch @ addcontent
     l sp @ addcontent
-    container @ l @ addcontent
-    ''',
+    container @ l @ addcontent''',
             #*********************************
-            'radio' : ''''''
+            'radio' : '''    local labeltext
+    local value
+    local groupname
+    local checked
+    local radioid
+    local container
+    radioid @ value @ "radio" fieldarea local ra
+    ra "name" groupname @ addattr
+    labeltext @ radioid @ label local l
+    checked @ "checked" =
+    if
+        ra "checked" "checked" addattr
+    then
+    l "class" "radiocontainer" addattr
+    "" span local sp
+    sp "class" "radiobtn" addattr
+    l ra @ addcontent
+    l sp @ addcontent
+    container @ l @ addcontent'''
         }
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
