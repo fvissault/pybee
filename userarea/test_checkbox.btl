@@ -1,0 +1,11 @@
+<?btl
+webreset
+title "Page pour tester les checkbox personnalisés" addcontent
+html "lang" lang? addattr
+head "userarea/css/checkbox.css" headlink addcontent
+
+body "cb1" "checked" "Premier checkbox" checkbox
+body "cb2" "notchecked" "Deuxième checkbox" checkbox
+
+html @ generate cls
+?>
