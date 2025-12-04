@@ -22,10 +22,10 @@
             L'ensemble des mots qui composent ce package est le suivant : <br>
             <a href="#accordion">accordion</a> <a href="#simplecard">addcardbody</a> <a href="#simplecard">addcardtitle</a> 
             <a href="#simplecard">addcardbottom</a> <a href="#simplecard">card</a> <a href="#cdropdown">cdropdown</a> 
-            <a href="#complexwidget">completeselect</a> <a href="#divider">divider</a> <a href="#flipcard">flipcard</a> 
-            <a href="#hdropdown">hdropdown</a> <a href="#overlay">overlay</a> productcard profilecard <a href="#tables">row</a> 
-            <a href="#sidenav">sidenav</a> <a href="#slider">slider</a> <a href="#splitter">splitter</a> <a href="#tab">tab</a> 
-            <a href="#tooltip">tooltip</a> <a href="#topnav">topnav</a>
+            <a href="#checkbox">checkbox</a> <a href="#complexwidget">completeselect</a> <a href="#divider">divider</a> 
+            <a href="#flipcard">flipcard</a> <a href="#hdropdown">hdropdown</a> <a href="#overlay">overlay</a> productcard profilecard 
+            <a href="#radio">radio</a> <a href="#tables">row</a> <a href="#sidenav">sidenav</a> <a href="#slider">slider</a> <a href="#splitter">splitter</a> 
+            <a href="#tab">tab</a> <a href="#tooltip">tooltip</a> <a href="#topnav">topnav</a>
         </p>
 
         <a name="complexwidget"><h3>2. La construction du HTML : widgets complexes</h3></a>
@@ -658,6 +658,62 @@
         </div>
         <p>Voici ce que cela donne dans votre navigateur préféré :</p>
         <video controls muted loop src="images/tooltip.mp4"></video>
+
+        <a name="checkbox"><h4>2.17. le widget 'checkbox'</h3></a>
+        
+        <p>
+            Ce widget vous permet d'afficher une case à cocher personnalisée.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>checkbox_id</i>" "checked|notchecked" "<i>checkbox_text</i>" <b>checkbox</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les checkbox personnalisés" addcontent<br>
+                html "lang" lang? addattr<br>
+                head "userarea/css/<b>checkbox.css</b>" headlink addcontent<br><br>
+                body "cb1" "checked" "Premier checkbox" <b>checkbox</b><br>
+                body "cb2" "notchecked" "Deuxième checkbox" <b>checkbox</b><br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <video controls muted loop src="images/checkbox.mp4"></video>
+
+        <a name="checkbox"><h4>2.18. le widget 'radio'</h3></a>
+        
+        <p>
+            Ce widget vous permet d'afficher des radios boutons personnalisés.
+        </p>
+        <p>La syntaxe de ce mot est la suivante :</p>
+        <div class="div_code">
+            <code>
+                <i>container</i> "<i>checkbox_id</i>" "checked|notchecked" "<i>group_name</i>" "<i>radio_value</i>" "<i>checkbox_text</i>" <b>radio</b>
+            </code>
+        </div>
+        <p>Voici un exemple de ce que cela donne :</p>
+        <div class="div_code">
+            <code>
+                &lt;?btl<br>
+                webreset<br>
+                title "Page pour tester les radio boutons personnalisés" addcontent<br>
+                html "lang" lang? addattr<br>
+                head "userarea/css/radio.css" headlink addcontent<br><br>
+                body "ra1" "checked" "group" "value1" "Premier radio" radio<br>
+                body "ra2" "notchecked" "group" "value2" "Deuxième radio" radio<br><br>
+                html @ generate cls<br>
+                ?>
+            </code>
+        </div>
+        <p>Voici ce que cela donne dans votre navigateur préféré :</p>
+        <video controls muted loop src="images/radio.mp4"></video>
 
         <p><a href="db.html">Précédent : XII.5. Packages:Module 'db'</a> | <a href="index.html">Index</a> | <a href="tests.html">Suivant : XIII. Tests</a> | <a href="web.html">XII.6. Module 'web'</a></p>
     </body>
