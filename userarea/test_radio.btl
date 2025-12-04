@@ -1,6 +1,6 @@
 <?btl
 webreset
-title "Page pour tester les checkbox personnalisés" addcontent
+title "Page pour tester les radio boutons personnalisés" addcontent
 html "lang" lang? addattr
 head "userarea/css/radio.css" headlink addcontent
 
