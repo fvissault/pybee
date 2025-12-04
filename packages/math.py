@@ -9,77 +9,109 @@ import random
 class math(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
-        self.dictionary = {'cos' : self.cos_instr,
-                           'sin' : self.sin_instr,
-                           'tan' : self.tan_instr,
-                           'comb' : self.comb_instr,
-                           'perm' : self.perm_instr,
-                           'fact' : self.fact_instr,
-                           'random' : self.random_instr,
-                           'intrand' : self.intrand_instr,
-                           'floatrand' : self.floatrand_instr,
-                           'fib' : '2 local i dup 1 >= if dup 1 = if 0 .cr drop else 1 0 2dup . . reverse i do 2dup + dup . rot drop loop 2drop cr then else "Usage : n FIB with n > 0" .cr then',
-                           '#fib' : '2 local i dup 1 >= if dup 1 = if 0 .cr drop else 1 0 reverse i do 2dup + rot drop loop .cr drop then else "Usage : n #FIB with n > 0" .cr then',
-                           'square' : 'dup *',
-                           'cube' : 'dup square *',
-                           'pow' : '2 local i swap dup dup * rot i do over * loop nip', 
-                           'abs' : self.abs_instr,
-                           'sqrt' : self.sqrt_instr,
-                           'log10' : self.log10_instr,
-                           'log2' : self.log2_instr,
-                           'log1p' : self.log1p_instr,
-                           'log' : self.log_instr,
-                           'exp' : 'e swap pow',
-                           'exp2' : '2 swap pow',
-                           'expm1' : 'exp 1-',
-                           'cbrt' : self.cbrt_instr,
-                           'ceil' : self.ceil_instr,
-                           'floor' : self.floor_instr,
-                           'remainder' : self.remainder_instr,
-                           'mod' : '/ floor',
-                           'round' : self.round_instr,
-                           'trunc' : self.trunc_instr,
-                           '>deg' : self.deg_instr,
-                           '>rad' : self.rad_instr,
-                           'acos' : self.acos_instr,
-                           'asin' : self.asin_instr,
-                           'atan' : self.atan_instr,
-                           'atan2' : '/ atan',
-                           'acosh' : self.acosh_instr,
-                           'asinh' : self.asinh_instr,
-                           'atanh' : self.atanh_instr,
-                           'cosh' : self.cosh_instr,
-                           'sinh' : self.sinh_instr,
-                           'tanh' : self.tanh_instr,
-                           '2dpoint' : '2var',
-                           '3dpoint' : 'create , , ,',
-                           '2dvector' : '2var',
-                           '3dvector' : 'create , , ,',
-                           '2dmatrix' : '2var',
-                           '3dmatrix' : 'create , , ,',
-                           'x' : '',
-                           'det' : '',
-                           'id2d' : '[ [ 1 0 ] [ 0 1 ] ]',
-                           'id3d' : '[ [ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ] ]',
-                           'id4d' : '[ [ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ] [ 0 0 0 1 ] ]',
-                           'norm' : '0 local res 0 local i dup cells i do dup i @ swap cell@ 2 pow norm#res +! loop drop res @ sqrt',
-                           'pi' : 3.141592653589793, 
-                           'pi>deg' : 'pi >deg ceil', 
-                           'pi/2' : 1.570796326794895, 
-                           'pi/2>deg' : 'pi/2 >deg ceil', 
-                           'pi/3' : 1.047197551196596, 
-                           'pi/3>deg' : 'pi/3 >deg ceil', 
-                           'pi/4' : 0.785398163397447, 
-                           'pi/4>deg' : 'pi/4 >deg ceil', 
-                           '3pi/2' : 4.712388980384685, 
-                           '3pi/2>deg' : '3pi/2 >deg ceil', 
-                           '3pi/4' : 2.356194490192342, 
-                           '3pi/4>deg' : '3pi/4 >deg ceil', 
-                           'tau' : 6.28318530717958, 
-                           'c' : 299792458, 
-                           'e' : 2.7182818284,
-                           'h' : '6.62607015e−34', 
-                           'g' : '6.67430e−11'}
+        self.dictionary = {
+            'cos' : self.cos_instr,
+            'sin' : self.sin_instr,
+            'tan' : self.tan_instr,
+            'comb' : self.comb_instr,
+            'perm' : self.perm_instr,
+            'fact' : self.fact_instr,
+            'random' : self.random_instr,
+            'intrand' : self.intrand_instr,
+            'floatrand' : self.floatrand_instr,
+            'fib' : '''    2 local i 
+    dup 1 >= 
+    if 
+        dup 1 = 
+        if 
+            0 .cr drop 
+        else 
+            1 0 2dup . bl . bl 
+            reverse i 
+            do 
+                2dup + dup . bl rot drop 
+            loop 
+            2drop cr 
+        then 
+    else 
+        "Usage : n FIB with n > 0" .cr 
+    then''',
+            '#fib' : '''    2 local i 
+    dup 1 >= 
+    if 
+        dup 1 = 
+        if 
+            0 .cr drop 
+        else 
+            1 0 reverse i 
+            do 
+                2dup + rot drop 
+            loop 
+            .cr drop 
+        then 
+    else 
+        "Usage : n #FIB with n > 0" .cr 
+    then''',
+            'square' : 'dup *',
+            'cube' : 'dup square *',
+            'pow' : '2 local i swap dup dup * rot i do over * loop nip', 
+            'abs' : self.abs_instr,
+            'sqrt' : self.sqrt_instr,
+            'log10' : self.log10_instr,
+            'log2' : self.log2_instr,
+            'log1p' : self.log1p_instr,
+            'log' : self.log_instr,
+            'exp' : 'e swap pow',
+            'exp2' : '2 swap pow',
+            'expm1' : 'exp 1-',
+            'cbrt' : self.cbrt_instr,
+            'ceil' : self.ceil_instr,
+            'floor' : self.floor_instr,
+            'remainder' : self.remainder_instr,
+            'mod' : '/ floor',
+            'round' : self.round_instr,
+            'trunc' : self.trunc_instr,
+            '>deg' : self.deg_instr,
+            '>rad' : self.rad_instr,
+            'acos' : self.acos_instr,
+            'asin' : self.asin_instr,
+            'atan' : self.atan_instr,
+            'atan2' : '/ atan',
+            'acosh' : self.acosh_instr,
+            'asinh' : self.asinh_instr,
+            'atanh' : self.atanh_instr,
+            'cosh' : self.cosh_instr,
+            'sinh' : self.sinh_instr,
+            'tanh' : self.tanh_instr,
+            '2dpoint' : '2var',
+            '3dpoint' : 'create , , ,',
+            '2dvector' : '2var',
+            '3dvector' : 'create , , ,',
+            '2dmatrix' : '2var',
+            '3dmatrix' : 'create , , ,',
+            'x' : '',
+            'det' : '',
+            'id2d' : '[ [ 1 0 ] [ 0 1 ] ]',
+            'id3d' : '[ [ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ] ]',
+            'id4d' : '[ [ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ] [ 0 0 0 1 ] ]',
+            'norm' : '0 local res 0 local i dup cells i do dup i @ swap cell@ 2 pow norm#res +! loop drop res @ sqrt',
+            'pi' : 3.141592653589793, 
+            'pi>deg' : 'pi >deg ceil', 
+            'pi/2' : 1.570796326794895, 
+            'pi/2>deg' : 'pi/2 >deg ceil', 
+            'pi/3' : 1.047197551196596, 
+            'pi/3>deg' : 'pi/3 >deg ceil', 
+            'pi/4' : 0.785398163397447, 
+            'pi/4>deg' : 'pi/4 >deg ceil', 
+            '3pi/2' : 4.712388980384685, 
+            '3pi/2>deg' : '3pi/2 >deg ceil', 
+            '3pi/4' : 2.356194490192342, 
+            '3pi/4>deg' : '3pi/4 >deg ceil', 
+            'tau' : 6.28318530717958, 
+            'c' : 299792458, 
+            'e' : 2.7182818284,
+            'h' : '6.62607015e−34', 
+            'g' : '6.67430e−11'}
         self.help = math_help(interpreter.output)
 
         interpreter.userdefinitions['pi'] = deque(['@'])
