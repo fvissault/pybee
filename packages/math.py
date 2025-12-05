@@ -87,13 +87,6 @@ class math(base_module):
             'cosh' : self.cosh_instr,
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
-            '2dpoint' : '''    2var''',
-            '3dpoint' : '''    create , , ,''',
-            '2dvector' : '''    2var''',
-            '3dvector' : '''    create , , ,''',
-            '2dmatrix' : '''    2var''',
-            '3dmatrix' : '''    create , , ,''',
-            'x' : '''''',
             'det' : '''''',
             'id2' : '''    [ [ 1 0 ] 
       [ 0 1 ] ]''',
@@ -116,20 +109,18 @@ class math(base_module):
     ( a b -- a*b )
     local b 
     local a 
-    a @ cells local a_rows 
     a @ 0 cell@ cells local a_cols 
-    b @ cells local b_rows 
     b @ 0 cell@ cells local b_cols 
-    a_cols @ b_rows @ <> 
+    a_cols @ b @ cells <> 
     if 
-        "Incompatible matrix" .cr abort 
+        "Fatal error : incompatible matrix" .cr abort 
     then
     [ ] local r
     0 local row
     0 local i
     0 local j
     0 local k
-    a_rows @ i 
+    a @ cells i 
     do
         [ ] row !
         0 j !
@@ -139,11 +130,76 @@ class math(base_module):
             0 k !
             a_cols @ k 
             do
-                a @ i @ cell@ k @ cell@ b @ k @ cell@ j @ cell@ * r> + >r
+                a @ i @ cell@ k @ cell@ 
+                b @ k @ cell@ j @ cell@ * r> + >r
             loop
             r> row @ cell+
         loop
         row @ r @ cell+
+    loop
+    r @''',
+            'mscalar*' : '''    local s
+    local a
+    a @ cells local a_rows
+    a @ 0 cell@ cells local a_cols
+    [ ] local r
+    0 local row
+    0 local i
+    0 local j
+    a_rows @ i do
+        [ ] row !
+        0 j !
+        a_cols @ j do
+            a @ i @ cell@ j @ cell@ 
+            s @ * 
+            row @ cell+
+        loop
+        row @ r @ cell+
+    loop
+    r @''',
+            'mscalar+' : '''    local s
+    local a
+    a @ cells local a_rows
+    a @ 0 cell@ cells local a_cols
+    [ ] local r
+    0 local row
+    0 local i
+    0 local j
+    a_rows @ i do
+        [ ] row !
+        0 j !
+        a_cols @ j do
+            a @ i @ cell@ j @ cell@ 
+            s @ + 
+            row @ cell+
+        loop
+        row @ r @ cell+
+    loop
+    r @''',
+            'mscalar-' : '''    negate scalar+''',
+            'msub' : '''    local params
+    local a
+    params @ 0 cell@ local col
+    params @ 1 cell@ local row
+    params @ 2 cell@ local dist
+    a @ cells local a_rows
+    a @ 0 cell@ cells local a_cols
+    dist @ col @ + a_cols @ <= dist @ row @ + a_rows @ <= or invert
+    if
+        "Fatal error : matrix extraction not allowed" .cr abort 
+    then 
+    [ ] local r
+    0 local new_row_i
+    0 local new_col_j
+    dist @ new_row_i 
+    do
+        [ ] local new_row
+        0 new_col_j !
+        dist @ new_col_j 
+        do
+            a @ row @ new_row_i @ + cell@ col @ new_col_j @ + cell@ new_row @ cell+
+        loop
+        new_row @ r @ cell+
     loop
     r @''',
             'pi' : 3.141592653589793, 
