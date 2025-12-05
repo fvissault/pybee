@@ -52,9 +52,13 @@ class math(base_module):
     else 
         "Usage : n #FIB with n > 0" .cr 
     then''',
-            'square' : 'dup *',
-            'cube' : 'dup square *',
-            'pow' : '2 local i swap dup dup * rot i do over * loop nip', 
+            'square' : '''    dup *''',
+            'cube' : '''    dup square *''',
+            'pow' : '''    2 local i 
+    swap dup dup * rot i 
+    do 
+        over * 
+    loop nip''', 
             'abs' : self.abs_instr,
             'sqrt' : self.sqrt_instr,
             'log10' : self.log10_instr,
@@ -83,35 +87,83 @@ class math(base_module):
             'cosh' : self.cosh_instr,
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
-            '2dpoint' : '2var',
-            '3dpoint' : 'create , , ,',
-            '2dvector' : '2var',
-            '3dvector' : 'create , , ,',
-            '2dmatrix' : '2var',
-            '3dmatrix' : 'create , , ,',
-            'x' : '',
-            'det' : '',
-            'id2d' : '[ [ 1 0 ] [ 0 1 ] ]',
-            'id3d' : '[ [ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ] ]',
-            'id4d' : '[ [ 1 0 0 0 ] [ 0 1 0 0 ] [ 0 0 1 0 ] [ 0 0 0 1 ] ]',
-            'norm' : '0 local res 0 local i dup cells i do dup i @ swap cell@ 2 pow norm#res +! loop drop res @ sqrt',
+            '2dpoint' : '''    2var''',
+            '3dpoint' : '''    create , , ,''',
+            '2dvector' : '''    2var''',
+            '3dvector' : '''    create , , ,''',
+            '2dmatrix' : '''    2var''',
+            '3dmatrix' : '''    create , , ,''',
+            'x' : '''''',
+            'det' : '''''',
+            'id2' : '''    [ [ 1 0 ] 
+      [ 0 1 ] ]''',
+            'id3' : '''    [ [ 1 0 0 ] 
+      [ 0 1 0 ] 
+      [ 0 0 1 ] ]''',
+            'id4' : '''    [ [ 1 0 0 0 ] 
+      [ 0 1 0 0 ] 
+      [ 0 0 1 0 ] 
+      [ 0 0 0 1 ] ]''',
+            'norm' : '''    local v 
+    0 local res 
+    0 local i 
+    v @ cells i 
+    do 
+        v @ i @ cell@ 2 pow res +! 
+    loop 
+    res @ sqrt''',
+            'm*' : '''
+    ( a b -- a*b )
+    local b 
+    local a 
+    a @ cells local a_rows 
+    a @ 0 cell@ cells local a_cols 
+    b @ cells local b_rows 
+    b @ 0 cell@ cells local b_cols 
+    a_cols @ b_rows @ <> 
+    if 
+        "Incompatible matrix" .cr abort 
+    then
+    [ ] local r
+    0 local row
+    0 local i
+    0 local j
+    0 local k
+    a_rows @ i 
+    do
+        [ ] row !
+        0 j !
+        b_cols @ j 
+        do
+            0 >r
+            0 k !
+            a_cols @ k 
+            do
+                a @ i @ cell@ k @ cell@ b @ k @ cell@ j @ cell@ * r> + >r
+            loop
+            r> row @ cell+
+        loop
+        row @ r @ cell+
+    loop
+    r @''',
             'pi' : 3.141592653589793, 
-            'pi>deg' : 'pi >deg ceil', 
+            'pi>deg' : '''    pi >deg ceil''', 
             'pi/2' : 1.570796326794895, 
-            'pi/2>deg' : 'pi/2 >deg ceil', 
+            'pi/2>deg' : '''    pi/2 >deg ceil''', 
             'pi/3' : 1.047197551196596, 
-            'pi/3>deg' : 'pi/3 >deg ceil', 
+            'pi/3>deg' : '''    pi/3 >deg ceil''', 
             'pi/4' : 0.785398163397447, 
-            'pi/4>deg' : 'pi/4 >deg ceil', 
+            'pi/4>deg' : '''    pi/4 >deg ceil''', 
             '3pi/2' : 4.712388980384685, 
-            '3pi/2>deg' : '3pi/2 >deg ceil', 
+            '3pi/2>deg' : '''    3pi/2 >deg ceil''', 
             '3pi/4' : 2.356194490192342, 
-            '3pi/4>deg' : '3pi/4 >deg ceil', 
+            '3pi/4>deg' : '''    3pi/4 >deg ceil''', 
             'tau' : 6.28318530717958, 
             'c' : 299792458, 
             'e' : 2.7182818284,
             'h' : '6.62607015e−34', 
-            'g' : '6.67430e−11'}
+            'g' : '6.67430e−11'
+        }
         self.help = math_help(interpreter.output)
 
         interpreter.userdefinitions['pi'] = deque(['@'])
