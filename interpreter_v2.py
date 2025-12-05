@@ -208,6 +208,11 @@ class interpreter:
                     self.from_instr = instr
                     self.set_sequence(self.instructions)
                     self.interpret('last_sequence')
+
+                    for key, value in self.locals[self.lastseqnumber].items():
+                        if key in self.locals[self.lastseqnumber - 1]:
+                            self.locals[self.lastseqnumber - 1][key] = value
+
                     self.instructions.clear()
                     self.decreaselastseqnumber()
                     return "nobreak"
