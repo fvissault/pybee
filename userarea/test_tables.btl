@@ -17,5 +17,5 @@ t [ [ "cell9" ] [ "cell10" ] [ "cell11" ] ] row
 
 body t addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
