@@ -66,7 +66,7 @@ body br addcontent
 
 ( html @ .cr cr )
 
-html @ generate cls
+html @ 0 generate cls
 
 forget div1
 forget myimg
