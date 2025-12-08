@@ -25,13 +25,6 @@ class Io:
             else:
                 return self.err('error_integer_expected', 'emit')
 
-    '''
-    Instruction cr : permet d'afficher un retour chariot dans la console
-    '''
-    def cr_instr(self):
-        print('')
-        return 'nobreak'
-
 
     '''
     Instruction input : met en attente la console pour permettre à l'utilisateur de rentrer de l'information
