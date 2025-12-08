@@ -35,5 +35,5 @@ fcbflip2 versotext addcontent
 forget rectotext
 forget versotext
 
-html @ generate cls
+html @ 0 generate cls
 ?>
