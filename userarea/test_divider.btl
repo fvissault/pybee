@@ -10,5 +10,5 @@ body "sep3" "dotted" divider
 body "sep4" "solid" divider
 body "sep5" "rounded" divider
 
-html @ generate cls
+html @ 0 generate cls
 ?>
