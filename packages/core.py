@@ -34,9 +34,11 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             '.' : self.point_instr, 
             '.s' : '''    dup .''', 
             '2.s' : '''    2dup . bl . bl''', 
-            '.cr' : '''    . cr''',
-            '.scr' : '''    .s cr''',
-            '.2cr' : '''    .cr cr''',
+            'cr' : '''    ( "Warning: 'cr' is deprecated, use /nl instead" . ) 
+    /nl''',
+            '.cr' : '''    . /nl''',
+            '.scr' : '''    .s /nl''',
+            '.2cr' : '''    .cr /nl''',
             '.bl' : '''    space emit''',
             'words' : self.words_instr, 
             'dump' : self.dump_instr, 
@@ -64,7 +66,6 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'detach' : self.detach_instr, 
             'help' : self.help_instr, 
             'emit' : self.emit_instr,
-            'cr' : self.cr_instr, 
             'input' : self.input_instr, 
             'secinput' : self.secinput_instr, 
             'var' : '''    create ,''', 
@@ -185,9 +186,6 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'kpress' : self.keypress_instr,
             'readk' : self.readkey_instr,
             'space' : '''    bl''',
-            'arget' : '''    rot rot swap cell@ cell@''',
-            'arrow' : '''    swap cell@''',
-            'arcol' : '''    swap cell@''',
             't{' : self.begintest_instr,
             '}t' : self.endtest_instr,
             '<=>' : self.test_instr,
@@ -208,7 +206,16 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             '>md5' : self.md5_instr,
             '>json' : self.jsonencode_instr,
             'json>' : self.jsondecode_instr,
-            'lang?' : self.locale_instr
+            'lang?' : self.locale_instr,
+            'output' : self.output_instr,
+            '/t' : '''    9 emit''',
+            '/r' : '''    10 emit''',
+            '/n' : '''    13 emit''',
+            '/nl' : '''    /n
+    output "web" <> 
+    if 
+        /r
+    then'''
         }
 
         self.variables = ['path']
@@ -220,6 +227,10 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
         self.version = 'v2.1.5'
+
+    def output_instr(self):
+        self.work.appendleft(self.interpreter.output)
+        return "nobreak"
 
     def begintest_instr(self):
         left_instrs = deque()
@@ -244,10 +255,16 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         irightwork = list(iright.work)
         if ileftwork == irightwork:
             self.work.appendleft(1)
-            print(termcolors.GREEN + "true test" + termcolors.NORMAL, end=' ')
+            if self.interpreter.output == 'web':
+                print("true test")
+            else:
+                print(termcolors.GREEN + "true test" + termcolors.NORMAL, end=' ')
         else:
             self.work.appendleft(0)
-            print(termcolors.FATAL + "false test" + termcolors.NORMAL, end=' ')
+            if self.interpreter.output == 'web':
+                print("false test")
+            else:
+                print(termcolors.FATAL + "false test" + termcolors.NORMAL, end=' ')
         return 'nobreak'
 
     def endtest_instr(self):
