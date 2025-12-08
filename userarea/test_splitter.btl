@@ -13,5 +13,5 @@ vsplitright "hsplit" "horizontal" splitter
 hsplittop "top zone" addcontent
 hsplitbottom "bottom zone" addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
