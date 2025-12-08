@@ -7,6 +7,6 @@ head "defer" "userarea/js/loginform.js" headscriptfile addcontent
 
 body "action_page.btl" "forgotpassword.btl" loginform
 
-html @ generate cls
+html @ 0 generate cls
 
 ?>
