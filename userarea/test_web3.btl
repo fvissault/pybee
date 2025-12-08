@@ -29,5 +29,5 @@ z3 "4" addcontent
 title "Ceci est une page test" addcontent
 ( html @ .cr cr )
 
-html @ generate cls
+html @ 0 generate cls
 ?>
