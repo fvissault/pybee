@@ -220,6 +220,121 @@ class math(base_module):
         new_row @ r @ cell+ drop
     loop
     r @''',
+            #****************************************
+            'mtrans' : '''   local m
+    m @ cells local m_rows
+    m @ 0 cell@ cells local m_cols
+    [ ] local r
+    0 local i
+    0 local j
+    [ ] local row
+    m_cols @ i 
+    do
+        [ ] row !
+        0 j !
+        m_rows @ j 
+        do
+            m @ 
+            j @ cell@ 
+            i @ cell@ 
+            row @ cell+ drop
+        loop
+        row @ r @ cell+ drop
+    loop
+    r @''',
+            #****************************************
+            'complex' : '''    local im
+    local re
+    [ re @ im @ ]''',
+            #****************************************
+            're' : '''    0 cell@''',
+            #****************************************
+            'im' : '''    1 cell@''',
+            #****************************************
+            'c+' : '''    local z2
+    local z1
+    z1 @ re z2 @ re + 
+    z1 @ im z2 @ im + 
+    complex''',
+            #****************************************
+            'c-' : '''    local z2
+    local z1
+    z1 @ re z2 @ re - 
+    z1 @ im z2 @ im - 
+    complex''',
+            #****************************************
+            'c*' : '''    local z2
+    local z1
+    z1 @ re z2 @ re * z1 @ im z2 @ im * - 
+    z1 @ re z2 @ im * z1 @ im z2 @ re * + 
+    complex''',
+            #****************************************
+            'cconj' : '''    dup re 
+    swap im negate 
+    complex''',
+            #****************************************
+            'mconj' : '''    local m
+    m @ cells local m_rows ( "m_rows = " . m_rows @ .cr )
+    m @ 0 cell@ cells local m_cols ( "m_cols = " . m_cols @ .cr )
+    [ ] local r
+    0 local i
+    0 local j
+    [ ] local row
+    m_rows @ i
+    do
+        [ ] row !
+        0 j !
+        m_cols @ j
+        do
+            m @ i @ cell@ j @ cell@ cconj row @ cell+ drop
+        loop
+        row @ r @ cell+ drop
+    loop
+    r @''',
+            #****************************************
+            'madjoint' : '''    mconj
+    mtrans''',
+            #****************************************
+            'phi' : '''    966 stemit''',
+            #****************************************
+            'psi' : '''    968 stemit''',
+            #****************************************
+            'sigma' : '''    963 stemit''',
+            #****************************************
+            'alpha' : '''    945 stemit''',
+            #****************************************
+            'beta' : '''    946 stemit''',
+            #****************************************
+            'delta' : '''    948 stemit''',
+            #****************************************
+            'epsilon' : '''    949 stemit''',
+            #****************************************
+            'lambda' : '''    955 stemit''',
+            #****************************************
+            'mu' : '''    956 stemit''',
+            #****************************************
+            'omega' : '''    937 stemit''',
+            #****************************************
+            'nu' : '''    957 stemit''',
+            #****************************************
+            'tau' : '''    964 stemit''',
+            #****************************************
+            'omicron' : '''    959 stemit''',
+            #****************************************
+            'theta' : '''    952 stemit''',
+            #****************************************
+            'ket' : '''    local state
+    local content
+    content @ "var |<#0#>>" [ state @ ] format evaluate''',
+            #****************************************
+            'bra' : '''    local state
+    local content
+    content @ "var <<#0#>|" [ state @ ] format evaluate''',
+            #****************************************
+            'braket' : '''    local brastate
+    local ketstate
+    local content
+    content @ "var <<#0#>|<#1#>>" [ brastate @ ketstate @ ] format evaluate''',
             'pi' : 3.141592653589793, 
             'pi>deg' : '''    pi >deg ceil''', 
             'pi/2' : 1.570796326794895, 
@@ -232,7 +347,7 @@ class math(base_module):
             '3pi/2>deg' : '''    3pi/2 >deg ceil''', 
             '3pi/4' : 2.356194490192342, 
             '3pi/4>deg' : '''    3pi/4 >deg ceil''', 
-            'tau' : 6.28318530717958, 
+            't' : 6.28318530717958, 
             'c' : 299792458, 
             'e' : 2.7182818284,
             'h' : '6.62607015e−34', 
@@ -245,7 +360,7 @@ class math(base_module):
         interpreter.userdefinitions['h'] = deque(['@'])
         interpreter.userdefinitions['g'] = deque(['@'])
         interpreter.userdefinitions['e'] = deque(['@'])
-        interpreter.userdefinitions['tau'] = deque(['@'])
+        interpreter.userdefinitions['t'] = deque(['@'])
         interpreter.userdefinitions['pi/2'] = deque(['@'])
         interpreter.userdefinitions['pi/3'] = deque(['@'])
         interpreter.userdefinitions['pi/4'] = deque(['@'])
