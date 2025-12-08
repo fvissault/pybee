@@ -7,5 +7,5 @@ head "sync" "userarea/js/filteredlist.js" headscriptfile addcontent
 
 body [ "Bleu"  "Blanc" "Rouge" "Jaune" "Vert" "Noir" "Gris" ] "ulist" filteredlist
 
-html @ generate cls
+html @ 0 generate cls
 ?>
