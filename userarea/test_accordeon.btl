@@ -10,5 +10,5 @@ acc1panel0 "Contenu de la section 1" addcontent
 acc1panel1 "Contenu de la section 2" addcontent
 acc1panel2 "Contenu de la section 3" addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
