@@ -17,7 +17,15 @@ class web(base_module):
     def __init__(self, interpreter):
         super().__init__(interpreter)
         self.dictionary = {
-            'generate' : '''    dup "tag" cell@ local tag 
+            'indent' : '''    local limit
+    0 local i
+    limit @ i 
+    do
+        /t
+    loop''',
+            #*********************************
+            'generate' : '''    >r
+    dup "tag" cell@ local tag 
     dup "content" cell@ local content 
     dup "attrs" cell@ local attrs 
     "container" cell@ local container 
@@ -27,7 +35,7 @@ class web(base_module):
     0 local v 
     tag @ "comment" = 
     if 
-        "<!--<#0#>-->" [ content @ 0 cell@ ] format .cr 
+        "<!--<#0#>-->" [ content @ 0 cell@ ] format . 
     else 
         tag @ "html" = 
         if 
@@ -35,7 +43,7 @@ class web(base_module):
             if 
                 htmlcontent 
             then 
-            "<!DOCTYPE html>" .cr 
+            "<!DOCTYPE html>" . /nl
         then 
         "<<#0#>" [ tag @ ] format . 
         attrs @ cells 0 > 
@@ -48,32 +56,37 @@ class web(base_module):
                 if 
                     " <#0#>" [ k @ i @ cell@ ] format . 
                 else 
-                    " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ ] format . 
+                    " <#0#>='<#1#>'" [ k @ i @ cell@ v @ i @ cell@ safeorescape ] format . 
                 then 
             loop 
         then 
         container @ "y" = 
         if 
-            ">" . 
+            ">" . /nl
             0 i ! 
-            content @ cells i 
+            content @ cells i
+            r> 1+ >r 
             do 
                 content @ i @ cell@ item ! 
                 item @ ?str 
                 if 
-                    item @ safeorescape . 
+                    r> dup >r 1+ indent
+                    item @ safeorescape . /nl
                 else 
-                    item @ generate 
+                    r> dup >r indent
+                    item @ r> generate /nl
                 then 
-            loop 
+            loop
+            r> 1- >r 
         else 
             "/>" . 
         then 
         container @ "y" = 
         if 
+            r> dup >r indent 
             "</<#0#>>" [ tag @ ] format . 
         then 
-    then cr''',
+    then''',
             #*********************************
             'webreset' : '''    "html" ?var 
     if 
@@ -95,7 +108,7 @@ class web(base_module):
     if 
         forget form1 
     then 
-    { tag : "html" , content : [ ] , attrs : { lang : "fr" } , container : "y" } var html 
+    { tag : "html" , content : [ ] , attrs : { } , container : "y" } var html 
     { tag : "head" , content : [ ] , attrs : { } , container : "y" } var head "UTF-8" charset addcontent 
     head "width=device-width,initial-scale=1.0" "viewport" meta addcontent 
     { tag : "body" , content : [ ] , attrs : { } , container : "y" } var body 
@@ -120,7 +133,9 @@ class web(base_module):
             'addattr' : '''    local valueattr 
     local nameattr 
     local contattrs 
-    nameattr @ contattrs @ "attrs" cell@ key= invert
+    nameattr @ 
+    contattrs @ "attrs" cell@ 
+    key= invert 
     if
         nameattr @ valueattr @ contattrs @ "attrs" cell@ cell+ drop
     else
