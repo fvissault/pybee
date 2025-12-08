@@ -9,5 +9,5 @@ body br addcontent
 body br addcontent
 body 0 100 10 "default" "s2" slider
 
-html @ generate cls
+html @ 0 generate cls
 ?>
