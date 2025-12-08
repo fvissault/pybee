@@ -19,5 +19,5 @@ body "outlinewarning" "button" "Warning" "b8" advancebutton
 body "outlinedanger" "button" "Danger" "b9" advancebutton
 body "outlinedefault" "button" "Default" "b10" advancebutton
 
-html @ generate cls
+html @ 0 generate cls
 ?>
