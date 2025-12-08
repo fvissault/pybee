@@ -7,5 +7,5 @@ head "defer" "userarea/js/topnav.js" headscriptfile addcontent
 
 body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "notfixed" 0 "tn" topnav
 
-html @ generate cls
+html @ 0 generate cls
 ?>
