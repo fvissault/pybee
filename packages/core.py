@@ -66,6 +66,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'detach' : self.detach_instr, 
             'help' : self.help_instr, 
             'emit' : self.emit_instr,
+            'stemit' : self.stackemit_instr,
             'input' : self.input_instr, 
             'secinput' : self.secinput_instr, 
             'var' : '''    create ,''', 
