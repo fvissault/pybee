@@ -25,6 +25,17 @@ class Io:
             else:
                 return self.err('error_integer_expected', 'emit')
 
+    '''
+    Instruction stemit : positionne sur la pile de travail le caractère correpondant à son code
+    '''
+    def stackemit_instr(self):
+        if self.require_stack(1, 'stemit') == None:
+            temp = self.pop_work()
+            if isinstance(temp, int):
+                self.work.appendleft(chr(temp))
+                return 'nobreak'
+            else:
+                return self.err('error_char_expected', 'stemit')
 
     '''
     Instruction input : met en attente la console pour permettre à l'utilisateur de rentrer de l'information
