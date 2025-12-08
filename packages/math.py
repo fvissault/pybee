@@ -105,6 +105,7 @@ class math(base_module):
         v @ i @ cell@ 2 pow res +! 
     loop 
     res @ sqrt''',
+            #****************************************
             'm*' : '''
     ( a b -- a*b )
     local b 
@@ -133,9 +134,9 @@ class math(base_module):
                 a @ i @ cell@ k @ cell@ 
                 b @ k @ cell@ j @ cell@ * r> + >r
             loop
-            r> row @ cell+
+            r> row @ cell+ drop
         loop
-        row @ r @ cell+
+        row @ r @ cell+ drop
     loop
     r @''',
             'mscalar*' : '''    local s
