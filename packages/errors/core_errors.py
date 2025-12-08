@@ -19,6 +19,7 @@ class core_errors:
     error_prod_on_2_string_invalid =            error('fatal', 'invalid multiplication operation on 2 strings : you can use + to concat strings')
     error_plus_on_string_and_number_invalid =   error('fatal', 'invalid plus operation between string and number')
     error_integer_expected =                    error('fatal', 'integer only expected')
+    error_char_expected =                       error('fatal', 'character only expected')
     error_integer_and_float_expected =          error('fatal', 'integer and float only expected')
     error_strings_invalid =                     error('fatal', 'invalid operation between string')
     error_division_by_zero_invalid =            error('fatal', 'invalid division by zero')
