@@ -16,5 +16,5 @@ tt2tab1 "Onglet des Audi" addcontent
 tt2tab2 "Onglet des Volvo" addcontent
 tt2tab3 "Onglet des Renault" addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
