@@ -184,15 +184,16 @@ class Structures:
             elif isinstance(tab, list) or isinstance(tab, dict):
                 content = tab
             if not isinstance(content, list) and not isinstance(content , dict):
-                return self.err('error_get_cell_on_array_invalid', 'cell@')
+                return self.err('error_get_cell_on_array_invalid', '1cell@')
             if isinstance(content, dict) and position not in content.keys():
-                return self.err('error_index_on_array_invalid', 'cell@')
+                return self.err('error_index_on_array_invalid', '2cell@')
             elif isinstance(position, int) and (position < 0 or position >= len(content)):
-                return self.err('error_index_on_array_invalid', 'cell@')
+                #self.interpreter.print_sequence_numbers()
+                return self.err('error_index_on_array_invalid', '3cell@')
             if isinstance(content, dict) and not isinstance(position, str):
-                return self.err('error_index_on_array_invalid', 'cell@')
+                return self.err('error_index_on_array_invalid', '4cell@')
             elif isinstance(content, list) and not isinstance(position, int):
-                return self.err('error_index_on_array_invalid', 'cell@')
+                return self.err('error_index_on_array_invalid', '5cell@')
             result = content[position]
             self.work.appendleft(result)
             return 'nobreak'
@@ -282,6 +283,8 @@ class Structures:
             if isinstance(tab, str):
                 if tab in self.variables:
                     arr = self.dictionary[tab]
+                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
                 else:
                     return self.err('error_not_a_variable', 'cell=')
             elif isinstance(tab, list) or isinstance(tab, dict):
