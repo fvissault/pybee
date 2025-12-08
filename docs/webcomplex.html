@@ -133,7 +133,7 @@
                 cardtest3 "titre3" <b>addcardtitle</b><br>
                 cardtest3 "corps3" <b>addcardbody</b><br>
                 cardtest3 "Add to cart" "button" button addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -197,7 +197,7 @@
                 fcbflip2 versotext addcontent<br>
                 forget rectotext<br>
                 forget versotext<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -259,7 +259,7 @@
                 vsplitright "hsplit" "horizontal" <b>splitter</b><br>
                 hsplittop "top zone" addcontent<br>
                 hsplitbottom "bottom zone" addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -299,7 +299,7 @@
                 body "sep3" "dotted" <b>divider</b><br>
                 body "sep4" "solid" <b>divider</b><br>
                 body "sep5" "rounded" <b>divider</b><br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -349,7 +349,7 @@
                 tt2tab1 "Onglet des Audi" addcontent<br>
                 tt2tab2 "Onglet des Volvo" addcontent<br>
                 tt2tab3 "Onglet des Renault" addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -388,7 +388,7 @@
                 acc1panel0 "Contenu de la section 1" addcontent<br>
                 acc1panel1 "Contenu de la section 2" addcontent<br>
                 acc1panel2 "Contenu de la section 3" addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -414,7 +414,7 @@
                 head "normal" "userarea/js/sidenav.js" headscriptfile addcontent<<br><br>
                 body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "push" "snp" <b>sidenav</b><br>
                 snpmain "Sidenav Main content" addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -440,7 +440,7 @@
                 head "userarea/css/topnav.css" headlink addcontent<br>
                 head "defer" "userarea/js/topnav.js" headscriptfile addcontent<br><br>
                 body [ [ "#home" "Home" ] [ "#news" "News" ] [ "#contact" "Contact" ] [ "#about" "About" ] ] "notfixed" 0 "tn" <b>topnav</b><br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -503,7 +503,7 @@
                 t [ [ "nosort" "nofilter" "row" "cell7" 2 0 ] [ "cell8" ] ] <b>row</b> ( <b>rowspan = 2, colspan = 0 les 2 valeurs sont facultatives en même temps</b> )<br>
                 t [ [ "cell9" ] [ "cell10" ] [ "cell11" ] ] <b>row</b><br>
                 body t addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -533,7 +533,7 @@
                 head "sync" "userarea/js/modal.js" headscriptfile addcontent<br><br>
                 body "Open Modal" "Titre de la modale" "myModal" <b>modal</b><br>
                 myModalcontent "Un peu de texte dans cette modale..." paragraph addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -561,7 +561,7 @@
                 html "lang" lang? addattr<br>
                 head "userarea/css/hdropdown.css" headlink addcontent<br><br>
                 body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] <b>hdropdown</b><br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -589,7 +589,7 @@
                 html "lang" lang? addattr<br>
                 head "userarea/css/cdropdown.css" headlink addcontent<br><br>
                 body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] <b>cdropdown</b><br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -619,7 +619,7 @@
                 body br addcontent<br>
                 body br addcontent<br>
                 body 0 100 10 "default" "s2" slider<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -652,7 +652,7 @@
                 body br addcontent<br>
                 body br addcontent<br>
                 body divtooltip addcontent<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -680,7 +680,7 @@
                 head "userarea/css/<b>checkbox.css</b>" headlink addcontent<br><br>
                 body "cb1" "checked" "Premier checkbox" <b>checkbox</b><br>
                 body "cb2" "notchecked" "Deuxième checkbox" <b>checkbox</b><br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
@@ -708,7 +708,7 @@
                 head "userarea/css/radio.css" headlink addcontent<br><br>
                 body "ra1" "checked" "group" "value1" "Premier radio" radio<br>
                 body "ra2" "notchecked" "group" "value2" "Deuxième radio" radio<br><br>
-                html @ generate cls<br>
+                html @ 0 generate cls<br>
                 ?>
             </code>
         </div>
