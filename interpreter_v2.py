@@ -195,6 +195,7 @@ class interpreter:
             
 
     def package_search(self, instr, package):
+        #print('instr = ' + instr)
         if instr.lower() in package.dictionary.keys():
             if instr.lower() not in self.core_instr.variables: # and instr.lower() not in self.core_instr.constants:
                 if isinstance(package.dictionary[instr.lower()], str):
@@ -208,14 +209,15 @@ class interpreter:
                     self.from_instr = instr
                     self.set_sequence(self.instructions)
                     ret = self.interpret('last_sequence')
-                    if self.locals:
-                        for key, value in self.locals[self.lastseqnumber].items():
-                            if key in self.locals[self.lastseqnumber - 1]:
-                                self.locals[self.lastseqnumber - 1][key] = value
+                    if ret == 'break':
+                        return 'break'
+                    #for key, value in self.locals[self.lastseqnumber].items():
+                    #    if key in self.locals[self.lastseqnumber - 1]:
+                    #        self.locals[self.lastseqnumber - 1][key] = value
 
                     self.instructions.clear()
                     self.decreaselastseqnumber()
-                    return ret
+                    return 'nobreak'
                 else:
                     # instructions qui ne sont pas dans la définition
                     package.set_work_stack(self.work)
