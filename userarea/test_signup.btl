@@ -7,5 +7,5 @@ head "defer" "userarea/js/signupform.js" headscriptfile addcontent
 
 body "action_page.btl" "term_privacy.btl" signupform
 
-html @ generate cls
+html @ 0 generate cls
 ?>
