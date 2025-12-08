@@ -19,6 +19,7 @@ class math(base_module):
             'random' : self.random_instr,
             'intrand' : self.intrand_instr,
             'floatrand' : self.floatrand_instr,
+            #****************************************
             'fib' : '''    2 local i 
     dup 1 >= 
     if 
@@ -36,6 +37,7 @@ class math(base_module):
     else 
         "Usage : n FIB with n > 0" .cr 
     then''',
+            #****************************************
             '#fib' : '''    2 local i 
     dup 1 >= 
     if 
@@ -52,8 +54,11 @@ class math(base_module):
     else 
         "Usage : n #FIB with n > 0" .cr 
     then''',
+            #****************************************
             'square' : '''    dup *''',
+            #****************************************
             'cube' : '''    dup square *''',
+            #****************************************
             'pow' : '''    2 local i 
     swap dup dup * rot i 
     do 
@@ -65,14 +70,18 @@ class math(base_module):
             'log2' : self.log2_instr,
             'log1p' : self.log1p_instr,
             'log' : self.log_instr,
-            'exp' : 'e swap pow',
-            'exp2' : '2 swap pow',
-            'expm1' : 'exp 1-',
+            #****************************************
+            'exp' : '''    e swap pow''',
+            #****************************************
+            'exp2' : '''    2 swap pow''',
+            #****************************************
+            'expm1' : '''    exp 1-''',
             'cbrt' : self.cbrt_instr,
             'ceil' : self.ceil_instr,
             'floor' : self.floor_instr,
             'remainder' : self.remainder_instr,
-            'mod' : '/ floor',
+            #****************************************
+            'mod' : '''    / floor''',
             'round' : self.round_instr,
             'trunc' : self.trunc_instr,
             '>deg' : self.deg_instr,
@@ -88,15 +97,19 @@ class math(base_module):
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
             'det' : '''''',
+            #****************************************
             'id2' : '''    [ [ 1 0 ] 
       [ 0 1 ] ]''',
+            #****************************************
             'id3' : '''    [ [ 1 0 0 ] 
       [ 0 1 0 ] 
       [ 0 0 1 ] ]''',
+            #****************************************
             'id4' : '''    [ [ 1 0 0 0 ] 
       [ 0 1 0 0 ] 
       [ 0 0 1 0 ] 
       [ 0 0 0 1 ] ]''',
+            #****************************************
             'norm' : '''    local v 
     0 local res 
     0 local i 
@@ -139,6 +152,7 @@ class math(base_module):
         row @ r @ cell+ drop
     loop
     r @''',
+            #****************************************
             'mscalar*' : '''    local s
     local a
     a @ cells local a_rows
@@ -147,17 +161,18 @@ class math(base_module):
     0 local row
     0 local i
     0 local j
-    a_rows @ i do
+    a_rows @ i 
+    do
         [ ] row !
         0 j !
-        a_cols @ j do
-            a @ i @ cell@ j @ cell@ 
-            s @ * 
-            row @ cell+
+        a_cols @ j 
+        do
+            a @ i @ cell@ j @ cell@ s @ * row @ cell+ drop
         loop
-        row @ r @ cell+
+        row @ r @ cell+ drop
     loop
     r @''',
+            #****************************************
             'mscalar+' : '''    local s
     local a
     a @ cells local a_rows
@@ -166,18 +181,20 @@ class math(base_module):
     0 local row
     0 local i
     0 local j
-    a_rows @ i do
+    a_rows @ i 
+    do
         [ ] row !
         0 j !
-        a_cols @ j do
-            a @ i @ cell@ j @ cell@ 
-            s @ + 
-            row @ cell+
+        a_cols @ j 
+        do
+            a @ i @ cell@ j @ cell@ s @ + row @ cell+ drop
         loop
-        row @ r @ cell+
+        row @ r @ cell+ drop
     loop
     r @''',
-            'mscalar-' : '''    negate scalar+''',
+            #****************************************
+            'mscalar-' : '''    negate mscalar+''',
+            #****************************************
             'msub' : '''    local params
     local a
     params @ 0 cell@ local col
@@ -198,9 +215,9 @@ class math(base_module):
         0 new_col_j !
         dist @ new_col_j 
         do
-            a @ row @ new_row_i @ + cell@ col @ new_col_j @ + cell@ new_row @ cell+
+            a @ row @ new_row_i @ + cell@ col @ new_col_j @ + cell@ new_row @ cell+ drop
         loop
-        new_row @ r @ cell+
+        new_row @ r @ cell+ drop
     loop
     r @''',
             'pi' : 3.141592653589793, 
