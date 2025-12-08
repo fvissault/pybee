@@ -10,5 +10,5 @@ overlaydiv "class" "overlay-centered-content" addattr
 overlaydiv "Contenu du texte" addcontent
 o1overlay overlaydiv addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
