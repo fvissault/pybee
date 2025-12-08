@@ -14,5 +14,5 @@ body br addcontent
 body br addcontent
 body divtooltip addcontent 
 
-html @ generate cls
+html @ 0 generate cls
 ?>
