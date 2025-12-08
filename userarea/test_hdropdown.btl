@@ -6,5 +6,5 @@ head "userarea/css/hdropdown.css" headlink addcontent
 
 body "dd" "Dropdown" [ [ "Link 1" "#link1" ] [ "Link 2" "#link2" ] [ "Link 3" "#link3" ] ] hdropdown
 
-html @ generate cls
+html @ 0 generate cls
 ?>
