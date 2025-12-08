@@ -8,5 +8,5 @@ head "sync" "userarea/js/modal.js" headscriptfile addcontent
 body "Open Modal" "Titre de la modale" "myModal" modal
 myModalcontent "Un peu de texte dans cette modale..." paragraph addcontent
 
-html @ generate cls
+html @ 0 generate cls
 ?>
