@@ -212,10 +212,11 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             '/t' : '''    9 emit''',
             '/r' : '''    10 emit''',
             '/n' : '''    13 emit''',
-            '/nl' : '''    /n
-    output "web" <> 
+            '/nl' : '''    output "web" <> 
     if 
-        /r
+        /n /r
+    else
+        "<br/>" .
     then'''
         }
 
