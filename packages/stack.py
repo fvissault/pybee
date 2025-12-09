@@ -219,8 +219,11 @@ class StackInstructions:
     def char_instr(self):
         if self.require_stack(1, 'char') == None:
             temp = self.pop_work()
-            self.work.appendleft(ord(temp[0]))
-
+            if isinstance(temp, str):
+                self.work.appendleft(ord(temp[0]))
+                return 'nobreak'
+            else:
+                return self.err('error_strings_expected', 'char')
 
     '''
     Instruction chars : ajoute sur la pile de travail le nombre de caractère d'une chaine
@@ -228,5 +231,8 @@ class StackInstructions:
     def chars_instr(self):
         if self.require_stack(1, 'chars') == None:
             temp = self.pop_work()
-            self.work.appendleft(len(temp))
-            return 'nobreak'
+            if isinstance(temp, str):
+                self.work.appendleft(len(temp))
+                return 'nobreak'
+            else:
+                return self.err('error_strings_expected', 'chars')
