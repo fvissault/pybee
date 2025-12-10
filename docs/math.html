@@ -60,12 +60,222 @@
             <a href="#trunc"><b>trunc</b></a>
         </p>
 
-        <h3>2. Fonctions arithmétiques</h3>
-        <h3>3. Fonctions trigonométriques</h3>
-        <h3>4. Nombres aléatoires</h3>
-        <h3>5. Nombres complexes</h3>
-        <h3>6. Calcul matriciel</h3>
-        <h3>7. Constantes principales de la physiques</h3>
+        <a name="arithmetique"></a><h3>2. Fonctions arithmétiques</h3>
+
+        <a name="c"></a><h4>2.1. Mot 'abs' : valeur absolue</h4>
+        <p>'abs' positionne sur la pile de travail la valeur absolue d'un nombre n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - abs(n)<br><br>
+                <u>Exemples :</u><br>
+                Beetle> -5 <b>abs</b> .cr<br>
+                5<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> 5 <b>abs</b> .cr<br>
+                5<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="cbrt"></a><h4>2.2. Mot 'cbrt' : racine cubique</h4>
+        <p>'cbrt' positionne sur la pile de travail la racine cubique d'un nombre n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - cbrt(n)<br><br>
+                <u>Exemples :</u><br>
+                Beetle> 8 <b>cbrt</b> .cr<br>
+                2.0<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> 9 <b>cbrt</b> .cr<br>
+                2.080083823051904<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="ceil"></a><h4>2.3. Mot 'ceil' : arrondi supérieur</h4>
+        <p>'ceil' positionne sur la pile de travail l'arondi supérieur d'un nombre n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - ceil(n)<br><br>
+                <u>Exemples :</u><br>
+                Beetle> 8.1 <b>ceil</b> .cr<br>
+                9<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> 9 <b>ceil</b> .cr<br>
+                9<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="comb"></a><h4>2.4. Mot 'comb' : nombre de façon de choisir k éléments dans n éléments sans répétition ni ordre</h4>
+        <p>'comb' positionne sur la pile de travail le nombre de façon de choisir k éléments dans n éléments sans répétition ni ordre.<br>
+        k et n doivent être supérieurs à 0</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n k - comb(n, k)<br><br>
+                <u>Exemples :</u><br>
+                Beetle> 10 3 <b>comb</b> .cr<br>
+                120<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> 3 10 <b>comb</b> .cr<br>
+                0<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="cube"></a><h4>2.5. Mot 'cube' : cube de n</h4>
+        <p>'cube' positionne sur la pile de travail le cube de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - cube(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 10 <b>cube</b> .cr<br>
+                1000<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="exp"></a><h4>2.6. Mot 'exp' : exponentiel de n</h4>
+        <p>'exp' positionne sur la pile de travail l'exponentielle de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - exp(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 9 <b>exp</b> .cr<br>
+                8103.08392599128<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="exp2"></a><h4>2.7. Mot 'exp2' : puissance n de 2</h4>
+        <p>'exp2' positionne sur la pile de travail la puissance n de 2.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - exp2(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5 <b>exp2</b> .cr<br>
+                32<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="expm1"></a><h4>2.8. Mot 'expm1' : exp(n) - 1</h4>
+        <p>'exp2' positionne sur la pile de travail l'exponenielle de n moins 1.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - expm1(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5 <b>expm1</b> .cr<br>
+                147.4131590864578<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="fact"></a><h4>2.9. Mot 'fact' : factorielle de n</h4>
+        <p>'fact' positionne sur la pile de travail la factorielle de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - fact(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5 <b>fact</b> .cr<br>
+                120<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="floor"></a><h4>2.10. Mot 'floor' : arrondi inférieur de n</h4>
+        <p>'floor' positionne sur la pile de travail l'arrondi inférieur de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - floor(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.9 <b>floor</b> .cr<br>
+                5<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="log"></a><h4>2.11. Mot 'log' : logarithme naturel de n</h4>
+        <p>'log' positionne sur la pile de travail le logarithme naturel de n (en base e).</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - log(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.9 <b>log</b> .cr<br>
+                1.7749523509116738<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="log10"></a><h4>2.12. Mot 'log10' : logarithme de n en base 10</h4>
+        <p>'log10' positionne sur la pile de travail le logarithme naturel de n (en base 10).</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - log10(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.9 <b>log10</b> .cr<br>
+                0.7708520116421442<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="log1p"></a><h4>2.13. Mot 'log1p' : logarithme naturel de 1+n (en base e)</h4>
+        <p>'log1p' positionne sur la pile de travail le logarithme naturel de 1+n (en base e).</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - log1p(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.9 <b>log1p</b> .cr<br>
+                1.9315214116032138<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="log2"></a><h4>2.14. Mot 'log2' : logarithme de n en base 2</h4>
+        <p>'log2' positionne sur la pile de travail le logarithme de n en base 2.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - log2(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.9 <b>log2</b> .cr<br>
+                2.560714954474479<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="trigonometrie"></a><h3>3. Fonctions trigonométriques</h3>
+        <a name="aleatoire"></a><h3>4. Nombres aléatoires</h3>
+        <a name="complex"></a><h3>5. Nombres complexes</h3>
+        <a name="matrix"></a><h3>6. Calcul matriciel</h3>
+        <a name="constants"></a><h3>7. Constantes principales de la physique</h3>
 
         <a name="c"></a><h4>7.1. Constante 'c' : vitesse de la lumière</h4>
         <p>'c' est une constante et son appel positionne sur la pile de travail la vitesse de la lumière.</p>
@@ -122,8 +332,8 @@
             </code>
         </div>
 
-        <h3>8. Calcul quantique</h3>
-        <h3>9. Suites</h3>
+        <a name="quantique"></a><h3>8. Calcul quantique</h3>
+        <a name="suites"></a><h3>9. Suites</h3>
 
         <p><a href="core.html">Précédent : XII.1. Package 'core'</a> | <a href="index.html">Index</a> | <a href="file.html">Suivant : XII.3. Package 'file'</a></p>
 
