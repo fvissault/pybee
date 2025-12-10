@@ -271,7 +271,144 @@
             </code>
         </div>
 
+        <a name="mod"></a><h4>2.15. Mot 'mod' : modulo n dans m</h4>
+        <p>'mod' positionne sur la pile de travail le modulo de n dans m.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m n - mod(m, n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5 2 <b>mod</b> .cr<br>
+                2<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="perm"></a><h4>2.16. Mot 'perm' : nombre de façon de choisir k éléments dans n éléments sans répétition dans l'ordre</h4>
+        <p>'perm' positionne sur la pile de travail le nombre de façon de choisir k éléments dans n éléments sans répétition dans l'ordre.<br>
+        k et n doivent être supérieurs à 0</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                k n - perm(k, n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 10 3 <b>perm</b> .cr<br>
+                720<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="pow"></a><h4>2.17. Mot 'pow' : puissance m de n</h4>
+        <p>'pow' positionne sur la pile de travail la puissance m de n</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n m - pow(n, m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 3 <b>pow</b> .cr<br>
+                8<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="remainder"></a><h4>2.18. Mot 'remainder' : reste de la division de n par rapport à m</h4>
+        <p>
+            'remainder' positionne sur la pile de travail le reste selon la norme IEEE 754 de n par rapport à m. Pour n fini et 
+            m fini non nul, il s'agit de la différence n - x*m, où x est l'entier le plus proche de la valeur exacte du quotient n / m. 
+            Si n / m est exactement à mi-chemin de deux entiers consécutifs, le plus proche entier pair est utilisé pour x. Ainsi, 
+            le reste r = remainder(n, m) vérifie toujours abs(r) <= 0.5 * abs(m)</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n m - remainder(n, m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5 3 <b>remainder</b> .cr<br>
+                -1.0<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="round"></a><h4>2.19. Mot 'round' : arrondi à la décimale</h4>
+        <p>
+            'round' positionne sur la pile de travail l'arrondi à la décimale m de n</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n m - round(n, m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 5.235689 3 <b>round</b> .cr<br>
+                5.236<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="sqrt"></a><h4>2.20. Mot 'sqrt' : racine carré de n</h4>
+        <p>
+            'sqrt' positionne sur la pile de travail la racine carré de n. n doit être strictement positif.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - sqrt(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>sqrt</b> .cr<br>
+                1.4142135623730951<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="square"></a><h4>2.21. Mot 'square' : puissance de 2 de n</h4>
+        <p>
+            'square' positionne sur la pile de travail la puissance de 2 de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - square(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>square</b> .cr<br>
+                4<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="trunc"></a><h4>2.22. Mot 'trunc' : n sans la part fractionnelle de n</h4>
+        <p>
+            'trunc' positionne sur la pile de travail n sans la part fractionnelle de n.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - trunc(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2.251436 <b>trunc</b> .cr<br>
+                2<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
         <a name="trigonometrie"></a><h3>3. Fonctions trigonométriques</h3>
+
+        <a name="sin"></a><h4>3.1. Mot 'sin' : sinus de n</h4>
+        <p>
+            'sin' positionne sur la pile de travail le sinus de n. n doit être exprimé en radians</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - sin(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 1.51 <b>sin</b> .cr<br>
+                0.9981524724975481<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
         <a name="aleatoire"></a><h3>4. Nombres aléatoires</h3>
         <a name="complex"></a><h3>5. Nombres complexes</h3>
         <a name="matrix"></a><h3>6. Calcul matriciel</h3>
