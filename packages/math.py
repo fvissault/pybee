@@ -96,7 +96,65 @@ class math(base_module):
             'cosh' : self.cosh_instr,
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
-            'det' : '''''',
+            #****************************************
+            'mminor' : '''    local m
+    local col_index
+    local row_index
+    [ ] local r
+    0 local i
+    0 local j
+    [ ] local row 
+    m @ cells i  
+    do
+        i @ row_index @ <> 
+        if
+            [ ] row !
+            0 j !
+            m @ i @ cell@ cells j 
+            do
+                j @ col_index @ <> 
+                if
+                    m @ i @ cell@ j @ cell@ row @ cell+ drop
+                then
+            loop
+            row @ r @ cell+ drop
+        then
+    loop
+    r @''',
+            #****************************************
+            'mcofactor' : '''    local m
+    local j
+    local i
+    m @ i @ cell@ j @ cell@ 
+    i @ j @ m @ mminor 
+    mdet * 
+    i @ j @ + 2 mod 1 = 
+    if
+        -1 *
+    then''',
+            #****************************************
+            'mdet' : '''    local m
+    m @ cells local n
+    n @ 1 = if
+        m @ 0 cell@ 0 cell@
+    else
+        n @ 2 = 
+        if
+            m @ 0 cell@ 0 cell@ 
+            m @ 1 cell@ 1 cell@ * 
+            m @ 0 cell@ 1 cell@ 
+            m @ 1 cell@ 0 cell@ * 
+            - 
+        else
+            0 local det
+            0 local j
+            n @ j
+            do
+                0 j @ m @ mcofactor det @ + det !
+            loop
+            det @ 
+        then
+    then''',
             #****************************************
             'id2' : '''    [ [ 1 0 ] 
       [ 0 1 ] ]''',
@@ -110,7 +168,8 @@ class math(base_module):
       [ 0 0 1 0 ] 
       [ 0 0 0 1 ] ]''',
             #****************************************
-            'norm' : '''    local v 
+            'norm' : '''    ( norme d'un vecteur ) 
+    local v 
     0 local res 
     0 local i 
     v @ cells i 
@@ -119,8 +178,7 @@ class math(base_module):
     loop 
     res @ sqrt''',
             #****************************************
-            'm*' : '''
-    ( a b -- a*b )
+            'm*' : '''    ( produit de 2 matrices )
     local b 
     local a 
     a @ 0 cell@ cells local a_cols 
@@ -153,7 +211,8 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'mscalar*' : '''    local s
+            'mscalar*' : '''    ( produit d'un scalaire et d'une matrice ) 
+    local s
     local a
     a @ cells local a_rows
     a @ 0 cell@ cells local a_cols
@@ -173,7 +232,8 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'mscalar+' : '''    local s
+            'mscalar+' : '''    ( somme d'un scalaire et une matrice ) 
+    local s
     local a
     a @ cells local a_rows
     a @ 0 cell@ cells local a_cols
@@ -193,9 +253,11 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'mscalar-' : '''    negate mscalar+''',
+            'mscalar-' : '''    ( difference entre un scalaire et une matrice ) 
+    negate mscalar+''',
             #****************************************
-            'msub' : '''    local params
+            'msub' : '''    ( sous-matrice ) 
+    local params
     local a
     params @ 0 cell@ local col
     params @ 1 cell@ local row
@@ -221,7 +283,8 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'mtrans' : '''   local m
+            'mtrans' : '''   ( transposée d'un matrice ) 
+    local m
     m @ cells local m_rows
     m @ 0 cell@ cells local m_cols
     [ ] local r
@@ -243,39 +306,79 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'complex' : '''    local im
+            'mcofactor-matrix' : '''    ( matrice de cofactor )
+    local m
+    m @ cells local n
+    [ ] local r
+    0 local i
+    0 local j
+    [ ] local row
+
+    n @ i do
+        [ ] row !
+        0 j !
+        n @ j do
+            i @ j @ m @ mcofactor row @ cell+ drop
+        loop
+        row @ r @ cell+ drop
+    loop
+    r @''',
+            #****************************************
+            'madjucate' : '''    ( transposée de la matrice des cofacteurs )
+    local m
+    m @ mcofactor-matrix mtrans''',
+            #****************************************
+            'minv' : '''        ( inverse d'une matrice )
+    local m
+    m @ mdet local d
+    d @ 0 = 
+    if
+        "Fatal error : matrix not invertible" .cr
+    else
+        m @ madjugate 1 d @ / swap mscalar*
+    then''',
+            #****************************************
+            'complex' : '''    ( création d'un nombre complexe ) 
+    local im
     local re
     [ re @ im @ ]''',
             #****************************************
-            're' : '''    0 cell@''',
+            're' : '''    ( partie rélle d'un complexe ) 
+    0 cell@''',
             #****************************************
-            'im' : '''    1 cell@''',
+            'im' : '''    ( partie imaginaire d'un complexe )
+    1 cell@''',
             #****************************************
-            'c+' : '''    local z2
+            'c+' : '''    ( somme de complexes ) 
+    local z2
     local z1
     z1 @ re z2 @ re + 
     z1 @ im z2 @ im + 
     complex''',
             #****************************************
-            'c-' : '''    local z2
+            'c-' : '''    ( difference de complexes ) 
+    local z2
     local z1
     z1 @ re z2 @ re - 
     z1 @ im z2 @ im - 
     complex''',
             #****************************************
-            'c*' : '''    local z2
+            'c*' : '''    ( produit de complexes )
+    local z2
     local z1
     z1 @ re z2 @ re * z1 @ im z2 @ im * - 
     z1 @ re z2 @ im * z1 @ im z2 @ re * + 
     complex''',
             #****************************************
-            'cconj' : '''    dup re 
+            'cconj' : '''    ( complexe conjuguée )
+    dup re 
     swap im negate 
     complex''',
             #****************************************
-            'mconj' : '''    local m
-    m @ cells local m_rows ( "m_rows = " . m_rows @ .cr )
-    m @ 0 cell@ cells local m_cols ( "m_cols = " . m_cols @ .cr )
+            'mconj' : '''    ( matrice conjuguée )
+    local m
+    m @ cells local m_rows 
+    m @ 0 cell@ cells local m_cols 
     [ ] local r
     0 local i
     0 local j
