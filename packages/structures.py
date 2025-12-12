@@ -204,17 +204,24 @@ class Structures:
     def cellexclam_instr(self):
         if self.require_stack(3, 'cell!') == None:
             tab = self.pop_work()
-            if not isinstance(tab, list) and not isinstance(tab , dict):
-                return self.err('error_get_cell_on_array_invalid', 'cell!')
+            if isinstance(tab, str):
+                if tab in self.variables:
+                    content = self.dictionary[tab]
+                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                else:
+                    return self.err('error_not_a_variable', 'cell@')
+            elif isinstance(tab, list) or isinstance(tab, dict):
+                content = tab
             position = self.pop_work()
-            if isinstance(tab, list):
-                if not isinstance(position, int) or position < 0 or position >= len(tab):
+            if isinstance(content, list):
+                if not isinstance(position, int) or position < 0 or position >= len(content):
                     return self.err('error_index_on_array_invalid', 'cell!')
-            if isinstance(tab, dict) and position not in tab.keys():
+            if isinstance(content, dict) and position not in content.keys():
                 return self.err('error_index_on_array_invalid', 'cell!')
             value = self.pop_work()
-            tab[position] = value
-            self.work.appendleft(tab)
+            content[position] = value
+            self.work.appendleft(content)
             return 'nobreak'
 
     '''
