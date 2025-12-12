@@ -6,7 +6,7 @@ class Io:
     Instruction . : affiche et détruit le haut de la pile 
     '''
     def point_instr(self):
-        if self.require_stack(1, '?local') == None:
+        if self.require_stack(1, '.') == None:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
             print(temp, end='')
