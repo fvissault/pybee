@@ -81,8 +81,9 @@ class math(base_module):
             'floor' : self.floor_instr,
             'remainder' : self.remainder_instr,
             #****************************************
-            'mod' : '''    / floor''',
+            'mod' : '''    2dup / floor * -''',
             'round' : self.round_instr,
+            'f.' : '''    12 round''',
             'trunc' : self.trunc_instr,
             '>deg' : self.deg_instr,
             '>rad' : self.rad_instr,
@@ -96,6 +97,23 @@ class math(base_module):
             'cosh' : self.cosh_instr,
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
+            #****************************************
+            'matrix.' : '''    ( formate les aij d'une matrice pour supprimer l'erreur introduite par python )
+    local m
+    0 local i
+    0 local j
+    0 local aij
+    [ ] local row
+    m @ cells i 
+    do 
+        0 j !
+        m @ i @ cell@ row !
+        row @ cells j 
+        do 
+            row @ j @ cell@ f. aij ! aij @ j @ row cell! drop
+        loop
+    loop
+    m @''',
             #****************************************
             'mminor' : '''    local m
     local col_index
@@ -125,33 +143,33 @@ class math(base_module):
             'mcofactor' : '''    local m
     local j
     local i
-    m @ i @ cell@ j @ cell@ 
     i @ j @ m @ mminor 
-    mdet * 
+    mdet 
     i @ j @ + 2 mod 1 = 
     if
-        -1 *
+        -1 * 
     then''',
             #****************************************
-            'mdet' : '''    local m
-    m @ cells local n
-    n @ 1 = if
-        m @ 0 cell@ 0 cell@
-    else
+            'mdet' : '''    ( calcul du déterminant d'une matrice )
+    local m 
+    m @ cells local n 
+    n @ 1 = if 
+        m @ 0 cell@ 0 cell@ 
+    else 
         n @ 2 = 
-        if
+        if 
             m @ 0 cell@ 0 cell@ 
             m @ 1 cell@ 1 cell@ * 
             m @ 0 cell@ 1 cell@ 
             m @ 1 cell@ 0 cell@ * 
             - 
-        else
-            0 local det
-            0 local j
-            n @ j
-            do
-                0 j @ m @ mcofactor det @ + det !
-            loop
+        else 
+            0 local det 
+            0 local j 
+            n @ j 
+            do 
+                0 j @ m @ mcofactor det @ + det ! 
+            loop 
             det @ 
         then
     then''',
@@ -174,7 +192,7 @@ class math(base_module):
     0 local i 
     v @ cells i 
     do 
-        v @ i @ cell@ 2 pow res +! 
+        v @ i @ cell@ 2 pow res @ + res ! 
     loop 
     res @ sqrt''',
             #****************************************
@@ -205,9 +223,9 @@ class math(base_module):
                 a @ i @ cell@ k @ cell@ 
                 b @ k @ cell@ j @ cell@ * r> + >r
             loop
-            r> row @ cell+ drop
+            r> row cell+ drop
         loop
-        row @ r @ cell+ drop
+        row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -226,9 +244,9 @@ class math(base_module):
         0 j !
         a_cols @ j 
         do
-            a @ i @ cell@ j @ cell@ s @ * row @ cell+ drop
+            a @ i @ cell@ j @ cell@ s @ * row cell+ drop
         loop
-        row @ r @ cell+ drop
+        row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -247,9 +265,9 @@ class math(base_module):
         0 j !
         a_cols @ j 
         do
-            a @ i @ cell@ j @ cell@ s @ + row @ cell+ drop
+            a @ i @ cell@ j @ cell@ s @ + row cell+ drop
         loop
-        row @ r @ cell+ drop
+        row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -277,9 +295,9 @@ class math(base_module):
         0 new_col_j !
         dist @ new_col_j 
         do
-            a @ row @ new_row_i @ + cell@ col @ new_col_j @ + cell@ new_row @ cell+ drop
+            a @ row @ new_row_i @ + cell@ col @ new_col_j @ + cell@ new_row cell+ drop
         loop
-        new_row @ r @ cell+ drop
+        new_row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -297,12 +315,9 @@ class math(base_module):
         0 j !
         m_rows @ j 
         do
-            m @ 
-            j @ cell@ 
-            i @ cell@ 
-            row @ cell+ drop
+            m @ j @ cell@ i @ cell@ row cell+ drop
         loop
-        row @ r @ cell+ drop
+        row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -318,9 +333,9 @@ class math(base_module):
         [ ] row !
         0 j !
         n @ j do
-            i @ j @ m @ mcofactor row @ cell+ drop
+            i @ j @ m @ mcofactor row cell+ drop
         loop
-        row @ r @ cell+ drop
+        row @ r cell+ drop
     loop
     r @''',
             #****************************************
@@ -335,7 +350,7 @@ class math(base_module):
     if
         "Fatal error : matrix not invertible" .cr
     else
-        m @ madjugate 1 d @ / swap mscalar*
+        m @ madjucate 1 d @ / mscalar* matrix.
     then''',
             #****************************************
             'complex' : '''    ( création d'un nombre complexe ) 
@@ -825,7 +840,7 @@ class math(base_module):
             if precision < 0:
                 return math_errors.error_precision_sup_0.print_error('round', self.interpreter.output)
             number = self.pop_work()
-            ret = round(number, precision)
+            ret = round(float(number), precision)
             self.interpreter.work.appendleft(ret)
             return 'nobreak'
         else:
