@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beetle — Calculs de mécanique quantique</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>⚛️ Beetle et le calcul quantique</h1>
+  <p>
+    Cette page décrit le cadre de mécanique quantique en cours de développement
+    avec Beetle, ainsi que la nomenclature et les calculs fondamentaux que le langage
+    permet d’exprimer de manière explicite et vérifiable.
+  </p>
+</header>
+
+<section>
+  <h2>Un formalisme manipulable</h2>
+  <p>
+    La mécanique quantique repose sur un ensemble d’objets mathématiques bien définis :
+    vecteurs d’état, formes duales, opérateurs linéaires et produits scalaires.
+  </p>
+  <p>
+    L’objectif ici n’est pas de masquer ces objets derrière une bibliothèque opaque,
+    mais de les manipuler directement, étape par étape, à l’aide d’un langage simple :
+    <strong>Beetle</strong>.
+  </p>
+  <p>
+    Beetle permet de reconstruire le calcul quantique de manière progressive,
+    lisible et contrôlée.
+  </p>
+</section>
+
+<section>
+  <h2>Nomenclature fondamentale</h2>
+  <p>
+    Afin de rester fidèle au formalisme mathématique standard, une nomenclature claire
+    est utilisée. Chaque notion correspond à un objet ou une transformation explicite.
+  </p>
+
+  <h3>Ket</h3>
+  <p>
+    Un <em>ket</em> représente un vecteur d’état. Il est traité comme une valeur
+    manipulable sur la pile.
+  </p>
+  <pre><code>|psi&gt;   \ ket</code></pre>
+
+  <h3>Bra</h3>
+  <p>
+    Un <em>bra</em> est la forme duale associée à un ket. Il s’obtient par adjonction
+    (conjugaison et transposition).
+  </p>
+  <pre><code>|psi&gt; >bra</code></pre>
+
+  <h3>Opérateur</h3>
+  <p>
+    Un opérateur est une transformation linéaire appliquée à un état.
+    Dans Beetle, un opérateur est un mot qui agit explicitement sur la pile.
+  </p>
+  <pre><code>|psi&gt; H apply</code></pre>
+
+  <h3>Adjoint</h3>
+  <p>
+    L’adjoint d’un opérateur correspond à sa transposée conjuguée.
+    Il est manipulé comme un objet à part entière.
+  </p>
+  <pre><code>H adjoint</code></pre>
+</section>
+
+<section>
+  <h2>Exemple de calcul quantique en Beetle</h2>
+  <p>
+    L’exemple suivant illustre un calcul simple : application d’un opérateur
+    à un état, suivi du calcul d’une amplitude.
+  </p>
+
+  <pre><code>|psi&gt; H apply >bra |phi&gt; dot</code></pre>
+
+  <p>
+    La lecture est directe :
+  </p>
+  <ul>
+    <li>on part d’un état |psi&gt;</li>
+    <li>on applique l’opérateur H</li>
+    <li>on construit le bra correspondant</li>
+    <li>on calcule le produit scalaire avec |phi&gt;</li>
+  </ul>
+
+  <p>
+    Chaque étape correspond à une transformation visible sur la pile.
+    Rien n’est implicite, rien n’est caché.
+  </p>
+</section>
+
+<section>
+  <h2>Pourquoi Beetle est un bon outil pour ces calculs</h2>
+  <p>
+    Le modèle à pile de Beetle correspond naturellement au calcul quantique formel :
+  </p>
+  <ul>
+    <li>les états sont des valeurs explicites,</li>
+    <li>les opérateurs sont des transformations,</li>
+    <li>la composition est séquentielle et lisible,</li>
+    <li>l’ordre des opérations est parfaitement contrôlé.</li>
+  </ul>
+  <p>
+    Beetle n’est pas conçu pour cacher la complexité, mais pour la rendre
+    manipulable et compréhensible.
+  </p>
+</section>
+
+<section>
+  <h2>Conclusion</h2>
+  <p>
+    Beetle permet d’écrire et de vérifier des calculs de mécanique quantique
+    sans intermédiaire opaque.
+  </p>
+  <p>
+    C’est un outil expérimental pour explorer le formalisme quantique,
+    pas à pas, avec rigueur et clarté.
+  </p>
+</section>
+
+<section class="cta">
+  <a href="presentation.html">⬅ Retour à la présentation</a>
+</section>
+
+<footer>
+  🪲 Beetle — Un langage simple pour des calculs profonds.
+</footer>
+
+</body>
+</html>
