@@ -175,16 +175,28 @@ class math(base_module):
     then''',
             #****************************************
             'id2' : '''    [ [ 1 0 ] 
-      [ 0 1 ] ]''',
+    [ 0 1 ] ]''',
             #****************************************
             'id3' : '''    [ [ 1 0 0 ] 
-      [ 0 1 0 ] 
-      [ 0 0 1 ] ]''',
+    [ 0 1 0 ] 
+    [ 0 0 1 ] ]''',
             #****************************************
             'id4' : '''    [ [ 1 0 0 0 ] 
-      [ 0 1 0 0 ] 
-      [ 0 0 1 0 ] 
-      [ 0 0 0 1 ] ]''',
+    [ 0 1 0 0 ] 
+    [ 0 0 1 0 ] 
+    [ 0 0 0 1 ] ]''',
+            #****************************************
+            'σx' : '''    ( matrice de Pauli sur x : ne comporte que des nombres complexes )
+    [ [ 0 0 complex 1 0 complex ]
+    [ 1 0 complex 0 0 complex ] ]''',
+            #****************************************
+            'σy' : '''    ( matrice de Pauli sur y : ne comporte que des nombres complexes )
+    [ [ 0 0 complex  0 -1 complex ]
+    [ 0 1 complex 0 0 complex ] ]''',
+            #****************************************
+            'σz' : '''    ( matrice de Pauli sur z : ne comporte que des nombres complexes )
+    [ [ 1 0 complex 0 0 complex ]
+    [ 0 0 complex -1 0 complex ] ]''',
             #****************************************
             'norm' : '''    ( norme d'un vecteur ) 
     local v 
@@ -410,7 +422,8 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'madjoint' : '''    mconj
+            'madjoint' : '''    
+    mconj
     mtrans''',
             #****************************************
             'phi' : '''    966 stemit''',
@@ -441,11 +454,13 @@ class math(base_module):
             #****************************************
             'theta' : '''    952 stemit''',
             #****************************************
-            'ket' : '''    local state
+            'ket' : '''    ( |ψ> = [ [ a ] [ b ] [ c ] ] ou a, b, c sont des nombres complexes a = [ re de a im de a ], idem pour b et c )
+    local state
     local content
     content @ "var |<#0#>>" [ state @ ] format evaluate''',
             #****************************************
-            'bra' : '''    local state
+            'bra' : '''    ( <ψ| = [ a* b* c* ] ou a, b, c sont des nombres complexes a = [ re de a im de a ], idem pour b et c )
+    local state
     local content
     content @ "var <<#0#>|" [ state @ ] format evaluate''',
             #****************************************
@@ -453,6 +468,26 @@ class math(base_module):
     local ketstate
     local content
     content @ "var <<#0#>|<#1#>>" [ brastate @ ketstate @ ] format evaluate''',
+            #****************************************
+            '>bra' : '''    ( transformation d'un ket en bra )
+    local ketname
+    "|<#0#>> @" [ ketname @ ] format evaluate
+    madjoint
+    ketname @ bra''',
+            #****************************************
+            '>ket' : '''    ( transformation d'un bra en ket )
+    local braname
+    "<<#0#>| @" [ braname @ ] format evaluate
+    madjoint
+    braname @ ket''',
+            #****************************************
+            '|0>' : '''   [ [ 1 0 complex ] [ 0 0 complex ] ]''',
+            #****************************************
+            '|1>' : '''   [ [ 0 0 complex ] [ 1 0 complex ] ]''',
+            #****************************************
+            '<0|' : '''   [ 1 0 complex 0 0 complex ]''',
+            #****************************************
+            '<1|' : '''   [ 0 0 complex 1 0 complex ]''',
             'pi' : 3.141592653589793, 
             'pi>deg' : '''    pi >deg ceil''', 
             'pi/2' : 1.570796326794895, 
@@ -740,6 +775,8 @@ class math(base_module):
             number = self.pop_work()
             if not isinstance(number, int) and not isinstance(number, float):
                 return core_errors.error_integer_and_float_expected.print_error('acos', self.interpreter.output)
+            if number < -1 or number > 1:
+                return math_errors.error_number_between_minus_1_and_1.print_error('acos', self.interpreter.output)
             result = acos(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -751,6 +788,8 @@ class math(base_module):
             number = self.pop_work()
             if not isinstance(number, int) and not isinstance(number, float):
                 return core_errors.error_integer_and_float_expected.print_error('asin', self.interpreter.output)
+            if number < -1 or number > 1:
+                return math_errors.error_number_between_minus_1_and_1.print_error('asin', self.interpreter.output)
             result = asin(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -773,6 +812,8 @@ class math(base_module):
             number = self.pop_work()
             if not isinstance(number, int) and not isinstance(number, float):
                 return core_errors.error_integer_and_float_expected.print_error('acosh', self.interpreter.output)
+            if number < 1:
+                return math_errors.error_number_greater_than_1.print_error('acosh', self.interpreter.output)
             result = acosh(number)
             self.work.appendleft(result)
             return 'nobreak'
