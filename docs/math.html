@@ -27,8 +27,10 @@
             L'ensemble des mots qui composent ce package est le suivant : <br>
 
             <a href="#fibnum"><b>#fib</b></a> <a href="#3pi/2"><b>3pi/2</b></a> <a href="#3pi/2deg"><b>3pi/2>deg</b></a> 
-            <a href="#3pi/4"><b>3pi/4</b></a> <a href="#3pi/4deg"><b>3pi/4>deg</b></a> <a href="#deg"><b>>deg</b></a> 
-            <a href="#rad"><b>>rad</b></a> <a href="#abs"><b>abs</b></a> <a href="#acos"><b>acos</b></a> 
+            <a href="#3pi/4"><b>3pi/4</b></a> <a href="#3pi/4deg"><b>3pi/4>deg</b></a> <a href="#bra0"><b>&lt;0|</b></a> 
+            <a href="#bra1"><b>&lt;1|</b></a> <a href="#tobra"><b>>bra</b></a> <a href="#deg"><b>>deg</b></a> 
+            <a href="#toket"><b>>ket</b></a> <a href="#rad"><b>>rad</b></a> <a href="#abs"><b>abs</b></a> 
+            <a href="#acos"><b>acos</b></a> 
             <a href="#acosh"><b>acosh</b></a> <a href="#alpha"><b>alpha</b></a> <a href="#asin"><b>asin</b></a> 
             <a href="#asinh"><b>asinh</b></a> <a href="#atan"><b>atan</b></a> <a href="#atan2"><b>atan2</b></a> 
             <a href="#atanh"><b>atanh</b></a> <a href="#beta"><b>beta</b></a> <a href="#bra"><b>bra</b></a> 
@@ -44,9 +46,9 @@
             <a href="#im"><b>im</b></a> <a href="#intrand"><b>intrand</b></a> <a href="#ket"><b>ket</b></a> 
             <a href="#lambda"><b>lambda</b></a> <a href="#log"><b>log</b></a> <a href="#log10"><b>log10</b></a> 
             <a href="#log1p"><b>log1p</b></a> <a href="#log2"><b>log2</b></a> <a href="#m*"><b>m*</b></a> 
-            <a href="#madjoint"><b>madjoint</b></a> <a href="#madjucate"><b>madjucate</b></a> <a href="#mcofactor"><b>mcofactor</b></a> 
+            <a href="#madjoint"><b>madjoint</b></a> <a href="#madjucate"><b>madjucate</b></a> matrix. <a href="#mcofactor"><b>mcofactor</b></a> 
             <a href="#mcofactor-matrix"><b>mcofactor-matrix</b></a> <a href="#mconj"><b>mconj</b></a> <a href="#mdet"><b>mdet</b></a> 
-            <a href="#mminor"><b>mminor</b></a> <a href="#mod"><b>mod</b></a> 
+            <a href="#minv"><b>minv</b></a> <a href="#mminor"><b>mminor</b></a> <a href="#mod"><b>mod</b></a> 
             <a href="#mscalar*"><b>mscalar*</b></a> <a href="#mscalar+"><b>mscalar+</b></a> <a href="#mscalar-"><b>mscalar-</b></a> 
             <a href="#msub"><b>msub</b></a> <a href="#mtrans"><b>mtrans</b></a> <a href="#mu"><b>mu</b></a> 
             <a href="#norm"><b>norm</b></a> <a href="#nu"><b>nu</b></a> <a href="#omega"><b>omega</b></a> 
@@ -59,7 +61,8 @@
             <a href="#sin"><b>sin</b></a> <a href="#sinh"><b>sinh</b></a> <a href="#sqrt"><b>sqrt</b></a> 
             <a href="#square"><b>square</b></a> <a href="#t"><b>t</b></a> <a href="#tan"><b>tan</b></a> 
             <a href="#tanh"><b>tanh</b></a> <a href="#tau"><b>tau</b></a> <a href="#theta"><b>theta</b></a> 
-            <a href="#trunc"><b>trunc</b></a>
+            <a href="#trunc"><b>trunc</b></a> <a href="#ket0"><b>|0></b></a> <a href="#ket1"><b>|1></b></a> 
+            <a href="#sigmax"><b>σx</b></a> <a href="#sigmay"><b>σy</b></a> <a href="#sigmaz"><b>σz</b></a>
         </p>
 
         <a name="arithmetique"></a><h3>2. Fonctions arithmétiques</h3>
@@ -426,7 +429,7 @@
             </code>
         </div>
 
-        <a name="tan"></a><h4>3.2. Mot 'tan' : tangente de n</h4>
+        <a name="tan"></a><h4>3.3. Mot 'tan' : tangente de n</h4>
         <p>
             'tan' positionne sur la pile de travail la tangente de n. n doit être exprimé en radians</p>
         <p>La syntaxe de ce mot est :</p>
@@ -437,6 +440,138 @@
                 <u>Exemple :</u><br>
                 Beetle> 1.51 <b>tan</b> .cr<br>
                 16.428091703885336<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="deg"></a><h4>3.4. Mot '>deg' : conversion radians vers degrés</h4>
+        <p>
+            '>deg' convertit des radians en degrés. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - deg(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 1.51 <b>>deg</b> .cr<br>
+                86.5166270647543<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="rad"></a><h4>3.5. Mot '>rad' : conversion degrés vers radians</h4>
+        <p>
+            '>rad' convertit des degrés en radians. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - rad(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 86 <b>>rad</b> .cr<br>
+                1.5009831567151235<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="acos"></a><h4>3.6. Mot 'acos' : arc cosinus d'un nombre compris entre -1 et 1</h4>
+        <p>
+            'acos' fournit un angle exprimé en radians d'une valeur comprise entre -1 et 1. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - acos(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 0.5 <b>acos</b> .cr<br>
+                1.0471975511965979<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> -1 <b>acos</b> .cr<br>
+                3.141592653589793<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> 1 <b>acos</b> .cr<br>
+                0.0<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="acosh"></a><h4>3.7. Mot 'acosh' : arc cosinus hyperbolique d'un nombre supérieur ou égal à 1</h4>
+        <p>
+            'acosh' fournit un angle exprimé en radians d'une valeur supérieure ou égale à 1. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - acosh(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>acosh</b> .cr<br>
+                1.3169578969248166<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="asin"></a><h4>3.8. Mot 'asin' : arc sinus d'un nombre compris entre -1 et 1</h4>
+        <p>
+            'asin' fournit un angle exprimé en radians d'une nombre compris entre -1 et 1. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - asin(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 0.5 <b>asin</b> .cr<br>
+                0.5235987755982989<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="asinh"></a><h4>3.9. Mot 'asinh' : arc sinus hyperbolique d'un nombre</h4>
+        <p>
+            'asinh' fournit un angle exprimé en radians d'une nombre. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - asinh(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>asinh</b> .cr<br>
+                1.4436354751788103<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="cosh"></a><h4>3.10. Mot 'cosh' : cosinus hyperbolique d'un nombre</h4>
+        <p>
+            'cosh' fournit le cosinus hyperbolique d'une nombre. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - cosh(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>cosh</b> .cr<br>
+                3.7621956910836314<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> -2 <b>cosh</b> .cr<br>
+                3.7621956910836314<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="sinh"></a><h4>3.11. Mot 'sinh' : sinus hyperbolique d'un nombre</h4>
+        <p>
+            'sinh' fournit le sinus hyperbolique d'une nombre. Le résultat est positionné sur le haut de la pile de travail.</p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                n - sinh(n)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> 2 <b>sinh</b> .cr<br>
+                3.6268604078470186<br>
+                <span style="color:green;">ready</span><br>
+                Beetle> -2 <b>sinh</b> .cr<br>
+                -3.6268604078470186<br>
                 <span style="color:green;">ready</span>
             </code>
         </div>
