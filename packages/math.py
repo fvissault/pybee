@@ -97,6 +97,27 @@ class math(base_module):
             'cosh' : self.cosh_instr,
             'sinh' : self.sinh_instr,
             'tanh' : self.tanh_instr,
+            'hypot' : '''    ( donne le rayon du cercle qui est représenté par l'hypothénuse d'un triangle rectangle ) 
+    square swap square + sqrt''',
+            'sum' : '''    ( somme d'une suite de nombres )
+    local suite
+    0 local r
+    0 local i
+    suite @ cells i
+    do
+        r @ suite @ i @ cell@ + r !
+    loop
+    r @''',
+            'prod' : '''    ( produit d'une suite de nombres )
+    local suite
+    1 local r
+    0 local i
+    suite @ cells i
+    do
+        r @ suite @ i @ cell@ * r !
+    loop
+    r @''',
+            'closed' : self.closed_instr,
             #****************************************
             'matrix.' : '''    ( formate les aij d'une matrice pour supprimer l'erreur introduite par python )
     local m
@@ -836,6 +857,8 @@ class math(base_module):
             number = self.pop_work()
             if not isinstance(number, int) and not isinstance(number, float):
                 return core_errors.error_integer_and_float_expected.print_error('atanh', self.interpreter.output)
+            if number <= -1 or number >= 1:
+                return math_errors.error_number_between_minus_1_and_1.print_error('atanh', self.interpreter.output)
             result = atanh(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -923,3 +946,17 @@ class math(base_module):
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('intrand', self.interpreter.output)
+
+    def closed_instr(self):
+        if len(self.work) > 1:
+            b = self.pop_work()
+            a = self.pop_work()
+            if not self.isfloat(a) or not self.isfloat(b):
+                return math_errors.error_float_expected.print_error('closed', self.interpreter.output)
+            if isclose(a, b):
+                self.work.appendleft(1)
+            else:
+                self.work.appendleft(0)
+            return 'nobreak'
+        else:
+            return core_errors.error_nothing_in_work_stack.print_error('closed', self.interpreter.output)
