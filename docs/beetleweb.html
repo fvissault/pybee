@@ -17,7 +17,7 @@
 
         <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
 
-        <h2>1. Principe général</h2>
+        <h3>1. Principe général</h3>
         <p>
             Beetle peut être utilisé de deux manières complémentaires :
         </p>
@@ -30,7 +30,7 @@
             via le script Python 'browser.py'.
         </p>
 
-        <h2>2. Appel direct via browser.py</h2>
+        <h3>2. Appel direct via browser.py</h3>
         <p>
             Le point d'entrée web de Beetle est le script suivant :
         </p>
@@ -43,7 +43,7 @@
             'my_filename.btl'.
         </p>
 
-        <h3>Gestion du paramètre 'path'</h3>
+        <h4>Gestion du paramètre 'path'</h4>
         <ul>
             <li><b>absent</b> : Beetle utilise le répertoire 'userarea' ;</li>
             <li><b>path=default</b> : équivalent au cas précédent ;</li>
@@ -55,7 +55,7 @@
             Les scripts '.btl' ne sont jamais exposés directement.
         </p>
 
-        <h2>3. Exemple simple</h2>
+        <h3>3. Exemple simple</h3>
         <p>
             Si le fichier 'test.btl' est présent dans 'userarea', l'URL suivante exécutera le programme :
         </p>
@@ -67,13 +67,13 @@
             En cas d'erreur de syntaxe ou d'exécution, les messages d'erreur Beetle sont affichés directement dans la page web.
         </p>
 
-        <h2>4. URLs simplifiées avec mod_rewrite</h2>
+        <h3>4. URLs simplifiées avec mod_rewrite</h3>
         <p>
             Pour obtenir des URLs plus naturelles, il est possible d'utiliser la réécriture d'URL Apache afin d'appeler directement
             des fichiers '.btl'.
         </p>
 
-        <h3>4.1 Fichier .htaccess</h3>
+        <h4>Fichier .htaccess</h4>
         <p>
             Placez le fichier '.htaccess' suivant dans le répertoire 'pybee' (normalement, il est déjà positionné) :
         </p>
@@ -90,19 +90,19 @@
             http://localhost/pybee/test.btl
         </code></div>
 
-        <h2>5. Configuration Apache requise (Windows / WAMP)</h2>
+        <h3>5. Configuration Apache requise (Windows / WAMP)</h3>
 
         <p>
             Sous Windows, Apache n'exécute jamais automatiquement les scripts Python. Une configuration explicite est indispensable.
         </p>
 
-        <h3>5.1 Modules requis</h3>
+        <h4>Modules requis</h4>
         <ul>
             <li>mod_rewrite</li>
             <li>mod_cgi</li>
         </ul>
 
-        <h3>5.2 Configuration minimale</h3>
+        <h4>Configuration minimale</h4>
         <div class="div_code"><code>
             &lt;Directory "${INSTALL_DIR}/www"&gt;<br>
             &nbsp;&nbsp;Options +FollowSymLinks -Multiviews +ExecCGI<br>
@@ -117,7 +117,7 @@
             l'application des règles de réécriture.
         </p>
 
-        <h3>5.3 Script Python CGI</h3>
+        <h4>Script Python CGI</h4>
         <p>
             Le fichier 'browser.py' doit respecter les règles CGI suivantes :
         </p>
@@ -132,7 +132,7 @@
             print("Content-Type: text/html; charset=utf-8\r\n")
         </code></div>
 
-        <h2>6. Problèmes courants</h2>
+        <h3>6. Problèmes courants</h3>
         <ul>
             <li><b>Le code Python s'affiche dans le navigateur</b> : AddHandler cgi-script .py manquant.</li>
             <li><b>La réécriture ne fonctionne pas</b> : Multiviews activé ou .htaccess mal placé.</li>
@@ -144,7 +144,7 @@
             <code>c:/wamp64/logs/apache_error.log</code>
         </p>
 
-        <h2>7. Remarque architecturale</h2>
+        <h3>7. Remarque architecturale</h3>
         <p>
             <b>Beetle ne dépend pas d'Apache.</b> Apache peut être remplacé par tout autre serveur HTTP.
             Il est uniquement utilisé ici comme serveur de fichiers statiques et routeur web.
