@@ -216,7 +216,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
     if 
         /n /r
     else
-        "<br/>" .
+        /n
     then'''
         }
 
