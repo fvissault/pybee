@@ -1337,7 +1337,7 @@ class web(base_module):
     def _escape_html(self, s: str) -> str:
         if s is None:
             return ""
-        escaped = html.escape(str(s), quote=True)
+        escaped = html.escape(str(s), quote=False)
         escaped = escaped.replace("'", "&#39;")
         return escaped
 
