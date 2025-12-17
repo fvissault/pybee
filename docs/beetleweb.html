@@ -17,116 +17,139 @@
 
         <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
 
+        <h2>1. Principe général</h2>
         <p>
-            Vous pouvez choisir d'utiliser la console pour réaliser vos programmes. Cependant, vous pouvez rediriger la sortie 
-            standard vers une page web en utilisant l'outil mis à votre disposition qui est, dans votre navigateur préféré :
-            <b>http://localhost/pybee/browser.py?file=my_filename&path=my_path</b>
+            Beetle peut être utilisé de deux manières complémentaires :
         </p>
-        <p>
-            Le paramètre 'file=my_filename' ne doit pas contenir l'extension de votre fichier mais doit être un fichier donc l'extension 
-            est .btl
-        </p>
-        <p>Le paramètre 'path' de l'url est optionnel. Vous avez, au choix, 3 solutions pour construire cette url :</p>
         <ul>
-            <li>Le paramètre 'path' n'existe pas dans l'url => Beetle pointe sur les fichiers qui se trouvent dans 'userarea'</li>
-            <li>
-                Le paramètre 'path' existe dans l'url et a la valeur 'default' => Beetle pointe sur les fichiers qui se trouvent dans 
-                'userarea'
-            </li>
-            <li>
-                Le paramètre 'path' existe dans l'url et sa valeur n'est pas 'default' => Beetle pointe sur les fichiers qui se trouvent 
-                sur le chemin fourni par le paramètre 'path'. La variable 'path' de Beetle est mise à jour avec le nouveau chemin 
-                spécifié
-            </li>
+            <li>en <b>console interactive</b> ;</li>
+            <li>en <b>mode web</b>, où la sortie standard de Beetle est redirigée vers une page HTML.</li>
         </ul>
         <p>
-            Avec ce mécanisme, vous pouvez déposer un ensemble de fichiers n'importe où sur votre disque. Les fichiers Beetle que vous 
-            créez pour vos sites sont totalement cachés d'un browser. Ce paramétre 'path' ne doit pas comporter de / à la fin
+            En mode web, Apache joue uniquement le rôle de <b>routeur HTTP</b>. Le traitement logique est entièrement réalisé par Beetle
+            via le script Python 'browser.py'.
         </p>
-        <p>
-            Exemple :<br> 
-            Si vous créez un répertoire <b>projet1</b> dans <b>userarea</b> et que vous y mettez un fichier <b>myprogram.btl</b>, votre 
-            url sera la suivante : <b>http://localhost/pybee/browser.py?file=projet1/myprogram</b>
-        </p>    
-        <p>De ce fait, vous contrôlez entièrement l'arboscence de votre site ou projet.</p>    
-        <p>
-            Autre exemple :<br>
-            En admettant que vous avez créé un fichier <b>test.btl</b> contenant :
-        </p>
-        <div class="div_code">
-            <code>
-                : newfib
-                <blockquote> 
-                    dup 1 >= ( premier test )<br>
-                    if 
-                    <blockquote>
-                        dup 1 = ( deuxième test )<br>
-                        if 
-                        <blockquote>
-                            0 .cr drop 
-                        </blockquote> 
-                        else 
-                        <blockquote>
-                            2 var i <br>
-                            1 0 2dup . . swap rot i<br> 
-                            do ( début de la boucle )
-                            <blockquote>
-                                2dup + dup . rot drop
-                            </blockquote> 
-                            loop ( fin de la bloucle )<br>
-                            2drop forget i cr
-                        </blockquote> 
-                        then
-                    </blockquote> 
-                    else 
-                    <blockquote>
-                        "Usage : n FIB with n > 0" .cr 
-                    </blockquote> 
-                    then 
-                </blockquote>
-                ;<br>
-                50 newfib<br>
-                cr<br>
-                words<br>
-                cr cr<br>
-                list test
-            </code>
-        </div>
 
-            
-        <p>Lorsque vous tapez : http://localhost/pybee/browser.py?file=test vous obtenez :</p>
-        <p><img src="images/webex.png"/></p>
+        <h2>2. Appel direct via browser.py</h2>
         <p>
-            Si vous commettez une erreur de syntaxe, vous afficherez les erreurs dans la page web.
-            Ainsi vous pouvez utiliser un autre canal de sortie que la simple console.
+            Le point d'entrée web de Beetle est le script suivant :
         </p>
-        <h3>Autre manière de faire</h3>
-        <p>Vous disposez d'une autre manière de faire des appels à des fichiers dont l'extension est .btl. Voici comment faire cela.</p>
+        <div class="div_code"><code>
+            http://localhost/pybee/browser.py?file=my_filename&path=my_path
+        </code></div>
+
         <p>
-            <u>Etape 1</u> : pour commencer, vous devez créer un fichier <b>.htaccess</b> que vous allez placer à la racine de pybee. Ce fichier <b>.htaccess</b> 
-            contient les lignes suivantes :
+            Le paramètre 'file' ne doit pas contenir l'extension '.btl'. Beetle chargera automatiquement le fichier
+            'my_filename.btl'.
         </p>
-        <div class="div_code">
-            <code>
-                RewriteEngine On<br>
-                RewriteRule ^(.+)\.btl$ /pybee/browser.py?file=$1 [QSA,L]
-            </code>
-        </div>
-        <p>Ce fichier est normalement fourni dans Beetle.</p>
-        <p><u>Etape 2</u> : vérifier que le module rewrite de votre serveur Apache est chargé</p>
+
+        <h3>Gestion du paramètre 'path'</h3>
+        <ul>
+            <li><b>absent</b> : Beetle utilise le répertoire 'userarea' ;</li>
+            <li><b>path=default</b> : équivalent au cas précédent ;</li>
+            <li><b>path=autre</b> : Beetle charge les fichiers depuis le chemin fourni et met à jour sa variable interne 'path'.</li>
+        </ul>
+
         <p>
-            <u>Etape 3</u> : relancer votre serveur Apache pour qu'il prenne en compte le chargement du module rewrite dans le cas ou il n'était pas
-            chargé
+            Ce mécanisme permet de séparer totalement les fichiers Beetle des fichiers visibles par le navigateur.
+            Les scripts '.btl' ne sont jamais exposés directement.
         </p>
-        <p><u>Etape 4</u> : Votre url peut maintenant devenir : <b>http://localhost/pybee/test.btl</b></p>
+
+        <h2>3. Exemple simple</h2>
         <p>
-            Ceci est très pratique pour faire un site car toutes les urls de vos liens peuvent prendre cette forme au lieu de la forme 
-            précédente.<br>
-            Si vous modifiez le nom de votre projet de <b>pybee</b> en autre chose, n'oubliez pas de modifier également le fichier <b>.htaccess</b>
-            afin que tout se passe correctement.
+            Si le fichier 'test.btl' est présent dans 'userarea', l'URL suivante exécutera le programme :
+        </p>
+        <div class="div_code"><code>
+            http://localhost/pybee/browser.py?file=test
+        </code></div>
+
+        <p>
+            En cas d'erreur de syntaxe ou d'exécution, les messages d'erreur Beetle sont affichés directement dans la page web.
+        </p>
+
+        <h2>4. URLs simplifiées avec mod_rewrite</h2>
+        <p>
+            Pour obtenir des URLs plus naturelles, il est possible d'utiliser la réécriture d'URL Apache afin d'appeler directement
+            des fichiers '.btl'.
+        </p>
+
+        <h3>4.1 Fichier .htaccess</h3>
+        <p>
+            Placez le fichier '.htaccess' suivant dans le répertoire 'pybee' (normalement, il est déjà positionné) :
+        </p>
+
+        <div class="div_code"><code>
+            RewriteEngine On<br>
+            RewriteRule ^(.+)\.btl$ /pybee/browser.py?file=$1 [QSA,L]
+        </code></div>
+
+        <p>
+            L'URL suivante devient alors valide :
+        </p>
+        <div class="div_code"><code>
+            http://localhost/pybee/test.btl
+        </code></div>
+
+        <h2>5. Configuration Apache requise (Windows / WAMP)</h2>
+
+        <p>
+            Sous Windows, Apache n'exécute jamais automatiquement les scripts Python. Une configuration explicite est indispensable.
+        </p>
+
+        <h3>5.1 Modules requis</h3>
+        <ul>
+            <li>mod_rewrite</li>
+            <li>mod_cgi</li>
+        </ul>
+
+        <h3>5.2 Configuration minimale</h3>
+        <div class="div_code"><code>
+            &lt;Directory "${INSTALL_DIR}/www"&gt;<br>
+            &nbsp;&nbsp;Options +FollowSymLinks -Multiviews +ExecCGI<br>
+            &nbsp;&nbsp;AllowOverride All<br>
+            &nbsp;&nbsp;Require all granted<br>
+            &nbsp;&nbsp;AddHandler cgi-script .py<br>
+            &lt;/Directory&gt;
+        </code></div>
+
+        <p>
+            <b>Important :</b> l'option '-Multiviews' est obligatoire. Elle évite qu'Apache intercepte les URLs avant
+            l'application des règles de réécriture.
+        </p>
+
+        <h3>5.3 Script Python CGI</h3>
+        <p>
+            Le fichier 'browser.py' doit respecter les règles CGI suivantes :
+        </p>
+        <ul>
+            <li>shebang absolu vers Python ;</li>
+            <li>en-tête HTTP 'Content-Type' obligatoire ;</li>
+            <li>aucune sortie avant les headers.</li>
+        </ul>
+
+        <div class="div_code"><code>
+            #!C:/Users/USER/AppData/Local/Programs/Python/Python312/python.exe<br>
+            print("Content-Type: text/html; charset=utf-8\r\n")
+        </code></div>
+
+        <h2>6. Problèmes courants</h2>
+        <ul>
+            <li><b>Le code Python s'affiche dans le navigateur</b> : AddHandler cgi-script .py manquant.</li>
+            <li><b>La réécriture ne fonctionne pas</b> : Multiviews activé ou .htaccess mal placé.</li>
+            <li><b>Erreur 500</b> : shebang incorrect, header manquant ou erreur Python.</li>
+        </ul>
+
+        <p>
+            Les erreurs Apache sont consultables dans :<br>
+            <code>c:/wamp64/logs/apache_error.log</code>
+        </p>
+
+        <h2>7. Remarque architecturale</h2>
+        <p>
+            <b>Beetle ne dépend pas d'Apache.</b> Apache peut être remplacé par tout autre serveur HTTP.
+            Il est uniquement utilisé ici comme serveur de fichiers statiques et routeur web.
         </p>
 
         <p><a href="console.html">Précédent : VII. Console</a> | <a href="index.html">Index</a> | <a href="filesystem.html">Suivant : IX. Système de fichiers</a></p>
-
     </body>
 </html>
