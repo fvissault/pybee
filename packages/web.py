@@ -1331,7 +1331,7 @@ class web(base_module):
         self.help = web_help(self.interpreter.output)
         self.sessionvars = {'session_duration':30}
         self.usecookies = False
-        self.version = 'v1.3.5'
+        self.version = 'v1.7.2'
         self.packuse = ['db', 'mail']
 
     def _escape_html(self, s: str) -> str:
