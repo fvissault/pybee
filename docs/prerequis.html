@@ -50,10 +50,17 @@
             <li><b>keyboard</b> - version 0.13.5</li>
             <li><b><a href="https://pypi.org/project/legacy-cgi/" taget="_blank">legacy-cgi</a></b> - version 2.6.1</li>
             <li><b>mysql-connector-python</b> - version 9.1.0</li>
-            <li><b>psycopg2-binary>=2.9</b> - version >= 2.9</li>
+            <li><b>psycopg2-binary</b> - version >= 2.9</li>
         </ul>
         <p>La commande permettant d'installer un package Python est la suivante : <b>pip install</b> <i>nom_du_package</i></p>
         <p>Il est conseillé d'installer Python dans un répertoire au plus haut sur votre disque. Par exemple : 'c:\python'</p>
+        <p>
+            Un fichier 'requirements.txt' regroupe l'ensemble des packages Python qu'il faut installer à la racine de pybee.<br>
+            La commande pip suivante permet de les télécharger en une seule fois :
+        </p>
+        <div class="div_code"><code>
+            pip install -r requirements.txt
+        </code></div>
         
         <h3><u>3. Beetle</u></h3>
         <p>
