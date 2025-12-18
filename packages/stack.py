@@ -177,11 +177,11 @@ class StackInstructions:
     '''
     def tick_instr(self):
         name = self.pop_sequence()
-        for p in self.interpreter.packages.keys():
-            if name in self.interpreter.packages[p].dictionary:
-                self.work.appendleft(name)
-                return 'nobreak'
-        return self.err('error_not_a_variable_or_definition', '\' (tick)')
+        #for p in self.interpreter.packages.keys():
+        #    if name in self.interpreter.packages[p].dictionary:
+        self.work.appendleft(name)
+        return 'nobreak'
+        #return self.err('error_not_a_variable_or_definition', '\' (tick)')
 
     '''
     Instruction @ : insère dans la pile de travail la valeur d'une variable ou d'une constante
