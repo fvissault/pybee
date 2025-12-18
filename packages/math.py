@@ -128,7 +128,6 @@ class math(base_module):
     local m
     0 local i
     0 local j
-    0 local aij
     [ ] local row
     m @ cells i 
     do 
@@ -136,7 +135,18 @@ class math(base_module):
         m @ i @ cell@ row !
         row @ cells j 
         do 
-            row @ j @ cell@ f. aij ! aij @ j @ row cell! drop
+            row @ j @ cell@ ?array
+            if
+                row @ j @ cell@ cells 2 = 
+                if
+                    [ row @ j @ cell@ 0 cell@ f. row @ j @ cell@ 1 cell@ f. ] 
+                else 
+                    "matrix. : complex are only expected" .cr abort
+                then  
+            else
+                row @ j @ cell@ f. 
+            then
+            j @ row cell! drop
         loop
     loop
     m @''',
@@ -209,18 +219,6 @@ class math(base_module):
     [ 0 1 0 0 ] 
     [ 0 0 1 0 ] 
     [ 0 0 0 1 ] ]''',
-            #****************************************
-            'σx' : '''    ( matrice de Pauli sur x : ne comporte que des nombres complexes )
-    [ [ 0 0 complex 1 0 complex ]
-    [ 1 0 complex 0 0 complex ] ]''',
-            #****************************************
-            'σy' : '''    ( matrice de Pauli sur y : ne comporte que des nombres complexes )
-    [ [ 0 0 complex  0 -1 complex ]
-    [ 0 1 complex 0 0 complex ] ]''',
-            #****************************************
-            'σz' : '''    ( matrice de Pauli sur z : ne comporte que des nombres complexes )
-    [ [ 1 0 complex 0 0 complex ]
-    [ 0 0 complex -1 0 complex ] ]''',
             #****************************************
             'norm' : '''    ( norme d'un vecteur ) 
     local v 
@@ -302,7 +300,6 @@ class math(base_module):
     local b 
     local a 
     a @ 0 cell@ cells local a_cols 
-    b @ 0 cell@ cells local b_cols 
     a_cols @ b @ cells <> 
     if 
         "Fatal error : incompatible matrix" .cr abort 
@@ -312,18 +309,37 @@ class math(base_module):
     0 local i
     0 local j
     0 local k
+    0 local aleft
+    0 local bright
     a @ cells i 
     do
         [ ] row !
         0 j !
-        b_cols @ j 
+        b @ 0 cell@ cells j 
         do
             0 >r
             0 k !
             a_cols @ k 
             do
-                a @ i @ cell@ k @ cell@ 
-                b @ k @ cell@ j @ cell@ * r> + >r
+                a @ i @ cell@ k @ cell@ aleft !
+                b @ k @ cell@ j @ cell@ bright !
+                k @ 0 =
+                if
+                    aleft @ ?array bright @ ?array and
+                    if
+                        aleft @ bright @ c*
+                    else
+                        aleft @ bright @ *
+                    then
+                    >r
+                else
+                    aleft @ ?array bright @ ?array and
+                    if
+                        aleft @ bright @ c* r> c+ >r
+                    else
+                        aleft @ bright @ * r> + >r
+                    then
+                then
             loop
             r> row cell+ drop
         loop
@@ -494,7 +510,7 @@ class math(base_module):
             'c*' : '''    ( produit de complexes )
     local z2
     local z1
-    [ z1 @ re z2 @ re * z1 @ im z2 @ im * - z1 @ re z2 @ im * z1 @ im z2 @ re * + ]''',
+    [ z1 @ re z2 @ re * z1 @ im z2 @ im * - f. z1 @ re z2 @ im * z1 @ im z2 @ re * + f. ]''',
             #****************************************
             'cscalar*' : '''    ( produit d'un scalaire avec un complexe )
     local s
@@ -534,126 +550,6 @@ class math(base_module):
             'madjoint' : '''    ( matrice adjointe )
     mconj
     mtrans''',
-            #****************************************
-            'phi' : '''    966 stemit''',
-            #****************************************
-            'psi' : '''    968 stemit''',
-            #****************************************
-            'sigma' : '''    963 stemit''',
-            #****************************************
-            'alpha' : '''    945 stemit''',
-            #****************************************
-            'beta' : '''    946 stemit''',
-            #****************************************
-            'delta' : '''    948 stemit''',
-            #****************************************
-            'epsilon' : '''    949 stemit''',
-            #****************************************
-            'lambda' : '''    955 stemit''',
-            #****************************************
-            'mu' : '''    956 stemit''',
-            #****************************************
-            'omega' : '''    937 stemit''',
-            #****************************************
-            'nu' : '''    957 stemit''',
-            #****************************************
-            'tau' : '''    964 stemit''',
-            #****************************************
-            'omicron' : '''    959 stemit''',
-            #****************************************
-            'theta' : '''    952 stemit''',
-            #****************************************
-            'ket' : '''    ( |ψ> = [ [ a ] [ b ] [ c ] ] ou a, b, c sont des nombres complexes a = [ re(a) im(a) ], idem pour b et c )
-    local state
-    local content
-    content @ "const |<#0#>>" [ state @ ] format evaluate''',
-            #****************************************
-            'bra' : '''    ( <ψ| = [ a* b* c* ] ou a, b, c sont des nombres complexes a = [ re(a) im(a) ], idem pour b et c )
-    local state
-    local content
-    content @ "const <<#0#>|" [ state @ ] format evaluate''',
-            #****************************************
-            'braket' : '''    local brastate
-    local ketstate
-    local content
-    content @ "const <<#0#>|<#1#>>" [ brastate @ ketstate @ ] format evaluate''',
-            #****************************************
-            '>bra' : '''    ( transformation d'un ket en bra )
-    local ketname
-    "|<#0#>>" [ ketname @ ] format evaluate
-    madjoint
-    ketname @ bra''',
-            #****************************************
-            '>ket' : '''    ( transformation d'un bra en ket )
-    local braname
-    "<<#0#>|" [ braname @ ] format evaluate
-    madjoint
-    braname @ ket''',
-            #****************************************
-            'braket*' : '''    ( produit scalaire de bra et ket -> fournit un scalaire )
-    local k
-    local b
-    b @ k @ m*
-    0 0 cell@''',
-            #****************************************
-            'ktensor' : '''    ( a b -- a ⊗ b )
-    local b
-    local a
-    [ ] local r
-    [ ] local rowa
-    [ ] local rowb
-    [ ] local rowr
-    0 local i
-    0 local j
-    0 local k
-    0 local l
-    0 local aleft
-    0 local bright
-    a @ cells i
-    do
-        0 k !
-        a @ i @ cell@ rowa !
-        b @ cells k
-        do
-            0 j !
-            b @ k @ cell@ rowb !
-            [ ] rowr !
-            rowa @ cells j
-            do
-                0 l !
-                rowb @ cells l
-                do
-                    rowa @ j @ cell@ aleft !
-                    rowb @ l @ cell@ bright !
-                    aleft @ ?array
-                    if
-                        aleft @ bright @ c*
-                    else
-                        aleft @ bright @ *
-                    then
-                    rowr cell+ drop 
-                loop
-            loop
-            rowr @ r cell+ drop
-        loop
-    loop
-    r @''',
-            #****************************************
-            '|0>' : '''    [ [ 1 0 complex ] [ 0 0 complex ] ]''',
-            #****************************************
-            '|1>' : '''    [ [ 0 0 complex ] [ 1 0 complex ] ]''',
-            #****************************************
-            '<0|' : '''    [ 1 0 complex 0 0 complex ]''',
-            #****************************************
-            '<1|' : '''    [ 0 0 complex 1 0 complex ]''',
-            #****************************************
-            '|+>' : '''    |0> |1> m+ 1 2 sqrt / mscalar*''',
-            #****************************************
-            '|->' : '''    |0> |1> m- 1 2 sqrt / mscalar*''',
-            #****************************************
-            '<+|' : '''    |+> madjoint''',
-            #****************************************
-            '<-|' : '''    |-> madjoint''',
             'pi' : 3.141592653589793, 
             'pi>deg' : '''    pi >deg ceil''', 
             'pi/2' : 1.570796326794895, 
