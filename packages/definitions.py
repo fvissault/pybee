@@ -387,6 +387,19 @@ class Definitions:
             return 'nobreak'
 
     '''
+    Instruction ?const : indique si le haut de la pile de travail est une constante
+    Attention : Usage : ' const_name ?const if ... then
+    '''
+    def isconst_instr(self):
+        if self.require_stack(1, '?const') == None:
+            name = self.pop_work()
+            if name in self.interpreter.userdefinitions:
+                self.work.appendleft(1)
+                return 'nobreak'
+            self.work.appendleft(0)
+            return 'nobreak'
+
+    '''
     Instruction ?local : indique si le nombre de la pile de travail est une variable locale
     '''
     def islocal_instr(self):
