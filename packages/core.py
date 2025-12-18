@@ -174,6 +174,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             '?int' : self.isint_instr,
             '?def' : self.isdef_instr,
             '?var' : self.isvar_instr,
+            '?const' : self.isconst_instr,
             '?local' : self.islocal_instr,
             '?float' : self.isfloat_instr,
             '?str' : self.isstr_instr,
