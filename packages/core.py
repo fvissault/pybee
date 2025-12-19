@@ -157,6 +157,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'load' : self.load_instr,
             'list' : self.list_instr,
             'char' : self.char_instr,
+            'char?' : self.getchar_instr,
             'chars' : self.chars_instr,
             'bl' : '''    decimal 32 emit''',
             'path' : 'userarea',
