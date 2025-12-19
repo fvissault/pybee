@@ -226,6 +226,23 @@ class StackInstructions:
                 return self.err('error_strings_expected', 'char')
 
     '''
+    Instruction char? : met sur la pile de travail le nième caractère d'une chaine de caractères
+    '''
+    def getchar_instr(self):
+        if self.require_stack(2, 'char?') == None:
+            pos = self.pop_work()
+            if isinstance(pos, int):
+                s = self.pop_work()
+                if isinstance(s, str):
+                    self.work.appendleft(s[pos])
+                    return 'nobreak'
+                else:
+                    return self.err('error_strings_expected', 'char? string parameter')
+            else:
+                return self.err('error_integer_expected', 'char? position parameter')
+            
+
+    '''
     Instruction chars : ajoute sur la pile de travail le nombre de caractère d'une chaine
     '''
     def chars_instr(self):
