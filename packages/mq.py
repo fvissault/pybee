@@ -156,22 +156,27 @@ class mq(base_module):
     [ [ 1 0 complex 0 0 complex ] [ 0 0 complex pi/4 cos pi/4 sin complex ] ]''',
             #****************************************
             'cnot' : '''    ( porte CNOT )
-    [ [ 1 0 complex 0 0 complex 0 0 complex 0 0 complex ] [ 0 0 complex 1 0 complex 0 0 complex 0 0 complex ] [ 0 0 complex 0 0 complex 0 0 complex 1 0 complex ] [ 0 0 complex 0 0 complex 1 0 complex 0 0 complex ] ]
-    ' |00> ?const invert 
+    [ [ 1 0 complex 0 0 complex 0 0 complex 0 0 complex ] 
+      [ 0 0 complex 1 0 complex 0 0 complex 0 0 complex ] 
+      [ 0 0 complex 0 0 complex 0 0 complex 1 0 complex ] 
+      [ 0 0 complex 0 0 complex 1 0 complex 0 0 complex ] ]''',
+            #****************************************
+            'nqubits' : '''    ( str -- ket : exemple : "010101" nqubits -> |010101> )
+    local squbit
+    squbit @ chars local size
+    size @ 1 > size @ 6 < and
     if
-        |0> |0> ktensor "00" ket
-    then
-    ' |01> ?const invert 
-    if
-        |0> |1> ktensor "01" ket
-    then
-    ' |10> ?const invert 
-    if
-        |1> |0> ktensor "10" ket
-    then
-    ' |11> ?const invert 
-    if
-        |1> |1> ktensor "11" ket
+        2 local i
+        squbit @ 0 char? local first
+        squbit @ 1 char? local second
+        "|<#0#>> |<#1#>> ktensor" [ first @ second @ ] format evaluate
+        size @ i
+        do
+            "|<#0#>> ktensor" [ squbit @ i @ char? ] format evaluate
+        loop
+        squbit @ ket
+    else
+        "nqubits : n must be greater than 1 and lesser then 9" .cr abort
     then''',
             #****************************************
             'hmeasure' : '''    hgate |0> m* local state 
