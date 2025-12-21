@@ -220,15 +220,37 @@ class math(base_module):
     [ 0 0 1 0 ] 
     [ 0 0 0 1 ] ]''',
             #****************************************
-            'norm' : '''    ( norme d'un vecteur ) 
-    local v 
-    0 local res 
-    0 local i 
-    v @ cells i 
-    do 
-        v @ i @ cell@ 2 pow res @ + res ! 
-    loop 
-    res @ sqrt''',
+            'norm' : '''   ( norme d'un vecteur classique, avec complexe, ligne ou colonne )
+    local v
+    0 local acc
+    v @ cells local n
+    0 local i
+    0 local elt
+    n @ i
+    do
+        v @ i @ cell@ elt !
+        elt @ ?array
+        if 
+            elt @ cells 1 = 
+            if
+                elt @ 0 cell@ elt !
+                elt @ ?array
+                if
+                    elt @ 0 cell@ square
+                    elt @ 1 cell@ square +
+                else
+                    elt @ square
+                then
+            else
+                elt @ 0 cell@ square
+                elt @ 1 cell@ square +
+            then
+        else
+            elt @ square 
+        then
+        acc @ + acc !
+    loop
+    acc @ sqrt''',
             #****************************************
             'm+' : '''    ( somme de 2 matrices )
     local b
