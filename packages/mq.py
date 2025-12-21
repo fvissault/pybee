@@ -66,16 +66,12 @@ class mq(base_module):
     content @ "const <<#0#>|<#1#>>" [ brastate @ ketstate @ ] format evaluate''',
             #****************************************
             '>bra' : '''    ( transformation d'un ket en bra )
-    local ketname
-    "|<#0#>>" [ ketname @ ] format evaluate
-    madjoint
-    ketname @ bra''',
+    local mket
+    mket @ madjoint''',
             #****************************************
             '>ket' : '''    ( transformation d'un bra en ket )
-    local braname
-    "<<#0#>|" [ braname @ ] format evaluate
-    madjoint
-    braname @ ket''',
+    local mbra
+    mbra @ madjoint''',
             #****************************************
             'braket*' : '''    ( produit scalaire de bra et ket -> fournit un scalaire )
     local k
@@ -178,6 +174,35 @@ class mq(base_module):
     else
         "nqubits : n must be greater than 1 and lesser then 9" .cr abort
     then''',
+            #****************************************
+            'allnqubits' : '''    ( créer tous les nqubits - Usage : n -- allqubits_constants )
+    local n
+    2 n @ pow local limit
+    0 local i
+    limit @ i
+    do
+        i @ 2 >base n @ "0" lpad nqubits
+    loop''',
+            #****************************************
+            'p0' : '''    
+    |0> dup >bra m*''',
+            #****************************************
+            'p1' : '''    
+    |1> dup >bra m*''',
+            #****************************************
+            'proj&prob' : '''    ( P |ψ> -- p |φ> )
+    m* dup norm square''',
+            #****************************************
+            'normalize-measure' : '''    ( p |φ> -- |ψ> )
+    swap sqrt 1 swap / mscalar*''',
+            #****************************************
+            'measure1' : '''    ( P |ψ> -- p |ψ_post> )
+    proj&prob
+    dup 0=
+    if
+        abort
+    then
+    normalize-measure''',
             #****************************************
             'hmeasure' : '''    hgate |0> m* local state 
     "État après Hadamard :" .cr 
