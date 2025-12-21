@@ -219,7 +219,9 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         /n /r
     else
         /n
-    then'''
+    then''',
+            'rpad' : self.ljust_instr,
+            'lpad' : self.rjust_instr
         }
 
         self.variables = ['path']
