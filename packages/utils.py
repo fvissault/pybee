@@ -558,6 +558,40 @@ class Utils:
                     self.work.appendleft(1)
                 else:
                     self.work.appendleft(0)
-                return 'nobreak'    
+                return 'nobreak'
             else:
                 return self.err('error_strings_expected', 'scan')
+
+    def ljust_instr(self):
+        if self.require_stack(3, 'rpad') == None:
+            c = self.pop_work()
+            if len(c) == 1:
+                n = self.pop_work()
+                if isinstance(n, int):
+                    s = self.pop_work()
+                    if isinstance(s, str):
+                        self.work.appendleft(s.ljust(n, c))
+                        return 'nobreak'
+                    else:
+                        return self.err('error_strings_expected', 'rpad')
+                else:
+                    return self.err('error_integer_expected', 'rpad')
+            else:
+                return self.err('error_char_expected', 'rpad')
+
+    def rjust_instr(self):
+        if self.require_stack(3, 'lpad') == None:
+            c = self.pop_work()
+            if len(c) == 1:
+                n = self.pop_work()
+                if isinstance(n, int):
+                    s = self.pop_work()
+                    if isinstance(s, str):
+                        self.work.appendleft(s.rjust(n, c))
+                        return 'nobreak'
+                    else:
+                        return self.err('error_strings_expected', 'lpad')
+                else:
+                    return self.err('error_integer_expected', 'lpad')
+            else:
+                return self.err('error_char_expected', 'lpad')
