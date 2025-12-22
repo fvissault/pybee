@@ -193,16 +193,38 @@ class mq(base_module):
             'proj&prob' : '''    ( P |ψ> -- p |φ> )
     m* dup norm square''',
             #****************************************
-            'normalize-measure' : '''    ( p |φ> -- |ψ> )
-    swap sqrt 1 swap / mscalar*''',
+            'normalize-measure' : '''    ( |φ> p -- |ψ> p )
+    dup sqrt
+    1 swap / swap rot rot
+    mscalar* swap''',
             #****************************************
-            'measure1' : '''    ( P |ψ> -- p |ψ_post> )
+            'measure' : '''    ( P |ψ> --|ψ_post> p )
     proj&prob
     dup 0=
     if
         abort
     then
     normalize-measure''',
+            #****************************************
+            'random-measure' : '''    ( |ψ> -- k |ψ_post> )
+    dup 
+    p0 swap measure 
+    local p0v
+    local psi0
+    dup
+    p1 swap measure 
+    local p1v 
+    local psi1
+    drop
+    0 1 floatrand p0v @ <
+    if
+        psi0 @
+        0
+
+    else
+        psi1 @
+        1
+    then''',
             #****************************************
             'hmeasure' : '''    hgate |0> m* local state 
     "État après Hadamard :" .cr 
