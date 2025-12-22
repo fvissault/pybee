@@ -124,7 +124,7 @@ class math(base_module):
             #****************************************
             'closed' : self.closed_instr,
             #****************************************
-            'matrix.' : '''    ( formate les aij d'une matrice pour supprimer l'erreur introduite par python )
+            '.m' : '''    ( formate les aij d'une matrice pour supprimer l'erreur introduite par python )
     local m
     0 local i
     0 local j
@@ -149,7 +149,7 @@ class math(base_module):
             j @ row cell! drop
         loop
     loop
-    m @''',
+    m @ .cr''',
             #****************************************
             'mminor' : '''    local m
     local col_index
