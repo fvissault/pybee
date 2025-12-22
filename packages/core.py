@@ -232,7 +232,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v2.1.5'
+        self.version = 'v2.3.5'
 
     def output_instr(self):
         self.work.appendleft(self.interpreter.output)
