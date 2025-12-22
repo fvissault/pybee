@@ -248,6 +248,25 @@ class mq(base_module):
     loop
     acc @''',
             #****************************************
+            'random-measure-qubit' : '''    ( |ψ> n k -- bit |ψ_post> )
+    local k
+    local n
+    local psi
+    psi @
+    n @ k @ p0 partial-projector
+    swap measure
+    local p0v local psi0 
+    psi @
+    n @ k @ p1 partial-projector
+    swap measure
+    local p1v local psi1 
+    0 1 floatrand p0v @ <
+    if
+        psi0 @ 0 
+    else
+        psi1 @ 1
+    then''',
+            #****************************************
             'hmeasure' : '''    hgate |0> m* local state 
     "État après Hadamard :" .cr 
     state @ matrix. .cr 
@@ -266,5 +285,5 @@ class mq(base_module):
         }
         self.help = mq_help(interpreter.output)
 
-        self.version = 'v1.0.0'
+        self.version = 'v1.2.5'
         self.packuse = ['math']
