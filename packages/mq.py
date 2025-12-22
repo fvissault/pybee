@@ -142,6 +142,22 @@ class mq(base_module):
     [ [ 1 0 complex 1 0 complex ] [ 1 0 complex -1 0 complex ] ] 
     1 2 sqrt / mscalar*''',
             #****************************************
+            'hmeasure' : '''    hgate |0> m* local state 
+    "État après Hadamard :" .cr 
+    state @ matrix. .cr 
+    0 local amp0 
+    0 local amp1 
+    <0| state @ m* amp0 ! 
+    <1| state @ m* amp1 ! 
+    0 local p0 
+    0 local p1 
+    amp0 @ 0 cell@ 0 cell@ norm 2 pow p0 ! 
+    amp1 @ 0 cell@ 0 cell@ norm 2 pow p1 ! 
+    "Probabilité de mesurer |0> :" .cr 
+    p0 @ f. .cr 
+    "Probabilité de mesurer |1> :" .cr 
+    p1 @ f. .cr''',
+            #****************************************
             'igate' : '''    ( porte identité )
     [ [ 1 0 complex 0 0 complex ] [ 0 0 complex 1 0 complex ] ]''',
             #****************************************
@@ -253,11 +269,11 @@ class mq(base_module):
     local n
     local psi
     psi @
-    n @ k @ p0 partial-projector
+    n @ k @ p0 partial-proj
     swap measure
     local p0v local psi0 
     psi @
-    n @ k @ p1 partial-projector
+    n @ k @ p1 partial-proj
     swap measure
     local p1v local psi1 
     0 1 floatrand p0v @ <
@@ -265,23 +281,7 @@ class mq(base_module):
         psi0 @ 0 
     else
         psi1 @ 1
-    then''',
-            #****************************************
-            'hmeasure' : '''    hgate |0> m* local state 
-    "État après Hadamard :" .cr 
-    state @ matrix. .cr 
-    0 local amp0 
-    0 local amp1 
-    <0| state @ m* amp0 ! 
-    <1| state @ m* amp1 ! 
-    0 local p0 
-    0 local p1 
-    amp0 @ 0 cell@ 0 cell@ norm 2 pow p0 ! 
-    amp1 @ 0 cell@ 0 cell@ norm 2 pow p1 ! 
-    "Probabilité de mesurer |0> :" .cr 
-    p0 @ f. .cr 
-    "Probabilité de mesurer |1> :" .cr 
-    p1 @ f. .cr'''
+    then'''
         }
         self.help = mq_help(interpreter.output)
 
