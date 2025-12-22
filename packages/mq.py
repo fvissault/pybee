@@ -226,6 +226,28 @@ class mq(base_module):
         1
     then''',
             #****************************************
+            'partial-proj' : '''    ( n k P -- Pn )
+    local p
+    local k
+    local n
+    1 local i
+    0 k @ =
+    if
+        p @ local acc
+    else
+        igate local acc
+    then
+    n @ i
+    do
+        i @ k @ =
+        if
+            acc @ p @ ktensor acc !
+        else
+            acc @ igate ktensor acc !
+        then
+    loop
+    acc @''',
+            #****************************************
             'hmeasure' : '''    hgate |0> m* local state 
     "État après Hadamard :" .cr 
     state @ matrix. .cr 
