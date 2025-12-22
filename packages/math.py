@@ -604,7 +604,7 @@ class math(base_module):
         interpreter.userdefinitions['3pi/2'] = deque(['@'])
         interpreter.userdefinitions['3pi/4'] = deque(['@'])
 
-        self.version = 'v1.3.2'
+        self.version = 'v1.3.8'
 
     '''
     Instruction cos : cosinus 
