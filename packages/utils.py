@@ -55,14 +55,11 @@ class Utils:
 
     def __importonepack(self, packname):
         if packname not in self.interpreter.packages.keys():
-            if packname not in self.interpreter.packages.keys():
-                packpath = 'packages.'
-                try:
-                    module = importlib.import_module(packpath + packname, package=None)
-                    self.interpreter.packages[packname] = eval('module.' + packname)(self.interpreter)
-                except (AttributeError, ModuleNotFoundError):
-                    return self.err('error_package_dont_exists', packname)
-
+            try:
+                module = importlib.import_module('packages.' + packname, package=None)
+                self.interpreter.packages[packname] = eval('module.' + packname)(self.interpreter)
+            except (AttributeError, ModuleNotFoundError):
+                return self.err('error_package_dont_exists', packname)
 
     '''
     Instruction detach : détache le dictionnaire d'un package du dictionnaire principal 
@@ -116,8 +113,7 @@ class Utils:
             return self.err('error_no_such_file', 'list' + filename)
         content = f.read()
         if self.interpreter.output == 'web':
-            content = content.replace('\n', '<br>')
-            content = content.replace(' ', '&nbsp;')
+            content = content.replace('\n', '<br>').replace(' ', '&nbsp;')
         print(content)
         f.close()
         return 'nobreak'
@@ -271,7 +267,6 @@ class Utils:
     def isint_instr(self):
         if self.require_stack(1, '?int') == None:
             o = self.pop_work()
-            #self.work.appendleft(o)
             if self.isinteger(o):
                 self.work.appendleft(1)
             else:
@@ -284,7 +279,6 @@ class Utils:
     def isfloat_instr(self):
         if self.require_stack(1, '?float') == None:
             o = self.pop_work()
-            #self.work.appendleft(o)
             if self.isfloat(o):
                 self.work.appendleft(1)
             else:
@@ -297,7 +291,6 @@ class Utils:
     def isstr_instr(self):
         if self.require_stack(1, '?str') == None:
             o = self.pop_work()
-            #self.work.appendleft(o)
             if isinstance(o, str):
                 self.work.appendleft(1)
             else:
@@ -310,7 +303,6 @@ class Utils:
     def ischar_instr(self):
         if self.require_stack(1, '?char') == None:
             o = self.pop_work()
-            #self.work.appendleft(o)
             if isinstance(o, str) and len(o) == 1:
                 self.work.appendleft(1)
             else:
