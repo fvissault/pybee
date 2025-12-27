@@ -502,10 +502,7 @@ class Utils:
                 return self.err('error_get_cell_on_array_invalid', 'format')
             content = self.pop_work()
 
-            content = content.replace('{', '<<')
-            content = content.replace('}', '>>')
-            content = content.replace('<#', '{')
-            content = content.replace('#>', '}')
+            content = content.replace('{', '<<').replace('}', '>>').replace('<#', '{').replace('#>', '}')
             try:
                 content = content.format(*tab)
             except(IndexError):
