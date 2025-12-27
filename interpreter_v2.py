@@ -70,57 +70,30 @@ class interpreter:
         self.lastseqnumber += 1
 
     def isemptysequence(self, sequence:deque):
-        if len(sequence) == 0:
-            return True
-        else:
-            return False
+        return not sequence
 
     def isemptysequences(self):
-        if len(self.sequences) == 0:
-            return True
-        for s in self.sequences:
-            if not self.isemptysequence(s):
-                return False
-        return True
+        return all(not s for s in self.sequences)
 
     def deleteemptysequences(self):
-        for index, seq in enumerate(self.sequences):
-            if len(seq) == 0:
-                del(self.sequences[index])
-                del(self.locals[index])
-                self.lastseqnumber -= 1
+        kept = [(s, l) for s, l in zip(self.sequences, self.locals) if s]
+        self.sequences, self.locals = map(list, zip(*kept)) if kept else ([], [])
+        self.lastseqnumber = len(self.sequences)
 
     def decreaselastseqnumber(self):
-        if len(self.sequences) > 0:
-            if self.isemptysequence(self.sequences[self.lastseqnumber]):
-                del(self.sequences[self.lastseqnumber])
-                del(self.locals[self.lastseqnumber])
-                self.lastseqnumber -= 1
+        if self.sequences and not self.sequences[self.lastseqnumber]:
+            del self.sequences[self.lastseqnumber]
+            del self.locals[self.lastseqnumber]
+            self.lastseqnumber -= 1
 
     def isemptylastsequence(self):
-        if len(self.sequences) == 0:
-            return True
-        if len(self.sequences[self.lastseqnumber]) == 0:
-            return True
-        else:
-            return False
+        return not self.sequences or not self.sequences[self.lastseqnumber]
 
     def setcurrentsequence(self):
         self.currentseqnumber = self.lastseqnumber
 
     def isemptycurrentsequence(self):
-        if len(self.sequences) == 0:
-            return True
-        if len(self.sequences[self.currentseqnumber]) == 0 and self.currentseqnumber > self.lastseqnumber:
-            return True
-        else:
-            return False
-
-    def print_sequence_numbers(self):
-        print('lastseqnumber = ' + str(self.lastseqnumber))
-        print('sequences = ', self.sequences)
-        print('locals = ', self.locals)
-        print('work = ', self.work)
+        return (not self.sequences or (self.currentseqnumber > self.lastseqnumber and not self.sequences[self.currentseqnumber]))
 
     '''
     Cette méthode est le coeur de l'interprete de Beetle
@@ -201,8 +174,7 @@ class interpreter:
                 if isinstance(package.dictionary[instr.lower()], str):
                     # instructions dans la définition
                     instr_body = package.dictionary[instr.lower()]
-                    instr_body = instr_body.replace('\t', ' ')
-                    instr_body = instr_body.replace('\n', ' ')
+                    instr_body = instr_body.replace('\t', ' ').replace('\n', ' ')
                     split = instr_body.split(' ')
                     if instr_body != '':
                         self.string_treatment(split)
@@ -211,9 +183,6 @@ class interpreter:
                     ret = self.interpret('last_sequence')
                     if ret == 'break':
                         return 'break'
-                    #for key, value in self.locals[self.lastseqnumber].items():
-                    #    if key in self.locals[self.lastseqnumber - 1]:
-                    #        self.locals[self.lastseqnumber - 1][key] = value
 
                     self.instructions.clear()
                     self.decreaselastseqnumber()
