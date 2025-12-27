@@ -44,11 +44,7 @@ class interpreter:
             content = f.read()
             content = content.replace('"', '\\"')
             content = '"' + content + '" .'
-            content = content.replace('\\"', '"')
-            content = content.replace('<?btl', '" . ')
-            content = content.replace('?>', ' "')
-            content = content.replace('\n', ' ')
-            content = content.replace('"" .', '')
+            content = content.replace('\\"', '"').replace('<?btl', '" . ').replace('?>', ' "').replace('\n', ' ').replace('"" .', '')
             content = re.sub(r'\s+', ' ', content)
             sp = content.split(' ')
             self.string_treatment(sp)
