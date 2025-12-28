@@ -1,6 +1,5 @@
 #!C:\Users\A648326\AppData\Local\Programs\Python\Python312\python.exe
 
-# -*- coding: utf8 -*-
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
