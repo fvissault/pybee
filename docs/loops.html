@@ -138,6 +138,25 @@
             l'endroit où il est écrit. <b>leave</b> en dehors d'une boucle n'a aucun effet.
         </p>
 
+        <p>
+            <h3>Spécificités de Beetle concernant les boucles :</h3>
+            <ul>
+                <li>
+                    Si le compteur de votre boucle est une variable (obtenue avec 'var' et non 'local') alors vous pouvez 
+                    utiliser l'opérateur (somme-affectation) +! dans les instructions de la boucle. En effet, une variable
+                    est globale.
+                </li>
+                <li>
+                    Si le compteur de votre boucle est une variable locale (obtenue avec le mot 'local') alors il est interdit
+                    d'initialiser cette variable dans la boucle. Vous ne pouvez que l'affecter. Sa création doit rester en dehors
+                    de la boucle.
+                </li>
+                <li>
+                    Pour les boucles finies, Beetle se charge d'incrémenter le compteur de boucle. Il est nécessaire de faire
+                    attention à l'affectation dans la boucle du compteur de boucle pour eviter des surprises non attendues.
+                </li>
+            </ul>
+        </p>
         <a href="conds.html">Précédent : XI.4. Structures du langage - Conditionnelles</a> | <a href="index.html">Index</a> | <a href="operations.html">Suivant :  : XI.6. Structures du langage - Opérations arithmétiques</a>
 
     </body>
