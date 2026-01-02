@@ -151,6 +151,20 @@ class math(base_module):
     loop
     m @ .cr''',
             #****************************************
+            'dim' : '''    ( cardinalité d'une matrice )
+    dup
+    local m
+    m @ ?array invert
+    if
+        "dim : not a matrix" .cr abort
+    then
+    m @ 0 cell@ ?array
+    if
+        [ m @ cells m @ 0 cell@ cells ]
+    else 
+        [ 1 m @ cells ]
+    then''',
+            #****************************************
             'mminor' : '''    local m
     local col_index
     local row_index
@@ -513,7 +527,7 @@ class math(base_module):
     local re
     [ re @ im @ ]''',
             #****************************************
-            're' : '''    ( partie rélle d'un complexe ) 
+            're' : '''    ( partie réelle d'un complexe ) 
     0 cell@''',
             #****************************************
             'im' : '''    ( partie imaginaire d'un complexe )
