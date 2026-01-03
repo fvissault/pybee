@@ -190,7 +190,8 @@ class math(base_module):
     loop
     r @''',
             #****************************************
-            'mcofactor' : '''    local m
+            'mcofactor' : '''    ( cofacteur d'une matrice )
+    local m
     local j
     local i
     i @ j @ m @ mminor 
@@ -222,17 +223,20 @@ class math(base_module):
         then
     then''',
             #****************************************
-            'id2' : '''    [ [ 1 0 ] 
-    [ 0 1 ] ]''',
+            'id2' : '''    ( matrice identité 2x2 )
+    [ [ 1 0 ] 
+      [ 0 1 ] ]''',
             #****************************************
-            'id3' : '''    [ [ 1 0 0 ] 
-    [ 0 1 0 ] 
-    [ 0 0 1 ] ]''',
+            'id3' : '''    ( matrice identité 3x3 )
+    [ [ 1 0 0 ] 
+      [ 0 1 0 ] 
+      [ 0 0 1 ] ]''',
             #****************************************
-            'id4' : '''    [ [ 1 0 0 0 ] 
-    [ 0 1 0 0 ] 
-    [ 0 0 1 0 ] 
-    [ 0 0 0 1 ] ]''',
+            'id4' : '''    ( matrice identité 4x4 )
+    [ [ 1 0 0 0 ] 
+      [ 0 1 0 0 ] 
+      [ 0 0 1 0 ] 
+      [ 0 0 0 1 ] ]''',
             #****************************************
             'norm' : '''   ( norme d'un vecteur classique, avec complexe, ligne ou colonne )
     local v
@@ -269,6 +273,12 @@ class math(base_module):
             'm+' : '''    ( somme de 2 matrices )
     local b
     local a
+    a @ dim local dima
+    b @ dim local dimb
+    dima @ 0 cell@ dimb @ 0 cell@ <>
+    if
+        "Fatal error : m+ : incompatible matrix" .cr abort
+    then
     [ ] local r
     [ ] local rowr
     [ ] local rowa
@@ -302,6 +312,12 @@ class math(base_module):
             'm-' : '''    ( différence de 2 matrices )
     local b
     local a
+    a @ dim local dima
+    b @ dim local dimb
+    dima @ 0 cell@ dimb @ 0 cell@ <>
+    if
+        "Fatal error : m- : incompatible matrix" .cr abort
+    then
     [ ] local r
     [ ] local rowr
     [ ] local rowa
@@ -385,7 +401,15 @@ class math(base_module):
             #****************************************
             'mscalar*' : '''    ( produit d'un scalaire et d'une matrice ) 
     local s 
-    local a 
+    local a
+    a @ ?array invert
+    if
+        "Fatal error : mscalar* usage : matrix scalar --" .cr abort
+    then 
+    s @ ?int s @ ?float or invert
+    if
+        "Fatal error : mscalar* usage : matrix scalar --" .cr abort
+    then 
     a @ cells local a_rows 
     a @ 0 cell@ cells local a_cols 
     [ ] local r
