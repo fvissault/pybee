@@ -57,7 +57,7 @@ class base_module:
         if element is None: 
             return False
         try:
-            float(element)
+            float(str(element))
             return True
         except ValueError:
             return False
@@ -77,7 +77,7 @@ class base_module:
         if element is None: 
             return False
         try:
-            int(element)
+            int(str(element))
             return True
         except ValueError:
             return False
