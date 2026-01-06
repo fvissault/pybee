@@ -439,6 +439,14 @@ class math(base_module):
             'mscalar+' : '''    ( somme d'un scalaire et une matrice ) 
     local s
     local a
+    a @ ?array invert
+    if
+        "Fatal error : mscalar+ usage : matrix scalar --" .cr abort
+    then 
+    s @ ?int s @ ?float or invert
+    if
+        "Fatal error : mscalar+ usage : matrix scalar --" .cr abort
+    then 
     a @ cells local a_rows
     a @ 0 cell@ cells local a_cols
     [ ] local r
@@ -471,6 +479,14 @@ class math(base_module):
             'msub' : '''    ( sous-matrice ) 
     local params
     local a
+    params @ ?array invert
+    if
+        "Fatal error : msub usage : matrix params --" .cr abort
+    then 
+    a @ ?array invert
+    if
+        "Fatal error : msub usage : matrix params --" .cr abort
+    then 
     params @ 0 cell@ local col
     params @ 1 cell@ local row
     params @ 2 cell@ local dist
@@ -478,7 +494,7 @@ class math(base_module):
     a @ 0 cell@ cells local a_cols
     dist @ col @ + a_cols @ <= dist @ row @ + a_rows @ <= or invert
     if
-        "Fatal error : matrix extraction not allowed" .cr abort 
+        "Fatal error : msub : matrix extraction not allowed" .cr abort 
     then 
     [ ] local r
     0 local new_row_i
@@ -497,6 +513,10 @@ class math(base_module):
             #****************************************
             'mtrans' : '''   ( transposée d'un matrice ) 
     local m
+    m @ ?array invert
+    if
+        "Fatal error : mtrans usage : matrix --" .cr abort
+    then 
     m @ cells local m_rows
     m @ 0 cell@ cells local m_cols
     [ ] local r
@@ -517,6 +537,10 @@ class math(base_module):
             #****************************************
             'mcofactor-matrix' : '''    ( matrice de cofactor )
     local m
+    m @ ?array invert
+    if
+        "Fatal error : mcofactor-matrix usage : matrix --" .cr abort
+    then 
     m @ cells local n
     [ ] local r
     0 local i
@@ -534,10 +558,18 @@ class math(base_module):
             #****************************************
             'madjucate' : '''    ( transposée de la matrice des cofacteurs )
     local m
+    m @ ?array invert
+    if
+        "Fatal error : madjucate usage : matrix --" .cr abort
+    then 
     m @ mcofactor-matrix mtrans''',
             #****************************************
             'minv' : '''        ( inverse d'une matrice )
     local m
+    m @ ?array invert
+    if
+        "Fatal error : minv usage : matrix --" .cr abort
+    then 
     m @ mdet local d
     d @ 0 = 
     if
@@ -549,6 +581,14 @@ class math(base_module):
             'complex' : '''    ( création d'un nombre complexe ) 
     local im
     local re
+    im @ ?int im @ ?float or invert
+    if
+        "Fatal error : complex usage : re im --" .cr abort
+    then 
+    re @ ?int re @ ?float or invert
+    if
+        "Fatal error : complex usage : re im --" .cr abort
+    then 
     [ re @ im @ ]''',
             #****************************************
             're' : '''    ( partie réelle d'un complexe ) 
@@ -560,26 +600,74 @@ class math(base_module):
             'c+' : '''    ( somme de complexes ) 
     local z2
     local z1
+    z2 @ dim local z2dim
+    z2dim @ 0 cell@ 1 <> z2dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c+ : need a complex number" .cr abort
+    then 
+    z1 @ dim local z1dim
+    z1dim @ 0 cell@ 1 <> z1dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c+ : need a complex number" .cr abort
+    then 
     [ z1 @ re z2 @ re + z1 @ im z2 @ im + ]''',
             #****************************************
             'c-' : '''    ( difference de complexes ) 
     local z2
     local z1
+    z2 @ dim local z2dim
+    z2dim @ 0 cell@ 1 <> z2dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c- : need a complex number" .cr abort
+    then 
+    z1 @ dim local z1dim
+    z1dim @ 0 cell@ 1 <> z1dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c- : need a complex number" .cr abort
+    then 
     [ z1 @ re z2 @ re - z1 @ im z2 @ im - ]''',
             #****************************************
             'c*' : '''    ( produit de complexes )
     local z2
     local z1
+    z2 @ dim local z2dim
+    z2dim @ 0 cell@ 1 <> z2dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c* : need a complex number" .cr abort
+    then 
+    z1 @ dim local z1dim
+    z1dim @ 0 cell@ 1 <> z1dim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : c* : need a complex number" .cr abort
+    then 
     [ z1 @ re z2 @ re * z1 @ im z2 @ im * - f. z1 @ re z2 @ im * z1 @ im z2 @ re * + f. ]''',
             #****************************************
             'cscalar*' : '''    ( produit d'un scalaire avec un complexe )
     local s
     local c
+    s @ ?int s @ ?float or invert
+    if
+        "Fatal error : cscalar* usage : complex scalar --" .cr abort
+    then 
+    c @ dim local cdim
+    cdim @ 0 cell@ 1 <> cdim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : cscalar* : need a complex number" .cr abort
+    then 
     [ c @ 0 cell@ s @ * c @ 1 cell@ s @ * ]''',
             #****************************************
             'cscalar+' : '''    ( somme d'un scalaire avec un complexe )
     local s
     local c
+    s @ ?int s @ ?float or invert
+    if
+        "Fatal error : cscalar+ usage : complex scalar --" .cr abort
+    then 
+    c @ dim local cdim
+    cdim @ 0 cell@ 1 <> cdim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : cscalar+ : need a complex number" .cr abort
+    then 
     [ c @ 0 cell@ s @ + c @ 1 cell@ ]''',
             #****************************************
             'cconj' : '''    ( complexe conjuguée )
@@ -589,6 +677,10 @@ class math(base_module):
             #****************************************
             'mconj' : '''    ( matrice conjuguée )
     local m
+    m @ ?array invert
+    if
+        "Fatal error : mconj usage : matrix --" .cr abort
+    then 
     m @ cells local m_rows 
     m @ 0 cell@ cells local m_cols 
     [ ] local r
