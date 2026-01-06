@@ -670,6 +670,20 @@ class math(base_module):
     then 
     [ c @ 0 cell@ s @ + c @ 1 cell@ ]''',
             #****************************************
+            'cscalar-' : '''    ( difference d'un scalaire avec un complexe )
+    local s
+    local c
+    s @ ?int s @ ?float or invert
+    if
+        "Fatal error : cscalar- usage : complex scalar --" .cr abort
+    then 
+    c @ dim local cdim
+    cdim @ 0 cell@ 1 <> cdim @ 1 cell@ 2 <> or
+    if
+        "Fatal error : cscalar- : need a complex number" .cr abort
+    then 
+    [ c @ 0 cell@ s @ - c @ 1 cell@ ]''',
+            #****************************************
             'cconj' : '''    ( complexe conjuguée )
     dup re 
     swap im negate 
