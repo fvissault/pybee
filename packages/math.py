@@ -756,6 +756,8 @@ class math(base_module):
     def cos_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('cos', self.interpreter.output)
             ret = cos(number)
             self.interpreter.work.appendleft(ret)
             return 'nobreak'
@@ -768,6 +770,8 @@ class math(base_module):
     def sin_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('sin', self.interpreter.output)
             ret = sin(number)
             self.interpreter.work.appendleft(ret)
             return 'nobreak'
@@ -780,6 +784,8 @@ class math(base_module):
     def tan_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('tan', self.interpreter.output)
             ret = tan(number)
             self.interpreter.work.appendleft(ret)
             return 'nobreak'
@@ -850,8 +856,8 @@ class math(base_module):
     def abs_instr(self):
         if len(self.work) > 0:
             op = self.pop_work()
-            if not isinstance(op, int) and not isinstance(op, float):
-                return core_errors.error_integer_and_float_expected.print_error('abs', self.interpreter.output)
+            if not isinstance(op, (int, float)):
+                return math_errors.error_number_expected.print_error('abs', self.interpreter.output)
             result = abs(op)
             self.work.appendleft(result)
             return 'nobreak'
@@ -861,8 +867,8 @@ class math(base_module):
     def sqrt_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('sqrt', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('sqrt', self.interpreter.output)
             if number < 0:
                 return math_errors.error_positive_number_expected.print_error('sqrt', self.interpreter.output)
             result = sqrt(number)
@@ -874,8 +880,8 @@ class math(base_module):
     def log10_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('log10', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('log10', self.interpreter.output)
             result = log10(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -885,8 +891,8 @@ class math(base_module):
     def log2_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('log2', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('log2', self.interpreter.output)
             result = log2(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -896,8 +902,8 @@ class math(base_module):
     def log1p_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('log1p', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('log1p', self.interpreter.output)
             result = log1p(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -907,8 +913,8 @@ class math(base_module):
     def log_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('log', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('log', self.interpreter.output)
             result = log(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -918,8 +924,8 @@ class math(base_module):
     def cbrt_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('cbrt', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('cbrt', self.interpreter.output)
             result = cbrt(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -929,24 +935,24 @@ class math(base_module):
     def ceil_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('cbrt', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('ceil', self.interpreter.output)
             result = ceil(number)
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cbrt', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('ceil', self.interpreter.output)
 
     def floor_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('cbrt', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('floor', self.interpreter.output)
             result = floor(number)
             self.work.appendleft(result)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('cbrt', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('floor', self.interpreter.output)
 
     '''
     Instruction remainder : combinaison 
@@ -968,8 +974,8 @@ class math(base_module):
     def trunc_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('trunc', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('trunc', self.interpreter.output)
             result = trunc(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -979,8 +985,8 @@ class math(base_module):
     def deg_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('deg', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('deg', self.interpreter.output)
             result = degrees(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -990,8 +996,8 @@ class math(base_module):
     def rad_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('rad', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('rad', self.interpreter.output)
             result = radians(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -1001,8 +1007,8 @@ class math(base_module):
     def acos_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('acos', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('acos', self.interpreter.output)
             if number < -1 or number > 1:
                 return math_errors.error_number_between_minus_1_and_1.print_error('acos', self.interpreter.output)
             result = acos(number)
@@ -1014,8 +1020,8 @@ class math(base_module):
     def asin_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('asin', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('asin', self.interpreter.output)
             if number < -1 or number > 1:
                 return math_errors.error_number_between_minus_1_and_1.print_error('asin', self.interpreter.output)
             result = asin(number)
@@ -1027,8 +1033,8 @@ class math(base_module):
     def atan_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('atan', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('atan', self.interpreter.output)
             result = atan(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -1038,8 +1044,8 @@ class math(base_module):
     def acosh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('acosh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('acosh', self.interpreter.output)
             if number < 1:
                 return math_errors.error_number_greater_than_1.print_error('acosh', self.interpreter.output)
             result = acosh(number)
@@ -1051,8 +1057,8 @@ class math(base_module):
     def asinh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('asinh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('asinh', self.interpreter.output)
             result = asinh(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -1062,8 +1068,8 @@ class math(base_module):
     def atanh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('atanh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('atanh', self.interpreter.output)
             if number <= -1 or number >= 1:
                 return math_errors.error_number_between_minus_1_and_1.print_error('atanh', self.interpreter.output)
             result = atanh(number)
@@ -1075,8 +1081,8 @@ class math(base_module):
     def cosh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('cosh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('cosh', self.interpreter.output)
             result = cosh(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -1086,8 +1092,8 @@ class math(base_module):
     def sinh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('sinh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('sinh', self.interpreter.output)
             result = sinh(number)
             self.work.appendleft(result)
             return 'nobreak'
@@ -1097,8 +1103,8 @@ class math(base_module):
     def tanh_instr(self):
         if len(self.work) > 0:
             number = self.pop_work()
-            if not isinstance(number, int) and not isinstance(number, float):
-                return core_errors.error_integer_and_float_expected.print_error('tanh', self.interpreter.output)
+            if not isinstance(number, (int, float)):
+                return math_errors.error_number_expected.print_error('tanh', self.interpreter.output)
             result = tanh(number)
             self.work.appendleft(result)
             return 'nobreak'
