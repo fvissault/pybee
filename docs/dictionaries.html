@@ -38,6 +38,7 @@
                 <li>dictionnaire <b>'file'</b> qui vous permet de manipuler des fichiers</li>
                 <li>dictionnaire <b>'db'</b> qui vous offre la possibilité de vous connecter et requêter une base de données MySql ou PostgreSQL</li>
                 <li>dictionnaire <b>'web'</b> qui vous offre la possibilité de développer vos pages web</li>
+                <li>dictionnaire <b>'mq'</b> qui vous offre la possibilité d'appliquer quelques principes de la mécanique quantique</li>
             </ul>
         </p>
         <p>
@@ -52,29 +53,31 @@
         <p>Et voici ce que cela vous affiche pour 'core' dans la console :</p>
         <div class="div_code">
             <code>Beetle> words<br>
-                -------/core/ (179 words)<br>
-                ! % ' ( ) * *! */ + +! +loop , - . .2cr .bl .cr .s .scr / 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 2drop 2dup 2nip 
-                2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <=> <> = > >= >base >decimal >json >md5 >r ? ?array ?char ?def ?exists 
-                ?float ?int ?local ?pack ?str ?var @ @r [ ] again and arcol arget array arrow base base! begin bl bye case cell! cell+ cell- 
-                cell= cell? cell@ cells cells? char chars cls clt const constants cr create decimal defer do does> drop dump dup else emit 
-                endcase endof evaluate execute false forget format help here hex if immediate import input invert is json> keys kpress leave 
-                list load local loop max min negate nip octal of or over packages path pick postpone r> r@ rdrop rdump rdup readk recurse 
-                repeat reverse roll rot rotonall rover rswap secinput see sp space swap then true t{ until values var variables vp while 
-                words wp xor { } }t
+                -------/core/ (190 words)
+                ! % ' ( ) * *! */ + +! +loop , - . .2cr .bl .cr .s .scr / /n /nl /r /t 0< 0<= 0= 0> 0>= 1+ 1- 2* 2+ 2- 2.s 2>r 2const 
+                2drop 2dup 2nip 2over 2r> 2rdrop 2rdup 2swap 2var : :noname ; < <= <=> <> = > >= >base >decimal >json >md5 >r ? ?array 
+                ?char ?const ?def ?exists ?float ?int ?local ?pack ?str ?var @ @r [ ] abort again and array base base! begin bl bye case 
+                cell! cell+ cell- cell= cell@ cells char char? chars cls clt const constants cr create decimal defer detach do does> 
+                drop dump dup else emit endcase endof evaluate execute false forget format help here hex if immediate import input invert 
+                is json> key= keys kpress lang? leave list load local loop lpad max min negate nip octal of or output over packages path 
+                pick postpone r> r@ rdrop rdump rdup readk recurse repeat reverse roll rot rotonall rover rpad rswap s+ scan secinput see 
+                sp space stemit swap then true t{ until values var variables vp while words wp xor { } }t
             </code>
         </div>
         <p>Pour le package 'web', cela devrait ressembler à cela :</p>
         <div class="div_code">
             <code>Beetle> words<br>
-                -------/web/ (122 words)<br>
-                a abbr addattr addcontent address area article aside audio bdo blockquote bold br button canvas caption charset cite code 
-                col colgroup comment completeselect data datalist dd del details dfn dialog div dl dloption dt em fieldarea fieldset 
-                figcaption figure footer form generate getsession getsessvar grouplaystyle header headlink headscriptfile hr htmlcontent 
-                httpequiv iframe img ins italic kbd label layout layoutarea layoutgrid legend listitem main maintitle map mark menu meta 
-                meter nav noscript optgroup option orderlist paragraph paramget pictsrc picture pre quote redirect savelaystyle section 
-                select sessduration? session setsessduration setsessvar small source span strong style sub summary sup svg svgcircle 
-                svgellipse svgimage svgline svglineargradient svgmarker svgpath svgpattern svgpolygon svgpolyline svgradialgradient svgrect 
-                svgtext svgtextpath table tablecell tablehead tablerow textarea underline unorderlist urlbase usecookies? video webreset
+                -------/web/ (141 words)
+                a abbr accordion addattr addcardbody addcardbottom addcardtitle addcontent address advancebutton area article aside 
+                audio bdo blockquote bold br button canvas caption card cdropdown charset checkbox cite code col colgroup comment 
+                completeselect data datalist dd del details dfn dialog div divider dl dloption dt em escapehtml fieldarea fieldset 
+                figcaption figure filteredlist flipcard footer form generate getsession getsessvar grouplaystyle hdropdown header 
+                headlink headscriptfile hr htmlcontent httpequiv iframe img indent ins italic kbd label layout layoutarea layoutgrid 
+                legend listitem loginform main maintitle map mark menu meta meter modal nav noscript optgroup option orderlist overlay 
+                paragraph pictsrc picture posted pre productcard profilecard quote radio redirect row safehtml safeorescape safeurl 
+                savelaystyle script section select sessduration? session session? setsessduration setsessvar sidenav signupform slider 
+                small source span splitter strong style sub summary sup tab table tablecell tablehead tablerow td textarea th tooltip 
+                topnav underline unorderlist urlbase video webreset
             </code>
         </div>
 
