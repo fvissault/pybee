@@ -142,7 +142,8 @@ class Controls:
                         self.dictionary[varname] = compteur
                     self.interpreter.set_sequence(instructions.copy())
                     ret = self.interpreter.interpret('last_sequence')
-
+                    if ret == 'break':
+                        return 'break'
                     for key, value in self.interpreter.locals[self.interpreter.lastseqnumber].items():
                         if key in self.interpreter.locals[self.interpreter.lastseqnumber - 1]:
                             self.interpreter.locals[self.interpreter.lastseqnumber - 1][key] = value
