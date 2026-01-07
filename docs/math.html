@@ -1073,7 +1073,7 @@
                 <u>Syntaxe :</u><br>
                 id2<br><br>
                 <u>Exemple :</u><br>
-                Beetle><b>id2</b> .cr<br>
+                Beetle> <b>id2</b> .cr<br>
                 [[1, 0], [0, 1]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1090,7 +1090,7 @@
                 <u>Syntaxe :</u><br>
                 id3<br><br>
                 <u>Exemple :</u><br>
-                Beetle><b>id3</b> .cr<br>
+                Beetle> <b>id3</b> .cr<br>
                 [[1, 0, 0], [0, 1, 0], [0, 0, 1]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1107,7 +1107,7 @@
                 <u>Syntaxe :</u><br>
                 id4<br><br>
                 <u>Exemple :</u><br>
-                Beetle><b>id4</b> .cr<br>
+                Beetle> <b>id4</b> .cr<br>
                 [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1125,10 +1125,10 @@
                 <u>Syntaxe :</u><br>
                 m1 m2 -- m1*m2<br><br>
                 <u>Exemples :</u><br>
-                Beetle>id4 id4 <b>m*</b> .cr<br>
+                Beetle> id4 id4 <b>m*</b> .cr<br>
                 [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]<br>
                 <span style="color:green;">ready</span><br><br>
-                Beetle>[ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m*</b> .cr<br>
+                Beetle> [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m*</b> .cr<br>
                 [[19, 22], [43, 50]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1146,10 +1146,10 @@
                 <u>Syntaxe :</u><br>
                 m1 m2 -- m1 + m2<br><br>
                 <u>Exemples :</u><br>
-                Beetle>id4 id4 <b>m+</b> .cr<br>
+                Beetle> id4 id4 <b>m+</b> .cr<br>
                 [[2, 0, 0, 0], [0, 2, 0, 0], [0, 0, 2, 0], [0, 0, 0, 2]]<br>
                 <span style="color:green;">ready</span><br><br>
-                Beetle>[ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m+</b> .cr<br>
+                Beetle> [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m+</b> .cr<br>
                 [[6, 8], [10, 12]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1167,10 +1167,10 @@
                 <u>Syntaxe :</u><br>
                 m1 m2 -- m1 - m2<br><br>
                 <u>Exemples :</u><br>
-                Beetle>id4 id4 <b>m-</b> .cr<br>
+                Beetle> id4 id4 <b>m-</b> .cr<br>
                 [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]<br>
                 <span style="color:green;">ready</span><br><br>
-                Beetle>[ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m-</b> .cr<br>
+                Beetle> [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m-</b> .cr<br>
                 [[-4, -4], [-4, -4]]<br>
                 <span style="color:green;">ready</span>
             </code>
@@ -1186,8 +1186,81 @@
                 <u>Syntaxe :</u><br>
                 m -- adjoint(m)<br><br>
                 <u>Exemple :</u><br>
-                Beetle>[ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>madjoint</b> .cr<br>
+                Beetle> [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>madjoint</b> .cr<br>
                 [[[1, -2], [5, -6]], [[3, -4], [7, -8]]]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="madjucate"></a><h4>6.8. Mot 'madjucate' : transposée de la matrice des cofacteurs</h4>
+        <p>
+            'madjucate' positionne en haut de la pile de travail la transposée de la matrice des cofacteurs d'une matrice.
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m -- adjucate(m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>madjucate</b> .cr<br>
+                [[[7, 8], []], [[], [1, 2]]]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="mcofactor"></a><h4>6.9. Mot 'mcofactor' : cofacteur d'une matrice à la ligne i et à la colonne j</h4>
+        <p>
+            'mcofactor' positionne en haut de la pile de travail le cofacteur d'une matrice à la ligne i et à la colonne j.
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                i j m -- cofactor(m)<br><br>
+                <u>Exemples :</u><br>
+                Beetle> 1 1 [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mcofactor</b> .cr<br>
+                [1, 2]<br>
+                <span style="color:green;">ready</span><br><br>
+                Beetle> 1 0 [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mcofactor</b> .cr<br>
+                []<br>
+                <span style="color:green;">ready</span><br><br>
+                Beetle> 0 0 [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mcofactor</b> .cr<br>
+                [7, 8]<br>
+                <span style="color:green;">ready</span><br><br>
+                Beetle> 0 1 [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mcofactor</b> .cr<br>
+                []<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="mcofactor-matrix"></a><h4>6.10. Mot 'mcofactor-matrix' : matrice de cofacteurs</h4>
+        <p>
+            'mcofactor-matrix' positionne en haut de la pile de travail la matrice de cofacteurs d'une matrice.
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m -- mcofactor-matrix(m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mcofactor-matrix</b> .cr<br>
+                [[[7, 8], []], [[], [1, 2]]]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="mconj"></a><h4>6.11. Mot 'mconj' : matrice conjointe</h4>
+        <p>
+            'mconj' positionne en haut de la pile de travail la matrice conjointe d'une matrice.
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m -- mconj(m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle> [ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>mconj</b> .cr<br>
+                [[[1, -2], [3, -4]], [[5, -6], [7, -8]]]<br>
                 <span style="color:green;">ready</span>
             </code>
         </div>
