@@ -48,19 +48,34 @@
                             <li>...</li>
                         </ul>
                     </li>
-                    <li><b>userarea</b> (zone de dépot des fichiers Beetle)</li>
+                    <li><b>userarea</b> (zone de dépot des fichiers Beetle)
+                        <ul>
+                            <li><b>css</b> (les classes css)</li>
+                            <li><b>datamodel</b> (vos modèles de données)</li>
+                            <li><b>img</b> (vos images)</li>
+                            <li><b>js</b> (vos fichiers javascript)</li>
+                            <li><b>mails</b> (vos mails prédéfinis)</li>
+                            <li><b>tmp</b> (répertoire pour le stockage des sessions)</li>
+                            <li><b>translations</b> (vos fichiers de traductions)</li>
+                            <li>preload.btl</li>
+                            <li>test.btl</li>
+                            <li>...</li>
+                        </ul>
+                    </li>
                     <li>beetle.py</li>
                     <li>browser.py</li>
                     <li>console.py</li>
                     <li>interpreter_v2.py</li>
                     <li>.htaccess</li>
+                    <li>README.md</li>
+                    <li>requirements.txt</li>
                 </ul>
             </li>
         </ul>
         <h3><u>Système de fichiers par défaut de vos programmes</u></h3>
         <p>
             Par défaut, Beetle vous met à disposition une zone mémoire ou vous pouvez déposer vos fichiers et vous propose un ensemble 
-            de mots vous permettant d'exploiter cette zone mémoire.
+            de mots vous permettant d'exploiter cette zone mémoire. Un peu comme le répertoire 'www' d'Apache.
         </p>
         <p>Voici comment est découpée cette zone de mémoire</p>
         <ul>
@@ -87,7 +102,10 @@
             Il est possible de paramétrer Beetle sur une autre zone de mémoire. Dans Beetle, vous avez une variable prédéfinie nommée 
             'path' positionnée à la valeur 'userarea'
         </p>
-        <p>A partir de la console, vous pouvez modifier le contenu de 'path' en exécutant les mots suivants :</p>
+        <p>
+            A partir de la console, vous pouvez modifier le contenu de 'path' en exécutant les mots suivants ou en utilisant le fichier
+            'preload.btl' :
+        </p>
         <div class="div_code">
             <code>
                 "my_new_dir" path !
