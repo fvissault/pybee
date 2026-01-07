@@ -165,9 +165,18 @@ class math(base_module):
         [ 1 m @ cells ]
     then''',
             #****************************************
-            'mminor' : '''    local m
+            'mminor' : '''    ( mineur d'une matrice )
+    local m
     local col_index
     local row_index
+    m @ ?array invert
+    if
+        "mminor : not a matrix" .cr abort
+    then
+    col_index @ ?int row_index @ ?int or invert
+    if
+        "Fatal error : mminor usage : row column matrix --" .cr abort
+    then 
     [ ] local r
     0 local i
     0 local j
@@ -587,7 +596,7 @@ class math(base_module):
     if
         "Fatal error : matrix not invertible" .cr
     else
-        m @ madjucate 1 d @ / mscalar* matrix.
+        m @ madjucate 1 d @ / mscalar* 
     then''',
             #****************************************
             'complex' : '''    ( création d'un nombre complexe ) 
