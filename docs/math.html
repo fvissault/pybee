@@ -1134,7 +1134,7 @@
             </code>
         </div>
 
-        <a name="m+"></a><h4>6.5. Mot 'm+' : somme de 2 matrice</h4>
+        <a name="m+"></a><h4>6.5. Mot 'm+' : somme de 2 matrices</h4>
         <p>
             'm+' positionne en haut de la pile de travail la somme de 2 matrices. La somme de matrices dans Beetle fonctionne aussi
             bien pour des matrices classiques que pour des matrices de complexes sans limitation particulière sur la dimension des
@@ -1151,6 +1151,43 @@
                 <span style="color:green;">ready</span><br><br>
                 Beetle>[ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m+</b> .cr<br>
                 [[6, 8], [10, 12]]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="m-"></a><h4>6.6. Mot 'm-' : différence de 2 matrices</h4>
+        <p>
+            'm-' positionne en haut de la pile de travail la différence de 2 matrices. La différence de matrices dans Beetle fonctionne aussi
+            bien pour des matrices classiques que pour des matrices de complexes sans limitation particulière sur la dimension des
+            matrices. La seule limitation est la suivante dim(m1) = dim(m2)
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m1 m2 -- m1 - m2<br><br>
+                <u>Exemples :</u><br>
+                Beetle>id4 id4 <b>m-</b> .cr<br>
+                [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]<br>
+                <span style="color:green;">ready</span><br><br>
+                Beetle>[ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] <b>m-</b> .cr<br>
+                [[-4, -4], [-4, -4]]<br>
+                <span style="color:green;">ready</span>
+            </code>
+        </div>
+
+        <a name="madjoint"></a><h4>6.7. Mot 'madjoint' : matrice adjointe</h4>
+        <p>
+            'madjoint' positionne en haut de la pile de travail la matrice adjointe d'une matrice.
+        </p>
+        <p>La syntaxe de ce mot est :</p>
+        <div class="div_code">
+            <code>
+                <u>Syntaxe :</u><br>
+                m -- adjoint(m)<br><br>
+                <u>Exemple :</u><br>
+                Beetle>[ [ [ 1 2 ] [ 3 4 ] ] [ [ 5 6 ] [ 7 8 ] ] ] <b>madjoint</b> .cr<br>
+                [[[1, -2], [5, -6]], [[3, -4], [7, -8]]]<br>
                 <span style="color:green;">ready</span>
             </code>
         </div>
