@@ -106,6 +106,8 @@ class interpreter:
             if instr == '':
                 continue
             base = self.core_instr.dictionary['base']
+            if isinstance(instr, str) and instr.lower() == 'abort':
+                return 'break'
             if isinstance(instr, str) and instr.lower() == 'leave':
                 self.from_instr = ''
                 return 'leave'
@@ -135,8 +137,7 @@ class interpreter:
                 pack = self.search_in_pack(str(instr).lower())
                 ret = self.package_search(str(instr).lower(), self.packages[pack])
                 if ret == 'break':
-                    self.sequences.clear()
-                    break
+                    return 'break'
                 else:
                     continue
             else:
