@@ -707,6 +707,10 @@ class math(base_module):
         0 j !
         m_cols @ j
         do
+            m @ i @ cell@ j @ cell@ ?array invert
+            if
+                "Fatal error : mconj : need a matrix with complex numbers" .cr abort
+            then 
             m @ i @ cell@ j @ cell@ cconj row @ cell+ drop
         loop
         row @ r @ cell+ drop
