@@ -194,6 +194,14 @@ class math(base_module):
     local m
     local j
     local i
+    m @ ?array invert
+    if
+        "mcofactor : not a matrix" .cr abort
+    then
+    j @ ?int i @ ?int or invert
+    if
+        "Fatal error : mcofactor usage : row column matrix --" .cr abort
+    then 
     i @ j @ m @ mminor 
     mdet 
     i @ j @ + 2 mod 1 = 
@@ -203,6 +211,10 @@ class math(base_module):
             #****************************************
             'mdet' : '''    ( calcul du déterminant d'une matrice )
     local m 
+    m @ ?array invert
+    if
+        "mdet : not a matrix" .cr abort
+    then
     m @ cells local n 
     n @ 1 = if 
         m @ 0 cell@ 0 cell@ 
