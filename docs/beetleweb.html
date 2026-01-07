@@ -122,15 +122,17 @@
             Le fichier 'browser.py' doit respecter les règles CGI suivantes :
         </p>
         <ul>
-            <li>shebang absolu vers Python ;</li>
-            <li>en-tête HTTP 'Content-Type' obligatoire ;</li>
-            <li>aucune sortie avant les headers.</li>
+            <li>shebang absolu vers Python (pour windows)</li>
+            <li>en-tête HTTP 'Content-Type' obligatoire</li>
+            <li>aucune sortie avant les headers</li>
         </ul>
 
-        <div class="div_code"><code>
-            #!C:/Users/USER/AppData/Local/Programs/Python/Python312/python.exe<br>
-            print("Content-Type: text/html; charset=utf-8\r\n")
-        </code></div>
+        <div class="div_code">
+            <code>
+                #!C:/Users/USER/AppData/Local/Programs/Python/Python312/python.exe<br>
+                print("Content-Type: text/html; charset=utf-8\r\n")
+            </code>
+        </div>
 
         <h3>6. Problèmes courants</h3>
         <ul>
