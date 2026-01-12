@@ -35,12 +35,7 @@ class db(base_module):
             'engine?' : self.eng_instr,
             #*********************************
             # "hostname" "username" "userpass" dbcred
-            'dbcred' : '''    local upass 
-    local uname 
-    local host 
-    host @ hostname ! 
-    uname @ username ! 
-    upass @ userpass !''',
+            'dbcred' : '''    userpass ! username ! hostname !''',
             #*********************************
             'createdb' : '''    local dbname 
     "|create> database <#0#> charset utf8mb3 >|" [ dbname @ ] format evaluate''',
@@ -622,7 +617,8 @@ class db(base_module):
                     if status.lower() != 'status':
                         return self.request_malformed('|show>')
                     sql += ' ' + status
-                if endreq == None or endreq != '>|':
+                end = self.seq_next()
+                if end == None or end != '>|':
                     return self.request_malformed('|show>')
                 try:
                     self.cursor.execute(sql)
@@ -631,8 +627,7 @@ class db(base_module):
                     return self.request_dont_work(sql)
                 return 'nobreak'
             else:
-                return err(self, 'error_pg_not_supported', what)
-
+                return self.error_pg_not_supported("|show>")
         return self.request_malformed("|show>")
 
     '''
