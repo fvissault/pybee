@@ -253,3 +253,28 @@ class StackInstructions:
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 'chars')
+
+    def maybeint_instr(self):
+        if self.require_stack(1, 'maybe-int') == None:
+            x = self.pop_work()
+            if not isinstance(x, str):
+                self.work.appendleft(x)
+                return 'nobreak'
+            s = x.strip()
+            if s == "":
+                self.work.appendleft(x)
+                return 'nobreak'
+            sign = 1
+            if s[0] == '-':
+                sign = -1
+                s = s[1:]
+            elif s[0] == '+':
+                s = s[1:]
+            if not s.isdigit():
+                self.work.appendleft(x)
+                return 'nobreak'
+            n = 0
+            for c in s:
+                n = n * 10 + (ord(c) - ord('0'))
+            self.work.appendleft(sign * n)
+            return 'nobreak'
