@@ -221,7 +221,23 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         /n
     then''',
             'rpad' : self.ljust_instr,
-            'lpad' : self.rjust_instr
+            'lpad' : self.rjust_instr,
+            'index?' : '''   ( xs x -- i|-1 )
+    local x
+    local xs
+    xs @ cells local n
+    -1 local out
+    0 local i
+    n @ i
+    do
+        xs @ i @ cell@ maybe-int x @ maybe-int = 
+        if
+            i @ out !
+            leave
+        then
+    loop
+    out @''',
+            'maybe-int' : self.maybeint_instr
         }
 
         self.variables = ['path']
@@ -257,8 +273,8 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
                 return self.err('error_invalid_instruction', 'tests - t{')
         ileft = self.exec_interpreter(left_instrs)
         iright = self.exec_interpreter(right_instrs)
-        ileftwork = list(ileft.work)
-        irightwork = list(iright.work)
+        ileftwork = ileft.work
+        irightwork = iright.work
         if ileftwork == irightwork:
             self.work.appendleft(1)
             if self.interpreter.output == 'web':
