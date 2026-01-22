@@ -99,7 +99,6 @@ class interpreter:
                      'last_sequence' : self.isemptylastsequence, 
                      'current_sequence' : self.isemptycurrentsequence }
         while not type_seq[what]():
-            #self.print_sequence_numbers()
             self.instructions.clear()
             instr = self.instr = self.sequences[self.lastseqnumber][0]
             self.sequences[self.lastseqnumber].popleft()
@@ -165,7 +164,6 @@ class interpreter:
             
 
     def package_search(self, instr, package):
-        #print('instr = ' + instr)
         if instr.lower() in package.dictionary.keys():
             if instr.lower() not in self.core_instr.variables: # and instr.lower() not in self.core_instr.constants:
                 if isinstance(package.dictionary[instr.lower()], str):
