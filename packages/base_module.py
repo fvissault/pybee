@@ -99,6 +99,6 @@ class base_module:
         i.work.clear()
         i.locals.clear()
         i.set_sequence(sequence)
-        i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
+        #i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
         i.interpret()
         return i
