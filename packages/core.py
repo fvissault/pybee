@@ -248,7 +248,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.interpreter.compile['const'] = deque(['@'])
         self.interpreter.compile['2const'] = deque(['@'])
         self.help = core_help(self.interpreter.output)
-        self.version = 'v2.3.5'
+        self.version = 'v2.3.7'
 
     def output_instr(self):
         self.work.appendleft(self.interpreter.output)
@@ -280,13 +280,13 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             if self.interpreter.output == 'web':
                 print("true test")
             else:
-                print(termcolors.GREEN + "true test" + termcolors.NORMAL, end=' ')
+                print(termcolors.GREEN + "true test" + termcolors.NORMAL)
         else:
             self.work.appendleft(0)
             if self.interpreter.output == 'web':
                 print("false test")
             else:
-                print(termcolors.FATAL + "false test" + termcolors.NORMAL, end=' ')
+                print(termcolors.FATAL + "false test" + termcolors.NORMAL)
         return 'nobreak'
 
     def endtest_instr(self):
