@@ -23,7 +23,7 @@ class interpreter:
         self.does = deque()
         self.output = output
         self.params = None
-        self.version = 'v2.4.3'
+        self.version = 'v2.4.4'
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
         self.preload()
