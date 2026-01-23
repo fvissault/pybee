@@ -102,3 +102,25 @@ class base_module:
         #i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
         i.interpret()
         return i
+
+    def maybe_int(self, x):
+        if not isinstance(x, str):
+            return x
+        s = x.strip()
+        if s == "":
+            return x
+        sign = 1
+        if s[0] == '-':
+            sign = -1
+            s = s[1:]
+        elif s[0] == '+':
+            s = s[1:]
+        if not s.isdigit():
+            return x
+        n = 0
+        for c in s:
+            n = n * 10 + (ord(c) - ord('0'))
+        return sign * n
+    
+    def normalize_stack(self, stack):
+        return deque(self.maybe_int(x) for x in stack)
