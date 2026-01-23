@@ -275,7 +275,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         iright = self.exec_interpreter(right_instrs)
         ileftwork = ileft.work
         irightwork = iright.work
-        if ileftwork == irightwork:
+        if self.normalize_stack(ileftwork) == self.normalize_stack(irightwork):
             self.work.appendleft(1)
             if self.interpreter.output == 'web':
                 print("true test")
