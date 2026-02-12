@@ -118,12 +118,12 @@ class Controls:
         if self.require_stack(2, 'do ... loop | +loop') == None:
             instr = self.search_do_loop(instructions)
             # lire le nom de la variable
-            varname = self.work[0]
+            varname = self.interpreter.work[0]
             if varname in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                self.work.popleft()
+                self.interpreter.work.popleft()
                 begin = self.interpreter.locals[self.interpreter.lastseqnumber][varname]
             elif varname in self.variables:
-                self.work.popleft()
+                self.interpreter.work.popleft()
                 # begin = Récupérer la valeur de la variable
                 begin = self.dictionary[varname]
             else:
