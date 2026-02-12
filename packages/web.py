@@ -1351,38 +1351,38 @@ class web(base_module):
         return "#"
 
     def safeurl_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             val = self.pop_work()
-            self.work.appendleft(self._safe_url(val))
+            self.interpreter.work.appendleft(self._safe_url(val))
         else:
             return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter.output)
         return 'nobreak'
 
     def escapehtml_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             val = self.pop_work()
-            self.work.appendleft(self._escape_html(val))
+            self.interpreter.work.appendleft(self._escape_html(val))
         else:
             return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter.output)
         return 'nobreak'
 
     def safehtml_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             val = self.pop_work()
-            self.work.appendleft("__SAFE__" + str(val))
+            self.interpreter.work.appendleft("__SAFE__" + str(val))
         else:
             return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter.output)
         return 'nobreak'
 
     def safe_or_escape_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             val = self.pop_work()
             s = "" if val is None else str(val)
             if s.startswith("__SAFE__"):
                 s2 = s[len("__SAFE__"):]
             else:
                 s2 = self._escape_html(s)
-            self.work.appendleft(s2)
+            self.interpreter.work.appendleft(s2)
         else:
             return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter.output)
         return 'nobreak'
@@ -1415,14 +1415,14 @@ class web(base_module):
     Instruction posted : permet de récupérer un paramètre passé entre les pages
     '''
     def paramget_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             paramname = self.pop_work()
             fstorage = self.interpreter.params
             if fstorage[paramname] != None:
                 value = fstorage[paramname]
                 if value == None:
                     return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter.output)
-                self.work.appendleft(value)
+                self.interpreter.work.appendleft(value)
                 return 'nobreak'
             else:
                 return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter.output)
@@ -1433,7 +1433,7 @@ class web(base_module):
     Instruction redirect : effectuer une redirection
     '''
     def redirect_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             url = self.pop_work()
             print("Location: {0}\n".format(url))
             return 'nobreak'
@@ -1451,7 +1451,7 @@ class web(base_module):
     Instruction session : créer une session
     '''
     def session_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             name = str(self.pop_work())
             cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
             if name in cookie:
@@ -1491,7 +1491,7 @@ class web(base_module):
     Instruction getsession : charge les variables de session si elle existe
     '''
     def getsession_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             name = str(self.pop_work())
             cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
             if name in cookie:
@@ -1510,7 +1510,7 @@ class web(base_module):
     Instruction setsessvar : créer une variable de session
     '''
     def setsessvar_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             value = self.pop_work()
             key = self.pop_work()
             self.sessionvars[key] = value
@@ -1522,9 +1522,9 @@ class web(base_module):
     Instruction getsessvar : positionne la valeur d'une variable de session sur la pile de travail si elle existe
     '''
     def getsessvar_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             key = self.pop_work()
-            self.work.appendleft(self.sessionvars[key])
+            self.interpreter.work.appendleft(self.sessionvars[key])
         else:
             return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
         return 'nobreak'
@@ -1534,16 +1534,16 @@ class web(base_module):
     '''
     def usecookies_instr(self):
         if self.usecookies == True:
-            self.work.appendleft(1)
+            self.interpreter.work.appendleft(1)
         else:
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
         return 'nobreak'
 
     '''
     Instruction setsessduration : fixe la durée de validitaé d'une session : par défaut c'est 30 minutes et la minute est l'unité
     '''
     def setsessduration_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             duration = int(self.pop_work())
             self.sessionvars['session_duration'] = duration
         else:
@@ -1554,5 +1554,5 @@ class web(base_module):
     Instruction sessduration? : positionne sur la pile de travail la durée de validité des sessions : par défaut ce sera 30 minutes
     '''
     def sessduration_instr(self):
-        self.work.appendleft(self.sessionvars['session_duration'])
+        self.interpreter.work.appendleft(self.sessionvars['session_duration'])
         return 'nobreak'
