@@ -40,7 +40,26 @@ class nnet(base_module):
             #****************************************
             'space-size' : '''    ( Returns the size of the neural space )
     space-w @
-    space-h @'''
+    space-h @''',
+            #****************************************
+            'zone-new' : '''    ( Création d'une nouvelle zone )
+    local id
+    { id : id @ , mode : "growing" , neurons : [ ] , links : [ ] }
+    space-zones cell+''',
+            #****************************************
+            'zone-find' : '''    ( Recherche d'une zone par son id dans space-zones -> doit déposer l'objet sur la pile
+    pour pouvoir le modifier. S'il ne le trouve pas, il dépose false sur la pile )
+    local id
+    0 local i
+    false local acc
+    space-zones @ cells i
+    do
+        space-zones @ i @ cell@ "id" cell@ id @ =
+        if
+            space-zones @ i @ cell@ acc !
+        then
+    loop
+    acc @'''
         }
         self.help = nnet_help(self.interpreter.output)
         self.version = 'v0.0.1'
