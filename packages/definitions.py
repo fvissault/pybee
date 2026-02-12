@@ -233,7 +233,7 @@ class Definitions:
             self.interpreter.userdefinitions[var_name] = self.interpreter.compile[self.interpreter.from_instr].copy()
         else:
             self.variables.append(var_name)
-        self.work.appendleft(var_name)
+        self.interpreter.work.appendleft(var_name)
         self.interpreter.recentWord = var_name
         return 'nobreak'
 
@@ -331,7 +331,7 @@ class Definitions:
                 return self.err('error_twopoints_invalid', ':noname')
             if instr != ';':
                 defbody = defbody + ' ' + str(instr)
-        self.work.appendleft(defbody.strip())
+        self.interpreter.work.appendleft(defbody.strip())
         return 'nobreak'
     
     '''
@@ -354,8 +354,8 @@ class Definitions:
     Instruction abort : arrête le programme complètement à l'endroit ou abort est écrit
     '''
     def abort_instr(self):
-        self.work.clear()
-        self.altwork.clear()
+        self.interpreter.work.clear()
+        self.interpreter.altwork.clear()
         self.interpreter.sequences.clear()
         self.interpreter.locals.clear()
         return 'break'
@@ -368,9 +368,9 @@ class Definitions:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
                 if name in self.interpreter.packages[p].dictionary.keys():
-                    self.work.appendleft(1)
+                    self.interpreter.work.appendleft(1)
                     return 'nobreak'
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -381,9 +381,9 @@ class Definitions:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
                 if name in self.interpreter.packages[p].variables:
-                    self.work.appendleft(1)
+                    self.interpreter.work.appendleft(1)
                     return 'nobreak'
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -394,9 +394,9 @@ class Definitions:
         if self.require_stack(1, '?const') == None:
             name = self.pop_work()
             if name in self.interpreter.userdefinitions:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
                 return 'nobreak'
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -406,7 +406,7 @@ class Definitions:
         if self.require_stack(1, '?local') == None:
             name = self.pop_work()
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
