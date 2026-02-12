@@ -18,9 +18,9 @@ class Io:
     '''
     def emit_instr(self):
         if self.require_stack(1, 'emit') == None:
-            temp = self.work[0]
+            temp = self.interpreter.work[0]
             if isinstance(temp, int):
-                self.work.popleft()
+                self.interpreter.work.popleft()
                 print(chr(temp), end='')
                 return 'nobreak'
             else:
@@ -33,7 +33,7 @@ class Io:
         if self.require_stack(1, 'stemit') == None:
             temp = self.pop_work()
             if isinstance(temp, int):
-                self.work.appendleft(chr(temp))
+                self.interpreter.work.appendleft(chr(temp))
                 return 'nobreak'
             else:
                 return self.err('error_char_expected', 'stemit')
@@ -46,11 +46,11 @@ class Io:
             prompt = self.pop_work()
             ret = input(prompt)
             if self.isinteger(ret):
-                self.work.appendleft(int(ret))
+                self.interpreter.work.appendleft(int(ret))
             elif self.isfloat(ret):
-                self.work.appendleft(float(ret))
+                self.interpreter.work.appendleft(float(ret))
             else:
-                self.work.appendleft(str(ret))
+                self.interpreter.work.appendleft(str(ret))
             return 'nobreak'
 
     '''
@@ -61,11 +61,11 @@ class Io:
             prompt = self.pop_work()
             ret = getpass.getpass(prompt)
             if self.isinteger(ret):
-                self.work.appendleft(int(ret))
+                self.interpreter.work.appendleft(int(ret))
             elif self.isfloat(ret):
-                self.work.appendleft(float(ret))
+                self.interpreter.work.appendleft(float(ret))
             else:
-                self.work.appendleft(str(ret))
+                self.interpreter.work.appendleft(str(ret))
             return 'nobreak'
 
     '''
@@ -75,9 +75,9 @@ class Io:
         if self.require_stack(1, 'kpress') == None:
             key = self.pop_work()
             if keyboard.is_pressed(key):
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -87,7 +87,7 @@ class Io:
         if self.require_stack(1, 'readk') == None:
             key = self.pop_work()
             if keyboard.read_key(suppress=True) == key:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
