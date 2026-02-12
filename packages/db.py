@@ -319,26 +319,26 @@ class db(base_module):
             elif self.engine == 'postgresql':
                 self.db = psycopg2.connect(host = hostname, user = username, password = userpass, dbname = databasename)
                 self.cursor = self.db.cursor()            
-            self.work.appendleft(1)
+            self.interpreter.work.appendleft(1)
             return 'nobreak'
         except:
             self.cursor = None
             self.db = None
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
             return db_errors.error_connection_failed.print_error('connect', self.interpreter.output)
 
     '''
     Instruction ?connect : permet de savoir si la connection est effective : ( ... ) ?CONNECT ( 0|1 ... )
     '''
     def isconnect_instr(self):
-        self.work.appendleft(1 if self.db else 0)
+        self.interpreter.work.appendleft(1 if self.db else 0)
         return 'nobreak'
 
     '''
     Instruction ?close : permet de savoir si le curseur est effectif : ( ... ) ?CLOSE ( 0|1 ... )
     '''
     def isclose_instr(self):
-        self.work.appendleft(0 if self.cursor else 1)
+        self.interpreter.work.appendleft(0 if self.cursor else 1)
         return 'nobreak'
     
     '''
@@ -513,7 +513,7 @@ class db(base_module):
 
             try:
                 self.cursor.execute(sql)
-                self.work.appendleft(self.cursor.fetchall())
+                self.interpreter.work.appendleft(self.cursor.fetchall())
             except:
                 return self.request_dont_work(sql)
             return "nobreak"
@@ -540,7 +540,7 @@ class db(base_module):
 
             try:
                 self.cursor.execute(sql)
-                self.work.appendleft(self.cursor.fetchall())
+                self.interpreter.work.appendleft(self.cursor.fetchall())
             except:
                 return self.request_dont_work(sql)
             return "nobreak"
@@ -574,7 +574,7 @@ class db(base_module):
 
             try:
                 self.cursor.execute(sql)
-                self.work.appendleft(self.cursor.fetchall())
+                self.interpreter.work.appendleft(self.cursor.fetchall())
             except:
                 return self.request_dont_work(sql)
             return "nobreak"
@@ -603,7 +603,7 @@ class db(base_module):
 
             try:
                 self.cursor.execute(sql)
-                self.work.appendleft(self.cursor.fetchall())
+                self.interpreter.work.appendleft(self.cursor.fetchall())
             except:
                 return self.request_dont_work(sql)
             return "nobreak"
@@ -622,7 +622,7 @@ class db(base_module):
                     return self.request_malformed('|show>')
                 try:
                     self.cursor.execute(sql)
-                    self.work.appendleft(self.cursor.fetchall())
+                    self.interpreter.work.appendleft(self.cursor.fetchall())
                 except:
                     return self.request_dont_work(sql)
                 return 'nobreak'
@@ -669,7 +669,7 @@ class db(base_module):
         try:
             self.cursor.execute(sql)
             result = self.cursor.fetchall()
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
         except:
             return self.request_dont_work(sql)
         return 'nobreak'
@@ -706,7 +706,7 @@ class db(base_module):
                 return self.request_malformed('|insert>')
         try:
             self.cursor.execute(sql)
-            self.work.appendleft(self.cursor.lastrowid)
+            self.interpreter.work.appendleft(self.cursor.lastrowid)
             self.db.commit()
         except:
             return self.request_dont_work(sql)
@@ -920,5 +920,5 @@ class db(base_module):
     Par défaut, engine = mysql
     '''
     def eng_instr(self):
-        self.work.appendleft(self.engine)
+        self.interpreter.work.appendleft(self.engine)
         return 'nobreak'
