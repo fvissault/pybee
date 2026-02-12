@@ -5,7 +5,7 @@ class StackInstructions:
     '''
     def dump_instr(self):
         if self.require_stack(1, 'dump') == None:
-            for temp in self.work:
+            for temp in self.interpreter.work:
                 print(temp, end=' ')
             print()
             return 'nobreak'
@@ -28,12 +28,12 @@ class StackInstructions:
     def roll_instr(self):
         if self.require_stack(1, 'roll') == None:
             number = self.pop_work()
-            if number < len(self.work):
-                for i in range(len(self.work)):
-                    value = self.work[i]
+            if number < len(self.interpreter.work):
+                for i in range(len(self.interpreter.work)):
+                    value = self.interpreter.work[i]
                     if i == number:
-                        del(self.work[i])
-                        self.work.appendleft(value)
+                        del(self.interpreter.work[i])
+                        self.interpreter.work.appendleft(value)
                         break                    
             else:
                 return self.err('error_index_on_workstack_invalid', 'roll')
@@ -46,9 +46,9 @@ class StackInstructions:
     def pick_instr(self):
         if self.require_stack(1, 'pick') == None:
             number = self.pop_work()
-            if number < len(self.work):
-                value = self.work[number]
-                self.work.appendleft(value)
+            if number < len(self.interpreter.work):
+                value = self.interpreter.work[number]
+                self.interpreter.work.appendleft(value)
             else:
                 return self.err('error_index_on_workstack_invalid', 'pick')
             return 'nobreak'
@@ -60,9 +60,9 @@ class StackInstructions:
         if self.require_stack(2, 'over') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
-            self.work.appendleft(op2)
-            self.work.appendleft(op1)
-            self.work.appendleft(op2)
+            self.interpreter.work.appendleft(op2)
+            self.interpreter.work.appendleft(op1)
+            self.interpreter.work.appendleft(op2)
             return 'nobreak'
 
     '''
@@ -72,7 +72,7 @@ class StackInstructions:
     def tor_instr(self):
         if self.require_stack(1, '>r') == None:
             op = self.pop_work()
-            self.altwork.appendleft(op)
+            self.interpreter.altwork.appendleft(op)
             return 'nobreak'   
 
     '''
@@ -83,9 +83,9 @@ class StackInstructions:
         if self.require_stack(1, '@r') == None:
             op = self.pop_work()
             if op in self.variables:
-                self.altwork.appendleft(self.dictionary[op])
+                self.interpreter.altwork.appendleft(self.dictionary[op])
             else:
-                self.altwork.appendleft(op)
+                self.interpreter.altwork.appendleft(op)
             return 'nobreak'   
 
     '''
@@ -95,7 +95,7 @@ class StackInstructions:
     def fromr_instr(self):
         if self.require_altstack(1, 'r>') == None:
             op = self.pop_altwork()
-            self.work.appendleft(op)
+            self.interpreter.work.appendleft(op)
             return 'nobreak'   
 
     '''
@@ -106,9 +106,9 @@ class StackInstructions:
         if self.require_altstack(1, 'r@') == None:
             op = self.pop_altwork()
             if op in self.variables:
-                self.work.appendleft(self.dictionary[op])
+                self.interpreter.work.appendleft(self.dictionary[op])
             else:
-                self.work.appendleft(op)
+                self.interpreter.work.appendleft(op)
             return 'nobreak'   
 
     '''
@@ -116,7 +116,7 @@ class StackInstructions:
     '''
     def rdrop_instr(self):
         if self.require_altstack(1, 'rdrop') == None:
-            self.altwork.popleft()
+            self.interpreter.altwork.popleft()
             return 'nobreak'
 
     '''
@@ -126,8 +126,8 @@ class StackInstructions:
         if self.require_altstack(2, 'rswap') == None:
             op1 = self.pop_altwork()
             op2 = self.pop_altwork()
-            self.altwork.appendleft(op1)
-            self.altwork.appendleft(op2)
+            self.interpreter.altwork.appendleft(op1)
+            self.interpreter.altwork.appendleft(op2)
             return 'nobreak'
 
     '''
@@ -135,8 +135,8 @@ class StackInstructions:
     '''
     def rdup_instr(self):
         if self.require_altstack(1, 'rdup') == None:
-            temp = self.altwork[0]
-            self.altwork.appendleft(temp)
+            temp = self.interpreter.altwork[0]
+            self.interpreter.altwork.appendleft(temp)
             return 'nobreak'
 
     '''
@@ -146,9 +146,9 @@ class StackInstructions:
         if self.require_altstack(2, 'rover') == None:
             op1 = self.pop_altwork()
             op2 = self.pop_altwork()
-            self.altwork.appendleft(op2)
-            self.altwork.appendleft(op1)
-            self.altwork.appendleft(op2)
+            self.interpreter.altwork.appendleft(op2)
+            self.interpreter.altwork.appendleft(op1)
+            self.interpreter.altwork.appendleft(op2)
             return 'nobreak'
 
     '''
@@ -156,7 +156,7 @@ class StackInstructions:
     '''
     def rdump_instr(self):
         if self.require_altstack(1, 'rdump') == None:
-            for temp in self.altwork:
+            for temp in self.interpreter.altwork:
                 print(temp, end=' ')
             print('')
             return 'nobreak'
@@ -165,7 +165,7 @@ class StackInstructions:
     Instruction wp? : indique l'adresse du prochain élément de la pile de travail
     '''
     def workstackpointer_instr(self):
-        self.work.appendleft(len(self.work))
+        self.interpreter.work.appendleft(len(self.interpreter.work))
         return 'nobreak'
 
     '''
@@ -179,7 +179,7 @@ class StackInstructions:
         name = self.pop_sequence()
         #for p in self.interpreter.packages.keys():
         #    if name in self.interpreter.packages[p].dictionary:
-        self.work.appendleft(name)
+        self.interpreter.work.appendleft(name)
         return 'nobreak'
         #return self.err('error_not_a_variable_or_definition', '\' (tick)')
 
@@ -188,18 +188,18 @@ class StackInstructions:
     '''
     def arobase_instr(self):
         if self.require_stack(1, '@') == None:
-            name = str(self.work[0])
+            name = str(self.interpreter.work[0])
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                self.work.popleft()
-                self.work.appendleft(self.interpreter.locals[self.interpreter.lastseqnumber][name])
+                self.interpreter.work.popleft()
+                self.interpreter.work.appendleft(self.interpreter.locals[self.interpreter.lastseqnumber][name])
                 return 'nobreak'
             elif name in self.variables:
-                self.work.popleft()
+                self.interpreter.work.popleft()
                 pack = self.interpreter.search_in_pack(name)
                 if pack != False:
                     d = self.interpreter.packages[pack].dictionary[name]
                 try:
-                    self.work.appendleft(d)
+                    self.interpreter.work.appendleft(d)
                 except TypeError:
                     return self.err('error_integer_and_float_expected', '@')
                 return 'nobreak'
@@ -210,7 +210,7 @@ class StackInstructions:
     Instruction cls : vide les éléments de la pile de travail (clear stack)
     '''
     def clearstack_instr(self):
-        self.work.clear()
+        self.interpreter.work.clear()
         return 'nobreak'
 
     '''
@@ -220,7 +220,7 @@ class StackInstructions:
         if self.require_stack(1, 'char') == None:
             temp = self.pop_work()
             if isinstance(temp, str):
-                self.work.appendleft(ord(temp[0]))
+                self.interpreter.work.appendleft(ord(temp[0]))
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 'char')
@@ -234,7 +234,7 @@ class StackInstructions:
             if isinstance(pos, int):
                 s = self.pop_work()
                 if isinstance(s, str):
-                    self.work.appendleft(s[pos])
+                    self.interpreter.work.appendleft(s[pos])
                     return 'nobreak'
                 else:
                     return self.err('error_strings_expected', 'char? string parameter')
@@ -249,7 +249,7 @@ class StackInstructions:
         if self.require_stack(1, 'chars') == None:
             temp = self.pop_work()
             if isinstance(temp, str):
-                self.work.appendleft(len(temp))
+                self.interpreter.work.appendleft(len(temp))
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 'chars')
@@ -258,11 +258,11 @@ class StackInstructions:
         if self.require_stack(1, 'maybe-int') == None:
             x = self.pop_work()
             if not isinstance(x, str):
-                self.work.appendleft(x)
+                self.interpreter.work.appendleft(x)
                 return 'nobreak'
             s = x.strip()
             if s == "":
-                self.work.appendleft(x)
+                self.interpreter.work.appendleft(x)
                 return 'nobreak'
             sign = 1
             if s[0] == '-':
@@ -271,10 +271,10 @@ class StackInstructions:
             elif s[0] == '+':
                 s = s[1:]
             if not s.isdigit():
-                self.work.appendleft(x)
+                self.interpreter.work.appendleft(x)
                 return 'nobreak'
             n = 0
             for c in s:
                 n = n * 10 + (ord(c) - ord('0'))
-            self.work.appendleft(sign * n)
+            self.interpreter.work.appendleft(sign * n)
             return 'nobreak'
