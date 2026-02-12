@@ -25,7 +25,7 @@ class mail(base_module):
     Instruction sendmail : envoie d'un mail 
     '''
     def sendmail_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             sendto = self.pop_work()
             mailcontent = self.pop_work()
             if "mailconfig" in self.interpreter.core_instr.dictionary:
@@ -79,7 +79,7 @@ class mail(base_module):
     Instruction preparemail : préparation d'un mail 
     '''
     def preparemail_instr(self):
-        if len(self.work) > 2:
+        if len(self.interpreter.work) > 2:
             predmails = {}
             mail = {}
             # lire sur la pile : mailname, maillang et toreplace
@@ -109,7 +109,7 @@ class mail(base_module):
                 mail['subject'] = mail['subject'].replace('[' + key + ']', value)
                 mail['body'] = mail['body'].replace('[' + key + ']', value)
                 mail['text'] = mail['text'].replace('[' + key + ']', value)
-            self.work.appendleft(mail)
+            self.interpreter.work.appendleft(mail)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('preparemail', self.interpreter.output)
@@ -118,7 +118,7 @@ class mail(base_module):
     Instruction addattachment : ajoute une pièce jointe à un mail
     '''
     def addattachment_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             filepath = self.pop_work()
             mailcontent = self.pop_work()
 
@@ -129,7 +129,7 @@ class mail(base_module):
                 mailcontent["attachments"] = []
 
             mailcontent["attachments"].append(filepath)
-            self.work.appendleft(mailcontent)
+            self.interpreter.work.appendleft(mailcontent)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('addattachment', self.interpreter.output)
