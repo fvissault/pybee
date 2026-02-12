@@ -23,7 +23,7 @@ class file(base_module):
     Instruction writein : content nom_du_descripteur WRITEIN -> écrit content dans le fichier 
     '''
     def writefile_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('writein', self.interpreter.output)
@@ -37,7 +37,7 @@ class file(base_module):
     Instruction readfile : nom_du_descripteur READFILE -> met le contenu lu sur la pile de travail
     '''
     def readfile_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('readfile', self.interpreter.output)
@@ -50,7 +50,7 @@ class file(base_module):
     Instruction readline : nom_du_descripteur READLINE -> met le contenu lu ligne par ligne sur la pile de travail
     '''
     def readline_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('readline', self.interpreter.output)
@@ -63,7 +63,7 @@ class file(base_module):
     Instruction readchar : nom_du_descripteur READCHAR -> met le contenu lu caractère par caractère sur la pile de travail
     '''
     def readchar_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('readchar', self.interpreter.output)
@@ -76,7 +76,7 @@ class file(base_module):
     Instruction appendtofile : nom_du_descripteur filename APPENDTOFILE  -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'a'
     '''
     def openappendwritefile_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
@@ -96,7 +96,7 @@ class file(base_module):
     Instruction overwritetofile : nom_du_descripteur filename OVERWRITEOFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'w'
     '''
     def openoverdwritefile_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
@@ -116,7 +116,7 @@ class file(base_module):
     Instruction readingfile : nom_du_descripteur filename READINGFILE -> créé une variable nom_du_descripteur et ouvre le fichier en mode 'r'
     '''
     def openreadfile_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             filename = self.pop_work()
             filename = '{0}/{1}'.format(self.interpreter.core_instr.dictionary['path'], filename)
             if self.interpreter.isemptylastsequence():
@@ -136,7 +136,7 @@ class file(base_module):
     Instruction closefile : nom_du_descripteur CLOSEFILE -> ferme le fichier et détruit la variable du descripteur
     '''
     def closefile_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             descriptor_name = self.pop_work()
             if not isinstance(self.interpreter.core_instr.dictionary[descriptor_name], TextIOWrapper):
                 return file_errors.error_not_a_file_descriptor.print_error('closefile', self.interpreter.output)
