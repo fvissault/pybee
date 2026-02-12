@@ -251,7 +251,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.version = 'v2.3.7'
 
     def output_instr(self):
-        self.work.appendleft(self.interpreter.output)
+        self.interpreter.work.appendleft(self.interpreter.output)
         return "nobreak"
 
     def begintest_instr(self):
@@ -276,13 +276,13 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         ileftwork = ileft.work
         irightwork = iright.work
         if self.normalize_stack(ileftwork) == self.normalize_stack(irightwork):
-            self.work.appendleft(1)
+            self.interpreter.work.appendleft(1)
             if self.interpreter.output == 'web':
                 print("true test")
             else:
                 print(termcolors.GREEN + "true test" + termcolors.NORMAL)
         else:
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
             if self.interpreter.output == 'web':
                 print("false test")
             else:
