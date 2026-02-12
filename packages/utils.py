@@ -244,7 +244,7 @@ class Utils:
             number = self.pop_work()
             if not isinstance(number, int):
                 return self.err('error_integer_expected', '>base')
-            self.work.appendleft(self.to_base(number, base))
+            self.interpreter.work.appendleft(self.to_base(number, base))
             return 'nobreak'
 
     '''
@@ -258,7 +258,7 @@ class Utils:
             number = self.pop_work()
             if not isinstance(number, str):
                 return self.err('error_integer_expected', '>decimal')
-            self.work.appendleft(int(str(number), base))
+            self.interpreter.work.appendleft(int(str(number), base))
             return 'nobreak'
 
     '''
@@ -268,9 +268,9 @@ class Utils:
         if self.require_stack(1, '?int') == None:
             o = self.pop_work()
             if self.isinteger(o):
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -280,9 +280,9 @@ class Utils:
         if self.require_stack(1, '?float') == None:
             o = self.pop_work()
             if self.isfloat(o):
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -292,9 +292,9 @@ class Utils:
         if self.require_stack(1, '?str') == None:
             o = self.pop_work()
             if isinstance(o, str):
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -304,9 +304,9 @@ class Utils:
         if self.require_stack(1, '?char') == None:
             o = self.pop_work()
             if isinstance(o, str) and len(o) == 1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -318,16 +318,16 @@ class Utils:
             return self.err('error_import_name_missing', '?pack')
         packname = self.pop_sequence()
         if packname in self.interpreter.packages.keys():
-            self.work.appendleft(1)
+            self.interpreter.work.appendleft(1)
         else:
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
         return 'nobreak'
 
     '''
     Instruction sp? : indique l'adresse de la prochaine séquence
     '''
     def seqpointer_instr(self):
-        self.work.appendleft(len(self.interpreter.sequences))
+        self.interpreter.work.appendleft(len(self.interpreter.sequences))
         return 'nobreak'
 
     '''
@@ -337,7 +337,7 @@ class Utils:
         pointer = 0
         for pack in self.interpreter.packages:
             pointer += len(self.interpreter.packages[pack].dictionary)
-        self.work.appendleft(pointer)
+        self.interpreter.work.appendleft(pointer)
         return 'nobreak'
 
     '''
@@ -348,16 +348,16 @@ class Utils:
             return self.err('error_instruction_expected', '?exists')
         obj_name = self.pop_work()
         if obj_name in self.variables or obj_name in self.interpreter.userdefinitions:
-            self.work.appendleft(1)
+            self.interpreter.work.appendleft(1)
         else:
-            self.work.appendleft(0)
+            self.interpreter.work.appendleft(0)
         return 'nobreak'
 
     def here_instr(self):
         if self.interpreter.recentWord != None:
-            self.work.appendleft(self.interpreter.recentWord)
+            self.interpreter.work.appendleft(self.interpreter.recentWord)
         else:
-            self.work.appendleft('here')
+            self.interpreter.work.appendleft('here')
         return 'nobreak'
 
     '''
@@ -367,7 +367,7 @@ class Utils:
         if self.require_stack(1, '>md5') == None:
             val = self.pop_work()
             md5 = hashlib.md5(val.encode())
-            self.work.appendleft(md5.hexdigest())
+            self.interpreter.work.appendleft(md5.hexdigest())
             return 'nobreak'
 
     '''
@@ -376,7 +376,7 @@ class Utils:
     def jsonencode_instr(self):
         if self.require_stack(1, '>json') == None:
             val = self.pop_work()
-            self.work.appendleft(json.dumps(val))
+            self.interpreter.work.appendleft(json.dumps(val))
             return 'nobreak'
 
     '''
@@ -385,7 +385,7 @@ class Utils:
     def jsondecode_instr(self):
         if self.require_stack(1, 'json>') == None:
             val = self.pop_work()
-            self.work.appendleft(json.loads(val))
+            self.interpreter.work.appendleft(json.loads(val))
             return 'nobreak'
 
     '''
@@ -394,9 +394,9 @@ class Utils:
     def locale_instr(self):
         lang = locale.getdefaultlocale()
         if not lang:
-            self.work.appendleft('en')
+            self.interpreter.work.appendleft('en')
         else:
-            self.work.appendleft(lang[0].split('_')[0])
+            self.interpreter.work.appendleft(lang[0].split('_')[0])
         return 'nobreak'
 
     '''
@@ -467,8 +467,8 @@ class Utils:
     '''
     def forceexclam_instr(self):
         if self.require_stack(2, 'force!') == None:
-            name = self.work[0]
-            self.work.popleft()
+            name = self.interpreter.work[0]
+            self.interpreter.work.popleft()
             value = self.pop_work()
             for pack in self.interpreter.packages:
                 if name in self.interpreter.packages[pack].dictionary.keys():
@@ -479,7 +479,7 @@ class Utils:
                         self.interpreter.packages[pack].dictionary[name].append(value)
                     elif isinstance(self.interpreter.packages[pack].dictionary[name], list):
                         self.interpreter.packages[pack].dictionary[name].append(value)
-                    self.work.appendleft(name)
+                    self.interpreter.work.appendleft(name)
                     break
             return 'nobreak'
     
@@ -513,7 +513,7 @@ class Utils:
                 return self.err('error_string_invalid', 'format')
             content = content.replace('<<', '{')
             content = content.replace('>>', '}')
-            self.work.appendleft(content)
+            self.interpreter.work.appendleft(content)
             return 'nobreak'
 
     '''
@@ -524,13 +524,13 @@ class Utils:
             op1 = self.pop_work()
             op2 = self.pop_work()
             if isinstance(op1, str) and (isinstance(op2, int) or isinstance(op2, float)):
-                self.work.appendleft(str(op2) + op1)
+                self.interpreter.work.appendleft(str(op2) + op1)
                 return 'nobreak'
             if isinstance(op2, str) and (isinstance(op1, int) or isinstance(op1, float)):
-                self.work.appendleft(op2 + str(op1)) 
+                self.interpreter.work.appendleft(op2 + str(op1)) 
                 return 'nobreak'
             if isinstance(op1, str) and isinstance(op2, str):
-                self.work.appendleft(op2 + op1)
+                self.interpreter.work.appendleft(op2 + op1)
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 's+')
@@ -544,9 +544,9 @@ class Utils:
             str2 = self.pop_work()
             if isinstance(str1, str) and isinstance(str2, str):
                 if str1 in str2:
-                    self.work.appendleft(1)
+                    self.interpreter.work.appendleft(1)
                 else:
-                    self.work.appendleft(0)
+                    self.interpreter.work.appendleft(0)
                 return 'nobreak'
             else:
                 return self.err('error_strings_expected', 'scan')
@@ -559,7 +559,7 @@ class Utils:
                 if isinstance(n, int):
                     s = self.pop_work()
                     if isinstance(s, str):
-                        self.work.appendleft(s.ljust(n, c))
+                        self.interpreter.work.appendleft(s.ljust(n, c))
                         return 'nobreak'
                     else:
                         return self.err('error_strings_expected', 'rpad')
@@ -576,7 +576,7 @@ class Utils:
                 if isinstance(n, int):
                     s = self.pop_work()
                     if isinstance(s, str):
-                        self.work.appendleft(s.rjust(n, c))
+                        self.interpreter.work.appendleft(s.rjust(n, c))
                         return 'nobreak'
                     else:
                         return self.err('error_strings_expected', 'lpad')
