@@ -20,9 +20,9 @@ class Logic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '=')
             if op2 == op1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'   
 
     '''
@@ -45,9 +45,9 @@ class Logic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '>')
             if op2 > op1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'   
 
     '''
@@ -70,9 +70,9 @@ class Logic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '<')
             if op2 < op1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'   
 
     '''
@@ -95,9 +95,9 @@ class Logic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '>=')
             if op2 >= op1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'   
 
     '''
@@ -120,9 +120,9 @@ class Logic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '<=')
             if op2 <= op1:
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'   
 
     '''
@@ -133,7 +133,7 @@ class Logic:
             op1 = self.pop_work()
             op2 = self.pop_work()
             result = op1 and op2
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
             return 'nobreak'
 
     '''
@@ -144,7 +144,7 @@ class Logic:
             op1 = self.pop_work()
             op2 = self.pop_work()
             result = op1 or op2
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
             return 'nobreak'
 
     '''
@@ -155,5 +155,5 @@ class Logic:
             op1 = self.pop_work()
             op2 = self.pop_work()
             result = op1 ^ op2
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
             return 'nobreak'
