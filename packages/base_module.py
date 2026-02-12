@@ -3,42 +3,39 @@ from copy import deepcopy
 
 class base_module:
     def __init__(self, interpreter):
-        self.work = deque()
-        self.altwork = deque()
         self.interpreter = interpreter
-        #print(interpreter.params)
         self.variables = []
 
     def require_altstack(self, n, word):
-        if len(self.altwork) < n:
+        if len(self.interpreter.altwork) < n:
             return self.nothing_in_return(word)
         return None
 
     def require_stack(self, n, word):
-        if len(self.work) < n:
+        if len(self.interpreter.work) < n:
             return self.nothing_in_work(word)
         return None
 
-    def set_work_stack(self, work):
-        self.work = work
+    #def set_work_stack(self, work):
+    #    self.interpreter.work = work
 
-    def get_work_stack(self):
-        return self.work
+    #def get_work_stack(self):
+    #    return self.interpreter.work
 
-    def set_altwork_stack(self, work):
-        self.altwork = work
+    #def set_altwork_stack(self, work):
+    #    self.interpreter.altwork = work
 
-    def get_altwork_stack(self):
-        return self.altwork
+    #def get_altwork_stack(self):
+    #    return self.interpreter.altwork
 
     def pop_work(self):
-        topwork = self.work[0]
-        self.work.popleft()
+        topwork = self.interpreter.work[0]
+        self.interpreter.work.popleft()
         return topwork
 
     def pop_altwork(self):
-        topaltwork = self.altwork[0]
-        self.altwork.popleft()
+        topaltwork = self.interpreter.altwork[0]
+        self.interpreter.altwork.popleft()
         return topaltwork
 
     def pop_sequence(self):
@@ -99,7 +96,7 @@ class base_module:
         i.work.clear()
         i.locals.clear()
         i.set_sequence(sequence)
-        #i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
+        i.locals[0] = self.interpreter.locals[self.interpreter.lastseqnumber].copy()
         i.interpret()
         return i
 
