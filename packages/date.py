@@ -130,14 +130,14 @@ class date(base_module):
     '''
     def now_instr(self):
         ct = datetime.now()
-        self.work.appendleft(ct.timestamp())
+        self.interpreter.work.appendleft(ct.timestamp())
         return 'nobreak'
 
     '''
     Instruction timestamp : obtention d'un timestamp à partir de 'year month day hh mm ss ms'
     '''
     def timestamp_instr(self):
-        if len(self.work) > 6:
+        if len(self.interpreter.work) > 6:
             try:
                 millisecond = self.pop_work()
                 if millisecond < 0:
@@ -163,7 +163,7 @@ class date(base_module):
             except:
                 return date_errors.error_bad_datas.print_error('timestamp', self.interpreter.output)
             d = datetime(year, month, day, hour, minut, second, millisecond)
-            self.work.appendleft(d.timestamp())
+            self.interpreter.work.appendleft(d.timestamp())
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('timestamp', self.interpreter.output)
@@ -172,12 +172,12 @@ class date(base_module):
     Instruction year : timestamp YEAR
     '''
     def year_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('year', self.interpreter.output)
             dt = datetime.fromtimestamp(timestamp)
-            self.work.appendleft(dt.year)
+            self.interpreter.work.appendleft(dt.year)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('year', self.interpreter.output)
@@ -186,7 +186,7 @@ class date(base_module):
     Instruction month : timestamp MONTH { number | shortname | longname }
     '''
     def month_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('month', self.interpreter.output)
@@ -202,7 +202,7 @@ class date(base_module):
                 tostack = dt.strftime('%B')
             if obj_type == 'sname':
                 tostack = dt.strftime('%b')
-            self.work.appendleft(tostack)
+            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('month', self.interpreter.output)
@@ -211,7 +211,7 @@ class date(base_module):
     Instruction day : timestanp DAY { number | shortname | longname }
     '''
     def day_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('day', self.interpreter.output)
@@ -227,7 +227,7 @@ class date(base_module):
                 tostack = dt.strftime('%A')
             if obj_type == 'sname':
                 tostack = dt.strftime('%a')
-            self.work.appendleft(tostack)
+            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('day', self.interpreter.output)
@@ -236,12 +236,12 @@ class date(base_module):
     Instruction hour : timestamp HOUR
     '''
     def hour_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('hour', self.interpreter.output)
             dt = datetime.fromtimestamp(timestamp)
-            self.work.appendleft(dt.hour)
+            self.interpreter.work.appendleft(dt.hour)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('hour', self.interpreter.output)
@@ -250,12 +250,12 @@ class date(base_module):
     Instruction minut : timestamp MINUT
     '''
     def minut_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('minut', self.interpreter.output)
             dt = datetime.fromtimestamp(timestamp)
-            self.work.appendleft(dt.minute)
+            self.interpreter.work.appendleft(dt.minute)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('minut', self.interpreter.output)
@@ -264,12 +264,12 @@ class date(base_module):
     Instruction second : timestamp SECOND
     '''
     def second_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('second', self.interpreter.output)
             dt = datetime.fromtimestamp(timestamp)
-            self.work.appendleft(dt.second)
+            self.interpreter.work.appendleft(dt.second)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('second', self.interpreter.output)
@@ -278,12 +278,12 @@ class date(base_module):
     Instruction microsecond : timestamp MICROSECOND
     '''
     def microsecond_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timestamp = self.pop_work()
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('microsecond', self.interpreter.output)
             dt = datetime.fromtimestamp(timestamp)
-            self.work.appendleft(dt.microsecond)
+            self.interpreter.work.appendleft(dt.microsecond)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('microsecond', self.interpreter.output)
@@ -292,7 +292,7 @@ class date(base_module):
     Instruction fdate : timestamp "separator" FDATE { english | french }
     '''
     def date_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             sep = self.pop_work()
             if not isinstance(sep, str):
                 return date_errors.error_bad_date_format.print_error('fdate', self.interpreter.output)
@@ -313,7 +313,7 @@ class date(base_module):
                 tostack = dt.strftime(format)
             except:
                 return date_errors.error_bad_date_format.print_error('fdate', self.interpreter.output)
-            self.work.appendleft(tostack)
+            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('fdate', self.interpreter.output)
@@ -322,7 +322,7 @@ class date(base_module):
     Instruction ftime : timestamp "separator" FTIME
     '''
     def time_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             sep = self.pop_work()
             if not isinstance(sep, str):
                 return date_errors.error_bad_date_format.print_error('ftime', self.interpreter.output)
@@ -335,7 +335,7 @@ class date(base_module):
                 tostack = dt.strftime(format)
             except:
                 return date_errors.error_bad_date_format.print_error('ftime', self.interpreter.output)
-            self.work.appendleft(tostack)
+            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('ftime', self.interpreter.output)
@@ -344,7 +344,7 @@ class date(base_module):
     Instruction fdatetime : timestamp date_sep time_sep FDATETIME { english | french }
     '''
     def datetime_instr(self):
-        if len(self.work) > 0:
+        if len(self.interpreter.work) > 0:
             timesep = self.pop_work()
             if not isinstance(timesep, str):
                 return date_errors.error_bad_date_format.print_error('fdatetime', self.interpreter.output)
@@ -368,7 +368,7 @@ class date(base_module):
                 tostack = dt.strftime(format)
             except:
                 return date_errors.error_bad_date_format.print_error('fdatetime', self.interpreter.output)
-            self.work.appendleft(tostack)
+            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('fdatetime', self.interpreter.output)
@@ -378,7 +378,7 @@ class date(base_module):
     '''
     def dateplus_instr(self):
         delta = 0
-        if len(self.work) > 2:
+        if len(self.interpreter.work) > 2:
             period = self.pop_work()
             if period != 'd' and period != 'h' and period != 'm' and period != 's' and period != 'day' and period != 'hour' and period != 'minut' and period != 'second':
                 return date_errors.error_bad_datas.print_error('d+', self.interpreter.output)
@@ -397,7 +397,7 @@ class date(base_module):
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('d+', self.interpreter.output)
             timestamp += delta
-            self.work.appendleft(timestamp)
+            self.interpreter.work.appendleft(timestamp)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('d+', self.interpreter.output)
@@ -407,7 +407,7 @@ class date(base_module):
     '''
     def dateminus_instr(self):
         delta = 0
-        if len(self.work) > 2:
+        if len(self.interpreter.work) > 2:
             period = self.pop_work()
             if period != 'd' and period != 'h' and period != 'm' and period != 's' and period != 'day' and period != 'hour' and period != 'minut' and period != 'second':
                 return date_errors.error_bad_datas.print_error('d-', self.interpreter.output)
@@ -426,7 +426,7 @@ class date(base_module):
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('d-', self.interpreter.output)
             timestamp -= delta
-            self.work.appendleft(timestamp)
+            self.interpreter.work.appendleft(timestamp)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('d-', self.interpreter.output)
@@ -435,7 +435,7 @@ class date(base_module):
     Instruction #monthdays : year month #MONTHDAYS
     '''
     def dayscount_instr(self):
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             month = self.pop_work()
             if not self.isinteger(month):
                 return date_errors.error_bad_datas.print_error('#monthdays month', self.interpreter.output)
@@ -445,7 +445,7 @@ class date(base_module):
             if not self.isinteger(year):
                 return date_errors.error_bad_datas.print_error('#monthdays year', self.interpreter.output)
             monthdatas = calendar.monthrange(year, month)
-            self.work.appendleft(monthdatas[1])
+            self.interpreter.work.appendleft(monthdatas[1])
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('#monthdays', self.interpreter.output)
@@ -455,7 +455,7 @@ class date(base_module):
     '''
     def wnumber_instr(self):
         # dt.isocalendar()
-        if len(self.work) > 1:
+        if len(self.interpreter.work) > 1:
             day = self.pop_work()
             if not self.isinteger(day):
                 return date_errors.error_bad_datas.print_error('#week day', self.interpreter.output)
@@ -471,7 +471,7 @@ class date(base_module):
                 return date_errors.error_bad_datas.print_error('#week year', self.interpreter.output)
             d = dat(year, month, day)
             iso = d.isocalendar()
-            self.work.appendleft(iso[1])
+            self.interpreter.work.appendleft(iso[1])
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('#week', self.interpreter.output)
