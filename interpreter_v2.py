@@ -184,8 +184,8 @@ class interpreter:
                     return 'nobreak'
                 else:
                     # instructions qui ne sont pas dans la définition
-                    package.set_work_stack(self.work)
-                    package.set_altwork_stack(self.altwork)
+                    #package.set_work_stack(self.work)
+                    #package.set_altwork_stack(self.altwork)
 
                     ret = package.dictionary[instr.lower()]()
                     self.from_instr = ''
