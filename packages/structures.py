@@ -8,13 +8,13 @@ class Structures:
     def array_instr(self):
         if self.require_stack(1, 'array') == None:
             size = self.pop_work()
-            if len(self.work) >= size:
+            if len(self.interpreter.work) >= size:
                 result = []
                 for i in range(0, size):
                     value = self.pop_work()
                     result.append(value)
                 result.reverse()
-                self.work.appendleft(result)
+                self.interpreter.work.appendleft(result)
                 return 'nobreak'
             else:
                 return self.nothing_in_work('array')
@@ -27,7 +27,7 @@ class Structures:
         result = self.search_braces()
         #if len(result) > 0:
             #result.reverse()
-        self.work.appendleft(result)
+        self.interpreter.work.appendleft(result)
         return 'nobreak'
 
     def ebrace_instr(self):
@@ -96,9 +96,9 @@ class Structures:
         result = self.search_brakets()
         if len(result) > 0:
             result.reverse()
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
         else:
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
         return 'nobreak'
 
     '''
@@ -163,7 +163,7 @@ class Structures:
                     return self.err('error_get_cell_on_array_invalid', 'cells')
             if not isinstance(tab, list) and not isinstance(tab , dict):
                 return self.err('error_get_cell_on_array_invalid', 'cells')
-            self.work.appendleft(len(tab))
+            self.interpreter.work.appendleft(len(tab))
             return 'nobreak'
 
     '''
@@ -195,7 +195,7 @@ class Structures:
             elif isinstance(content, list) and not isinstance(position, int):
                 return self.err('error_index_on_array_invalid', '5cell@')
             result = content[position]
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
             return 'nobreak'
 
     '''
@@ -221,7 +221,7 @@ class Structures:
                 return self.err('error_index_on_array_invalid', 'cell!')
             value = self.pop_work()
             content[position] = value
-            self.work.appendleft(content)
+            self.interpreter.work.appendleft(content)
             return 'nobreak'
 
     '''
@@ -252,7 +252,7 @@ class Structures:
                 content[index] = value
             elif isinstance(content, list):
                 content.append(value)
-            self.work.appendleft(content)
+            self.interpreter.work.appendleft(content)
             return 'nobreak'
 
     '''
@@ -278,7 +278,7 @@ class Structures:
                 if index not in content.keys():
                     return self.err('error_index_on_array_invalid', 'cell-')
             content.pop(index)
-            self.work.appendleft(content)
+            self.interpreter.work.appendleft(content)
             return 'nobreak'
 
     '''
@@ -299,14 +299,14 @@ class Structures:
             content = self.pop_work()
             if isinstance(arr, list):
                 if content in arr:
-                    self.work.appendleft(1)
+                    self.interpreter.work.appendleft(1)
                 else:
-                    self.work.appendleft(0)
+                    self.interpreter.work.appendleft(0)
             if isinstance(arr, dict):
                 if content in arr.values():
-                    self.work.appendleft(1)
+                    self.interpreter.work.appendleft(1)
                 else:
-                    self.work.appendleft(0)
+                    self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -317,9 +317,9 @@ class Structures:
             o = self.pop_work()
             #self.work.appendleft(o)
             if isinstance(o, list) or isinstance(o, dict):
-                self.work.appendleft(1)
+                self.interpreter.work.appendleft(1)
             else:
-                self.work.appendleft(0)
+                self.interpreter.work.appendleft(0)
             return 'nobreak'
 
     '''
@@ -345,7 +345,7 @@ class Structures:
             if content != None:
                 if not isinstance(content, dict):
                     return self.err('error_array_invalid', 'keys')
-                self.work.appendleft(list(content.keys()))
+                self.interpreter.work.appendleft(list(content.keys()))
                 return 'nobreak'
             else:
                 return self.err('error_name_missing', 'keys')
@@ -373,13 +373,13 @@ class Structures:
             
             # cas ou val est une liste, on retourne le tableau lui-même
             if isinstance(val, list) and content == None:
-                self.work.appendleft(val)
+                self.interpreter.work.appendleft(val)
                 return 'nobreak'
             
             if content != None:
                 if not isinstance(content, dict):
                     return self.err('error_array_invalid', 'values')
-                self.work.appendleft(list(content.values()))
+                self.interpreter.work.appendleft(list(content.values()))
                 return 'nobreak'
             else:
                 return self.err('error_name_missing', 'values')
