@@ -14,7 +14,7 @@ class Arithmetic:
                 if isinstance(op2, str):
                     op2 = float(op2)
                 result = op1 * op2
-                self.work.appendleft(result)
+                self.interpreter.work.appendleft(result)
                 return 'nobreak'
             else:
                 if isinstance(op1, str):
@@ -28,7 +28,7 @@ class Arithmetic:
                     except(ValueError):
                         return self.err('error_invalid_litteral', '*')
             result = op1 * op2
-            self.work.appendleft(self.to_base(result, base))
+            self.interpreter.work.appendleft(self.to_base(result, base))
             return 'nobreak'
 
     def to_base(self, number, base):
@@ -73,7 +73,7 @@ class Arithmetic:
             op2 = self.pop_work()
             op3 = self.plus(op1, op2)
             if op3 != "nobreak":
-                self.work.appendleft(op3)
+                self.interpreter.work.appendleft(op3)
             return 'nobreak'
 
     def possiblebases(self, s: str, exclure10=True):
@@ -119,7 +119,7 @@ class Arithmetic:
             op1 = self.pop_work()
             op2 = self.pop_work()
             op3 = self.minus(op2, op1)
-            self.work.appendleft(op3)
+            self.interpreter.work.appendleft(op3)
             return 'nobreak'
 
     '''
@@ -143,5 +143,5 @@ class Arithmetic:
             else:
                 return self.err('error_invalid_litteral', '/')
             result = op2 / op1
-            self.work.appendleft(result)
+            self.interpreter.work.appendleft(result)
             return 'nobreak'
