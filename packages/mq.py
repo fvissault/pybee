@@ -281,7 +281,31 @@ class mq(base_module):
         psi0 @ 0 
     else
         psi1 @ 1
-    then'''
+    then''',
+            #****************************************
+            'multi-partial-proj' : '''    ( n ks bs -- P )
+    local bs
+    local ks
+    local n
+    igate local acc
+    0 local i
+    n @ i
+    do
+        ks @ i @ index-of
+        dup -1 =
+        if
+            drop
+            acc @ igate ktensor acc !
+        else
+            bs @ swap cell@
+            if
+                acc @ p1 ktensor acc !
+            else
+                acc @ p0 ktensor acc !
+            then
+        then
+    loop
+    acc @'''
         }
         self.help = mq_help(interpreter.output)
 
