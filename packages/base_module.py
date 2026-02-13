@@ -82,6 +82,8 @@ class base_module:
     def exec_interpreter(self, sequence):
         db = None
         cursor = None
+        logdescriptor = self.interpreter.logdescriptor
+        self.interpreter.logdescriptor = None
         if 'db' in self.interpreter.packages:
             db = self.interpreter.packages['db'].db
             cursor = self.interpreter.packages['db'].cursor
@@ -91,6 +93,7 @@ class base_module:
         if 'db' in self.interpreter.packages:
             self.interpreter.packages['db'].db = db
             self.interpreter.packages['db'].cursor = cursor
+        self.interpreter.logdescriptor = logdescriptor
         i.sequences = []
         i.lastseqnumber = -1
         i.work.clear()
