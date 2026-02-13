@@ -24,6 +24,9 @@ class interpreter:
         self.output = output
         self.params = None
         self.version = 'v2.4.4'
+        self.activelog = False
+        self.logfilename = ''
+        self.logdescriptor = None
         self.core_instr = core(self)
         self.packages = {'core': self.core_instr}
         self.preload()
