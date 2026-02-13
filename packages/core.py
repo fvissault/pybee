@@ -16,30 +16,49 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
     def __init__(self, interpreter):
         super().__init__(interpreter)
         self.dictionary = {
-            'dup' : '''    0 pick''', 
-            '2dup' : '''    over over''', 
+            'dup' : '''    "Exec dup instruction" log-info
+    0 pick''', 
+            '2dup' : '''    "Exec 2dup instruction" log-info
+    over over''', 
             'drop' : self.drop_instr, 
-            '2drop' : '''    drop drop''', 
-            'nip' : '''    swap drop''', 
-            '2nip' : '''    2swap 2drop''', 
-            'swap' : '''    1 roll''', 
-            '2swap' : '''    rot >r rot r>''',
-            'reverse' : '''    swap rot''',
+            '2drop' : '''    "Exec 2drop instruction" log-info
+    drop drop''', 
+            'nip' : '''    "Exec nip instruction" log-info
+    swap drop''', 
+            '2nip' : '''    "Exec 2nip instruction" log-info
+    2swap 2drop''', 
+            'swap' : '''    "Exec swap instruction" log-info
+    1 roll''', 
+            '2swap' : '''    "Exec 2swap instruction" log-info
+    rot >r rot r>''',
+            'reverse' : '''    "Exec reverse instruction" log-info
+    swap rot''',
             'roll' : self.roll_instr, 
             'pick' : self.pick_instr, 
-            'over' : '''    swap dup rot rot''',
-            '2over' : '''    2>r 2dup 2r> 2swap''', 
-            'rot' : '''    2 roll''', 
-            'rotonall' : '''    wp 1- roll''', 
+            'over' : '''    "Exec over instruction" log-info
+    swap dup rot rot''',
+            '2over' : '''    "Exec 2over instruction" log-info
+    2>r 2dup 2r> 2swap''', 
+            'rot' : '''    "Exec rot instruction" log-info
+    2 roll''', 
+            'rotonall' : '''    "Exec rotonall instruction" log-info
+    wp 1- roll''', 
             '.' : self.point_instr, 
-            '.s' : '''    dup .''', 
-            '2.s' : '''    2dup . bl . bl''', 
-            'cr' : '''    ( "Warning: 'cr' is deprecated, use /nl instead" . ) 
+            '.s' : '''    "Exec .s instruction" log-info
+    dup .''', 
+            '2.s' : '''    "Exec 2.s instruction" log-info
+    2dup . bl . bl''', 
+            'cr' : '''    ( "Warning: 'cr' is deprecated, use /nl instead" . )
+    "Exec cr instruction" log-info 
     /nl''',
-            '.cr' : '''    . /nl''',
-            '.scr' : '''    .s /nl''',
-            '.2cr' : '''    .cr /nl''',
-            '.bl' : '''    space emit''',
+            '.cr' : '''    "Exec .cr instruction" log-info
+    . /nl''',
+            '.scr' : '''    "Exec .scr instruction" log-info
+    .s /nl''',
+            '.2cr' : '''    "Exec .2cr instruction" log-info
+    .cr /nl''',
+            '.bl' : '''    "Exec .bl instruction" log-info
+    space emit''',
             'words' : self.words_instr, 
             'dump' : self.dump_instr, 
             'bye' : self.bye_instr, 
@@ -47,21 +66,34 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             ';' : self.pointvirg_instr, 
             '(' : self.bcomment_instr, 
             ')' : self.ecomment_instr, 
-            '1+' : '''    1 +''', 
-            '2+' : '''    2 +''', 
-            '2*' : '''    2 *''', 
-            '1-' : '''    1 -''', 
-            '2-' : '''    2 -''', 
+            '1+' : '''    "Exec 1+ instruction" log-info
+    1 +''', 
+            '2+' : '''    "Exec 2+ instruction" log-info
+    2 +''', 
+            '2*' : '''    "Exec 2* instruction" log-info
+    2 *''', 
+            '1-' : '''    "Exec 1- instruction" log-info
+    1 -''', 
+            '2-' : '''    "Exec 2- instruction" log-info
+    2 -''', 
             'true' : 1,
             'false' : 0, 
-            '0=' : '''    0 =''', 
-            '0>' : '''    0 >''', 
-            '0<' : '''    0 <''', 
-            '0>=' : '''    0 >=''', 
-            '0<=' : '''    0 <=''', 
-            'invert' : '''    0=''', 
-            '2>r' : '''    swap >r >r''',
-            '2r>' : '''    r> r> swap''', 
+            '0=' : '''    "Exec 0= instruction" log-info
+    0 =''', 
+            '0>' : '''    "Exec 0> instruction" log-info
+    0 >''', 
+            '0<' : '''    "Exec 0< instruction" log-info
+    0 <''', 
+            '0>=' : '''    "Exec 0>= instruction" log-info
+    0 >=''', 
+            '0<=' : '''    "Exec 0<= instruction" log-info
+    0 <=''', 
+            'invert' : '''    "Exec invert instruction" log-info
+    0=''', 
+            '2>r' : '''    "Exec 2>r instruction" log-info
+    swap >r >r''',
+            '2r>' : '''    "Exec 2r> instruction" log-info
+    r> r> swap''', 
             'import' : self.import_instr, 
             'detach' : self.detach_instr, 
             'help' : self.help_instr, 
@@ -69,36 +101,47 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'stemit' : self.stackemit_instr,
             'input' : self.input_instr, 
             'secinput' : self.secinput_instr, 
-            'var' : '''    create ,''', 
-            '2var' : '''    create , ,''', 
-            'const' : '''    create , drop''',
-            '2const' : '''    create , , drop''',
+            'var' : '''    "Exec var instruction" log-info
+    create ,''', 
+            '2var' : '''    "Exec 2var instruction" log-info
+    create , ,''', 
+            'const' : '''    "Exec const instruction" log-info
+    create , drop''',
+            '2const' : '''    "Exec 2const instruction" log-info
+    create , , drop''',
             '@' : self.arobase_instr,
-            '?' : '''    @ .''', 
+            '?' : '''    "Exec ? instruction" log-info
+    @ .''', 
             '*' : self.prod_instr, 
             '+' : self.plus_instr,
             '-' : self.minus_instr,
             '/' : self.div_instr,
-            'negate' : '''    -1 *''',
-            'min' : '''    2dup <= 
+            'negate' : '''    "Exec negate instruction" log-info
+    -1 *''',
+            'min' : '''    "Exec min instruction" log-info
+    2dup <= 
     if 
         drop 
     else 
         nip 
     then''',
-            'max' : '''    2dup >= 
+            'max' : '''    "Exec max instruction" log-info
+    2dup >= 
     if 
         drop 
     else 
         nip 
     then''',
-            '*/' : '''    rot rot * swap /''',
-            '%' : '''    100 */''',
+            '*/' : '''    "Exec */ instruction" log-info
+    rot rot * swap /''',
+            '%' : '''    "Exec % instruction" log-info
+    100 */''',
             'packages' : self.packages_instr,
             'variables' : self.variables_instr,
             'constants' : self.constants_instr,
             '=' : self.equal_instr, 
-            '<>' : '''    = invert''',
+            '<>' : '''    "Exec <> instruction" log-info
+    = invert''',
             '>' : self.sup_instr, 
             '<' : self.inf_instr, 
             '>=' : self.supequal_instr, 
@@ -111,10 +154,12 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'r@' : self.rarobase_instr, 
             '@r' : self.arobaser_instr, 
             'rdrop' : self.rdrop_instr, 
-            '2rdrop' : '''    rdrop rdrop''',
+            '2rdrop' : '''    "Exec 2rdrop instruction" log-info
+    rdrop rdrop''',
             'rswap' : self.rswap_instr,
             'rdup' : self.rdup_instr,
-            '2rdup' : '''    rover rover''',
+            '2rdup' : '''    "Exec 2rdup instruction" log-info
+    rover rover''',
             'rover' : self.rover_instr, 
             'rdump' : self.rdump_instr,
             'do' : self.do_instr, 
@@ -126,8 +171,10 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'while' : self.while_instr,
             'repeat' : self.repeat_instr, 
             '!' : self.exclam_instr,
-            '+!' : '''    dup @ rot + swap !''',
-            '*!' : '''    dup @ rot * swap !''',
+            '+!' : '''    "Exec +! instruction" log-info
+    dup @ rot + swap !''',
+            '*!' : '''    "Exec *! instruction" log-info
+    dup @ rot * swap !''',
             'and' : self.and_instr,
             'or' : self.or_instr,
             'xor' : self.xor_instr,
@@ -151,7 +198,8 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'cell+' : self.addcell_instr,
             'cell-' : self.delcell_instr,
             'cell=' : self.valequal_instr,
-            'key=' : '''    keys cell=''',
+            'key=' : '''    "Exec key= instruction" log-info
+    keys cell=''',
             'clt' : self.clt_instr,
             ',' : self.forceexclam_instr,
             'load' : self.load_instr,
@@ -159,7 +207,8 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'char' : self.char_instr,
             'char?' : self.getchar_instr,
             'chars' : self.chars_instr,
-            'bl' : '''    decimal 32 emit''',
+            'bl' : '''    "Exec bl instruction" log-info
+    decimal 32 emit''',
             'path' : 'userarea',
             'recurse' : self.recurse_instr,
             'format' : self.format_instr,
@@ -188,7 +237,8 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'vp' : self.dictpointer_instr,
             'kpress' : self.keypress_instr,
             'readk' : self.readkey_instr,
-            'space' : '''    bl''',
+            'space' : '''    "Exec space instruction" log-info
+    bl''',
             't{' : self.begintest_instr,
             '}t' : self.endtest_instr,
             '<=>' : self.test_instr,
@@ -211,10 +261,14 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'json>' : self.jsondecode_instr,
             'lang?' : self.locale_instr,
             'output' : self.output_instr,
-            '/t' : '''    9 emit''',
-            '/r' : '''    10 emit''',
-            '/n' : '''    13 emit''',
-            '/nl' : '''    output "web" <> 
+            '/t' : '''    "Exec /t instruction" log-info
+    9 emit''',
+            '/r' : '''    "Exec /r instruction" log-info
+    10 emit''',
+            '/n' : '''    "Exec /n instruction" log-info
+    13 emit''',
+            '/nl' : '''    "Exec /nl instruction" log-info
+    output "web" <> 
     if 
         /n /r
     else
@@ -223,6 +277,7 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
             'rpad' : self.ljust_instr,
             'lpad' : self.rjust_instr,
             'index?' : '''   ( xs x -- i|-1 )
+    "Exec index? instruction" log-info
     local x
     local xs
     xs @ cells local n
@@ -237,7 +292,12 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         then
     loop
     out @''',
-            'maybe-int' : self.maybeint_instr
+            'maybe-int' : self.maybeint_instr,
+            'log-on' : self.logon_instr,
+            'log-off' : self.logoff_instr,
+            'log-info' : self.loginfo_instr,
+            'log-warn' : self.logwarn_instr,
+            'log-err' : self.logerr_instr
         }
 
         self.variables = ['path']
