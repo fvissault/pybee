@@ -5,6 +5,10 @@ import json
 import locale
 from collections import deque
 from packages.errors.core_errors import core_errors
+from packages.errors.file_errors import file_errors
+from datetime import datetime, date
+from io import TextIOWrapper
+
 
 class Utils:
 
@@ -30,6 +34,7 @@ class Utils:
     Instruction import : importe le dictionnaire d'un package dans le dictionnaire principal 
     '''
     def import_instr(self):
+        self.loginfo('Exec import instruction')
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
             return self.err('error_import_name_missing', 'import')
         packname = self.pop_sequence()
@@ -65,6 +70,7 @@ class Utils:
     Instruction detach : détache le dictionnaire d'un package du dictionnaire principal 
     '''
     def detach_instr(self):
+        self.loginfo('Exec detach instruction')
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
             return self.err('error_import_name_missing', 'detach')
         packname = self.pop_sequence()
@@ -76,6 +82,7 @@ class Utils:
     Instruction help : permet d'obtenir de l'aide sur un mot
     '''
     def help_instr(self):
+        self.loginfo('Exec help instruction')
         instr = self.pop_sequence()
         if str(instr).lower() == 'all':
             for p in self.interpreter.packages.keys():
@@ -102,6 +109,7 @@ class Utils:
     Instruction list : affiche le contenu d'un fichier Beetle
     '''
     def list_instr(self):
+        self.loginfo('Exec list instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_filename_missing', 'list')
         filename = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
@@ -122,6 +130,7 @@ class Utils:
     Instruction packages : Affiche la liste des packages qui ont été importés
     '''
     def packages_instr(self):
+        self.loginfo('Exec packages instruction')
         mystr = ''
         for pack in self.interpreter.packages.keys():
             try:
@@ -139,6 +148,7 @@ class Utils:
     Instruction variables : affiche la liste des variables
     '''
     def variables_instr(self):
+        self.loginfo('Exec variables instruction')
         mystr = ''
         for var in self.variables:
             if mystr != '':
@@ -154,6 +164,7 @@ class Utils:
     Instruction constants : affiche la liste des constantes
     '''
     def constants_instr(self):
+        self.loginfo('Exec constants instruction')
         mystr = ''
         for const in self.interpreter.userdefinitions.keys():
             if self.interpreter.userdefinitions[const] == deque(['@']):
@@ -170,6 +181,7 @@ class Utils:
     Instruction see : affiche le contenu d'une définition quand il le peut
     '''
     def see_instr(self):
+        self.loginfo('Exec see instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_def_name_missing', 'see')
         def_name = self.interpreter.sequences[self.interpreter.lastseqnumber][0]
@@ -198,6 +210,7 @@ class Utils:
     Instruction clt : efface le contenu de la console
     '''
     def clt_instr(self):
+        self.loginfo('Exec clt instruction')
         os.system('cls||clear')
         return 'nobreak'
 
@@ -205,6 +218,7 @@ class Utils:
     Instruction decimal : positionne la constante base à 10
     '''
     def decimal_instr(self):
+        self.loginfo('Exec decimal instruction')
         self.dictionary['base'] = 10
         return 'nobreak'
     
@@ -212,6 +226,7 @@ class Utils:
     Instruction hex : positionne la constante base à 16
     '''
     def hex_instr(self):
+        self.loginfo('Exec hex instruction')
         self.dictionary['base'] = 16
         return 'nobreak' 
        
@@ -219,6 +234,7 @@ class Utils:
     Instruction octal : positionne la constante base à 8
     '''
     def octal_instr(self):
+        self.loginfo('Exec octal instruction')
         self.dictionary['base'] = 8
         return 'nobreak'
     
@@ -226,6 +242,7 @@ class Utils:
     Instruction base! : positionne la constante base à une base comprise entre 2 et 36
     '''
     def baseexclam_instr(self):
+        self.loginfo('Exec base! instruction')
         if self.require_stack(1, 'base!') == None:
             base = self.pop_work()
             if base < 2 or base > 36:
@@ -237,6 +254,7 @@ class Utils:
     Instruction >base : convertit un nombre en base 10 en un nombre en base n 2 <= n <= 36 : number_in_base_10 newbase >BASE
     '''
     def tobase_instr(self):
+        self.loginfo('Exec >base instruction')
         if self.require_stack(2, '>base') == None:
             base = self.pop_work()
             if base < 2 or base > 36 or base == 10:
@@ -251,6 +269,7 @@ class Utils:
     Instruction >decimal : convertit un nombre en base n != 10 en un nombre en base 10 : str base >DECIMAL
     '''
     def todecimal_instr(self):
+        self.loginfo('Exec >decimal instruction')
         if self.require_stack(2, '>decimal') == None:
             base = self.pop_work()
             if base < 2 or base > 36:
@@ -265,6 +284,7 @@ class Utils:
     Instruction ?int : indique si le nombre de la pile de travail est un entier
     '''
     def isint_instr(self):
+        self.loginfo('Exec ?int instruction')
         if self.require_stack(1, '?int') == None:
             o = self.pop_work()
             if self.isinteger(o):
@@ -277,6 +297,7 @@ class Utils:
     Instruction ?float : indique si le nombre de la pile de travail est un float
     '''
     def isfloat_instr(self):
+        self.loginfo('Exec ?float instruction')
         if self.require_stack(1, '?float') == None:
             o = self.pop_work()
             if self.isfloat(o):
@@ -289,6 +310,7 @@ class Utils:
     Instruction ?str : indique si le haut de la pile de travail est une chaine de caractères
     '''
     def isstr_instr(self):
+        self.loginfo('Exec ?str instruction')
         if self.require_stack(1, '?str') == None:
             o = self.pop_work()
             if isinstance(o, str):
@@ -301,6 +323,7 @@ class Utils:
     Instruction ?char : indique si le haut de la pile de travail est un caractère
     '''
     def ischar_instr(self):
+        self.loginfo('Exec ?char instruction')
         if self.require_stack(1, '?char') == None:
             o = self.pop_work()
             if isinstance(o, str) and len(o) == 1:
@@ -313,6 +336,7 @@ class Utils:
     Instruction ?pack : indique si l'élément de la pile de travail est un package
     '''
     def ispackloaded_instr(self):
+        self.loginfo('Exec ?pack instruction')
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
         if len(seq) == 0:
             return self.err('error_import_name_missing', '?pack')
@@ -327,6 +351,7 @@ class Utils:
     Instruction sp? : indique l'adresse de la prochaine séquence
     '''
     def seqpointer_instr(self):
+        self.loginfo('Exec sp? instruction')
         self.interpreter.work.appendleft(len(self.interpreter.sequences))
         return 'nobreak'
 
@@ -334,6 +359,7 @@ class Utils:
     Instruction vp? : indique l'adresse du prochain élément du dictionnaire
     '''
     def dictpointer_instr(self):
+        self.loginfo('Exec vp? instruction')
         pointer = 0
         for pack in self.interpreter.packages:
             pointer += len(self.interpreter.packages[pack].dictionary)
@@ -344,6 +370,7 @@ class Utils:
     Instruction ?exists : teste l'existence d'une variable ou d'une constante
     '''
     def isexists_instr(self):
+        self.loginfo('Exec ?exists instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_instruction_expected', '?exists')
         obj_name = self.pop_work()
@@ -354,6 +381,7 @@ class Utils:
         return 'nobreak'
 
     def here_instr(self):
+        self.loginfo('Exec here instruction')
         if self.interpreter.recentWord != None:
             self.interpreter.work.appendleft(self.interpreter.recentWord)
         else:
@@ -364,6 +392,7 @@ class Utils:
     Instruction >md5 : écrit sur le haut de la pile de données le md5 du haut de la pile de données
     '''
     def md5_instr(self):
+        self.loginfo('Exec >md5 instruction')
         if self.require_stack(1, '>md5') == None:
             val = self.pop_work()
             md5 = hashlib.md5(val.encode())
@@ -374,6 +403,7 @@ class Utils:
     Instruction jsonencode : transforme une structure dict et list en une chaine de caractères
     '''
     def jsonencode_instr(self):
+        self.loginfo('Exec >json instruction')
         if self.require_stack(1, '>json') == None:
             val = self.pop_work()
             self.interpreter.work.appendleft(json.dumps(val))
@@ -383,6 +413,7 @@ class Utils:
     Instruction jsondecode : transforme une chaine de caractères en une structure dict et list
     '''
     def jsondecode_instr(self):
+        self.loginfo('Exec json> instruction')
         if self.require_stack(1, 'json>') == None:
             val = self.pop_work()
             self.interpreter.work.appendleft(json.loads(val))
@@ -392,6 +423,7 @@ class Utils:
     Instruction lang? : détection automatique de la langue utilisée
     '''
     def locale_instr(self):
+        self.loginfo('Exec lang? instruction')
         lang = locale.getdefaultlocale()
         if not lang:
             self.interpreter.work.appendleft('en')
@@ -405,6 +437,7 @@ class Utils:
         "2 dup" evaluate dump => 2 2
     '''
     def evaluate_instr(self):
+        self.loginfo('Exec evaluate instruction')
         if self.require_stack(1, 'evaluate') == None:
             instrs = self.pop_work()
             if instrs != '':
@@ -426,6 +459,7 @@ class Utils:
         2 ' dup execute dump => 2 2
     '''
     def execute_instr(self):
+        self.loginfo('Exec execute instruction')
         if self.require_stack(1, 'execute') == None:
             word = self.pop_work()
             for p in self.interpreter.packages.keys():
@@ -445,6 +479,7 @@ class Utils:
     Instruction ! : affecte la valeur d'une variable uniquement
     '''
     def exclam_instr(self):
+        self.loginfo('Exec ! instruction')
         if self.require_stack(2, '!') == None:
             name = self.pop_work()
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
@@ -466,6 +501,7 @@ class Utils:
     Instruction force! : affecte la valeur d'une variable et d'une constante : A UTILISER AVEC PRUDENCE
     '''
     def forceexclam_instr(self):
+        self.loginfo('Exec force! instruction')
         if self.require_stack(2, 'force!') == None:
             name = self.interpreter.work[0]
             self.interpreter.work.popleft()
@@ -489,6 +525,7 @@ class Utils:
     marqueur dans la chaine de caractères <#...#>
     '''
     def format_instr(self):
+        self.loginfo('Exec format instruction')
         if self.require_stack(2, 'format') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
@@ -520,6 +557,7 @@ class Utils:
     Instruction s+ : concatène 2 chaines de caractères
     '''
     def concat_instr(self):
+        self.loginfo('Exec s+ instruction')
         if self.require_stack(2, 's+') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
@@ -539,6 +577,7 @@ class Utils:
     Instruction scan : savoir si une chaine de caractères est contenu dans une autre chaine de caractères
     '''
     def scan_instr(self):
+        self.loginfo('Exec scan instruction')
         if self.require_stack(2, 'scan') == None:
             str1 = self.pop_work()
             str2 = self.pop_work()
@@ -552,6 +591,7 @@ class Utils:
                 return self.err('error_strings_expected', 'scan')
 
     def ljust_instr(self):
+        self.loginfo('Exec rpad instruction')
         if self.require_stack(3, 'rpad') == None:
             c = self.pop_work()
             if len(c) == 1:
@@ -569,6 +609,7 @@ class Utils:
                 return self.err('error_char_expected', 'rpad')
 
     def rjust_instr(self):
+        self.loginfo('Exec lpad instruction')
         if self.require_stack(3, 'lpad') == None:
             c = self.pop_work()
             if len(c) == 1:
@@ -584,3 +625,93 @@ class Utils:
                     return self.err('error_integer_expected', 'lpad')
             else:
                 return self.err('error_char_expected', 'lpad')
+
+    def logon_instr(self):
+        if not self.interpreter.activelog:
+            self.interpreter.activelog = True
+            try:
+                ct = datetime.today().strftime('%Y-%m-%d-%H')
+                self.interpreter.logfilename = '{0}/logs/{1}'.format(self.interpreter.core_instr.dictionary['path'], 'log-' + ct + '.txt')
+                self.interpreter.logdescriptor = open(self.interpreter.logfilename, 'a')
+                self.loginfo('Exec log-on instruction')
+            except OSError:
+                return file_errors.error_open_file_failed.print_error('log-on', self.interpreter.output)
+        return 'nobreak'
+
+
+    def logoff_instr(self):
+        self.loginfo('Exec log-off instruction')
+        if self.interpreter.activelog:
+            self.interpreter.activelog = False
+            if self.interpreter.logdescriptor is None:
+                return file_errors.error_not_a_file_descriptor.print_error('log-off', self.interpreter.output)
+            self.interpreter.logdescriptor.close()
+            self.interpreter.logdescriptor = None
+            self.interpreter.logfilename = ''
+        return 'nobreak'
+
+    def loginfo_instr(self):
+        if self.require_stack(1, 'log-info') == None:
+            message = self.pop_work()
+            if self.interpreter.activelog:
+                    self.loginfo(message)
+        return 'nobreak'
+
+    def logwarn_instr(self):
+        if self.require_stack(1, 'log-warn') == None:
+            message = self.pop_work()
+            if self.interpreter.activelog:
+                    self.logwarn(message)
+        return 'nobreak'
+
+    def logerr_instr(self):
+        if self.require_stack(1, 'log-err') == None:
+            message = self.pop_work()
+            if self.interpreter.activelog:
+                    self.logerr(message)
+        return 'nobreak'
+
+    def loginfo(self, message):
+        if self.interpreter.activelog:
+            ct = datetime.today().strftime('%Y-%m-%d-%H')
+            file_path = '{0}/logs/{1}'.format(self.interpreter.core_instr.dictionary['path'], 'log-' + ct + '.txt')
+            lt = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+            if os.path.exists(file_path):
+                self.interpreter.logdescriptor.write(lt + ' - INFO - ' + message + '\n')
+            else:
+                try:
+                    self.interpreter.logfilename = file_path
+                    self.interpreter.logdescriptor = open(self.interpreter.logfilename, 'a')
+                    self.interpreter.logdescriptor.write(lt + ' - INFO - ' + message + '\n')
+                except OSError:
+                    return file_errors.error_open_file_failed.print_error('log-info', self.interpreter.output)
+
+    def logwarn(self, message):
+        if self.interpreter.activelog:
+            ct = datetime.today().strftime('%Y-%m-%d-%H')
+            file_path = '{0}/logs/{1}'.format(self.interpreter.core_instr.dictionary['path'], 'log-' + ct + '.txt')
+            lt = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+            if os.path.exists(file_path):
+                self.interpreter.logdescriptor.write(lt + ' - WARNING - ' + message + '\n')
+            else:
+                try:
+                    self.interpreter.logfilename = file_path
+                    self.interpreter.logdescriptor = open(self.interpreter.logfilename, 'a')
+                    self.interpreter.logdescriptor.write(lt + ' - WARNING - ' + message + '\n')
+                except OSError:
+                    return file_errors.error_open_file_failed.print_error('log-warn', self.interpreter.output)
+
+    def logerr(self, message):
+        if self.interpreter.activelog:
+            ct = datetime.today().strftime('%Y-%m-%d-%H')
+            file_path = '{0}/logs/{1}'.format(self.interpreter.core_instr.dictionary['path'], 'log-' + ct + '.txt')
+            lt = datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+            if os.path.exists(file_path):
+                self.interpreter.logdescriptor.write(lt + ' - ERROR - ' + message + '\n')
+            else:
+                try:
+                    self.interpreter.logfilename = file_path
+                    self.interpreter.logdescriptor = open(self.interpreter.logfilename, 'a')
+                    self.interpreter.logdescriptor.write(lt + ' - ERROR - ' + message + '\n')
+                except OSError:
+                    return file_errors.error_open_file_failed.print_error('log-err', self.interpreter.output)
