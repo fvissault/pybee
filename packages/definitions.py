@@ -6,6 +6,7 @@ class Definitions:
     Instruction words : affiche la liste des mots du dictionnaire
     '''
     def words_instr(self):
+        self.loginfo('Exec definitions words instruction')
         mystr = ''
         for p in self.interpreter.packages.keys():
             mystr += '-------/' + p + '/ (' + str(len(self.interpreter.packages[p].dictionary)) + ' words)'
@@ -29,6 +30,7 @@ class Definitions:
     Instruction : ... ; : permet de créer de nouveaux mots et d'enrichir le dictionaire 
     '''
     def begin_def_instr(self):
+        self.loginfo('Exec definitions : ... ; instruction')
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
         if self.interpreter.isemptylastsequence():
             return self.err('error_def_name_missing', 'definition')
@@ -181,6 +183,7 @@ class Definitions:
     Instruction const : permet de créer une constante et l'ajoute au dictionnaire
     '''
     def const_instr(self):
+        self.loginfo('Exec definitions const instruction')
         if self.require_stack(1, 'const') == None:
             if self.interpreter.isemptylastsequence():
                 return self.err('error_name_missing', 'const')
@@ -196,6 +199,7 @@ class Definitions:
     Instruction forget : supprime une variable ou un mot défini par l'utilisateur dans le dictionnaire
     '''
     def forget_instr(self):
+        self.loginfo('Exec definitions forget instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_variable_or_definition_name_missing', 'forget')
         name = self.pop_sequence()
@@ -212,6 +216,7 @@ class Definitions:
     Instruction create : création d'une variable
     '''
     def create_instr(self):
+        self.loginfo('Exec definitions create instruction')
         # self.interpreter.sequences[self.interpreter.lastseqnumber]
         if self.interpreter.lastseqnumber > 0:
             # faire une boucle pour récupérer le bon var_name
@@ -247,6 +252,7 @@ class Definitions:
     Instruction immediate : définition de l'exécution d'instructions immediate
     '''
     def immediate_instr(self):
+        self.loginfo('Exec definitions immediate instruction')
         self.interpreter.immediate.append(self.interpreter.recentWord)
         return "nobreak"
 
@@ -254,6 +260,7 @@ class Definitions:
     Instruction postpone : sorte d'alias de mots
     '''
     def postpone_instr(self):
+        self.loginfo('Exec definitions postpone instruction')
         if len(self.interpreter.sequences[self.interpreter.lastseqnumber]) == 0:
             return self.err('error_variable_or_definition_name_missing', 'postpone')
         self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
@@ -263,6 +270,7 @@ class Definitions:
     Instruction recurse : applique la récursivité dans un mot
     '''
     def recurse_instr(self):
+        self.loginfo('Exec definitions recurse instruction')
         if self.interpreter.from_instr != '':
             self.interpreter.sequences[self.interpreter.lastseqnumber].extendleft(self.interpreter.from_instr)
         return 'nobreak'
@@ -273,6 +281,7 @@ class Definitions:
         defer print
     '''
     def defer_instr(self):
+        self.loginfo('Exec definitions defer instruction')
         name = self.pop_sequence()
         for p in self.interpreter.packages.keys():
             if name in self.interpreter.packages[p].dictionary.keys():
@@ -289,6 +298,7 @@ class Definitions:
         ' test is print
     '''
     def is_instr(self):
+        self.loginfo('Exec definitions is instruction')
         if self.require_stack(1, 'is') == None:
             wordname = self.pop_work()
             defername = self.pop_sequence()
@@ -305,6 +315,7 @@ class Definitions:
         :noname . cr ;
     '''
     def noname_instr(self):
+        self.loginfo('Exec definitions :noname instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_def_end_missing', ':noname')
         instr = self.pop_sequence()
@@ -340,6 +351,7 @@ class Definitions:
         val local a => créé une variable locale a = val
     '''
     def local_instr(self):
+        self.loginfo('Exec definitions local instruction')
         if self.interpreter.lastseqnumber == 0:
             return self.err('error_local_var_only_in_def', 'local')
         if self.require_stack(1, 'local') == None:
@@ -354,6 +366,7 @@ class Definitions:
     Instruction abort : arrête le programme complètement à l'endroit ou abort est écrit
     '''
     def abort_instr(self):
+        self.loginfo('Exec definitions abort instruction')
         self.interpreter.work.clear()
         self.interpreter.altwork.clear()
         self.interpreter.sequences.clear()
@@ -364,6 +377,7 @@ class Definitions:
     Instruction ?def : indique si le haut de la pile de travail est un mot du dictionnaire
     '''
     def isdef_instr(self):
+        self.loginfo('Exec definitions ?def instruction')
         if self.require_stack(1, '?def') == None:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
@@ -377,6 +391,7 @@ class Definitions:
     Instruction ?var : indique si le haut de la pile de travail est une variable
     '''
     def isvar_instr(self):
+        self.loginfo('Exec definitions ?var instruction')
         if self.require_stack(1, '?var') == None:
             name = self.pop_work()
             for p in self.interpreter.packages.keys():
@@ -391,6 +406,7 @@ class Definitions:
     Attention : Usage : ' const_name ?const if ... then
     '''
     def isconst_instr(self):
+        self.loginfo('Exec definitions ?const instruction')
         if self.require_stack(1, '?const') == None:
             name = self.pop_work()
             if name in self.interpreter.userdefinitions:
@@ -403,6 +419,7 @@ class Definitions:
     Instruction ?local : indique si le nombre de la pile de travail est une variable locale
     '''
     def islocal_instr(self):
+        self.loginfo('Exec definitions ?local instruction')
         if self.require_stack(1, '?local') == None:
             name = self.pop_work()
             if name in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
