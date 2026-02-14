@@ -4,6 +4,7 @@ class Logic:
     Instruction = : Egalité
     '''
     def equal_instr(self):
+        self.loginfo('Exec logic = instruction')
         if self.require_stack(2, '=') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
@@ -29,6 +30,7 @@ class Logic:
     Instruction > : Supérieur
     '''
     def sup_instr(self):
+        self.loginfo('Exec logic > instruction')
         if self.require_stack(2, '>') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
@@ -54,6 +56,7 @@ class Logic:
     Instruction < : Inférieur
     '''
     def inf_instr(self):
+        self.loginfo('Exec logic < instruction')
         if self.require_stack(2, '<') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
@@ -79,6 +82,7 @@ class Logic:
     Instruction >= : Supérieur ou égal
     '''
     def supequal_instr(self):
+        self.loginfo('Exec logic >= instruction')
         if self.require_stack(2, '>=') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
@@ -104,6 +108,7 @@ class Logic:
     Instruction <= : Inférieur ou égal
     '''
     def infequal_instr(self):
+        self.loginfo('Exec logic <= instruction')
         if self.require_stack(2, '<=') == None:
             base = self.dictionary['base']
             op1 = self.pop_work()
@@ -129,6 +134,7 @@ class Logic:
     Instruction and : et logique
     '''
     def and_instr(self):
+        self.loginfo('Exec logic and instruction')
         if self.require_stack(2, 'and') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
@@ -140,6 +146,7 @@ class Logic:
     Instruction ou : ou logique
     '''
     def or_instr(self):
+        self.loginfo('Exec logic or instruction')
         if self.require_stack(2, 'or') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
@@ -151,6 +158,7 @@ class Logic:
     Instruction xor : ou exclusif logique
     '''
     def xor_instr(self):
+        self.loginfo('Exec logic xor instruction')
         if self.require_stack(2, 'xor') == None:
             op1 = self.pop_work()
             op2 = self.pop_work()
