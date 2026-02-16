@@ -16,18 +16,6 @@ class base_module:
             return self.nothing_in_work(word)
         return None
 
-    #def set_work_stack(self, work):
-    #    self.interpreter.work = work
-
-    #def get_work_stack(self):
-    #    return self.interpreter.work
-
-    #def set_altwork_stack(self, work):
-    #    self.interpreter.altwork = work
-
-    #def get_altwork_stack(self):
-    #    return self.interpreter.altwork
-
     def pop_work(self):
         topwork = self.interpreter.work[0]
         self.interpreter.work.popleft()
@@ -93,6 +81,7 @@ class base_module:
         if 'db' in self.interpreter.packages:
             self.interpreter.packages['db'].db = db
             self.interpreter.packages['db'].cursor = cursor
+        i.logdescriptor = logdescriptor
         self.interpreter.logdescriptor = logdescriptor
         i.sequences = []
         i.lastseqnumber = -1
