@@ -64,16 +64,16 @@ class mail(base_module):
                             server.login(mconf["username"], mconf["password"])
                             server.sendmail(mconf["username"], sendto, message.as_string())
                     except smtplib.SMTPAuthenticationError:
-                        return mail_errors.error_auth_failed.print_error('sendmail', self.interpreter.output)
+                        return mail_errors.error_auth_failed.print_error('sendmail', self.interpreter)
                     except Exception as e:
-                        return mail_errors.error_unexpected.print_error('sendmail', self.interpreter.output)
+                        return mail_errors.error_unexpected.print_error('sendmail', self.interpreter)
                     return 'nobreak'
                 else:
-                    return mail_errors.error_mailconfig_malformed.print_error('sendmail', self.interpreter.output)
+                    return mail_errors.error_mailconfig_malformed.print_error('sendmail', self.interpreter)
             else:
-                return mail_errors.error_mailconfig_dont_exists.print_error('sendmail', self.interpreter.output)
+                return mail_errors.error_mailconfig_dont_exists.print_error('sendmail', self.interpreter)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('sendmail', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('sendmail', self.interpreter)
 
     '''
     Instruction preparemail : préparation d'un mail 
@@ -98,11 +98,11 @@ class mail(base_module):
                         mail['text'] = pminlang[mailname]["text"]
                         mail['attachments'] = []
                     else:
-                        return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter.output)
+                        return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter)
                 else:
-                    return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter.output)
+                    return mail_errors.error_predefinedmail_malformed.print_error('preparemail', self.interpreter)
             else:
-                return mail_errors.error_predefinedmails_dont_exists.print_error('preparemail', self.interpreter.output)
+                return mail_errors.error_predefinedmails_dont_exists.print_error('preparemail', self.interpreter)
 
             # formater le mail à envoyer
             for key, value in toreplace.items():
@@ -112,7 +112,7 @@ class mail(base_module):
             self.interpreter.work.appendleft(mail)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('preparemail', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('preparemail', self.interpreter)
 
     '''
     Instruction addattachment : ajoute une pièce jointe à un mail
@@ -123,7 +123,7 @@ class mail(base_module):
             mailcontent = self.pop_work()
 
             if not isinstance(mailcontent, dict):
-                return core_errors.error_bad_type.print_error('addattachment', self.interpreter.output)
+                return core_errors.error_bad_type.print_error('addattachment', self.interpreter)
 
             if "attachments" not in mailcontent:
                 mailcontent["attachments"] = []
@@ -132,4 +132,4 @@ class mail(base_module):
             self.interpreter.work.appendleft(mailcontent)
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('addattachment', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('addattachment', self.interpreter)
