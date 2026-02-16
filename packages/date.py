@@ -305,15 +305,15 @@ class date(base_module):
             if format != 'english' and format != 'french':
                 return date_errors.error_bad_date_format.print_error('fdate', self.interpreter.output)
             try:
-                dt = datetime.fromtimestamp(timestamp)
+                dt = datetime.fromtimestamp(float(timestamp))
                 if format == 'french':
                     format = '%d' + sep + '%m' + sep + '%Y'
                 if format == 'english':
                     format = '%m' + sep + '%d' + sep + '%Y'
                 tostack = dt.strftime(format)
+                self.interpreter.work.appendleft(tostack)
             except:
                 return date_errors.error_bad_date_format.print_error('fdate', self.interpreter.output)
-            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('fdate', self.interpreter.output)
@@ -330,12 +330,12 @@ class date(base_module):
             if not self.isfloat(timestamp):
                 return date_errors.error_bad_timestamp.print_error('ftime', self.interpreter.output)
             try:
-                dt = datetime.fromtimestamp(timestamp)
-                format = '%h' + sep + '%m' + sep + '%s'
+                dt = datetime.fromtimestamp(float(timestamp))
+                format = '%H' + sep + '%M' + sep + '%S'
                 tostack = dt.strftime(format)
+                self.interpreter.work.appendleft(tostack)
             except:
                 return date_errors.error_bad_date_format.print_error('ftime', self.interpreter.output)
-            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('ftime', self.interpreter.output)
@@ -360,15 +360,15 @@ class date(base_module):
             if format != 'english' and format != 'french':
                 return date_errors.error_bad_date_format.print_error('fdatetime', self.interpreter.output)
             try:
-                dt = datetime.fromtimestamp(timestamp)
+                dt = datetime.fromtimestamp(float(timestamp))
                 if format == 'french':
-                    format = '%d' + datesep + '%m' + datesep + '%Y %h' + timesep + '%m' + timesep + '%s'
+                    format = '%d' + datesep + '%m' + datesep + '%Y %H' + timesep + '%M' + timesep + '%S'
                 if format == 'english':
-                    format = '%m' + datesep + '%d' + datesep + '%Y %h' + timesep + '%m' + timesep + '%s'
+                    format = '%m' + datesep + '%d' + datesep + '%Y %H' + timesep + '%M' + timesep + '%S'
                 tostack = dt.strftime(format)
+                self.interpreter.work.appendleft(tostack)
             except:
                 return date_errors.error_bad_date_format.print_error('fdatetime', self.interpreter.output)
-            self.interpreter.work.appendleft(tostack)
             return 'nobreak'
         else:
             return core_errors.error_nothing_in_work_stack.print_error('fdatetime', self.interpreter.output)
