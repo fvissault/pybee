@@ -7,7 +7,6 @@ class Io:
     Instruction . : affiche et détruit le haut de la pile 
     '''
     def point_instr(self):
-        self.loginfo('Exec io . instruction')
         if self.require_stack(1, '.') == None:
             temp = self.pop_work()
             temp = str(temp).replace('\\"', '"')
@@ -18,7 +17,6 @@ class Io:
     Instruction emit : affiche le caractère correpondant à son code
     '''
     def emit_instr(self):
-        self.loginfo('Exec io emit instruction')
         if self.require_stack(1, 'emit') == None:
             temp = self.interpreter.work[0]
             if isinstance(temp, int):
@@ -32,7 +30,6 @@ class Io:
     Instruction stemit : positionne sur la pile de travail le caractère correpondant à son code
     '''
     def stackemit_instr(self):
-        self.loginfo('Exec io stemit instruction')
         if self.require_stack(1, 'stemit') == None:
             temp = self.pop_work()
             if isinstance(temp, int):
@@ -45,7 +42,6 @@ class Io:
     Instruction input : met en attente la console pour permettre à l'utilisateur de rentrer de l'information
     '''
     def input_instr(self):
-        self.loginfo('Exec io input instruction')
         if self.require_stack(1, 'input') == None:
             prompt = self.pop_work()
             ret = input(prompt)
@@ -61,7 +57,6 @@ class Io:
     Instruction secinput : met en attente la console pour permettre à l'utilisateur de rentrer de l'information de manière sécurisée
     '''
     def secinput_instr(self):
-        self.loginfo('Exec io secinput instruction')
         if self.require_stack(1, 'secinput') == None:
             prompt = self.pop_work()
             ret = getpass.getpass(prompt)
@@ -77,7 +72,6 @@ class Io:
     Instruction kpress : permet à l'uilisateur de controler le clavier
     '''
     def keypress_instr(self):
-        self.loginfo('Exec io kpress instruction')
         if self.require_stack(1, 'kpress') == None:
             key = self.pop_work()
             if keyboard.is_pressed(key):
@@ -90,7 +84,6 @@ class Io:
     Instruction readk : permet à l'uilisateur de controler le clavier
     '''
     def readkey_instr(self):
-        self.loginfo('Exec io readk instruction')
         if self.require_stack(1, 'readk') == None:
             key = self.pop_work()
             if keyboard.read_key(suppress=True) == key:
