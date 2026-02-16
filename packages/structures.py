@@ -6,7 +6,6 @@ class Structures:
     Instruction array : créé un tableau : n1 n2 n3 ... size array
     '''
     def array_instr(self):
-        self.loginfo('Exec structures array instruction')
         if self.require_stack(1, 'array') == None:
             size = self.pop_work()
             if len(self.interpreter.work) >= size:
@@ -25,7 +24,6 @@ class Structures:
     [ { name1 : value1 , name2 : [ 1 , 2 ] } ]  ==> [{'name1':value1, 'name2':[1, 2]}]
     '''
     def bbrace_instr(self):
-        self.loginfo('Exec structures { ... } instruction')
         result = self.search_braces()
         #if len(result) > 0:
             #result.reverse()
@@ -95,7 +93,6 @@ class Structures:
 
     '''
     def bbraket_instr(self):
-        self.loginfo('Exec structures [ ... ] instruction')
         result = self.search_brakets()
         if len(result) > 0:
             result.reverse()
@@ -158,7 +155,6 @@ class Structures:
     Instruction cells : écrit la taille d'un tableau sur la pile de travail
     '''
     def cells_instr(self):
-        self.loginfo('Exec structures cells instruction')
         if self.require_stack(1, 'cells') == None:
             tab = self.pop_work()
             if tab in self.variables:
@@ -174,7 +170,6 @@ class Structures:
     Instruction cell@ : écrit le contenu d'une cellule d'un tableau sur la pile de travail : (array|var_name|const_name) position CELL@
     '''
     def cellarobase_instr(self):
-        self.loginfo('Exec structures cell@ instruction')
         if self.require_stack(2, 'cell@') == None:
             position = self.pop_work()
             #print("position = ", position)
@@ -207,7 +202,6 @@ class Structures:
     Instruction cell! : écrit dans le contenu d'une cellule d'un tableau : value position array CELL!
     '''
     def cellexclam_instr(self):
-        self.loginfo('Exec structures cell! instruction')
         if self.require_stack(3, 'cell!') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
@@ -234,7 +228,6 @@ class Structures:
     Instruction cell+ : crée nombre cellules dans un tableau : index value var_name CELL+
     '''
     def addcell_instr(self):
-        self.loginfo('Exec structures cell+ instruction')
         if self.require_stack(2, 'cell+') == None:
             tab = self.pop_work()
             if tab in self.variables:
@@ -266,7 +259,6 @@ class Structures:
     Instruction cell- : détruit une cellule d'un tableau à la position position : index (array|var_name) CELL-
     '''
     def delcell_instr(self):
-        self.loginfo('Exec structures cell- instruction')
         if self.require_stack(2, 'cell-') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
@@ -293,7 +285,6 @@ class Structures:
     Instruction cell= : teste l'existence d'un contenu d'une cellule d'un tableau : content array CELL= --> True or False
     '''
     def valequal_instr(self):
-        self.loginfo('Exec structures cell= instruction')
         if self.require_stack(2, 'cell=') == None:
             tab = self.pop_work()
             if isinstance(tab, str):
@@ -322,7 +313,6 @@ class Structures:
     Instruction ?array : indique si l'élément de la pile de travail est un tableau
     '''
     def isarray_instr(self):
-        self.loginfo('Exec structures ?array instruction')
         if self.require_stack(1, '?array') == None:
             o = self.pop_work()
             #self.work.appendleft(o)
@@ -336,7 +326,6 @@ class Structures:
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
     '''
     def keys_instr(self):
-        self.loginfo('Exec structures keys instruction')
         if self.require_stack(1, 'keys') == None:
             content = None
             val = self.pop_work()
@@ -365,7 +354,6 @@ class Structures:
     Instruction values : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
     '''
     def values_instr(self):
-        self.loginfo('Exec structures values instruction')
         if self.require_stack(1, 'values') == None:
             content = None
             val = self.pop_work()
