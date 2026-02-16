@@ -1355,7 +1355,7 @@ class web(base_module):
             val = self.pop_work()
             self.interpreter.work.appendleft(self._safe_url(val))
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter)
         return 'nobreak'
 
     def escapehtml_instr(self):
@@ -1363,7 +1363,7 @@ class web(base_module):
             val = self.pop_work()
             self.interpreter.work.appendleft(self._escape_html(val))
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter)
         return 'nobreak'
 
     def safehtml_instr(self):
@@ -1371,7 +1371,7 @@ class web(base_module):
             val = self.pop_work()
             self.interpreter.work.appendleft("__SAFE__" + str(val))
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter)
         return 'nobreak'
 
     def safe_or_escape_instr(self):
@@ -1384,7 +1384,7 @@ class web(base_module):
                 s2 = self._escape_html(s)
             self.interpreter.work.appendleft(s2)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter)
         return 'nobreak'
 
     '''
@@ -1409,7 +1409,7 @@ class web(base_module):
                     result += "}\n"
                 self.interpreter.packages[p].dictionary['laystyle']['content'] = [result.strip("\n")]
                 return 'nobreak'
-        return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter.output)
+        return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter)
 
     '''
     Instruction posted : permet de récupérer un paramètre passé entre les pages
@@ -1421,13 +1421,13 @@ class web(base_module):
             if fstorage[paramname] != None:
                 value = fstorage[paramname]
                 if value == None:
-                    return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter.output)
+                    return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter)
                 self.interpreter.work.appendleft(value)
                 return 'nobreak'
             else:
-                return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter.output)
+                return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter)
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('posted', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('posted', self.interpreter)
 
     '''
     Instruction redirect : effectuer une redirection
@@ -1438,7 +1438,7 @@ class web(base_module):
             print("Location: {0}\n".format(url))
             return 'nobreak'
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
 
     '''
     Instruction htmlcontent : précise que le contenu de la page est du code html : fonction utilisée dans generate
@@ -1484,7 +1484,7 @@ class web(base_module):
             if param != 'redirect':
                 print()
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
         return 'nobreak'
 
     '''
@@ -1503,7 +1503,7 @@ class web(base_module):
             else:
                 self.sessionvars =  {}
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter)
         return 'nobreak'
 
     '''
@@ -1515,7 +1515,7 @@ class web(base_module):
             key = self.pop_work()
             self.sessionvars[key] = value
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
         return 'nobreak'
 
     '''
@@ -1526,7 +1526,7 @@ class web(base_module):
             key = self.pop_work()
             self.interpreter.work.appendleft(self.sessionvars[key])
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
         return 'nobreak'
 
     '''
@@ -1547,7 +1547,7 @@ class web(base_module):
             duration = int(self.pop_work())
             self.sessionvars['session_duration'] = duration
         else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter.output)
+            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
         return 'nobreak'
     
     '''
