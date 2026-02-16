@@ -7,7 +7,6 @@ class Controls:
     Instruction ( : marque le début d'un commentaire 
     '''
     def bcomment_instr(self):
-        self.loginfo('Exec controls ( ... ) instruction')
         instr = self.pop_sequence()
         while instr != ')':
             if self.interpreter.isemptylastsequence():
@@ -25,7 +24,6 @@ class Controls:
     Instruction load : inclut le contenu d'un fichier Beetle dans le dictionnaire principal
     '''
     def load_instr(self):
-        self.loginfo('Exec controls load instruction')
         if self.interpreter.isemptylastsequence():
             return self.err('error_filename_missing', 'load')
         filename = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
@@ -57,7 +55,6 @@ class Controls:
     Instruction IF : Conditionnelle
     '''
     def cond_instr(self):
-        self.loginfo('Exec controls conditional instruction')
         truezone = deque()
         falsezone = deque()
         seq = self.interpreter.sequences[self.interpreter.lastseqnumber]
@@ -117,7 +114,6 @@ class Controls:
     Instruction do : exécute une boucle DO ... LOOP | +LOOP
     '''
     def do_instr(self):
-        self.loginfo('Exec controls do ... loop | +loop instruction')
         instructions = deque()
         if self.require_stack(2, 'do ... loop | +loop') == None:
             instr = self.search_do_loop(instructions)
@@ -195,7 +191,6 @@ class Controls:
     Instruction begin : exécute une boucle BEGIN ... AGAIN | UNTIL ... WHILE ... REPEAT
     '''
     def begin_instr(self):
-        self.loginfo('Exec controls begin ... again | until ... while ... repeat instruction')
         firstzone = deque()
         secondzone = deque()
         instr = self.search_begin_loop(firstzone)
