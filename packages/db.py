@@ -256,7 +256,7 @@ class db(base_module):
         self.version = 'v0.7.5'
 
     def err(self, code, context):
-        return db_errors.__dict__[code].print_error(context, self.interpreter.output)
+        return db_errors.__dict__[code].print_error(context, self.interpreter)
 
     def request_malformed(self, context):
         return self.err('error_request_malformed', context)
@@ -286,7 +286,7 @@ class db(base_module):
             except:
                 self.cursor = None
                 self.db = None
-                return db_errors.error_connection_failed.print_error('connect', self.interpreter.output)
+                return db_errors.error_connection_failed.print_error('connect', self.interpreter)
 
     def auto_connect(func):
         def wrapper(self, *args, **kwargs):
@@ -325,7 +325,7 @@ class db(base_module):
             self.cursor = None
             self.db = None
             self.interpreter.work.appendleft(0)
-            return db_errors.error_connection_failed.print_error('connect', self.interpreter.output)
+            return db_errors.error_connection_failed.print_error('connect', self.interpreter)
 
     '''
     Instruction ?connect : permet de savoir si la connection est effective : ( ... ) ?CONNECT ( 0|1 ... )
@@ -372,14 +372,14 @@ class db(base_module):
         sql = 'create'
         type = self.seq_next()
         if type == None:
-            return db_errors.error_action_type.print_error('|create>', self.interpreter.output)
+            return db_errors.error_action_type.print_error('|create>', self.interpreter)
         type = type.lower()
         if type != 'database' and type != 'table':
-            return db_errors.error_action_type.print_error('|create>', self.interpreter.output)
+            return db_errors.error_action_type.print_error('|create>', self.interpreter)
         sql += ' ' + type
         name = self.seq_next()
         if name == None:
-            return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+            return db_errors.error_name_expected.print_error('|create>', self.interpreter)
         name = name.strip().strip('"').strip("'")
         if type == 'database':
             if self.engine == 'mysql':
@@ -401,7 +401,7 @@ class db(base_module):
                 sql += ' (like '
             old_table = self.seq_next()
             if old_table == None:
-                return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
             sql += old_table
             if self.engine == 'postgresql':
                 sql += ')'
@@ -412,30 +412,30 @@ class db(base_module):
                         if next == 'charset':
                             cs = self.seq_next()
                             if cs == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
                             sql += f" CHARACTER SET={cs}"
                         elif next == 'collate' and type == 'database':
                             co = self.seq_next()
                             if co == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
                             sql += f" COLLATE={co}"
                         elif next == 'encryption' and type == 'database':
                             encrypt = self.seq_next()
                             if encrypt == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
                             sql += f" encryption='{encrypt}'"
                         elif next == 'ai' and type == 'table':
                             ai = self.seq_next()
                             if ai == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
                             if not self.isinteger(ai):
-                                return core_errors.error_integer_expected.print_error('|create>', self.interpreter.output)
+                                return core_errors.error_integer_expected.print_error('|create>', self.interpreter)
                             if int(ai) < 0:
-                                return db_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter.output)
+                                return db_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter)
                             sql += f' auto_increment={ai}'
                         next = self.seq_next()
                         if next == None:
-                            return db_errors.error_name_expected.print_error('|create>', self.interpreter.output)
+                            return db_errors.error_name_expected.print_error('|create>', self.interpreter)
                         next = next.lower()
                 else:
                     return self.request_malformed(sql)
@@ -458,7 +458,7 @@ class db(base_module):
     def use_instr(self):
         name = self.seq_next()
         if name == None:
-            return db_errors.error_name_expected.print_error('use', self.interpreter.output)
+            return db_errors.error_name_expected.print_error('use', self.interpreter)
         self.dictionary['dbname'] = name
         if self.engine == 'mysql':
             try:
@@ -812,14 +812,14 @@ class db(base_module):
         sql = 'drop'
         type = self.seq_next()
         if type == None:
-            return db_errors.error_action_type.print_error('|drop>', self.interpreter.output)
+            return db_errors.error_action_type.print_error('|drop>', self.interpreter)
         type = type.lower()
         if type != 'database' and type != 'table' and type != 'procedure' and type != 'function' and type != 'trigger' and type != 'event' and type != 'user':
-            return db_errors.error_action_type.print_error('|drop>', self.interpreter.output)
+            return db_errors.error_action_type.print_error('|drop>', self.interpreter)
         sql += ' ' + type
         name = self.seq_next()
         if name == None:
-            return db_errors.error_name_expected.print_error('|drop>', self.interpreter.output)
+            return db_errors.error_name_expected.print_error('|drop>', self.interpreter)
         if type == 'table':
             sql += ' if exists ' + name
         else:
@@ -841,7 +841,7 @@ class db(base_module):
     Instruction >| : fin de requête
     '''
     def endreq_instr(self):
-        core_errors.error_invalid_instruction.print_error('>|', self.interpreter.output)
+        core_errors.error_invalid_instruction.print_error('>|', self.interpreter)
 
     '''
     Instruction alter : |alter> ... >|
@@ -909,9 +909,9 @@ class db(base_module):
     def chooseeng_instr(self):
         next = self.seq_next()
         if next == None:
-            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter.output)
+            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
         if next.lower() not in ['mysql', 'postgresql']:
-            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter.output)
+            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
         self.engine = next
         return 'nobreak'
 
