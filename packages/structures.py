@@ -1,4 +1,5 @@
 from collections import deque
+import traceback
 
 class Structures:
 
@@ -6,29 +7,41 @@ class Structures:
     Instruction array : créé un tableau : n1 n2 n3 ... size array
     '''
     def array_instr(self):
-        if self.require_stack(1, 'array') == None:
-            size = self.pop_work()
-            if len(self.interpreter.work) >= size:
-                result = []
-                for i in range(0, size):
-                    value = self.pop_work()
-                    result.append(value)
-                result.reverse()
-                self.interpreter.work.appendleft(result)
-                return 'nobreak'
-            else:
-                return self.nothing_in_work('array')
+        try:
+            if self.require_stack(1, 'array') == None:
+                size = self.pop_work()
+                if len(self.interpreter.work) >= size:
+                    result = []
+                    for i in range(0, size):
+                        value = self.pop_work()
+                        result.append(value)
+                    result.reverse()
+                    self.interpreter.work.appendleft(result)
+                    return 'nobreak'
+                else:
+                    return self.nothing_in_work('array')
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     { name1 : value1 , name2 : [ 1 , 2 ] }  ==> {'name1':value1, 'name2':[1, 2]}
     [ { name1 : value1 , name2 : [ 1 , 2 ] } ]  ==> [{'name1':value1, 'name2':[1, 2]}]
     '''
     def bbrace_instr(self):
-        result = self.search_braces()
-        #if len(result) > 0:
-            #result.reverse()
-        self.interpreter.work.appendleft(result)
-        return 'nobreak'
+        try:
+            result = self.search_braces()
+            #if len(result) > 0:
+                #result.reverse()
+            self.interpreter.work.appendleft(result)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     def ebrace_instr(self):
         return self.err('error_array_invalid', '}')
@@ -93,13 +106,19 @@ class Structures:
 
     '''
     def bbraket_instr(self):
-        result = self.search_brakets()
-        if len(result) > 0:
-            result.reverse()
-            self.interpreter.work.appendleft(result)
-        else:
-            self.interpreter.work.appendleft(result)
-        return 'nobreak'
+        try:
+            result = self.search_brakets()
+            if len(result) > 0:
+                result.reverse()
+                self.interpreter.work.appendleft(result)
+            else:
+                self.interpreter.work.appendleft(result)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction ] : ferme la séquence de création d'un tableau : [ n1 , n2 , n3 ]
@@ -155,231 +174,285 @@ class Structures:
     Instruction cells : écrit la taille d'un tableau sur la pile de travail
     '''
     def cells_instr(self):
-        if self.require_stack(1, 'cells') == None:
-            tab = self.pop_work()
-            if tab in self.variables:
-                tab = self.dictionary[tab]
+        try:
+            if self.require_stack(1, 'cells') == None:
+                tab = self.pop_work()
+                if tab in self.variables:
+                    tab = self.dictionary[tab]
+                    if not isinstance(tab, list) and not isinstance(tab , dict):
+                        return self.err('error_get_cell_on_array_invalid', 'cells')
                 if not isinstance(tab, list) and not isinstance(tab , dict):
                     return self.err('error_get_cell_on_array_invalid', 'cells')
-            if not isinstance(tab, list) and not isinstance(tab , dict):
-                return self.err('error_get_cell_on_array_invalid', 'cells')
-            self.interpreter.work.appendleft(len(tab))
-            return 'nobreak'
+                self.interpreter.work.appendleft(len(tab))
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction cell@ : écrit le contenu d'une cellule d'un tableau sur la pile de travail : (array|var_name|const_name) position CELL@
     '''
     def cellarobase_instr(self):
-        if self.require_stack(2, 'cell@') == None:
-            position = self.pop_work()
-            #print("position = ", position)
-            tab = self.pop_work()
-            if isinstance(tab, str):
-                if tab in self.variables:
-                    content = self.dictionary[tab]
-                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
-                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
-                else:
-                    return self.err('error_not_a_variable', 'cell@')
-            elif isinstance(tab, list) or isinstance(tab, dict):
-                content = tab
-            if not isinstance(content, list) and not isinstance(content , dict):
-                return self.err('error_get_cell_on_array_invalid', '1cell@')
-            if isinstance(content, dict) and position not in content.keys():
-                return self.err('error_index_on_array_invalid', '2cell@')
-            elif isinstance(position, int) and (position < 0 or position >= len(content)):
-                #self.interpreter.print_sequence_numbers()
-                return self.err('error_index_on_array_invalid', '3cell@')
-            if isinstance(content, dict) and not isinstance(position, str):
-                return self.err('error_index_on_array_invalid', '4cell@')
-            elif isinstance(content, list) and not isinstance(position, int):
-                return self.err('error_index_on_array_invalid', '5cell@')
-            result = content[position]
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
+        try:
+            if self.require_stack(2, 'cell@') == None:
+                position = self.pop_work()
+                #print("position = ", position)
+                tab = self.pop_work()
+                if isinstance(tab, str):
+                    if tab in self.variables:
+                        content = self.dictionary[tab]
+                    elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                    else:
+                        return self.err('error_not_a_variable', 'cell@')
+                elif isinstance(tab, list) or isinstance(tab, dict):
+                    content = tab
+                if not isinstance(content, list) and not isinstance(content , dict):
+                    return self.err('error_get_cell_on_array_invalid', '1cell@')
+                if isinstance(content, dict) and position not in content.keys():
+                    return self.err('error_index_on_array_invalid', '2cell@')
+                elif isinstance(position, int) and (position < 0 or position >= len(content)):
+                    #self.interpreter.print_sequence_numbers()
+                    return self.err('error_index_on_array_invalid', '3cell@')
+                if isinstance(content, dict) and not isinstance(position, str):
+                    return self.err('error_index_on_array_invalid', '4cell@')
+                elif isinstance(content, list) and not isinstance(position, int):
+                    return self.err('error_index_on_array_invalid', '5cell@')
+                result = content[position]
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction cell! : écrit dans le contenu d'une cellule d'un tableau : value position array CELL!
     '''
     def cellexclam_instr(self):
-        if self.require_stack(3, 'cell!') == None:
-            tab = self.pop_work()
-            if isinstance(tab, str):
-                if tab in self.variables:
-                    content = self.dictionary[tab]
-                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
-                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
-                else:
-                    return self.err('error_not_a_variable', 'cell@')
-            elif isinstance(tab, list) or isinstance(tab, dict):
-                content = tab
-            position = self.pop_work()
-            if isinstance(content, list):
-                if not isinstance(position, int) or position < 0 or position >= len(content):
+        try:
+            if self.require_stack(3, 'cell!') == None:
+                tab = self.pop_work()
+                if isinstance(tab, str):
+                    if tab in self.variables:
+                        content = self.dictionary[tab]
+                    elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                    else:
+                        return self.err('error_not_a_variable', 'cell@')
+                elif isinstance(tab, list) or isinstance(tab, dict):
+                    content = tab
+                position = self.pop_work()
+                if isinstance(content, list):
+                    if not isinstance(position, int) or position < 0 or position >= len(content):
+                        return self.err('error_index_on_array_invalid', 'cell!')
+                if isinstance(content, dict) and position not in content.keys():
                     return self.err('error_index_on_array_invalid', 'cell!')
-            if isinstance(content, dict) and position not in content.keys():
-                return self.err('error_index_on_array_invalid', 'cell!')
-            value = self.pop_work()
-            content[position] = value
-            self.interpreter.work.appendleft(content)
-            return 'nobreak'
+                value = self.pop_work()
+                content[position] = value
+                self.interpreter.work.appendleft(content)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction cell+ : crée nombre cellules dans un tableau : index value var_name CELL+
     '''
     def addcell_instr(self):
-        if self.require_stack(2, 'cell+') == None:
-            tab = self.pop_work()
-            if tab in self.variables:
-                content = self.dictionary[tab]
-            elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
-                content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
-            elif isinstance(tab, list) or isinstance(tab, dict):
-                content = tab
-            else:
-                return self.err('error_not_a_variable', 'cell+')
-            value = self.pop_work()
-            index = None
-            if isinstance(content, dict):
-                index = self.pop_work()
-                if not isinstance(index, str):
-                    return self.err('error_index_on_array_invalid', 'cell+')
-            if not isinstance(content, dict) and not isinstance(content, list):
-                content = [content, value]
-            elif index is not None and index in content and isinstance(content[index], list):
-                content[index].append(value)
-            elif index is not None and isinstance(content, dict):
-                content[index] = value
-            elif isinstance(content, list):
-                content.append(value)
-            self.interpreter.work.appendleft(content)
-            return 'nobreak'
+        try:
+            if self.require_stack(2, 'cell+') == None:
+                tab = self.pop_work()
+                if tab in self.variables:
+                    content = self.dictionary[tab]
+                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                elif isinstance(tab, list) or isinstance(tab, dict):
+                    content = tab
+                else:
+                    return self.err('error_not_a_variable', 'cell+')
+                value = self.pop_work()
+                index = None
+                if isinstance(content, dict):
+                    index = self.pop_work()
+                    if not isinstance(index, str):
+                        return self.err('error_index_on_array_invalid', 'cell+')
+                if not isinstance(content, dict) and not isinstance(content, list):
+                    content = [content, value]
+                elif index is not None and index in content and isinstance(content[index], list):
+                    content[index].append(value)
+                elif index is not None and isinstance(content, dict):
+                    content[index] = value
+                elif isinstance(content, list):
+                    content.append(value)
+                self.interpreter.work.appendleft(content)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction cell- : détruit une cellule d'un tableau à la position position : index (array|var_name) CELL-
     '''
     def delcell_instr(self):
-        if self.require_stack(2, 'cell-') == None:
-            tab = self.pop_work()
-            if isinstance(tab, str):
-                if tab in self.variables:
-                    content = self.dictionary[tab]
-                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
-                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
-                else:
-                    return self.err('error_not_a_variable', 'cell-')
-            elif isinstance(tab, list) or isinstance(tab, dict):
-                content = tab
-            index = self.pop_work()
-            if isinstance(content, list):
-                if not isinstance(index, int) or index < 0 or index >= len(tab):
-                    return self.err('error_index_on_array_invalid', 'cell-')
-            if isinstance(content, dict):
-                if index not in content.keys():
-                    return self.err('error_index_on_array_invalid', 'cell-')
-            content.pop(index)
-            self.interpreter.work.appendleft(content)
-            return 'nobreak'
+        try:
+            if self.require_stack(2, 'cell-') == None:
+                tab = self.pop_work()
+                if isinstance(tab, str):
+                    if tab in self.variables:
+                        content = self.dictionary[tab]
+                    elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                    else:
+                        return self.err('error_not_a_variable', 'cell-')
+                elif isinstance(tab, list) or isinstance(tab, dict):
+                    content = tab
+                index = self.pop_work()
+                if isinstance(content, list):
+                    if not isinstance(index, int) or index < 0 or index >= len(tab):
+                        return self.err('error_index_on_array_invalid', 'cell-')
+                if isinstance(content, dict):
+                    if index not in content.keys():
+                        return self.err('error_index_on_array_invalid', 'cell-')
+                content.pop(index)
+                self.interpreter.work.appendleft(content)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction cell= : teste l'existence d'un contenu d'une cellule d'un tableau : content array CELL= --> True or False
     '''
     def valequal_instr(self):
-        if self.require_stack(2, 'cell=') == None:
-            tab = self.pop_work()
-            if isinstance(tab, str):
-                if tab in self.variables:
-                    arr = self.dictionary[tab]
-                elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
-                    content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
-                else:
-                    return self.err('error_not_a_variable', 'cell=')
-            elif isinstance(tab, list) or isinstance(tab, dict):
-                arr = tab
-            content = self.pop_work()
-            if isinstance(arr, list):
-                if content in arr:
-                    self.interpreter.work.appendleft(1)
-                else:
-                    self.interpreter.work.appendleft(0)
-            if isinstance(arr, dict):
-                if content in arr.values():
-                    self.interpreter.work.appendleft(1)
-                else:
-                    self.interpreter.work.appendleft(0)
-            return 'nobreak'
+        try:
+            if self.require_stack(2, 'cell=') == None:
+                tab = self.pop_work()
+                if isinstance(tab, str):
+                    if tab in self.variables:
+                        arr = self.dictionary[tab]
+                    elif tab in list(self.interpreter.locals[self.interpreter.lastseqnumber].keys()):
+                        content = self.interpreter.locals[self.interpreter.lastseqnumber][tab]
+                    else:
+                        return self.err('error_not_a_variable', 'cell=')
+                elif isinstance(tab, list) or isinstance(tab, dict):
+                    arr = tab
+                content = self.pop_work()
+                if isinstance(arr, list):
+                    if content in arr:
+                        self.interpreter.work.appendleft(1)
+                    else:
+                        self.interpreter.work.appendleft(0)
+                if isinstance(arr, dict):
+                    if content in arr.values():
+                        self.interpreter.work.appendleft(1)
+                    else:
+                        self.interpreter.work.appendleft(0)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction ?array : indique si l'élément de la pile de travail est un tableau
     '''
     def isarray_instr(self):
-        if self.require_stack(1, '?array') == None:
-            o = self.pop_work()
-            #self.work.appendleft(o)
-            if isinstance(o, list) or isinstance(o, dict):
-                self.interpreter.work.appendleft(1)
-            else:
-                self.interpreter.work.appendleft(0)
-            return 'nobreak'
+        try:
+            if self.require_stack(1, '?array') == None:
+                o = self.pop_work()
+                #self.work.appendleft(o)
+                if isinstance(o, list) or isinstance(o, dict):
+                    self.interpreter.work.appendleft(1)
+                else:
+                    self.interpreter.work.appendleft(0)
+                return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction keys : écrit sur le haut de la pile de travail un tableau contenant les clés d'une table de hachage
     '''
     def keys_instr(self):
-        if self.require_stack(1, 'keys') == None:
-            content = None
-            val = self.pop_work()
-            if isinstance(val , str):
-                for p in self.interpreter.packages.keys():
-                    if val in self.interpreter.packages[p].variables:
-                        content = self.interpreter.packages[p].dictionary[val]
-                        break
-                    elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
-                        content = self.interpreter.packages[p].dictionary[val]
-                        break
-                    elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                        content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
-                        break
-            if isinstance(val, dict) and content == None:
-                content = val
-            if content != None:
-                if not isinstance(content, dict):
-                    return self.err('error_array_invalid', 'keys')
-                self.interpreter.work.appendleft(list(content.keys()))
-                return 'nobreak'
-            else:
-                return self.err('error_name_missing', 'keys')
+        try:
+            if self.require_stack(1, 'keys') == None:
+                content = None
+                val = self.pop_work()
+                if isinstance(val , str):
+                    for p in self.interpreter.packages.keys():
+                        if val in self.interpreter.packages[p].variables:
+                            content = self.interpreter.packages[p].dictionary[val]
+                            break
+                        elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
+                            content = self.interpreter.packages[p].dictionary[val]
+                            break
+                        elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                            content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
+                            break
+                if isinstance(val, dict) and content == None:
+                    content = val
+                if content != None:
+                    if not isinstance(content, dict):
+                        return self.err('error_array_invalid', 'keys')
+                    self.interpreter.work.appendleft(list(content.keys()))
+                    return 'nobreak'
+                else:
+                    return self.err('error_name_missing', 'keys')
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction values : écrit sur le haut de la pile de travail un tableau contenant les valeurs d'une table de hachage
     '''
     def values_instr(self):
-        if self.require_stack(1, 'values') == None:
-            content = None
-            val = self.pop_work()
-            if isinstance(val , str):
-                for p in self.interpreter.packages.keys():
-                    if val in self.interpreter.packages[p].variables:
-                        content = self.interpreter.packages[p].dictionary[val]
-                        break
-                    elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
-                        content = self.interpreter.packages[p].dictionary[val]
-                        break
-                    elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
-                        content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
-                        break
-            if isinstance(val, dict) and content == None:
-                content = val
-            
-            # cas ou val est une liste, on retourne le tableau lui-même
-            if isinstance(val, list) and content == None:
-                self.interpreter.work.appendleft(val)
-                return 'nobreak'
-            
-            if content != None:
-                if not isinstance(content, dict):
-                    return self.err('error_array_invalid', 'values')
-                self.interpreter.work.appendleft(list(content.values()))
-                return 'nobreak'
-            else:
-                return self.err('error_name_missing', 'values')
+        try:
+            if self.require_stack(1, 'values') == None:
+                content = None
+                val = self.pop_work()
+                if isinstance(val , str):
+                    for p in self.interpreter.packages.keys():
+                        if val in self.interpreter.packages[p].variables:
+                            content = self.interpreter.packages[p].dictionary[val]
+                            break
+                        elif val in self.interpreter.packages[p].userdefinitions.keys() and len(self.interpreter.packages[p].userdefinitions[val]) > 0:
+                            content = self.interpreter.packages[p].dictionary[val]
+                            break
+                        elif val in self.interpreter.locals[self.interpreter.lastseqnumber].keys():
+                            content = self.interpreter.locals[self.interpreter.lastseqnumber][val]
+                            break
+                if isinstance(val, dict) and content == None:
+                    content = val
+                
+                # cas ou val est une liste, on retourne le tableau lui-même
+                if isinstance(val, list) and content == None:
+                    self.interpreter.work.appendleft(val)
+                    return 'nobreak'
+                
+                if content != None:
+                    if not isinstance(content, dict):
+                        return self.err('error_array_invalid', 'values')
+                    self.interpreter.work.appendleft(list(content.values()))
+                    return 'nobreak'
+                else:
+                    return self.err('error_name_missing', 'values')
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
