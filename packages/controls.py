@@ -57,6 +57,7 @@ class Controls:
 
             self.interpreter.instructions.clear()
             f.close()
+            print()
             return 'nobreak'
         except Exception as e:
             tb = traceback.TracebackException.from_exception(e)
