@@ -5,6 +5,7 @@ from packages.help.db_help import db_help
 import mysql.connector
 import psycopg2
 from psycopg2 import sql
+import traceback
 
 class db(base_module):
     def __init__(self, interpreter):
@@ -298,156 +299,198 @@ class db(base_module):
     Instruction dbconf : affiche les paramètres de connection : DBCONF
     '''
     def param_instr(self):
-        print('Engine                     = ' + self.engine)
-        print('Database server (hostname) = ' + self.dictionary['hostname'])
-        print('Database name     (dbname) = ' + self.dictionary['dbname'])
-        print('User name       (username) = ' + self.dictionary['username'])
-        print('User password   (userpass) = ' + self.dictionary['userpass'])
+        try:
+            print('Engine                     = ' + self.engine)
+            print('Database server (hostname) = ' + self.dictionary['hostname'])
+            print('Database name     (dbname) = ' + self.dictionary['dbname'])
+            print('User name       (username) = ' + self.dictionary['username'])
+            print('User password   (userpass) = ' + self.dictionary['userpass'])
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction connect : se connecte à une base de données : CONNECT
     '''
     def connect_instr(self):
-        hostname = self.dictionary['hostname']
-        username = self.dictionary['username']
-        userpass = self.dictionary['userpass']
-        databasename = self.dictionary['dbname']
         try:
-            if self.engine == 'mysql':
-                self.db = mysql.connector.connect(host = hostname, user = username, password = userpass)
-                self.cursor = self.db.cursor(dictionary=True)
-            elif self.engine == 'postgresql':
-                self.db = psycopg2.connect(host = hostname, user = username, password = userpass, dbname = databasename)
-                self.cursor = self.db.cursor()            
-            self.interpreter.work.appendleft(1)
-            return 'nobreak'
-        except:
-            self.cursor = None
-            self.db = None
-            self.interpreter.work.appendleft(0)
-            return db_errors.error_connection_failed.print_error('connect', self.interpreter)
+            hostname = self.dictionary['hostname']
+            username = self.dictionary['username']
+            userpass = self.dictionary['userpass']
+            databasename = self.dictionary['dbname']
+            try:
+                if self.engine == 'mysql':
+                    self.db = mysql.connector.connect(host = hostname, user = username, password = userpass)
+                    self.cursor = self.db.cursor(dictionary=True)
+                elif self.engine == 'postgresql':
+                    self.db = psycopg2.connect(host = hostname, user = username, password = userpass, dbname = databasename)
+                    self.cursor = self.db.cursor()            
+                self.interpreter.work.appendleft(1)
+                return 'nobreak'
+            except:
+                self.cursor = None
+                self.db = None
+                self.interpreter.work.appendleft(0)
+                return db_errors.error_connection_failed.print_error('connect', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction ?connect : permet de savoir si la connection est effective : ( ... ) ?CONNECT ( 0|1 ... )
     '''
     def isconnect_instr(self):
-        self.interpreter.work.appendleft(1 if self.db else 0)
-        return 'nobreak'
+        try:
+            self.interpreter.work.appendleft(1 if self.db else 0)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction ?close : permet de savoir si le curseur est effectif : ( ... ) ?CLOSE ( 0|1 ... )
     '''
     def isclose_instr(self):
-        self.interpreter.work.appendleft(0 if self.cursor else 1)
-        return 'nobreak'
+        try:
+            self.interpreter.work.appendleft(0 if self.cursor else 1)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
     
     '''
     Instruction disconnect : ferme le lien entre beetle et la base de données : DISCONNECT
     '''
     @auto_connect
     def disconnect_instr(self):
-        if self.db != None:
-            if self.cursor != None:
-                self.cursor.close()
-                self.cursor = None
-            self.db.close()
-            self.db = None
-        return 'nobreak'
+        try:
+            if self.db != None:
+                if self.cursor != None:
+                    self.cursor.close()
+                    self.cursor = None
+                self.db.close()
+                self.db = None
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction close : ferme le lien entre beetle et la base de données : CLOSE
     '''
     @auto_connect
     def close_instr(self):
-        if self.cursor != None:
-            self.cursor.close()
-            self.cursor = None
-        return 'nobreak'
+        try:
+            if self.cursor != None:
+                self.cursor.close()
+                self.cursor = None
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
     
     '''
     Instruction |create> : action de création : |create> (DATABASE|TABLE) name [option] >|
     '''
     @auto_connect
     def create_instr(self):
-        sql = 'create'
-        type = self.seq_next()
-        if type == None:
-            return db_errors.error_action_type.print_error('|create>', self.interpreter)
-        type = type.lower()
-        if type != 'database' and type != 'table':
-            return db_errors.error_action_type.print_error('|create>', self.interpreter)
-        sql += ' ' + type
-        name = self.seq_next()
-        if name == None:
-            return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-        name = name.strip().strip('"').strip("'")
-        if type == 'database':
-            if self.engine == 'mysql':
-                sql += f' if not exists {name}'
-            else:
-                sql += f' {name}'
-        else:
-            if self.engine == 'mysql':
-                sql += f' if not exists `{name}` (`id` int(11) not null auto_increment, primary key (`id`))'
-            else:
-                sql += f'table if not exists {name} (id integer generated by default as identity primary key)'
-        # options sequence
-        next = self.seq_next()
-        next = next.lower()
-        if next == 'like' and type == 'table':
-            if self.engine == 'mysql':
-                sql += ' like '
-            else:
-                sql += ' (like '
-            old_table = self.seq_next()
-            if old_table == None:
-                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-            sql += old_table
-            if self.engine == 'postgresql':
-                sql += ')'
-        else:
-            if self.engine == 'mysql':
-                if next != None:
-                    while next != '>|':
-                        if next == 'charset':
-                            cs = self.seq_next()
-                            if cs == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-                            sql += f" CHARACTER SET={cs}"
-                        elif next == 'collate' and type == 'database':
-                            co = self.seq_next()
-                            if co == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-                            sql += f" COLLATE={co}"
-                        elif next == 'encryption' and type == 'database':
-                            encrypt = self.seq_next()
-                            if encrypt == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-                            sql += f" encryption='{encrypt}'"
-                        elif next == 'ai' and type == 'table':
-                            ai = self.seq_next()
-                            if ai == None:
-                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-                            if not self.isinteger(ai):
-                                return core_errors.error_integer_expected.print_error('|create>', self.interpreter)
-                            if int(ai) < 0:
-                                return db_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter)
-                            sql += f' auto_increment={ai}'
-                        next = self.seq_next()
-                        if next == None:
-                            return db_errors.error_name_expected.print_error('|create>', self.interpreter)
-                        next = next.lower()
-                else:
-                    return self.request_malformed(sql)
-            else:
-                if next != '>|':
-                    return self.request_malformed(sql)
         try:
-            self.cursor.execute(sql)
-            self.db.commit()
-        except:
-            return self.request_dont_work(sql)
-        return 'nobreak'
+            sql = 'create'
+            type = self.seq_next()
+            if type == None:
+                return db_errors.error_action_type.print_error('|create>', self.interpreter)
+            type = type.lower()
+            if type != 'database' and type != 'table':
+                return db_errors.error_action_type.print_error('|create>', self.interpreter)
+            sql += ' ' + type
+            name = self.seq_next()
+            if name == None:
+                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+            name = name.strip().strip('"').strip("'")
+            if type == 'database':
+                if self.engine == 'mysql':
+                    sql += f' if not exists {name}'
+                else:
+                    sql += f' {name}'
+            else:
+                if self.engine == 'mysql':
+                    sql += f' if not exists `{name}` (`id` int(11) not null auto_increment, primary key (`id`))'
+                else:
+                    sql += f'table if not exists {name} (id integer generated by default as identity primary key)'
+            # options sequence
+            next = self.seq_next()
+            next = next.lower()
+            if next == 'like' and type == 'table':
+                if self.engine == 'mysql':
+                    sql += ' like '
+                else:
+                    sql += ' (like '
+                old_table = self.seq_next()
+                if old_table == None:
+                    return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                sql += old_table
+                if self.engine == 'postgresql':
+                    sql += ')'
+            else:
+                if self.engine == 'mysql':
+                    if next != None:
+                        while next != '>|':
+                            if next == 'charset':
+                                cs = self.seq_next()
+                                if cs == None:
+                                    return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                                sql += f" CHARACTER SET={cs}"
+                            elif next == 'collate' and type == 'database':
+                                co = self.seq_next()
+                                if co == None:
+                                    return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                                sql += f" COLLATE={co}"
+                            elif next == 'encryption' and type == 'database':
+                                encrypt = self.seq_next()
+                                if encrypt == None:
+                                    return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                                sql += f" encryption='{encrypt}'"
+                            elif next == 'ai' and type == 'table':
+                                ai = self.seq_next()
+                                if ai == None:
+                                    return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                                if not self.isinteger(ai):
+                                    return core_errors.error_integer_expected.print_error('|create>', self.interpreter)
+                                if int(ai) < 0:
+                                    return db_errors.error_integer_superior_to_0.print_error('|create> auto_increment', self.interpreter)
+                                sql += f' auto_increment={ai}'
+                            next = self.seq_next()
+                            if next == None:
+                                return db_errors.error_name_expected.print_error('|create>', self.interpreter)
+                            next = next.lower()
+                    else:
+                        return self.request_malformed(sql)
+                else:
+                    if next != '>|':
+                        return self.request_malformed(sql)
+            try:
+                self.cursor.execute(sql)
+                self.db.commit()
+            except:
+                return self.request_dont_work(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
 
 
@@ -456,33 +499,39 @@ class db(base_module):
     '''
     @auto_connect
     def use_instr(self):
-        name = self.seq_next()
-        if name == None:
-            return db_errors.error_name_expected.print_error('use', self.interpreter)
-        self.dictionary['dbname'] = name
-        if self.engine == 'mysql':
-            try:
-                self.cursor.execute('use ' + name)
-            except:
-                return self.request_dont_work('use ' + name + ' in mysql')
-            return 'nobreak'
-        elif self.engine == "postgresql":
-            try:
-                if self.cursor:
-                    self.cursor.close()
-                if self.db:
-                    self.db.close()
+        try:
+            name = self.seq_next()
+            if name == None:
+                return db_errors.error_name_expected.print_error('use', self.interpreter)
+            self.dictionary['dbname'] = name
+            if self.engine == 'mysql':
+                try:
+                    self.cursor.execute('use ' + name)
+                except:
+                    return self.request_dont_work('use ' + name + ' in mysql')
+                return 'nobreak'
+            elif self.engine == "postgresql":
+                try:
+                    if self.cursor:
+                        self.cursor.close()
+                    if self.db:
+                        self.db.close()
 
-                self.db = psycopg2.connect(
-                    host=self.dictionary['hostname'],
-                    user=self.dictionary['username'],
-                    password=self.dictionary['userpass'],
-                    dbname=name
-                )
-                self.cursor = self.db.cursor()
-            except Exception:
-                return self.request_dont_work('use ' + name + ' in postgresql')
-            return 'nobreak'            
+                    self.db = psycopg2.connect(
+                        host=self.dictionary['hostname'],
+                        user=self.dictionary['username'],
+                        password=self.dictionary['userpass'],
+                        dbname=name
+                    )
+                    self.cursor = self.db.cursor()
+                except Exception:
+                    return self.request_dont_work('use ' + name + ' in postgresql')
+                return 'nobreak'            
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |show> : |SHOW> [databases|tables from dbname|fields from database.tablename|status|global status] >|
@@ -495,140 +544,146 @@ class db(base_module):
     '''
     @auto_connect
     def show_instr(self):
-        what = self.seq_next()
-        if what is None:
-            return self.request_malformed("|show>")
-        what = what.lower()
-
-        # 1. SHOW DATABASES
-        if what == "databases":
-            if self.engine == "mysql":
-                sql = "show databases;"
-            else:  # postgresql
-                sql = "select datname as Database from pg_database where datistemplate = false;"
-
-            end = self.seq_next()
-            if end != ">|":
+        try:
+            what = self.seq_next()
+            if what is None:
                 return self.request_malformed("|show>")
+            what = what.lower()
 
-            try:
-                self.cursor.execute(sql)
-                self.interpreter.work.appendleft(self.cursor.fetchall())
-            except:
-                return self.request_dont_work(sql)
-            return "nobreak"
+            # 1. SHOW DATABASES
+            if what == "databases":
+                if self.engine == "mysql":
+                    sql = "show databases;"
+                else:  # postgresql
+                    sql = "select datname as Database from pg_database where datistemplate = false;"
 
-        # 2. SHOW TABLES FROM db
-        if what == "tables":
-            from_kw = self.seq_next()
-            if from_kw != "from":
-                return self.request_malformed("|show>")
-
-            dbname = self.seq_next()
-            if dbname == None:
-                return self.request_malformed("|show>")
-
-            if self.engine == "mysql":
-                sql = f"show tables from {dbname};"
-            else:
-                # PostgreSQL → déjà connecté sur la bonne base
-                sql = "select tablename from pg_tables where schemaname='public';"
-
-            end = self.seq_next()
-            if end != ">|":
-                return self.request_malformed("|show>")
-
-            try:
-                self.cursor.execute(sql)
-                self.interpreter.work.appendleft(self.cursor.fetchall())
-            except:
-                return self.request_dont_work(sql)
-            return "nobreak"
-
-        # 3. SHOW FIELDS FROM db.table
-        if what == "fields":
-            from_kw = self.seq_next()
-            if from_kw != "from":
-                return self.request_malformed("|show>")
-
-            full = self.seq_next()
-            if full == None:
-                return self.request_malformed("|show>")
-
-            if self.engine == "mysql":
-                sql = f"show fields from {full};"
-            else:
-                # full = db.table → on garde seulement table
-                table = full.split(".")[-1]
-                sql = f"""
-                    select column_name as Field,
-                        data_type as Type,
-                        is_nullable as Null
-                    from information_schema.columns
-                    where table_name = '{table}';
-                """
-
-            end = self.seq_next()
-            if end != ">|":
-                return self.request_malformed("|show>")
-
-            try:
-                self.cursor.execute(sql)
-                self.interpreter.work.appendleft(self.cursor.fetchall())
-            except:
-                return self.request_dont_work(sql)
-            return "nobreak"
-
-        # 4. SHOW INDEX / KEYS FROM db.table
-        if what in ("index", "keys"):
-            from_kw = self.seq_next()
-            if from_kw != "from":
-                return self.request_malformed("|show>")
-
-            full = self.seq_next()
-            table = full.split(".")[-1]
-
-            if self.engine == "mysql":
-                sql = f"SHOW INDEX FROM {full};"
-            else:
-                sql = f"""
-                    SELECT indexname, indexdef
-                    FROM pg_indexes
-                    WHERE tablename='{table}';
-                """
-
-            end = self.seq_next()
-            if end != ">|":
-                return self.request_malformed("|show>")
-
-            try:
-                self.cursor.execute(sql)
-                self.interpreter.work.appendleft(self.cursor.fetchall())
-            except:
-                return self.request_dont_work(sql)
-            return "nobreak"
-
-        # 5. unsupported things on PostgreSQL
-        if what in ("privileges", "status", "global"):
-            if self.engine == "mysql":
-                sql += ' ' + what
-                if what == 'global':
-                    status = self.seq_next()
-                    if status.lower() != 'status':
-                        return self.request_malformed('|show>')
-                    sql += ' ' + status
                 end = self.seq_next()
-                if end == None or end != '>|':
-                    return self.request_malformed('|show>')
+                if end != ">|":
+                    return self.request_malformed("|show>")
+
                 try:
                     self.cursor.execute(sql)
                     self.interpreter.work.appendleft(self.cursor.fetchall())
                 except:
                     return self.request_dont_work(sql)
-                return 'nobreak'
-            else:
-                return self.error_pg_not_supported("|show>")
-        return self.request_malformed("|show>")
+                return "nobreak"
+
+            # 2. SHOW TABLES FROM db
+            if what == "tables":
+                from_kw = self.seq_next()
+                if from_kw != "from":
+                    return self.request_malformed("|show>")
+
+                dbname = self.seq_next()
+                if dbname == None:
+                    return self.request_malformed("|show>")
+
+                if self.engine == "mysql":
+                    sql = f"show tables from {dbname};"
+                else:
+                    # PostgreSQL → déjà connecté sur la bonne base
+                    sql = "select tablename from pg_tables where schemaname='public';"
+
+                end = self.seq_next()
+                if end != ">|":
+                    return self.request_malformed("|show>")
+
+                try:
+                    self.cursor.execute(sql)
+                    self.interpreter.work.appendleft(self.cursor.fetchall())
+                except:
+                    return self.request_dont_work(sql)
+                return "nobreak"
+
+            # 3. SHOW FIELDS FROM db.table
+            if what == "fields":
+                from_kw = self.seq_next()
+                if from_kw != "from":
+                    return self.request_malformed("|show>")
+
+                full = self.seq_next()
+                if full == None:
+                    return self.request_malformed("|show>")
+
+                if self.engine == "mysql":
+                    sql = f"show fields from {full};"
+                else:
+                    # full = db.table → on garde seulement table
+                    table = full.split(".")[-1]
+                    sql = f"""
+                        select column_name as Field,
+                            data_type as Type,
+                            is_nullable as Null
+                        from information_schema.columns
+                        where table_name = '{table}';
+                    """
+
+                end = self.seq_next()
+                if end != ">|":
+                    return self.request_malformed("|show>")
+
+                try:
+                    self.cursor.execute(sql)
+                    self.interpreter.work.appendleft(self.cursor.fetchall())
+                except:
+                    return self.request_dont_work(sql)
+                return "nobreak"
+
+            # 4. SHOW INDEX / KEYS FROM db.table
+            if what in ("index", "keys"):
+                from_kw = self.seq_next()
+                if from_kw != "from":
+                    return self.request_malformed("|show>")
+
+                full = self.seq_next()
+                table = full.split(".")[-1]
+
+                if self.engine == "mysql":
+                    sql = f"SHOW INDEX FROM {full};"
+                else:
+                    sql = f"""
+                        SELECT indexname, indexdef
+                        FROM pg_indexes
+                        WHERE tablename='{table}';
+                    """
+
+                end = self.seq_next()
+                if end != ">|":
+                    return self.request_malformed("|show>")
+
+                try:
+                    self.cursor.execute(sql)
+                    self.interpreter.work.appendleft(self.cursor.fetchall())
+                except:
+                    return self.request_dont_work(sql)
+                return "nobreak"
+
+            # 5. unsupported things on PostgreSQL
+            if what in ("privileges", "status", "global"):
+                if self.engine == "mysql":
+                    sql += ' ' + what
+                    if what == 'global':
+                        status = self.seq_next()
+                        if status.lower() != 'status':
+                            return self.request_malformed('|show>')
+                        sql += ' ' + status
+                    end = self.seq_next()
+                    if end == None or end != '>|':
+                        return self.request_malformed('|show>')
+                    try:
+                        self.cursor.execute(sql)
+                        self.interpreter.work.appendleft(self.cursor.fetchall())
+                    except:
+                        return self.request_dont_work(sql)
+                    return 'nobreak'
+                else:
+                    return self.error_pg_not_supported("|show>")
+            return self.request_malformed("|show>")
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |select> : |SELECT> * FROM table WHERE clause >|
@@ -637,42 +692,48 @@ class db(base_module):
     '''
     @auto_connect
     def select_instr(self):
-        sql = 'select'
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|select>')
-        if next != None:
-            while next.lower() != 'from':
-                sql += ' ' + next
-                next = self.seq_next()
-                if next == None:
-                    break
-        sql += ' from'
-        next = self.seq_next()
-        if next != None:
-            while next.lower() != 'where' :
-                if next == '>|':
-                    break
-                sql += ' ' + next
-                next = self.seq_next()
-                if next == None:
-                    # on sort de la boucle car il n'y a pas de clause where
-                    break
-        if next.lower() == 'where':
-            while next.lower() != '>|' :
-                sql += ' ' + next
-                next = self.seq_next()
-                if next == None:
-                    return self.request_malformed('|select>')
-        if next == None or next != '>|':
-            return self.request_malformed('|select>')
         try:
-            self.cursor.execute(sql)
-            result = self.cursor.fetchall()
-            self.interpreter.work.appendleft(result)
-        except:
-            return self.request_dont_work(sql)
-        return 'nobreak'
+            sql = 'select'
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|select>')
+            if next != None:
+                while next.lower() != 'from':
+                    sql += ' ' + next
+                    next = self.seq_next()
+                    if next == None:
+                        break
+            sql += ' from'
+            next = self.seq_next()
+            if next != None:
+                while next.lower() != 'where' :
+                    if next == '>|':
+                        break
+                    sql += ' ' + next
+                    next = self.seq_next()
+                    if next == None:
+                        # on sort de la boucle car il n'y a pas de clause where
+                        break
+            if next.lower() == 'where':
+                while next.lower() != '>|' :
+                    sql += ' ' + next
+                    next = self.seq_next()
+                    if next == None:
+                        return self.request_malformed('|select>')
+            if next == None or next != '>|':
+                return self.request_malformed('|select>')
+            try:
+                self.cursor.execute(sql)
+                result = self.cursor.fetchall()
+                self.interpreter.work.appendleft(result)
+            except:
+                return self.request_dont_work(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |insert> : |INSERT> tablename ( col1, col2, ... ) VALUES ( value1, value2, ... ) >|
@@ -681,73 +742,85 @@ class db(base_module):
     '''
     @auto_connect
     def insert_instr(self):
-        sql = 'insert into'
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|insert>')
-        # tablename
-        sql += ' ' + next
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|insert>')
-        while next.lower() != 'values' :
-            sql += ' ' + next
-            next = self.seq_next()
-            if next == None:
-                return self.request_malformed('|insert>')
-        sql += ' values '
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|insert>')
-        while next != '>|' :
-            sql += ' ' + next
-            next = self.seq_next()
-            if next == None:
-                return self.request_malformed('|insert>')
         try:
-            self.cursor.execute(sql)
-            self.interpreter.work.appendleft(self.cursor.lastrowid)
-            self.db.commit()
-        except:
-            return self.request_dont_work(sql)
-        return 'nobreak'
+            sql = 'insert into'
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|insert>')
+            # tablename
+            sql += ' ' + next
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|insert>')
+            while next.lower() != 'values' :
+                sql += ' ' + next
+                next = self.seq_next()
+                if next == None:
+                    return self.request_malformed('|insert>')
+            sql += ' values '
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|insert>')
+            while next != '>|' :
+                sql += ' ' + next
+                next = self.seq_next()
+                if next == None:
+                    return self.request_malformed('|insert>')
+            try:
+                self.cursor.execute(sql)
+                self.interpreter.work.appendleft(self.cursor.lastrowid)
+                self.db.commit()
+            except:
+                return self.request_dont_work(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |update> : |update> tablename set col1=value1, col2=value2, ... [where where_condition] >|
     '''
     @auto_connect
     def update_instr(self):
-        sql = 'update'
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|update>')
-        # tablename
-        sql += ' ' + next
-        next = self.seq_next()
-        if next == None and next.lower() != 'set':
-            return self.request_malformed('|update>')
-        # contenu du set
-        while next.lower() != 'where' and next != '>|':
+        try:
+            sql = 'update'
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|update>')
+            # tablename
             sql += ' ' + next
             next = self.seq_next()
-            if next == None:
+            if next == None and next.lower() != 'set':
                 return self.request_malformed('|update>')
-        if next.lower() == 'where':
-            sql += ' where'
-            next = self.seq_next()
-            if next == None:
-                return self.request_malformed('|update>')
-            while next != '>|' :
+            # contenu du set
+            while next.lower() != 'where' and next != '>|':
                 sql += ' ' + next
                 next = self.seq_next()
                 if next == None:
                     return self.request_malformed('|update>')
-        try:
-            self.cursor.execute(sql)
-            self.db.commit()
-        except:
-            return self.request_dont_work(sql)
-        return 'nobreak'
+            if next.lower() == 'where':
+                sql += ' where'
+                next = self.seq_next()
+                if next == None:
+                    return self.request_malformed('|update>')
+                while next != '>|' :
+                    sql += ' ' + next
+                    next = self.seq_next()
+                    if next == None:
+                        return self.request_malformed('|update>')
+            try:
+                self.cursor.execute(sql)
+                self.db.commit()
+            except:
+                return self.request_dont_work(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |delete> : |DELETE> tablename [ WHERE where_condition ] >| 
@@ -757,30 +830,36 @@ class db(base_module):
     '''
     @auto_connect
     def delete_instr(self):
-        sql = 'delete from'
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|delete>')
-        # tablename
-        sql += ' ' + next
-        next = self.seq_next()
-        if next != '>|':
-            if next.lower() == 'where':
-                sql += ' where'
-                next = self.seq_next()
-                if next == None:
-                    return self.request_malformed('|delete>')
-                while next != '>|' :
-                    sql += ' ' + next
+        try:
+            sql = 'delete from'
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|delete>')
+            # tablename
+            sql += ' ' + next
+            next = self.seq_next()
+            if next != '>|':
+                if next.lower() == 'where':
+                    sql += ' where'
                     next = self.seq_next()
                     if next == None:
                         return self.request_malformed('|delete>')
-        try:
-            self.cursor.execute(sql)
-            self.db.commit()
-        except:
-            return self.request_dont_work(sql)
-        return 'nobreak'
+                    while next != '>|' :
+                        sql += ' ' + next
+                        next = self.seq_next()
+                        if next == None:
+                            return self.request_malformed('|delete>')
+            try:
+                self.cursor.execute(sql)
+                self.db.commit()
+            except:
+                return self.request_dont_work(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |truncate> : |TRUNCATE> tablename >| 
@@ -789,53 +868,65 @@ class db(base_module):
     '''
     @auto_connect
     def truncate_instr(self):
-        sql = 'truncate table'
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|truncate>')
-        # tablename
-        sql += ' ' + next
-        next = self.seq_next()
-        if next == None or next != '>|':
-            return self.request_malformed('|truncate>')
         try:
-            self.cursor.execute(sql)
-            self.db.commit()
-        except:
-            return self.request_dont_work(sql)
+            sql = 'truncate table'
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|truncate>')
+            # tablename
+            sql += ' ' + next
+            next = self.seq_next()
+            if next == None or next != '>|':
+                return self.request_malformed('|truncate>')
+            try:
+                self.cursor.execute(sql)
+                self.db.commit()
+            except:
+                return self.request_dont_work(sql)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction |drop> : |drop> table { tablename { restrict | cascade } |database dbname }
     '''
     @auto_connect
     def drop_instr(self):
-        sql = 'drop'
-        type = self.seq_next()
-        if type == None:
-            return db_errors.error_action_type.print_error('|drop>', self.interpreter)
-        type = type.lower()
-        if type != 'database' and type != 'table' and type != 'procedure' and type != 'function' and type != 'trigger' and type != 'event' and type != 'user':
-            return db_errors.error_action_type.print_error('|drop>', self.interpreter)
-        sql += ' ' + type
-        name = self.seq_next()
-        if name == None:
-            return db_errors.error_name_expected.print_error('|drop>', self.interpreter)
-        if type == 'table':
-            sql += ' if exists ' + name
-        else:
-            sql += ' ' + name
-        next = self.seq_next()
-        if next == None:
-            return self.request_malformed('|drop>')
-        if next == '>|':
-            try:
-                self.cursor.execute(sql)
-                self.db.commit()
-            except:
-                return self.request_dont_work(sql)
-        else:
-            return self.request_malformed(sql)
-        return 'nobreak'
+        try:
+            sql = 'drop'
+            type = self.seq_next()
+            if type == None:
+                return db_errors.error_action_type.print_error('|drop>', self.interpreter)
+            type = type.lower()
+            if type != 'database' and type != 'table' and type != 'procedure' and type != 'function' and type != 'trigger' and type != 'event' and type != 'user':
+                return db_errors.error_action_type.print_error('|drop>', self.interpreter)
+            sql += ' ' + type
+            name = self.seq_next()
+            if name == None:
+                return db_errors.error_name_expected.print_error('|drop>', self.interpreter)
+            if type == 'table':
+                sql += ' if exists ' + name
+            else:
+                sql += ' ' + name
+            next = self.seq_next()
+            if next == None:
+                return self.request_malformed('|drop>')
+            if next == '>|':
+                try:
+                    self.cursor.execute(sql)
+                    self.db.commit()
+                except:
+                    return self.request_dont_work(sql)
+            else:
+                return self.request_malformed(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction >| : fin de requête
@@ -863,17 +954,29 @@ class db(base_module):
     '''
     @auto_connect
     def alter_instr(self):
-        sql = 'alter'
-        next = self.seq_next()
-        if next.lower() != 'table' and next.lower() != 'database':
-            return self.request_malformed('|alter>')
-        sql += ' ' + next.lower()
-        if next.lower() == 'table':
+        try:
+            sql = 'alter'
             next = self.seq_next()
-            sql += ' `' + next.lower() + '`'
-            next = self.seq_next()
-            if next.lower() == 'add' or next.lower() == 'alter' or next.lower() == 'change' or next.lower() == 'drop' or next.lower() == 'modify' or next.lower() == 'rename':
-                # action
+            if next.lower() != 'table' and next.lower() != 'database':
+                return self.request_malformed('|alter>')
+            sql += ' ' + next.lower()
+            if next.lower() == 'table':
+                next = self.seq_next()
+                sql += ' `' + next.lower() + '`'
+                next = self.seq_next()
+                if next.lower() == 'add' or next.lower() == 'alter' or next.lower() == 'change' or next.lower() == 'drop' or next.lower() == 'modify' or next.lower() == 'rename':
+                    # action
+                    sql += ' ' + next.lower()
+                    # et la suite
+                    next = self.seq_next()
+                    while next != '>|' :
+                        sql += ' ' + next
+                        next = self.seq_next()
+                        if next == None:
+                            return self.request_malformed('|alter>')
+            if next.lower() == 'database':
+                # nom de la base
+                next = self.seq_next()
                 sql += ' ' + next.lower()
                 # et la suite
                 next = self.seq_next()
@@ -882,43 +985,49 @@ class db(base_module):
                     next = self.seq_next()
                     if next == None:
                         return self.request_malformed('|alter>')
-        if next.lower() == 'database':
-            # nom de la base
-            next = self.seq_next()
-            sql += ' ' + next.lower()
-            # et la suite
-            next = self.seq_next()
-            while next != '>|' :
-                sql += ' ' + next
-                next = self.seq_next()
-                if next == None:
-                    return self.request_malformed('|alter>')
-        if next == '>|':
-            try:
-                self.cursor.execute(sql)
-                self.db.commit()
-            except:
-                return self.request_dont_work(sql)
-        else:
-            return self.request_malformed(sql)
-        return 'nobreak'
+            if next == '>|':
+                try:
+                    self.cursor.execute(sql)
+                    self.db.commit()
+                except:
+                    return self.request_dont_work(sql)
+            else:
+                return self.request_malformed(sql)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction chooseengine : permet de sélectionner le type de base de données utilisé
     '''
     def chooseeng_instr(self):
-        next = self.seq_next()
-        if next == None:
-            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
-        if next.lower() not in ['mysql', 'postgresql']:
-            return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
-        self.engine = next
-        return 'nobreak'
+        try:
+            next = self.seq_next()
+            if next == None:
+                return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
+            if next.lower() not in ['mysql', 'postgresql']:
+                return db_errors.error_engine_expected.print_error('chooseengine', self.interpreter)
+            self.engine = next
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction : engine? : permet de savoir quelle base de données est utilisée
     Par défaut, engine = mysql
     '''
     def eng_instr(self):
-        self.interpreter.work.appendleft(self.engine)
-        return 'nobreak'
+        try:
+            self.interpreter.work.appendleft(self.engine)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
