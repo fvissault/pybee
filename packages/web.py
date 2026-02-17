@@ -12,6 +12,7 @@ import os
 from datetime import datetime, timedelta
 import html
 from urllib.parse import urlparse
+import traceback
 
 class web(base_module):
     def __init__(self, interpreter):
@@ -1351,208 +1352,298 @@ class web(base_module):
         return "#"
 
     def safeurl_instr(self):
-        if len(self.interpreter.work) > 0:
-            val = self.pop_work()
-            self.interpreter.work.appendleft(self._safe_url(val))
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 0:
+                val = self.pop_work()
+                self.interpreter.work.appendleft(self._safe_url(val))
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('safeurl', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def escapehtml_instr(self):
-        if len(self.interpreter.work) > 0:
-            val = self.pop_work()
-            self.interpreter.work.appendleft(self._escape_html(val))
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 0:
+                val = self.pop_work()
+                self.interpreter.work.appendleft(self._escape_html(val))
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('escapehtml', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def safehtml_instr(self):
-        if len(self.interpreter.work) > 0:
-            val = self.pop_work()
-            self.interpreter.work.appendleft("__SAFE__" + str(val))
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 0:
+                val = self.pop_work()
+                self.interpreter.work.appendleft("__SAFE__" + str(val))
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('safehtml', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def safe_or_escape_instr(self):
-        if len(self.interpreter.work) > 0:
-            val = self.pop_work()
-            s = "" if val is None else str(val)
-            if s.startswith("__SAFE__"):
-                s2 = s[len("__SAFE__"):]
+        try:
+            if len(self.interpreter.work) > 0:
+                val = self.pop_work()
+                s = "" if val is None else str(val)
+                if s.startswith("__SAFE__"):
+                    s2 = s[len("__SAFE__"):]
+                else:
+                    s2 = self._escape_html(s)
+                self.interpreter.work.appendleft(s2)
             else:
-                s2 = self._escape_html(s)
-            self.interpreter.work.appendleft(s2)
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter)
-        return 'nobreak'
+                return core_errors.error_nothing_in_work_stack.print_error('safeorescape', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction grouplaystyle : regroupe les définitions qui portent le même sélecteur dans le css d'un layout
     la variable 'laystyle' doit impértivement exister
     '''
     def grouplaystyle_instr(self):
-        for p in self.interpreter.packages.keys():
-            if 'laystyle' in self.interpreter.packages[p].variables:
-                content = "\n".join(self.interpreter.packages[p].dictionary['laystyle']['content'])
-                blocs = re.findall(r'([^{]+)\{([^}]+)\}', content)
-                regles = defaultdict(list)
-                for selecteur, declarations in blocs:
-                    selecteur = selecteur.strip()
-                    declarations = declarations.strip()
-                    regles[selecteur].append(declarations)
-                result = ''
-                for selecteur, listes_declarations in regles.items():
-                    result += f"{selecteur} {{\n\t"
-                    toutes_declarations = "\n\t".join(listes_declarations)
-                    result += toutes_declarations.strip() + "\n"
-                    result += "}\n"
-                self.interpreter.packages[p].dictionary['laystyle']['content'] = [result.strip("\n")]
-                return 'nobreak'
-        return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter)
+        try:
+            for p in self.interpreter.packages.keys():
+                if 'laystyle' in self.interpreter.packages[p].variables:
+                    content = "\n".join(self.interpreter.packages[p].dictionary['laystyle']['content'])
+                    blocs = re.findall(r'([^{]+)\{([^}]+)\}', content)
+                    regles = defaultdict(list)
+                    for selecteur, declarations in blocs:
+                        selecteur = selecteur.strip()
+                        declarations = declarations.strip()
+                        regles[selecteur].append(declarations)
+                    result = ''
+                    for selecteur, listes_declarations in regles.items():
+                        result += f"{selecteur} {{\n\t"
+                        toutes_declarations = "\n\t".join(listes_declarations)
+                        result += toutes_declarations.strip() + "\n"
+                        result += "}\n"
+                    self.interpreter.packages[p].dictionary['laystyle']['content'] = [result.strip("\n")]
+                    return 'nobreak'
+            return web_errors.error_laystyle_not_found.print_error('grouplaystyle', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction posted : permet de récupérer un paramètre passé entre les pages
     '''
     def paramget_instr(self):
-        if len(self.interpreter.work) > 0:
-            paramname = self.pop_work()
-            fstorage = self.interpreter.params
-            if fstorage[paramname] != None:
-                value = fstorage[paramname]
-                if value == None:
+        try:
+            if len(self.interpreter.work) > 0:
+                paramname = self.pop_work()
+                fstorage = self.interpreter.params
+                if fstorage[paramname] != None:
+                    value = fstorage[paramname]
+                    if value == None:
+                        return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter)
+                    self.interpreter.work.appendleft(value)
+                    return 'nobreak'
+                else:
                     return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter)
-                self.interpreter.work.appendleft(value)
-                return 'nobreak'
             else:
-                return core_errors.error_nothing_to_evaluate.print_error('posted', self.interpreter)
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('posted', self.interpreter)
+                return core_errors.error_nothing_in_work_stack.print_error('posted', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction redirect : effectuer une redirection
     '''
     def redirect_instr(self):
-        if len(self.interpreter.work) > 0:
-            url = self.pop_work()
-            print("Location: {0}\n".format(url))
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                url = self.pop_work()
+                print("Location: {0}\n".format(url))
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction htmlcontent : précise que le contenu de la page est du code html : fonction utilisée dans generate
     '''
     def htmlcontent_instr(self):
-        print("Content-type: text/html;charset=UTF-8\n")
-        return 'nobreak'
+        try:
+            print("Content-type: text/html;charset=UTF-8\n")
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction session : créer une session
     '''
     def session_instr(self):
-        if len(self.interpreter.work) > 1:
-            name = str(self.pop_work())
-            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
-            if name in cookie:
-                session_cookie = cookie.get(name).value
-                if os.path.isfile(f"userarea/tmp/s{session_cookie}"):
-                    os.remove(f"userarea/tmp/s{session_cookie}")
-            param = self.pop_work()
-            valeur = json.dumps(self.sessionvars)
-            session_id = str(uuid.uuid4())
-            if 'session_duration' in self.sessionvars:
-                duration = self.sessionvars['session_duration']
+        try:
+            if len(self.interpreter.work) > 1:
+                name = str(self.pop_work())
+                cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+                if name in cookie:
+                    session_cookie = cookie.get(name).value
+                    if os.path.isfile(f"userarea/tmp/s{session_cookie}"):
+                        os.remove(f"userarea/tmp/s{session_cookie}")
+                param = self.pop_work()
+                valeur = json.dumps(self.sessionvars)
+                session_id = str(uuid.uuid4())
+                if 'session_duration' in self.sessionvars:
+                    duration = self.sessionvars['session_duration']
+                else:
+                    duration = 30
+                expiredate = (datetime.now() + timedelta(minutes=duration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
+                self.usecookies = True
+                with open(f"userarea/tmp/s{session_id}", "w") as f:
+                    f.write(valeur)
+                    f.close()            
+                if param == 'redirect':
+                    print("Status: 302 Found")
+                else:
+                    print("Content-Type: text/html;charset=UTF-8")
+                cookie = http.cookies.SimpleCookie()
+                cookie[name] = session_id
+                cookie[name]["path"] = "/"
+                cookie[name]["httponly"] = True
+                cookie[name]["Max-Age"] = str(duration * 60)
+                cookie[name]["Expires"] = expiredate
+                print(cookie.output())
+                if param != 'redirect':
+                    print()
             else:
-                duration = 30
-            expiredate = (datetime.now() + timedelta(minutes=duration)).strftime("%a, %d-%b-%Y %H:%M:%S GMT")
-            self.usecookies = True
-            with open(f"userarea/tmp/s{session_id}", "w") as f:
-                f.write(valeur)
-                f.close()            
-            if param == 'redirect':
-                print("Status: 302 Found")
-            else:
-                print("Content-Type: text/html;charset=UTF-8")
-            cookie = http.cookies.SimpleCookie()
-            cookie[name] = session_id
-            cookie[name]["path"] = "/"
-            cookie[name]["httponly"] = True
-            cookie[name]["Max-Age"] = str(duration * 60)
-            cookie[name]["Expires"] = expiredate
-            print(cookie.output())
-            if param != 'redirect':
-                print()
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
-        return 'nobreak'
+                return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction getsession : charge les variables de session si elle existe
     '''
     def getsession_instr(self):
-        if len(self.interpreter.work) > 0:
-            name = str(self.pop_work())
-            cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
-            if name in cookie:
-                session_cookie = cookie.get(name).value
-                with open(f"userarea/tmp/s{session_cookie}", "r") as f:
-                    sessionvars = f.read()
-                    self.sessionvars = json.loads(sessionvars)
-                    f.close()
+        try:
+            if len(self.interpreter.work) > 0:
+                name = str(self.pop_work())
+                cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+                if name in cookie:
+                    session_cookie = cookie.get(name).value
+                    with open(f"userarea/tmp/s{session_cookie}", "r") as f:
+                        sessionvars = f.read()
+                        self.sessionvars = json.loads(sessionvars)
+                        f.close()
+                else:
+                    self.sessionvars =  {}
             else:
-                self.sessionvars =  {}
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter)
-        return 'nobreak'
+                return core_errors.error_nothing_in_work_stack.print_error('getsession', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction setsessvar : créer une variable de session
     '''
     def setsessvar_instr(self):
-        if len(self.interpreter.work) > 1:
-            value = self.pop_work()
-            key = self.pop_work()
-            self.sessionvars[key] = value
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 1:
+                value = self.pop_work()
+                key = self.pop_work()
+                self.sessionvars[key] = value
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction getsessvar : positionne la valeur d'une variable de session sur la pile de travail si elle existe
     '''
     def getsessvar_instr(self):
-        if len(self.interpreter.work) > 0:
-            key = self.pop_work()
-            self.interpreter.work.appendleft(self.sessionvars[key])
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 0:
+                key = self.pop_work()
+                self.interpreter.work.appendleft(self.sessionvars[key])
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('setsessvar', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction usecookie? : positionne sur la pile de travail si une session a été créée
     '''
     def usecookies_instr(self):
-        if self.usecookies == True:
-            self.interpreter.work.appendleft(1)
-        else:
-            self.interpreter.work.appendleft(0)
-        return 'nobreak'
+        try:
+            if self.usecookies == True:
+                self.interpreter.work.appendleft(1)
+            else:
+                self.interpreter.work.appendleft(0)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction setsessduration : fixe la durée de validitaé d'une session : par défaut c'est 30 minutes et la minute est l'unité
     '''
     def setsessduration_instr(self):
-        if len(self.interpreter.work) > 0:
-            duration = int(self.pop_work())
-            self.sessionvars['session_duration'] = duration
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
-        return 'nobreak'
+        try:
+            if len(self.interpreter.work) > 0:
+                duration = int(self.pop_work())
+                self.sessionvars['session_duration'] = duration
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('redirect', self.interpreter)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
     
     '''
     Instruction sessduration? : positionne sur la pile de travail la durée de validité des sessions : par défaut ce sera 30 minutes
     '''
     def sessduration_instr(self):
-        self.interpreter.work.appendleft(self.sessionvars['session_duration'])
-        return 'nobreak'
+        try:
+            self.interpreter.work.appendleft(self.sessionvars['session_duration'])
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
