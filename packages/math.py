@@ -5,6 +5,7 @@ from packages.base_module import base_module
 from packages.help.math_help import math_help
 from math import *
 import random
+import traceback
 
 class math(base_module):
     def __init__(self, interpreter):
@@ -779,422 +780,620 @@ class math(base_module):
     Instruction cos : cosinus 
     '''
     def cos_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('cos', self.interpreter)
-            ret = cos(number)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('cos', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('cos', self.interpreter)
+                ret = cos(number)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('cos', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction sin : sinus 
     '''
     def sin_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('sin', self.interpreter)
-            ret = sin(number)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('sin', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('sin', self.interpreter)
+                ret = sin(number)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('sin', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction tan : tangente 
     '''
     def tan_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('tan', self.interpreter)
-            ret = tan(number)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('tan', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('tan', self.interpreter)
+                ret = tan(number)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('tan', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction comb : combinaison 
     '''
     def comb_instr(self):
-        if len(self.interpreter.work) > 1:
-            k = self.pop_work()
-            if not self.isinteger(k):
-                return math_errors.error_integer_expected.print_error('comb', self.interpreter)
-            if k < 0:
-                return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
-            n = self.pop_work()
-            if not self.isinteger(n):
-                return math_errors.error_integer_expected.print_error('comb', self.interpreter)
-            if n < 0:
-                return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
-            ret = comb(n, k)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('comb', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                k = self.pop_work()
+                if not self.isinteger(k):
+                    return math_errors.error_integer_expected.print_error('comb', self.interpreter)
+                if k < 0:
+                    return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
+                n = self.pop_work()
+                if not self.isinteger(n):
+                    return math_errors.error_integer_expected.print_error('comb', self.interpreter)
+                if n < 0:
+                    return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
+                ret = comb(n, k)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('comb', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction perm : nombre de permutations 
     '''
     def perm_instr(self):
-        if len(self.interpreter.work) > 1:
-            k = self.pop_work()
-            if not self.isinteger(k):
-                return math_errors.error_integer_expected.print_error('comb', self.interpreter)
-            if k < 0:
-                return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
-            n = self.pop_work()
-            if not self.isinteger(n):
-                return math_errors.error_integer_expected.print_error('comb', self.interpreter)
-            if n < 0:
-                return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
-            ret = perm(n, k)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('comb', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                k = self.pop_work()
+                if not self.isinteger(k):
+                    return math_errors.error_integer_expected.print_error('comb', self.interpreter)
+                if k < 0:
+                    return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
+                n = self.pop_work()
+                if not self.isinteger(n):
+                    return math_errors.error_integer_expected.print_error('comb', self.interpreter)
+                if n < 0:
+                    return math_errors.error_positive_number_expected.print_error('comb', self.interpreter)
+                ret = perm(n, k)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('comb', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction fact : factorielle 
     '''
     def fact_instr(self):
-        if len(self.interpreter.work) > 0:
-            n = self.pop_work()
-            if not self.isinteger(n):
-                return math_errors.error_integer_expected.print_error('fact', self.interpreter)
-            if n < 0:
-                return math_errors.error_positive_number_expected.print_error('fact', self.interpreter)
-            ret = factorial(n)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('fact', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                n = self.pop_work()
+                if not self.isinteger(n):
+                    return math_errors.error_integer_expected.print_error('fact', self.interpreter)
+                if n < 0:
+                    return math_errors.error_positive_number_expected.print_error('fact', self.interpreter)
+                ret = factorial(n)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('fact', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
     
     '''
     Instruction abs : renvoie la valeur absolue d'un entier ou d'un float
     '''
     def abs_instr(self):
-        if len(self.interpreter.work) > 0:
-            op = self.pop_work()
-            if not isinstance(op, (int, float)):
-                return math_errors.error_number_expected.print_error('abs', self.interpreter)
-            result = abs(op)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('abs', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                op = self.pop_work()
+                if not isinstance(op, (int, float)):
+                    return math_errors.error_number_expected.print_error('abs', self.interpreter)
+                result = abs(op)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('abs', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def sqrt_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('sqrt', self.interpreter)
-            if number < 0:
-                return math_errors.error_positive_number_expected.print_error('sqrt', self.interpreter)
-            result = sqrt(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('sqrt', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('sqrt', self.interpreter)
+                if number < 0:
+                    return math_errors.error_positive_number_expected.print_error('sqrt', self.interpreter)
+                result = sqrt(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('sqrt', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def log10_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('log10', self.interpreter)
-            result = log10(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('log10', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('log10', self.interpreter)
+                result = log10(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('log10', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def log2_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('log2', self.interpreter)
-            result = log2(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('log2', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('log2', self.interpreter)
+                result = log2(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('log2', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def log1p_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('log1p', self.interpreter)
-            result = log1p(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('log1p', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('log1p', self.interpreter)
+                result = log1p(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('log1p', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def log_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('log', self.interpreter)
-            result = log(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('log', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('log', self.interpreter)
+                result = log(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('log', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def cbrt_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('cbrt', self.interpreter)
-            result = cbrt(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('cbrt', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('cbrt', self.interpreter)
+                result = cbrt(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('cbrt', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def ceil_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('ceil', self.interpreter)
-            result = ceil(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('ceil', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('ceil', self.interpreter)
+                result = ceil(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('ceil', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def floor_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('floor', self.interpreter)
-            result = floor(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('floor', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('floor', self.interpreter)
+                result = floor(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('floor', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     '''
     Instruction remainder : combinaison 
     '''
     def remainder_instr(self):
-        if len(self.interpreter.work) > 1:
-            y = self.pop_work()
-            if y < 0:
-                return math_errors.error_positive_number_expected.print_error('remainder', self.interpreter)
-            x = self.pop_work()
-            if x < 0:
-                return math_errors.error_positive_number_expected.print_error('remainder', self.interpreter)
-            ret = remainder(x, y)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('remainder', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                y = self.pop_work()
+                if y < 0:
+                    return math_errors.error_positive_number_expected.print_error('remainder', self.interpreter)
+                x = self.pop_work()
+                if x < 0:
+                    return math_errors.error_positive_number_expected.print_error('remainder', self.interpreter)
+                ret = remainder(x, y)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('remainder', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def trunc_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('trunc', self.interpreter)
-            result = trunc(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('trunc', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('trunc', self.interpreter)
+                result = trunc(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('trunc', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def deg_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('deg', self.interpreter)
-            result = degrees(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('deg', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('deg', self.interpreter)
+                result = degrees(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('deg', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def rad_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('rad', self.interpreter)
-            result = radians(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('rad', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('rad', self.interpreter)
+                result = radians(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('rad', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def acos_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('acos', self.interpreter)
-            if number < -1 or number > 1:
-                return math_errors.error_number_between_minus_1_and_1.print_error('acos', self.interpreter)
-            result = acos(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('acos', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('acos', self.interpreter)
+                if number < -1 or number > 1:
+                    return math_errors.error_number_between_minus_1_and_1.print_error('acos', self.interpreter)
+                result = acos(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('acos', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def asin_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('asin', self.interpreter)
-            if number < -1 or number > 1:
-                return math_errors.error_number_between_minus_1_and_1.print_error('asin', self.interpreter)
-            result = asin(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('asin', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('asin', self.interpreter)
+                if number < -1 or number > 1:
+                    return math_errors.error_number_between_minus_1_and_1.print_error('asin', self.interpreter)
+                result = asin(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('asin', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def atan_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('atan', self.interpreter)
-            result = atan(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('atan', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('atan', self.interpreter)
+                result = atan(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('atan', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def acosh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('acosh', self.interpreter)
-            if number < 1:
-                return math_errors.error_number_greater_than_1.print_error('acosh', self.interpreter)
-            result = acosh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('acosh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('acosh', self.interpreter)
+                if number < 1:
+                    return math_errors.error_number_greater_than_1.print_error('acosh', self.interpreter)
+                result = acosh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('acosh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def asinh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('asinh', self.interpreter)
-            result = asinh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('asinh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('asinh', self.interpreter)
+                result = asinh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('asinh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def atanh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('atanh', self.interpreter)
-            if number <= -1 or number >= 1:
-                return math_errors.error_number_between_minus_1_and_1.print_error('atanh', self.interpreter)
-            result = atanh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('atanh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('atanh', self.interpreter)
+                if number <= -1 or number >= 1:
+                    return math_errors.error_number_between_minus_1_and_1.print_error('atanh', self.interpreter)
+                result = atanh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('atanh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def cosh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('cosh', self.interpreter)
-            result = cosh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('cosh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('cosh', self.interpreter)
+                result = cosh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('cosh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def sinh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('sinh', self.interpreter)
-            result = sinh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('sinh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('sinh', self.interpreter)
+                result = sinh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('sinh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def tanh_instr(self):
-        if len(self.interpreter.work) > 0:
-            number = self.pop_work()
-            if not isinstance(number, (int, float)):
-                return math_errors.error_number_expected.print_error('tanh', self.interpreter)
-            result = tanh(number)
-            self.interpreter.work.appendleft(result)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('tanh', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 0:
+                number = self.pop_work()
+                if not isinstance(number, (int, float)):
+                    return math_errors.error_number_expected.print_error('tanh', self.interpreter)
+                result = tanh(number)
+                self.interpreter.work.appendleft(result)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('tanh', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def round_instr(self):
-        if len(self.interpreter.work) > 1:
-            precision = self.pop_work()
-            if precision < 0:
-                return math_errors.error_precision_sup_0.print_error('round', self.interpreter)
-            number = self.pop_work()
-            ret = round(float(number), precision)
-            self.interpreter.work.appendleft(ret)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('round', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                precision = self.pop_work()
+                if precision < 0:
+                    return math_errors.error_precision_sup_0.print_error('round', self.interpreter)
+                number = self.pop_work()
+                ret = round(float(number), precision)
+                self.interpreter.work.appendleft(ret)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('round', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def random_instr(self):
-        rand = random.random()
-        self.interpreter.work.appendleft(rand)
-        return 'nobreak'
+        try:
+            rand = random.random()
+            self.interpreter.work.appendleft(rand)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def floatrand_instr(self):
-        if len(self.interpreter.work) > 1:
-            b = self.pop_work()
-            a = self.pop_work()
-            if not self.isfloat(a) or not self.isfloat(b):
-                return math_errors.error_float_expected.print_error('floatrand', self.interpreter)
-            if a < 0 or b < 0:
-                return math_errors.error_positive_number_expected.print_error('floatrand', self.interpreter)
-            if a >= b:
-                return math_errors.error_a_must_be_inferior_to_b.print_error('floatrand', self.interpreter)
-            rand = random.uniform(a, b)
-            self.interpreter.work.appendleft(rand)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('floatrand', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                b = self.pop_work()
+                a = self.pop_work()
+                if not self.isfloat(a) or not self.isfloat(b):
+                    return math_errors.error_float_expected.print_error('floatrand', self.interpreter)
+                if a < 0 or b < 0:
+                    return math_errors.error_positive_number_expected.print_error('floatrand', self.interpreter)
+                if a >= b:
+                    return math_errors.error_a_must_be_inferior_to_b.print_error('floatrand', self.interpreter)
+                rand = random.uniform(a, b)
+                self.interpreter.work.appendleft(rand)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('floatrand', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def intrand_instr(self):
-        if len(self.interpreter.work) > 1:
-            b = self.pop_work()
-            a = self.pop_work()
-            if not self.isinteger(a) or not self.isinteger(b):
-                return math_errors.error_integer_expected.print_error('intrand', self.interpreter)
-            if a < 0 or b < 0:
-                return math_errors.error_positive_number_expected.print_error('intrand', self.interpreter)
-            if a >= b:
-                return math_errors.error_a_must_be_inferior_to_b.print_error('intrand', self.interpreter)
-            rand = random.randint(a, b)
-            self.interpreter.work.appendleft(rand)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('intrand', self.interpreter)
+        try:
+            if len(self.interpreter.work) > 1:
+                b = self.pop_work()
+                a = self.pop_work()
+                if not self.isinteger(a) or not self.isinteger(b):
+                    return math_errors.error_integer_expected.print_error('intrand', self.interpreter)
+                if a < 0 or b < 0:
+                    return math_errors.error_positive_number_expected.print_error('intrand', self.interpreter)
+                if a >= b:
+                    return math_errors.error_a_must_be_inferior_to_b.print_error('intrand', self.interpreter)
+                rand = random.randint(a, b)
+                self.interpreter.work.appendleft(rand)
+                return 'nobreak'
+            else:
+                return core_errors.error_nothing_in_work_stack.print_error('intrand', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
 
     def closed_instr(self):
-        if len(self.interpreter.work) > 1:
-            b = self.pop_work()
-            a = self.pop_work()
-            if not self.isfloat(a) or not self.isfloat(b):
-                return math_errors.error_float_expected.print_error('closed', self.interpreter)
-            if isclose(a, b):
-                self.interpreter.work.appendleft(1)
+        try:
+            if len(self.interpreter.work) > 1:
+                b = self.pop_work()
+                a = self.pop_work()
+                if not self.isfloat(a) or not self.isfloat(b):
+                    return math_errors.error_float_expected.print_error('closed', self.interpreter)
+                if isclose(a, b):
+                    self.interpreter.work.appendleft(1)
+                else:
+                    self.interpreter.work.appendleft(0)
+                return 'nobreak'
             else:
-                self.interpreter.work.appendleft(0)
-            return 'nobreak'
-        else:
-            return core_errors.error_nothing_in_work_stack.print_error('closed', self.interpreter)
+                return core_errors.error_nothing_in_work_stack.print_error('closed', self.interpreter)
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.interpreter.core_instr.logerr("".join(tb.format()))        
+            return "break"
