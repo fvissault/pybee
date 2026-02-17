@@ -11,6 +11,7 @@ from .arithmetic import Arithmetic
 from .utils import Utils
 from .logic import Logic
 from .io import Io
+import traceback
 
 class core(base_module, StackInstructions, Definitions, Controls, Structures, Arithmetic, Utils, Logic, Io):
     def __init__(self, interpreter):
@@ -256,43 +257,55 @@ class core(base_module, StackInstructions, Definitions, Controls, Structures, Ar
         self.version = 'v2.3.7'
 
     def output_instr(self):
-        self.interpreter.work.appendleft(self.interpreter.output)
-        return "nobreak"
+        try:
+            self.interpreter.work.appendleft(self.interpreter.output)
+            return "nobreak"
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     def begintest_instr(self):
-        left_instrs = deque()
-        right_instrs = deque()
-        instr = self.pop_sequence()
-        while str(instr).lower() != '<=>':
-            left_instrs.append(str(instr).lower())
+        try:
+            left_instrs = deque()
+            right_instrs = deque()
             instr = self.pop_sequence()
-            if str(instr).lower() == '}t':
-                return self.err('error_invalid_instruction', 'tests - }t')
-        instr = self.pop_sequence()
-        while str(instr).lower() != '}t':
-            right_instrs.append(str(instr).lower())
+            while str(instr).lower() != '<=>':
+                left_instrs.append(str(instr).lower())
+                instr = self.pop_sequence()
+                if str(instr).lower() == '}t':
+                    return self.err('error_invalid_instruction', 'tests - }t')
             instr = self.pop_sequence()
-            if str(instr).lower() == '<=>':
-                return self.err('error_invalid_instruction', 'tests - <=>')
-            if str(instr).lower() == 't{':
-                return self.err('error_invalid_instruction', 'tests - t{')
-        ileft = self.exec_interpreter(left_instrs)
-        iright = self.exec_interpreter(right_instrs)
-        ileftwork = ileft.work
-        irightwork = iright.work
-        if self.normalize_stack(ileftwork) == self.normalize_stack(irightwork):
-            self.interpreter.work.appendleft(1)
-            if self.interpreter.output == 'web':
-                print("true test")
+            while str(instr).lower() != '}t':
+                right_instrs.append(str(instr).lower())
+                instr = self.pop_sequence()
+                if str(instr).lower() == '<=>':
+                    return self.err('error_invalid_instruction', 'tests - <=>')
+                if str(instr).lower() == 't{':
+                    return self.err('error_invalid_instruction', 'tests - t{')
+            ileft = self.exec_interpreter(left_instrs)
+            iright = self.exec_interpreter(right_instrs)
+            ileftwork = ileft.work
+            irightwork = iright.work
+            if self.normalize_stack(ileftwork) == self.normalize_stack(irightwork):
+                self.interpreter.work.appendleft(1)
+                if self.interpreter.output == 'web':
+                    print("true test")
+                else:
+                    print(termcolors.GREEN + "true test" + termcolors.NORMAL)
             else:
-                print(termcolors.GREEN + "true test" + termcolors.NORMAL)
-        else:
-            self.interpreter.work.appendleft(0)
-            if self.interpreter.output == 'web':
-                print("false test")
-            else:
-                print(termcolors.FATAL + "false test" + termcolors.NORMAL)
-        return 'nobreak'
+                self.interpreter.work.appendleft(0)
+                if self.interpreter.output == 'web':
+                    print("false test")
+                else:
+                    print(termcolors.FATAL + "false test" + termcolors.NORMAL)
+            return 'nobreak'
+        except Exception as e:
+            tb = traceback.TracebackException.from_exception(e)
+            print("".join(tb.format()))
+            self.logerr("".join(tb.format()))        
+            return "break"
 
     def endtest_instr(self):
         return self.err('error_array_invalid', '}t')
