@@ -14,15 +14,15 @@ class error:
 
         if interpreter.output == 'console':
             if self.type == 'warning':
-                print(termcolors.WARNING + msg + termcolors.NORMAL)
+                print(termcolors.WARNING + msg + termcolors.NORMAL, end='')
                 if interpreter.activelog:
                     interpreter.core_instr.logwarn(msg)
             elif self.type == 'error':
-                print(termcolors.ERROR + msg + termcolors.NORMAL)
+                print(termcolors.ERROR + msg + termcolors.NORMAL, end='')
                 if interpreter.activelog:
                     interpreter.core_instr.logerr(msg)
             elif self.type == 'fatal':
-                print(termcolors.FATAL + msg + termcolors.NORMAL)
+                print(termcolors.FATAL + msg + termcolors.NORMAL, end='')
                 if interpreter.activelog:
                     interpreter.core_instr.logerr(msg)
             else:
@@ -42,6 +42,5 @@ class error:
                     interpreter.core_instr.logerr(msg)
                 else:
                     interpreter.core_instr.loginfo(msg)
-
 
         return 'break' if self.type == 'fatal' else 'nobreak'
