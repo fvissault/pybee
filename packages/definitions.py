@@ -253,7 +253,8 @@ class Definitions:
                 var_name = str(self.interpreter.sequences[self.interpreter.lastseqnumber][0])
                 self.interpreter.sequences[self.interpreter.lastseqnumber].popleft()
             if var_name in list(self.dictionary.keys()):
-                return self.err('error_name_already_exists', 'create')
+                err = self.err('error_name_already_exists', var_name + ' create')
+                return err
             self.dictionary[var_name] = None
             if self.interpreter.from_instr in self.interpreter.compile.keys():
                 self.interpreter.userdefinitions[var_name] = self.interpreter.compile[self.interpreter.from_instr].copy()
