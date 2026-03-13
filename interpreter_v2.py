@@ -134,16 +134,22 @@ class interpreter:
                     self.work.appendleft(instr_content)
             elif self.instr_search(str(instr).lower()) == False:
                 # instr not in package dictionaries
-                return core_errors.error_invalid_instruction.print_error(instr, self.output)
+                return core_errors.error_invalid_instruction.print_error(instr, self)
             elif self.instr_search(str(instr).lower()): 
                 pack = self.search_in_pack(str(instr).lower())
                 ret = self.package_search(str(instr).lower(), self.packages[pack])
                 if ret == 'break':
+                    self.work = deque()
+                    self.altwork = deque()
+                    self.sequences = []
+                    self.lastseqnumber = -1
+                    self.currentseqnumber = 0
+                    self.from_instr = ''
                     return 'break'
                 else:
                     continue
             else:
-                return core_errors.error_invalid_instruction.print_error(instr, self.output)
+                return core_errors.error_invalid_instruction.print_error(instr, self)
             self.decreaselastseqnumber()
         self.from_instr = ''
 
