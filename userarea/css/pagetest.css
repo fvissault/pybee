@@ -2,8 +2,8 @@
 	display: grid;
 	grid-template-columns: 200px repeat(4, 1fr);
 	grid-template-rows: 50px 500px 50px;
-	grid-column-gap: 1px;
-	grid-row-gap: 1px;
+	grid-column-gap: 2px;
+	grid-row-gap: 2px;
 	background-color: indianred;
 	padding:10px;
 }
