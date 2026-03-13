@@ -705,8 +705,13 @@ class web(base_module):
         then 
     then''',
             #*********************************
-            'layout' : '''    local zonecount 
-    var pagename 
+            'layout' : '''    local zonecount
+    "pagename" ?var
+    if
+        pagename !
+    else
+        var pagename
+    then 
     0 local i 
     "html" ?var 
     if 
@@ -880,6 +885,7 @@ class web(base_module):
         then 
     else 
         container @ "Bad direction for your splitter : only vertical or hoizontal allowed" addcontent 
+        "Bad direction for your splitter : only vertical or hoizontal allowed" log-err
     then''',
             #*********************************
             'divider' : '''    local type 
@@ -942,6 +948,7 @@ class web(base_module):
         container "onload" "showDefault()" addattr 
     else 
         container @ "Bad direction for your tab : only top or left allowed" addcontent 
+        "Bad direction for your tab : only top or left allowed" log-err
     then''',
             #*********************************
             'accordion' : '''    local name 
@@ -1013,6 +1020,7 @@ class web(base_module):
         container @ snmain @ addcontent 
     else 
         container @ "Bad type for your sidenav : only push or overlay allowed" addcontent 
+        "Bad type for your sidenav : only push or overlay allowed" log-err
     then''',
             #*********************************
             'topnav' : '''    local name 
@@ -1119,9 +1127,11 @@ class web(base_module):
             container @ name @ @ addcontent 
         else 
             container @ "Bad type for your button : only button, reset, submit are allowed" addcontent 
+            "Bad type for your button : only button, reset, submit are allowed" log-err
         then 
     else 
         container @ "Bad look for your button : only fullsuccess, fullinfo, fullwarning, fulldanger, fulldefault, outlinesuccess, outlineinfo, outlinewarning, outlinedanger, outlinedefault are allowed" addcontent 
+        "Bad look for your button : only fullsuccess, fullinfo, fullwarning, fulldanger, fulldefault, outlinesuccess, outlineinfo, outlinewarning, outlinedanger, outlinedefault are allowed" log-err
     then''',
             #*********************************
             'loginform' : '''    local passlostaction 
@@ -1203,53 +1213,39 @@ class web(base_module):
     formulaire contdiv @ addcontent 
     container @ formulaire @ addcontent''',
             #*********************************
-            'hdropdown' : '''    local links
+            'dropdown' : '''    local links
     local btncontent 
     local name
+    local type
     local container
-    name @ div local dropdown
-    dropdown "class" "dropdown" addattr
-    btncontent @ "button" button local btn
-    btn "class" "dropbtn" addattr
-    dropdown btn @ addcontent
-    name @ "content" s+ div local ddcontent
-    ddcontent "class" "dropdown-content" addattr
-    dropdown ddcontent @ addcontent
-    0 local content 
-    0 local href 
-    0 local i 
-    links @ cells i 
-    do
-        links @ i @ cell@ 0 cell@ content !
-        links @ i @ cell@ 1 cell@ href !
-        ddcontent content @ href @ safeorescape a addcontent
-    loop
-    container @ dropdown @ addcontent 
-    ''',
-            #*********************************
-            'cdropdown' : '''    local links
-    local btncontent 
-    local name
-    local container
-    name @ div local dropdown
-    dropdown "class" "dropdown" addattr
-    btncontent @ "button" button local btn
-    btn "class" "dropbtn" addattr
-    btn "onclick" "showDropdown(\"<#0#>\")" [ name @ "content" s+ ] format addattr
-    dropdown btn @ addcontent
-    name @ "content" s+ div local ddcontent
-    ddcontent "class" "dropdown-content" addattr
-    dropdown ddcontent @ addcontent
-    0 local content 
-    0 local href 
-    0 local i 
-    links @ cells i 
-    do
-        links @ i @ cell@ 0 cell@ content !
-        links @ i @ cell@ 1 cell@ href !
-        ddcontent content @ href @ safeorescape a addcontent
-    loop
-    container @ dropdown @ addcontent''',
+    type @ "click" = type @ "hover" = or 
+    if 
+        name @ div local dropdown
+        dropdown "class" "dropdown" addattr
+        btncontent @ "button" button local btn
+        btn "class" "dropbtn" addattr
+        type @ "click" =
+        if
+            btn "onclick" "showDropdown(\"<#0#>\")" [ name @ "content" s+ ] format addattr
+        then
+        dropdown btn @ addcontent
+        name @ "content" s+ div local ddcontent
+        ddcontent "class" "dropdown-content" addattr
+        dropdown ddcontent @ addcontent
+        0 local content 
+        0 local href 
+        0 local i 
+        links @ cells i 
+        do
+            links @ i @ cell@ 0 cell@ content !
+            links @ i @ cell@ 1 cell@ href !
+            ddcontent content @ href @ safeorescape a addcontent
+        loop
+        container @ dropdown @ addcontent 
+    else 
+        container @ "Bad type for your dropdown : only click or hover are allowed" addcontent 
+        "Bad type for your dropdown : only click or hover are allowed" log-err
+    then''',
             #*********************************
             'slider' : '''    local name 
     local type
@@ -1333,7 +1329,7 @@ class web(base_module):
         self.sessionvars = {'session_duration':30}
         self.usecookies = False
         self.version = 'v1.7.2'
-        self.packuse = ['db', 'mail']
+        self.packuse = ['db', 'mail', 'file']
 
     def _escape_html(self, s: str) -> str:
         if s is None:
