@@ -2,8 +2,8 @@
 "pagetest" 4 layout
 "template-columns" "200px repeat(4, 1fr)" layoutgrid
 "template-rows" "50px 500px 50px" layoutgrid
-"column-gap" "1px" layoutgrid
-"row-gap" "1px" layoutgrid
+"column-gap" "2px" layoutgrid
+"row-gap" "2px" layoutgrid
 "other" "background-color: indianred" layoutgrid
 "other" "padding:10px" layoutgrid
 
