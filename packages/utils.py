@@ -663,7 +663,7 @@ class Utils:
                 self.interpreter.work.popleft()
                 value = self.pop_work()
                 for pack in self.interpreter.packages:
-                    if name in self.interpreter.packages[pack].dictionary.keys():
+                    if name in self.interpreter.packages[pack].dictionary:
                         if self.interpreter.packages[pack].dictionary[name] == None:
                             self.interpreter.packages[pack].dictionary[name] = value
                         elif self.isfloat(self.interpreter.packages[pack].dictionary[name]) or self.isinteger(self.interpreter.packages[pack].dictionary[name]) or isinstance(self.isfloat(self.interpreter.packages[pack].dictionary[name]), str):
