@@ -1,0 +1,87 @@
+body { 
+    font-family: Arial; 
+    display: flex; 
+    height: 100vh; 
+    margin: 0; 
+    flex-direction:column;
+}
+
+#main {
+    flex:1;
+    display:grid;
+    grid-template-columns:320px 1fr;
+    grid-template-rows:1fr;
+    gap:5px;
+    padding:5px;
+    background:#ddd;
+    min-height:0;
+}
+
+#palette { 
+    width: 200px; 
+    border-right: 1px solid #ccc; 
+    padding: 10px; 
+}
+
+#workspace { 
+    flex: 1; 
+    padding: 10px; 
+    overflow: auto; 
+    background:#eee;
+}
+
+.node { 
+    border: 1px solid #333; 
+    padding: 5px; 
+    margin: 5px; 
+}
+
+.slot { 
+    border: 1px dashed #aaa; 
+    margin: 5px; 
+    padding: 5px; 
+}
+
+button { 
+    margin: 2px; 
+    border-radius: 5px; 
+    border: 1px solid gray; 
+}
+
+.palette_section {
+    border: 1px solid #ccc;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    width:308px;
+}
+
+.palette_header {
+    background: #eee;
+    padding: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    width:295px;
+}
+
+.palette_content {
+    padding: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    width:300px;
+}
+
+.palette_section.collapsed .palette_content {
+    display: none;
+}
+
+.palette_button {
+    padding: 4px 6px;
+    cursor: grab;
+}
+
+#palette_container {
+    overflow:auto;
+    border-right: 1px solid #ccc;
+}
