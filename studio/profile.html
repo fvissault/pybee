@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="profile"></div>
+
+        <script>
+        fetch("/api/session.py", {
+            method: "POST",
+            body: new URLSearchParams({ action: "read" })
+        })
+        .then(r=>r.json())
+        .then(session=>{
+            fetch("/api/users.py", {
+                method: "POST",
+                body: new URLSearchParams({
+                    action: "getByEmail",
+                    email: session.email
+                })
+            })
+            .then(r=>r.json())
+            .then(u=>{
+                document.getElementById("profile").innerHTML =
+                    u.firstname + " " + u.lastname;
+            });
+        });
+        </script>
+
+        <a href="main.html">Retour</a>
+    </body>
+</html>
