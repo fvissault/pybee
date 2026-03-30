@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title data-i18n="text:title"></title>
+        <link rel="stylesheet" href="css/signin.css">
+        <script src="js/lang.js"></script>
+        <script defer src="js/signin.js"></script>
+    </head>
+    <body>
+        <div style="text-align:center;">
+            <img src="images/logo.png" style="width:400px;"/>
+        </div>
+        <div id="global-block">
+            <h2 data-i18n="text:identification"></h2>
+            <div id="block">
+                <label for="email"><b data-i18n="text:email"></b></label>
+                <input id="email" data-i18n="placeholder:enteremail" placeholder="" autofocus/>
+                <label for="password" class="label"><b data-i18n="text:password"></b></label>
+                <input id="password" type="password" data-i18n="placeholder:enterpassword" placeholder=""/>
+                <div id="button-block">
+                    <button onclick="signin()" data-i18n="text:login"></button>
+                </div>
+            </div>
+            <div style="text-align:center;">
+                <a href="signup.html" data-i18n="text:signup"></a>
+                <span data-i18n="text:or"></span>
+                <a href="passwordlost.html" data-i18n="text:pass"></a>
+            </div>
+        </div>
+    </body>
+</html>
