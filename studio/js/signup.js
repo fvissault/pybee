@@ -45,49 +45,60 @@ function signup(){
         return
     }
 
-    fetch("/pybee/studio/api/entities.py", {
+    fetch("/pybee/studio/api/users.py", {
         method: "POST",
         credentials: "include",
         body: new URLSearchParams({
-            action: "getByName",
-            name: entity.value
+            action: "unique_email",
+            email: email.value
         })
     })
     .then(r => r.json())
-    .then(ent => {
-        console.log("entity response:", ent);
-        if (!ent.id) {
-            alert("Entreprise inconnue");
+    .then(user => {
+        if (user.id) {
+            alert("Email déjà utilisé");
+            email.focus()
             return;
         }
-        console.log(ent)
-        fetch("/pybee/studio/api/users.py", {
+        fetch("/pybee/studio/api/entities.py", {
             method: "POST",
             credentials: "include",
             body: new URLSearchParams({
-                action: "create",
-                firstname: firstname.value,
-                lastname: lastname.value,
-                email: email.value,
-                password: password.value,
-                id_entity: ent.id
+                action: "getByName",
+                name: entity.value
             })
         })
         .then(r => r.json())
-        .then(res => {
-            //console.log(res);
-
-            if (res.status === "ok") {
-                location.href = "signin.html";
-            } else {
-                alert("Signup error");
+        .then(ent => {
+            if (!ent.id) {
+                alert("Entreprise inconnue");
+                return;
             }
-        })
-        .catch(err => {
-            //console.error(err);
-            alert("Network error");
+            fetch("/pybee/studio/api/users.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "create",
+                    firstname: firstname.value,
+                    lastname: lastname.value,
+                    email: email.value,
+                    password: password.value,
+                    id_entity: ent.id
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === "ok") {
+                    location.href = "signin.html";
+                } else {
+                    alert("Signup error");
+                }
+            })
+            .catch(err => {
+                alert("Network error");
+            });
         });
-    });
+    });   
 }
 
 const translations = {
