@@ -89,3 +89,68 @@ function signup(){
         });
     });
 }
+
+const translations = {
+    fr : { 
+        title: "Inscription à Beetle Studio",
+        registration : "Création de compte Beetle Studio", 
+        firstname : "Prénom", 
+        lastname : "Nom", 
+        email : "Email", 
+        password : "Mot de passe", 
+        confirm : "Confirmer le mot de passe",
+        organization : "Organisation",
+        register : "S'inscrire", 
+        signin : "Retour à la connexion" 
+    } , 
+    en : { 
+        title: "Beetle Studio Signup",
+        registration : "Beetle Studio Registration", 
+        firstname : "Firstname", 
+        lastname : "Lastname", 
+        email : "Email", 
+        password : "Password", 
+        confirm : "Confirm password",
+        organization : "Organization",
+        register : "Sign up", 
+        signin : "Back to sign in" 
+    } ,
+    it : {
+        title: "Registrazione a Beetle Studio",
+        registration : "Registrazione Beetle Studio", 
+        firstname : "Nome", 
+        lastname : "Cognome", 
+        email : "Email", 
+        password : "Password", 
+        confirm : "Conferma password",
+        organization : "Organizzazione",
+        register : "Registrati", 
+        signin : "Torna al login" 
+    },
+    de : {
+        title: "Registrierung bei Beetle Studio",
+        registration : "Beetle Studio Registrierung", 
+        firstname : "Vorname", 
+        lastname : "Nachname", 
+        email : "E-Mail", 
+        password : "Passwort", 
+        confirm : "Passwort bestätigen",
+        organization : "Organisation",
+        register : "Registrieren", 
+        signin : "Zur Anmeldung zurück" 
+    } ,
+    es : {
+        title: "Registro en Beetle Studio",
+        registration : "Registro de Beetle Studio", 
+        firstname : "Nombre", 
+        lastname : "Apellido", 
+        email : "Correo electrónico", 
+        password : "Contraseña", 
+        confirm : "Confirmar contraseña",
+        organization : "Organización",
+        register : "Registrarse", 
+        signin : "Volver al inicio de sesión" 
+    }
+}
+
+renderUI()
