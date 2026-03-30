@@ -16,3 +16,6 @@ env/
 .DS_Store
 Thumbs.db
 .vscode/settings.json
+studio/projects.json
+studio/projects/test/azeaze.bst
+studio/projects/project1/file1.bst
