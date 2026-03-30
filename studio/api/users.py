@@ -30,6 +30,14 @@ elif action == "create":
     ))
     db.commit()
     json_response({"status": "ok"})
+# EMAIL UNIQUE
+elif action == "unique_email":
+    sql = "SELECT * FROM users WHERE email=%s"
+    cursor.execute(sql, (
+        data["email"],
+    ))
+    user = cursor.fetchone()
+    json_response(user if user else {"error": "user don't exists"})
 else:
     session = require_auth()
 
