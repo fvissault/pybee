@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Beetle Studio Signup</title>
+        <link rel="stylesheet" href="css/signup.css">
+        <script src="js/signup.js"></script>
+    </head>
+    <body>
+        <div style="text-align:center;">
+            <img src="images/logo.png" style="width:400px;"/>
+        </div>
+        <div id="global-block">
+            <h2>Beetle Studio Registration</h2>
+            <div id="block">
+                <label for="firstname">Firstname</label>
+                <input id="firstname" type="text" placeholder="Firstname">
+                <label for="lastname" class="label">Lastname</label>
+                <input id="lastname" type="text" placeholder="Lastname">
+                <label for="email" class="label">Email</label>
+                <input id="email" type="email" placeholder="Email" value="">
+                <label for="password" class="label">Password</label>
+                <input id="password" type="password" placeholder="Password">
+                <label for="confirm" class="label">Confirm password</label>
+                <input id="confirm" type="password" placeholder="Confirm password">
+                <label for="entity" class="label">Organisation</label>
+                <input id="entity" placeholder="Your organization">
+            </div>
+            <div id="button-block">
+                <button onclick="signup()">Register</button>
+            </div>
+            <div style="text-align:center;">
+                <a href="signin.html">Signin return</a>
+            </div>
+        </div>
+    </body>
+</html>
