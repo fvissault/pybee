@@ -1,4 +1,4 @@
-const supportedLangs = ["fr", "en"]
+const supportedLangs = ["fr", "en", "de", "it", "es"]
 
 function detectBrowserLang() {
     const lang = navigator.language
