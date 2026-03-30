@@ -3,35 +3,36 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title>Beetle Studio Signup</title>
+        <title data-i18n="text:title"></title>
         <link rel="stylesheet" href="css/signup.css">
-        <script src="js/signup.js"></script>
+        <script src="js/lang.js"></script>
+        <script defer src="js/signup.js"></script>
     </head>
     <body>
         <div style="text-align:center;">
             <img src="images/logo.png" style="width:400px;"/>
         </div>
         <div id="global-block">
-            <h2>Beetle Studio Registration</h2>
+            <h2 data-i18n="text:registration"></h2>
             <div id="block">
-                <label for="firstname">Firstname</label>
-                <input id="firstname" type="text" placeholder="Firstname">
-                <label for="lastname" class="label">Lastname</label>
-                <input id="lastname" type="text" placeholder="Lastname">
-                <label for="email" class="label">Email</label>
-                <input id="email" type="email" placeholder="Email" value="">
-                <label for="password" class="label">Password</label>
-                <input id="password" type="password" placeholder="Password">
-                <label for="confirm" class="label">Confirm password</label>
-                <input id="confirm" type="password" placeholder="Confirm password">
-                <label for="entity" class="label">Organisation</label>
-                <input id="entity" placeholder="Your organization">
+                <label for="firstname"><b data-i18n="text:firstname"></b></label>
+                <input id="firstname" type="text" data-i18n="placeholder:firstname" placeholder="">
+                <label for="lastname" class="label"><b data-i18n="text:lastname"></b></label>
+                <input id="lastname" type="text" data-i18n="placeholder:lastname" placeholder="">
+                <label for="email" class="label"><b data-i18n="text:email"></b></label>
+                <input id="email" type="email" data-i18n="placeholder:email" placeholder="" value="">
+                <label for="password" class="label"><b data-i18n="text:password"></b></label>
+                <input id="password" type="password" data-i18n="placeholder:password" placeholder="Password">
+                <label for="confirm" class="label"><b data-i18n="text:confirm"></b></label>
+                <input id="confirm" type="password" data-i18n="placeholder:confirm" placeholder="">
+                <label for="entity" class="label"><b data-i18n="text:organization"></b></label>
+                <input id="entity" type="text" data-i18n="placeholder:organization" placeholder="">
             </div>
             <div id="button-block">
-                <button onclick="signup()">Register</button>
+                <button onclick="signup()" data-i18n="text:register"></button>
             </div>
             <div style="text-align:center;">
-                <a href="signin.html">Signin return</a>
+                <a href="signin.html" data-i18n="text:signin"></a>
             </div>
         </div>
     </body>
