@@ -4,6 +4,8 @@ import json
 import hashlib
 import cgi
 import time
+import re
+import sys
 
 SECRET = "cle_secrete"
 
@@ -17,6 +19,7 @@ def get_post_data():
 def json_response(data):
     print("Content-Type: application/json\n")
     print(json.dumps(data))
+    sys.exit()
 
 def hash_password(password):
     return hashlib.md5(password.encode()).hexdigest()
@@ -75,3 +78,6 @@ def require_auth(cookie_header=None):
         json_response({"error": "API error: unauthorized"})
         exit()
     return session
+
+def is_valid_email(email):
+    return re.match(r"^[^@]+@[^@]+\.[^@]+$", email)
