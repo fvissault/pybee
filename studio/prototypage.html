@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Beetle Studio Prototype</title>
+    <link rel="stylesheet" href="css/prototypage.css">
+    <script defer src="js/prototypage.js"></script>
+    <script defer src="js/prototypage_dialogs.js"></script>
+
+</head>
+
+<body>
+    <!-- Menu -->
+    <div id="menu">
+        <div style="margin-right:10px;">Beetle Studio - Prototypage</div>
+        <button id="newPageBtn">New workspace</button>
+        <button onclick="createProject()">New Project</button>
+        <button onclick="deleteProject()">Delete Project</button>
+        <button onclick="saveFileBST()">Save</button>
+    </div>
+
+    <div id="main">
+        <!-- Explorateur -->
+        <div id="explorer" class="panel">
+            <div class="panel-header">Explorateur</div>
+            <div class="panel-content">
+                <div style="margin-bottom:10px;font-weight:bold">Projets :</div>
+                <div style="display:flex;margin-bottom:10px">
+                    <select id="projectSelect" style="flex:1">
+                        <option value="">Select a project</option>
+                    </select>
+                </div>
+                <div id="projectTree"></div>
+            </div>
+        </div>
+
+        <!-- Palette -->
+        <div id="palette" class="panel">
+            <div class="panel-header">Palette</div>
+
+            <div class="panel-content">
+                <div class="palette-item" draggable="true" data-type="layout" data-zones="1">Layout : ▭</div>
+                <div class="palette-item" draggable="true" data-type="layout" data-zones="2">Layout : ▭▭</div>
+                <div class="palette-item" draggable="true" data-type="layout" data-zones="3">Layout : ▭▭▭</div>
+                <div class="palette-item" draggable="true" data-type="layout" data-zones="4">Layout : ▭▭▭▭</div>
+                <div class="palette-item" draggable="true" data-type="layout" data-zones="5">Layout : ▭▭▭▭▭</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Block">Block</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Text">Text</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Span">Span</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Label">Label</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="TextField">TextField</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Form">Form</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Image">Image</div>
+                <div class="palette-item" draggable="true" data-type="widget" data-widget="Button">Button</div>
+            </div>
+
+        </div>
+
+        <!-- workspace -->
+        <div id="workspace-panel" class="panel">
+            <div class="panel-header">
+                <button id="config_container" style="margin-right: 6px; height:20px; font-size:12px;" onclick="openConfigPopup(workspaceRoot, 'html')">⚙</button> 
+                <button id="css_layout" style="margin-right: 6px; display:none;" onclick="openConfigPopup(workspaceRoot, 'lcss')">layout css</button> 
+                <button id="css_container" style="margin-right: 6px;" onclick="openConfigPopup(workspaceRoot, 'css')">css</button> 
+                <button id="js_container" style="margin-right: 6px;" onclick="openIntFlow()">js</button> 
+                <button id="model_container" style="margin-right: 6px;" onclick="openConfigPopup(workspaceRoot, 'model')">M</button> 
+                Workspace</div>
+            <div class="panel-content">
+                <div id="workspace"></div>
+            </div>
+        </div>
+
+        <!-- poubelle -->
+        <div id="trash">🗑 Glisser ici pour supprimer</div>
+    </div>
+
+<div id="configPopup" class="config-popup">
+    <div class="config-header">Configuration</div>
+    <div id="configContent"></div>
+</div>
+
+</body>
+</html>
