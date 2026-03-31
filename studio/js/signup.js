@@ -89,8 +89,26 @@ function signup(){
             .then(r => r.json())
             .then(res => {
                 if (res.status === "ok") {
-                    alert("Un email vous a été envoyé sur votre boite email pour terminer votre incription")
-                    location.href = "signin.html";
+                    fetch("/pybee/studio/api/mail.py", {
+                        method: "POST",
+                        credentials: "include",
+                        body: new URLSearchParams({
+                            lang: currentLang,
+                            predname: "signin",
+                            email: email.value,
+                            toreplace: JSON.stringify({ 
+                                name: firstname.value, 
+                                link: "http://localhost/pybee/studio/confirm.html?email=" + email.value, 
+                                email: email.value 
+                            }),
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        console.log(res)
+                        alert("Un email vous a été envoyé sur votre boite email pour terminer votre incription")
+                        location.href = "signin.html";
+                    })
                 } else {
                     alert("Signup error");
                 }
