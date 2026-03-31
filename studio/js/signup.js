@@ -89,6 +89,7 @@ function signup(){
             .then(r => r.json())
             .then(res => {
                 if (res.status === "ok") {
+                    alert("Un email vous a été envoyé sur votre boite email pour terminer votre incription")
                     location.href = "signin.html";
                 } else {
                     alert("Signup error");
