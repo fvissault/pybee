@@ -2,61 +2,193 @@ predefined_mails = {
     "fr" : {
         "passlost" : {
             "subject" : "Réinitialisation de votre mot de passe" ,
-            "body" : "<html><body><div>Bonjour {name},<br>Vous souhaitez réinitialiser votre mot de passe.<br>Veuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : <a href='{link}'>ici</a><br>L'équipe</div></body></html>" ,
-            "text" : "Bonjour {name},\nVous souhaitez réinitialiser votre mot de passe.\nVeuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe : {link} ici\nL'équipe"
+            "body" : """<html>
+                            <body>
+                                <div>Bonjour {name},</div>
+                                <div>Vous souhaitez réinitialiser votre mot de passe.</div>
+                                <div>Veuillez cliquer sur le lien suivant afin de réinitialiser votre mot de passe :</div>
+                                <a href="{link}">Réinitialiser votre mot de passe</a>
+                                <div>L'équipe</div>
+                            </body>
+                        </html>""" ,
+            "text" : """Bonjour {name},\n
+Vous souhaitez réinitialiser votre mot de passe.\n
+Veuillez copier/coller le lien suivant dans votre navigateur afin de réinitialiser votre mot de passe : {link}\n
+L'équipe"""
         } , 
         "signin" : {
             "subject" : "Félicitations pour votre inscription" ,
-            "body" : "<html><body><div>Bonjour {name},<br>Nous sommes heureux de vous compter parmi nous!<br>Votre identifiant pour vous connecter est l'email que vous avez renseigné lors de votre inscription : {email}<br>Si vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l'authentification.<br>L'équipe</div></body></html>" ,
-            "text" : "Bonjour {name},\nNous sommes heureux de vous compter parmi nous!\nVotre identifiant pour vous connecter est l'email que vous avez renseigné lors de votre inscription : {email}\nSi vous avez oublié votre mot de passe, votre application vous permet de réinitialiser votre mot de passe au moment de l'authentification.\nL'équipe"
+            "body" : """<html>
+                            <body>
+                                <div>Bonjour {name},</div>
+                                <div>Nous sommes heureux de vous compter parmi nous !</div>
+                                <div>Votre identifiant pour vous connecter est l'email que vous avez renseigné lors de votre inscription : {email}</div>
+                                <div>Si vous avez oublié votre mot de passe, votre application vous permet de le réinitialiser lors de l'authentification.</div>
+                                <div>Cependant, pour terminer votre inscription, vous devez valider votre email en cliquant sur le lien suivant :</div>
+                                <a href="{link}">Valider votre email</a>
+                                <div>L'équipe</div>
+                            </body>
+                        </html>""" ,
+            "text" : """Bonjour {name},\n
+Nous sommes heureux de vous compter parmi nous !\n
+Votre identifiant est : {email}\n
+Pour finaliser votre inscription, veuillez utiliser le lien suivant :\n
+{link}\n
+L'équipe"""
         }
     } , 
+
     "en" : {
         "passlost" : {
-            "subject" : "Resetting your password" ,
-            "body" : "<html><body><div>Hi {name},<br>You wish reinitialize your password.<br>>Please click on the following link to reset your password : <a href='{link}'>here</a><br>The team</div></body></html>" ,
-            "text" : "Hi {name},\nYou wish reinitialize your password.\nPlease click on the following link to reset your password : {link} here\nThe team"
-        } , 
+            "subject" : "Reset your password",
+            "body" : """<html>
+                            <body>
+                                <div>Hello {name},</div>
+                                <div>You requested a password reset.</div>
+                                <div>Please click the link below to reset your password:</div>
+                                <a href="{link}">Reset your password</a>
+                                <div>The team</div>
+                            </body>
+                        </html>""",
+            "text" : """Hello {name},\n
+You requested a password reset.\n
+Please copy and paste the following link into your browser to reset your password: {link}\n
+The team"""
+        },
         "signin" : {
-            "subject" : "Congratulations on signing up" ,
-            "body" : "<html><body><div>Hello {name},<br>We are happy to have you among us!<br>Your login identifier is the email you provided when registering: {email}<br>If you have forgot your password, your application allows you to reset your password at the time of authentication.<br>The team</div></body></html>" ,
-            "text" : "Hello {name},\nWe are happy to have you among us!\nYour login identifier is the email you provided when registering: {email}\nIf you have forgot your password, your application allows you to reset your password at the time of authentication.\nThe team"
+            "subject" : "Welcome to Beetle Studio",
+            "body" : """<html>
+                            <body>
+                                <div>Hello {name},</div>
+                                <div>We are happy to have you with us!</div>
+                                <div>Your login email is: {email}</div>
+                                <div>If you forgot your password, you can reset it from the login page.</div>
+                                <div>To complete your registration, please confirm your email by clicking the link below:</div>
+                                <a href="{link}">Confirm your email</a>
+                                <div>The team</div>
+                            </body>
+                        </html>""",
+            "text" : """Hello {name},\n
+We are happy to have you with us!\n
+Your login email is: {email}\n
+To complete your registration, please use the following link:\n
+{link}\n
+The team"""
         }
-    } ,
+    },
+
     "de" : {
         "passlost" : {
-            "subject" : "Zurücksetzen Ihres Passworts" ,
-            "body" : "<html><body><div>Hallo {name},<br>Sie möchten Ihr Passwort zurücksetzen.<br>Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: <a href='{link}'>hier</a><br>Das Team</div></body></html>" ,
-            "text" : "Hallo {name},\nSie möchten Ihr Passwort zurücksetzen.\nBitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen: {link} hier\nDas Team"
-        } ,
+            "subject" : "Passwort zurücksetzen",
+            "body" : """<html>
+                            <body>
+                                <div>Hallo {name},</div>
+                                <div>Sie haben eine Zurücksetzung Ihres Passworts angefordert.</div>
+                                <div>Bitte klicken Sie auf den folgenden Link, um Ihr Passwort zurückzusetzen:</div>
+                                <a href="{link}">Passwort zurücksetzen</a>
+                                <div>Das Team</div>
+                            </body>
+                        </html>""",
+            "text" : """Hallo {name},\n
+Sie haben eine Zurücksetzung Ihres Passworts angefordert.\n
+Bitte kopieren Sie den folgenden Link in Ihren Browser, um Ihr Passwort zurückzusetzen: {link}\n
+Das Team"""
+        },
         "signin" : {
-            "subject" : "Herzlichen Glückwunsch zu Ihrer Anmeldung" ,
-            "body" : "<html><body><div>Hallo {name},<br>Wir freuen uns, Sie bei uns begrüßen zu dürfen!<br>Ihr Benutzername zum Anmelden ist die E-Mail-Adresse, die Sie bei der Registrierung angegeben haben: {email}<br>Wenn Sie Ihr Passwort vergessen haben, können Sie es während der Anmeldung in Ihrer Anwendung zurücksetzen.<br>Das Team</div></body></html>" ,
-            "text" : "Hallo {name},\nWir freuen uns, Sie bei uns begrüßen zu dürfen!\nIhr Benutzername zum Anmelden ist die E-Mail-Adresse, die Sie bei der Registrierung angegeben haben: {email}\nWenn Sie Ihr Passwort vergessen haben, können Sie es während der Anmeldung in Ihrer Anwendung zurücksetzen.\nDas Team"
+            "subject" : "Willkommen bei Beetle Studio",
+            "body" : """<html>
+                            <body>
+                                <div>Hallo {name},</div>
+                                <div>Wir freuen uns, Sie bei uns zu haben!</div>
+                                <div>Ihre Anmelde-E-Mail lautet: {email}</div>
+                                <div>Falls Sie Ihr Passwort vergessen haben, können Sie es auf der Anmeldeseite zurücksetzen.</div>
+                                <div>Bitte bestätigen Sie Ihre E-Mail über den folgenden Link:</div>
+                                <a href="{link}">E-Mail bestätigen</a>
+                                <div>Das Team</div>
+                            </body>
+                        </html>""",
+            "text" : """Hallo {name},\n
+Wir freuen uns, Sie bei uns zu haben!\n
+Ihre E-Mail: {email}\n
+Bitte bestätigen Sie Ihre Registrierung über den folgenden Link:\n
+{link}\n
+Das Team"""
         }
-    } ,
+    },
+
     "it" : {
         "passlost" : {
-            "subject" : "Reimpostazione della tua password" ,
-            "body" : "<html><body><div>Ciao {name},<br>Hai richiesto di reimpostare la tua password.<br>Fai clic sul seguente link per reimpostare la tua password: <a href='{link}'>qui</a><br>Il team</div></body></html>" ,
-            "text" : "Ciao {name},\nHai richiesto di reimpostare la tua password.\nFai clic sul seguente link per reimpostare la tua password: {link} qui\nIl team"
-        } ,
+            "subject" : "Reimposta la tua password",
+            "body" : """<html>
+                            <body>
+                                <div>Ciao {name},</div>
+                                <div>Hai richiesto di reimpostare la password.</div>
+                                <div>Clicca sul link seguente per reimpostarla:</div>
+                                <a href="{link}">Reimposta la password</a>
+                                <div>Il team</div>
+                            </body>
+                        </html>""",
+            "text" : """Ciao {name},\n
+Hai richiesto di reimpostare la password.\n
+Copia e incolla il seguente link nel tuo browser: {link}\n
+Il team"""
+        },
         "signin" : {
-            "subject" : "Congratulazioni per la tua registrazione" ,
-            "body" : "<html><body><div>Ciao {name},<br>Siamo felici di averti tra noi!<br>Il tuo identificativo per accedere è l'email che hai fornito durante la registrazione: {email}<br>Se hai dimenticato la tua password, l'applicazione ti permette di reimpostarla al momento dell'autenticazione.<br>Il team</div></body></html>" ,
-            "text" : "Ciao {name},\nSiamo felici di averti tra noi!\nIl tuo identificativo per accedere è l'email che hai fornito durante la registrazione: {email}\nSe hai dimenticato la tua password, l'applicazione ti permette di reimpostarla al momento dell'autenticazione.\nIl team"
+            "subject" : "Benvenuto in Beetle Studio",
+            "body" : """<html>
+                            <body>
+                                <div>Ciao {name},</div>
+                                <div>Siamo felici di averti con noi!</div>
+                                <div>La tua email di accesso è: {email}</div>
+                                <div>Per completare la registrazione, conferma la tua email:</div>
+                                <a href="{link}">Conferma email</a>
+                                <div>Il team</div>
+                            </body>
+                        </html>""",
+            "text" : """Ciao {name},\n
+Siamo felici di averti con noi!\n
+Email: {email}\n
+Completa la registrazione con questo link:\n
+{link}\n
+Il team"""
         }
-    } ,
+    },
+
     "es" : {
         "passlost" : {
-            "subject" : "Restablecimiento de tu contraseña" ,
-            "body" : "<html><body><div>Hola {name},<br>Has solicitado restablecer tu contraseña.<br>Por favor, haz clic en el siguiente enlace para restablecer tu contraseña: <a href='{link}'>aquí</a><br>El equipo</div></body></html>" ,
-            "text" : "Hola {name},\nHas solicitado restablecer tu contraseña.\nPor favor, haz clic en el siguiente enlace para restablecer tu contraseña: {link} aquí\nEl equipo"
-        } ,
+            "subject" : "Restablecer tu contraseña",
+            "body" : """<html>
+                            <body>
+                                <div>Hola {name},</div>
+                                <div>Has solicitado restablecer tu contraseña.</div>
+                                <div>Haz clic en el siguiente enlace:</div>
+                                <a href="{link}">Restablecer contraseña</a>
+                                <div>El equipo</div>
+                            </body>
+                        </html>""",
+            "text" : """Hola {name},\n
+Has solicitado restablecer tu contraseña.\n
+Copia y pega este enlace en tu navegador: {link}\n
+El equipo"""
+        },
         "signin" : {
-           "subject" : "Felicidades por tu registro" ,
-            "body" : "<html><body><div>Hola {name},<br>¡Nos alegra darte la bienvenida!<br>Tu identificador para iniciar sesión es el correo electrónico que proporcionaste al registrarte: {email}<br>Si has olvidado tu contraseña, tu aplicación te permite restablecerla en el momento de la autenticación.<br>El equipo</div></body></html>" ,
-            "text" : "Hola {name},\n¡Nos alegra darte la bienvenida!\nTu identificador para iniciar sesión es el correo electrónico que proporcionaste al registrarte: {email}\nSi has olvidado tu contraseña, tu aplicación te permite restablecerla en el momento de la autenticación.\nEl equipo"
+            "subject" : "Bienvenido a Beetle Studio",
+            "body" : """<html>
+                            <body>
+                                <div>Hola {name},</div>
+                                <div>¡Estamos encantados de tenerte con nosotros!</div>
+                                <div>Tu correo de acceso es: {email}</div>
+                                <div>Para completar tu registro, confirma tu email:</div>
+                                <a href="{link}">Confirmar email</a>
+                                <div>El equipo</div>
+                            </body>
+                        </html>""",
+            "text" : """Hola {name},\n
+¡Estamos encantados de tenerte con nosotros!\n
+Correo: {email}\n
+Completa tu registro con este enlace:\n
+{link}\n
+El equipo"""
         }
     }
 }
