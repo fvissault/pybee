@@ -19,3 +19,5 @@ Thumbs.db
 studio/projects.json
 studio/projects/test/azeaze.bst
 studio/projects/project1/file1.bst
+studio/api/config_mails.py
+userarea/mails/config.btl
