@@ -38,6 +38,22 @@ elif action == "unique_email":
     ))
     user = cursor.fetchone()
     json_response(user if user else {"error": "user don't exists"})
+# SELECT (confirm email)
+elif action == "confirm_email":
+    sql = "SELECT * FROM users WHERE email=%s and active=1"
+    cursor.execute(sql, (
+        data["email"],
+    ))
+    user = cursor.fetchone()
+    json_response(user if user else {"error": "user don't exists"})
+# UPDATE (active)
+elif action == "set_active":
+    sql = "UPDATE users SET active=1 WHERE email=%s"
+    cursor.execute(sql, (
+        data["email"],
+    ))
+    db.commit()
+    json_response({"status": "ok"})
 else:
     session = require_auth()
 
