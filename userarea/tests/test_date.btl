@@ -1,0 +1,32 @@
+<?btl
+import date
+
+now year .cr
+now month # .cr
+now month lname .cr
+now month sname .cr
+now day # .cr
+now day lname .cr
+now day sname .cr
+now hour .cr
+now minut .cr
+now second .cr
+now microsecond .cr
+
+now year now month # #monthdays .cr
+
+2025 1 10 15 39 33 5698 timestamp .cr
+
+2025 1 10 15 39 33 5698 timestamp now d= .cr
+now now d= .cr
+
+2024 ?leap .cr
+2025 ?leap .cr
+2026 ?leap .cr
+2027 ?leap .cr
+2028 ?leap .cr
+
+2025 01 12 #week .cr
+
+now 2025 year= .
+?>

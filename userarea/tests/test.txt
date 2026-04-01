@@ -1,0 +1,4 @@
+Ceci est du texte
+dans un fichier qui s'appelle "test.txt"
+Juste pour faire quelques tests
+sur le package 'file'

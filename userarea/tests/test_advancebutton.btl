@@ -1,0 +1,23 @@
+<?btl
+webreset
+title "Page pour tester les boutons avancés" addcontent
+html "lang" lang? addattr
+head "userarea/css/advancebutton.css" headlink addcontent
+
+body "fullsuccess" "button" "Success" "b1" advancebutton
+body "fullinfo" "button" "Info" "b2" advancebutton
+body "fullwarning" "button" "Warning" "b3" advancebutton
+body "fulldanger" "button" "Danger" "b4" advancebutton
+body "fulldefault" "button" "Default" "b5" advancebutton
+
+body br addcontent
+body br addcontent
+
+body "outlinesuccess" "button" "Success" "b6" advancebutton
+body "outlineinfo" "button" "Info" "b7" advancebutton
+body "outlinewarning" "button" "Warning" "b8" advancebutton
+body "outlinedanger" "button" "Danger" "b9" advancebutton
+body "outlinedefault" "button" "Default" "b10" advancebutton
+
+html @ 0 generate cls
+?>

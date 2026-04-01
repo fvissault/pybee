@@ -1,0 +1,16 @@
+<?btl
+: choice
+    case
+        1 of "Choix 1 est le bon" . endof
+        2 of "Choix 2 est le bon" . endof
+        3 of "Choix 3 est le bon" . endof
+        4 of "Choix 4 est le bon" . endof
+        5 of "Choix 5 est le bon" . endof
+        "Un autre choix a été fait" .
+    endcase
+;
+
+5 choice cr
+6 choice cr
+4 choice cr
+?>

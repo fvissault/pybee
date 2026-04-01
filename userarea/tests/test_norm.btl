@@ -1,0 +1,25 @@
+<?btl
+import math
+
+: normtest 
+    0 var norm#res
+    0 var norm#i
+    dup cells norm#i
+    do
+        dup norm#i @
+        swap cell@
+        2 pow                             
+        norm#res +! 
+    loop 
+    drop 
+    norm#res @ sqrt 
+    forget norm#res 
+    forget norm#i
+;
+[ 1 2 ] vector v1
+"norme de v1 = " . v1 @ normtest .cr
+[ 1 2 3 ] vector v2
+"norme de v2 = " . v2 @ normtest .cr
+[ 1 2 3 4 ] vector v3
+"norme de v3 = " . v3 @ normtest .cr
+?>

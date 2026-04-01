@@ -1,0 +1,14 @@
+<?btl
+webreset
+title "Page pour tester les accordéons" addcontent
+html "lang" lang? addattr
+head "userarea/css/accordion.css" headlink addcontent
+head "defer" "userarea/js/accordion.js" headscriptfile addcontent
+
+body [ "Section 1" "Section 2" "Section 3" ] "acc1" accordion
+acc1panel0 "Contenu de la section 1" addcontent
+acc1panel1 "Contenu de la section 2" addcontent
+acc1panel2 "Contenu de la section 3" addcontent
+
+html @ 0 generate cls
+?>

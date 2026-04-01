@@ -1,0 +1,11 @@
+<?btl
+webreset
+title "Page pour tester le formulaire de création de compte" addcontent
+html "lang" lang? addattr
+head "userarea/css/signupform.css" headlink addcontent
+head "defer" "userarea/js/signupform.js" headscriptfile addcontent
+
+body "action_page.btl" "term_privacy.btl" signupform
+
+html @ 0 generate cls
+?>

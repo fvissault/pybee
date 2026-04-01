@@ -1,0 +1,22 @@
+<?btl
+( "noredirect" "beetle" session )
+webreset
+body form1 addcontent
+title "Page test de passage de paramètres dans un formulaire" addcontent
+form1 "action" "test_form_result.btl" addattr
+html "lang" "en" addattr
+head "UTF-8" charset addcontent
+head "userarea/css/file.css" headlink addcontent
+
+form1 "Ceci est mon label : " "mydiv" label addcontent
+"mydiv" "fred" "text" fieldarea var fa drop
+form1 fa addcontent
+form1 br addcontent
+form1 "submit" "Valider" button addcontent
+
+( html @ .cr cr )
+
+html @ 0 generate cls
+
+forget fa
+?>
