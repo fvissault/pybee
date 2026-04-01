@@ -7,7 +7,7 @@ import shutil
 from urllib.parse import parse_qs
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
-PROJECTS_FILE = os.path.join(ROOT, "projects.json")
+PROJECTS_FILE = os.path.join(ROOT, "projects/projects.json")
 PROJECTS_DIR = os.path.join(ROOT, "projects")
 
 print("Content-Type: application/json\n")
