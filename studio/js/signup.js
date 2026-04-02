@@ -88,35 +88,31 @@ function signup(){
             })
             .then(r => r.json())
             .then(res => {
-                if (res.status === "ok") {
-                    fetch("/pybee/studio/api/mail.py", {
-                        method: "POST",
-                        credentials: "include",
-                        body: new URLSearchParams({
-                            lang: currentLang,
-                            predname: "signin",
-                            email: email.value,
-                            toreplace: JSON.stringify({ 
-                                name: firstname.value, 
-                                link: "http://localhost/pybee/studio/confirm.html?email=" + email.value, 
-                                email: email.value 
-                            }),
-                        })
+                fetch("/pybee/studio/api/mail.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        lang: currentLang,
+                        predname: "signin",
+                        email: email.value,
+                        toreplace: JSON.stringify({ 
+                            name: firstname.value, 
+                            link: "http://localhost/pybee/studio/confirm.html?token=" + res.token, 
+                            email: email.value 
+                        }),
                     })
-                    .then(r => r.json())
-                    .then(res => {
-                        alert(t("alertemailsent"))
-                        location.href = "signin.html";
-                    })
-                } else {
-                    alert("Signup error");
-                }
+                })
+                .then(r => r.json())
+                .then(res => {
+                    alert(t("alertemailsent"))
+                    location.href = "signin.html"
+                })
             })
-            .catch(err => {
-                alert("Network error");
-            });
-        });
-    });   
+        })
+    })
+    .catch(err => {
+        alert("Network error");
+    });
 }
 
 const translations = {
