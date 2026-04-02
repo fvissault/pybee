@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title data-i18n="text:title"></title>
+        <link rel="stylesheet" href="css/signup.css">
+        <script src="js/lang.js"></script>
+        <script defer src="js/reset.js"></script>
+    </head>
+    <body>
+        <div style="text-align:center;">
+            <img src="images/logo.png" style="width:400px;"/>
+        </div>
+        <div id="global-block">
+            <h2 data-i18n="text:reinitialize"></h2>
+            <div id="block">
+                <label for="password" class="label"><b data-i18n="text:password"></b></label>
+                <input id="password" type="password" data-i18n="placeholder:password" placeholder="Password">
+                <label for="confirm" class="label"><b data-i18n="text:confirm"></b></label>
+                <input id="confirm" type="password" data-i18n="placeholder:confirm" placeholder="">
+            </div>
+            <div id="button-block">
+                <button onclick="reset()" data-i18n="text:reset"></button>
+            </div>
+            <div style="text-align:center;">
+                <a href="signin.html" data-i18n="text:signin"></a>
+            </div>
+        </div>
+    </body>
+</html>
