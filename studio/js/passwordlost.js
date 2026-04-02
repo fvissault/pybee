@@ -12,18 +12,29 @@ function reset(){
     }
 
     fetch("/pybee/studio/api/users.py", {
-            method: "POST",
-            credentials: "include",
-            body: new URLSearchParams({
-                action: "unique_email",
-                email: email.value,
-            })
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "unique_email",
+            email: email.value,
         })
-        .then(r => r.json())
-        .then(data => {
-            if (data.error) {
-                alert(t("alertemail"))
-            } else {
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) {
+            alert(t("alertemail"))
+        } else {
+            fetch("/pybee/studio/api/users.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "gettokenbyemail",
+                    email: email.value,
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                console.log(data)
                 fetch("/pybee/studio/api/mail.py", {
                     method: "POST",
                     credentials: "include",
@@ -33,7 +44,7 @@ function reset(){
                         email: email.value,
                         toreplace: JSON.stringify({ 
                             name: data["firstname"], 
-                            link: "http://localhost/pybee/studio/reset.html?email=" + email.value, 
+                            link: "http://localhost/pybee/studio/reset.html?token=" + res.token, 
                             email: email.value 
                         }),
                     })
@@ -43,8 +54,9 @@ function reset(){
                     alert(t("alertemailsent"))
                     location.href = "signin.html";
                 });
-            }
-        })
+            })
+        }
+    })
 }
 
 const translations = {
