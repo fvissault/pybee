@@ -1,7 +1,7 @@
 predefined_mails = {
     "fr" : {
         "passlost" : {
-            "subject" : "Réinitialisation de votre mot de passe" ,
+            "subject" : "Beetle studio - Réinitialisation de votre mot de passe" ,
             "body" : """<html>
                             <body>
                                 <div>Bonjour {name},</div>
@@ -17,7 +17,7 @@ Veuillez copier/coller le lien suivant dans votre navigateur afin de réinitiali
 L'équipe"""
         } , 
         "signin" : {
-            "subject" : "Félicitations pour votre inscription" ,
+            "subject" : "Beetle studio - Félicitations pour votre inscription" ,
             "body" : """<html>
                             <body>
                                 <div>Bonjour {name},</div>
@@ -40,7 +40,7 @@ L'équipe"""
 
     "en" : {
         "passlost" : {
-            "subject" : "Reset your password",
+            "subject" : "Beetle studio - Reset your password",
             "body" : """<html>
                             <body>
                                 <div>Hello {name},</div>
@@ -56,7 +56,7 @@ Please copy and paste the following link into your browser to reset your passwor
 The team"""
         },
         "signin" : {
-            "subject" : "Welcome to Beetle Studio",
+            "subject" : "Beetle studio - Welcome to Beetle Studio",
             "body" : """<html>
                             <body>
                                 <div>Hello {name},</div>
@@ -79,7 +79,7 @@ The team"""
 
     "de" : {
         "passlost" : {
-            "subject" : "Passwort zurücksetzen",
+            "subject" : "Beetle studio - Passwort zurücksetzen",
             "body" : """<html>
                             <body>
                                 <div>Hallo {name},</div>
@@ -95,7 +95,7 @@ Bitte kopieren Sie den folgenden Link in Ihren Browser, um Ihr Passwort zurückz
 Das Team"""
         },
         "signin" : {
-            "subject" : "Willkommen bei Beetle Studio",
+            "subject" : "Beetle studio - Willkommen bei Beetle Studio",
             "body" : """<html>
                             <body>
                                 <div>Hallo {name},</div>
@@ -118,7 +118,7 @@ Das Team"""
 
     "it" : {
         "passlost" : {
-            "subject" : "Reimposta la tua password",
+            "subject" : "Beetle studio - Reimposta la tua password",
             "body" : """<html>
                             <body>
                                 <div>Ciao {name},</div>
@@ -134,7 +134,7 @@ Copia e incolla il seguente link nel tuo browser: {link}\n
 Il team"""
         },
         "signin" : {
-            "subject" : "Benvenuto in Beetle Studio",
+            "subject" : "Beetle studio - Benvenuto in Beetle Studio",
             "body" : """<html>
                             <body>
                                 <div>Ciao {name},</div>
@@ -156,7 +156,7 @@ Il team"""
 
     "es" : {
         "passlost" : {
-            "subject" : "Restablecer tu contraseña",
+            "subject" : "Beetle studio - Restablecer tu contraseña",
             "body" : """<html>
                             <body>
                                 <div>Hola {name},</div>
@@ -172,7 +172,7 @@ Copia y pega este enlace en tu navegador: {link}\n
 El equipo"""
         },
         "signin" : {
-            "subject" : "Bienvenido a Beetle Studio",
+            "subject" : "Beetle studio - Bienvenido a Beetle Studio",
             "body" : """<html>
                             <body>
                                 <div>Hola {name},</div>
