@@ -2,10 +2,11 @@
 from db import get_db
 from utils import *
 import uuid
+import sys
 
 
-data = get_post_data()
-action = data.get("action")
+form = get_post_data()
+action = form.getvalue("action") or ""
 
 db = get_db()
 cursor = db.cursor(dictionary=True)
@@ -28,6 +29,7 @@ def get_token_by_email(email):
 
 # SELECT (token_by_email)
 if action == "gettokenbyemail":
+    data = normalize(form, ["email"])
     sql = "SELECT token FROM email_tokens WHERE email=%s"
     cursor.execute(sql, (
         data["email"],
@@ -36,6 +38,7 @@ if action == "gettokenbyemail":
     json_response(user if user else {"error": "get token failed"})
 # SELECT (email_by_token)
 elif action == "getemailbytoken":
+    data = normalize(form, ["token"])
     sql = "SELECT email FROM email_tokens WHERE token=%s"
     cursor.execute(sql, (
         data["token"],
@@ -44,6 +47,7 @@ elif action == "getemailbytoken":
     json_response(user if user else {"error": "get email failed"})
 # SELECT (login)
 elif action == "login":
+    data = normalize(form, ["email", "password"])
     sql = "SELECT * FROM users WHERE email=%s AND password=%s AND active=1"
     cursor.execute(sql, (
         data["email"],
@@ -53,6 +57,7 @@ elif action == "login":
     json_response(user if user else {"error": "auth_failed"})
 # CREATE
 elif action == "create":
+    data = normalize(form, ["id_entity", "firstname", "lastname", "email", "password"])
     sql = "INSERT INTO users (id_entity, firstname, lastname, email, password, active) VALUES (%s,%s,%s,%s,%s,0)"
     cursor.execute(sql, (
         data["id_entity"],
@@ -69,6 +74,7 @@ elif action == "create":
         json_response({"error": "token not valid"})
 # EMAIL UNIQUE
 elif action == "unique_email":
+    data = normalize(form, ["email"])
     sql = "SELECT * FROM users WHERE email=%s"
     cursor.execute(sql, (
         data["email"],
@@ -77,6 +83,7 @@ elif action == "unique_email":
     json_response(user if user else {"error": "user don't exists"})
 # SELECT (confirm email)
 elif action == "confirm_email":
+    data = normalize(form, ["token"])
     email = get_email_by_token(data["token"])
     if email:
         sql = "SELECT * FROM users WHERE email=%s and active=0"
@@ -89,6 +96,7 @@ elif action == "confirm_email":
         json_response({"error": "email don't exists"})
 # UPDATE (active)
 elif action == "set_active":
+    data = normalize(form, ["email"])
     sql = "UPDATE users SET active=1 WHERE email=%s"
     cursor.execute(sql, (
         data["email"],
@@ -97,6 +105,7 @@ elif action == "set_active":
     json_response({"status": "ok"})
 # UPDATE (password)
 elif action == "reset":
+    data = normalize(form, ["password", "email"])
     sql = "UPDATE users SET password=%s WHERE email=%s"
     cursor.execute(sql, (
         hash_password(data["password"]),
@@ -107,8 +116,29 @@ elif action == "reset":
 else:
     session = require_auth()
 
+    # SELECT (getuser)
+    if action == "getuser":
+        data = normalize(form, ["userid"])
+        sql = "SELECT a.*, b.name, b.contact_email FROM users as a, entities as b WHERE a.id=%s and b.id=a.id_entity"
+        cursor.execute(sql, (
+            data["userid"],
+        ))
+        user = cursor.fetchone()
+        json_response(user if user else {"error": "user don't exists"})
+
+    # SELECT (getuserinfo)
+    elif action == "getuserinfo":
+        data = normalize(form, ["userid"])
+        sql = "SELECT * FROM users WHERE id=%s"
+        cursor.execute(sql, (
+            data["userid"],
+        ))
+        user = cursor.fetchone()
+        json_response(user if user else {"error": "user don't exists"})
+
     # UPDATE
-    if action == "update":
+    elif action == "update":
+        data = normalize(form, ["firstname", "lastname", "id"])
         sql = "UPDATE users SET firstname=%s, lastname=%s WHERE id=%s"
         cursor.execute(sql, (
             data["firstname"],
@@ -120,6 +150,7 @@ else:
 
     # DELETE
     elif action == "delete":
+        data = normalize(form, ["id"])
         cursor.execute("DELETE FROM users WHERE id=%s", (data["id"],))
         db.commit()
         json_response({"status": "ok"})
