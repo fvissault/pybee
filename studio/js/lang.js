@@ -42,7 +42,11 @@ function renderUI() {
         if (type === "placeholder") {
             el.placeholder = t(key)
         } else {
-            el.innerText = t(key)
+            if (type === "title") {
+                el.title = t(key)
+            } else {
+                el.innerText = t(key)
+            }
         }
     })
 }
