@@ -4,12 +4,13 @@ import time
 import os
 from utils import *
 
-data = get_post_data()
-action = data.get("action")
+form = get_post_data()
+action = form.getvalue("action") or ""
 
 cookie = http.cookies.SimpleCookie()
 
 if action == "create":
+    data = normalize(form, ["email", "userid"])
     session = {
         "email": data["email"],
         "userid": data["userid"],
@@ -36,19 +37,44 @@ if action == "create":
 
 elif action == "read":
     cookie = http.cookies.SimpleCookie(os.environ.get("HTTP_COOKIE"))
+
+    # Vérification présence des cookies
     if "bee_session" not in cookie or "bee_session_sig" not in cookie:
-        json_response({"status": "cookie manquant"})    
+        json_response({"status": "cookie manquant"})
     payload = cookie["bee_session"].value
     sig = cookie["bee_session_sig"].value
+    # Vérification signature
     if sign(payload) != sig:
         json_response({"status": "cookie corrompu"})
+    # Lecture session
     session_data = json.loads(payload)
+    # Vérification expiration
     if session_data.get("exp", 0) < int(time.time()):
         json_response({"status": "session expirée"})
-    if "bee_session" in cookie:
-        json_response(json.loads(cookie["bee_session"].value))
-    else:
-        json_response({})
+    # 🔄 Renouvellement (session glissante)
+    session_data["exp"] = int(time.time()) + 1800
+    new_payload = json.dumps(session_data)
+    new_sig = sign(new_payload)
+    # Réécriture des cookies
+    new_cookie = http.cookies.SimpleCookie()
+    new_cookie["bee_session"] = new_payload
+    new_cookie["bee_session_sig"] = new_sig
+    for key in ["bee_session", "bee_session_sig"]:
+        new_cookie[key]["path"] = "/"
+        new_cookie[key]["httponly"] = True
+        new_cookie[key]["max-age"] = 1800
+        # Optionnel mais recommandé en prod :
+        # new_cookie[key]["secure"] = True
+        # new_cookie[key]["samesite"] = "Lax"
+
+    # Réponse HTTP
+    print("Content-Type: application/json")
+    for morsel in new_cookie.values():
+        print("Set-Cookie:", morsel.OutputString())
+    print()
+
+    # On renvoie la session mise à jour
+    print(json.dumps(session_data))
 elif action == "destroy":
     cookie = http.cookies.SimpleCookie()
     # On vide les cookies
