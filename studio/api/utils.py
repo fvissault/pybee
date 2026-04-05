@@ -9,12 +9,21 @@ import sys
 
 SECRET = "cle_secrete"
 
-def get_post_data():
+def get_post_data(expected_fields=None):
     form = cgi.FieldStorage()
+    return form
+
+def normalize(form, expected_fields):
     data = {}
-    for key in form.keys():
-        data[key] = form.getvalue(key)
+    for key in expected_fields:
+        value = form.getvalue(key)
+        if value is None:
+            value = ""
+        elif isinstance(value, str):
+            value = value.strip()
+        data[key] = value
     return data
+
 
 def json_response(data):
     print("Content-Type: application/json\n")
