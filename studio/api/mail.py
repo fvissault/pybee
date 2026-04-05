@@ -10,7 +10,9 @@ from config_mails import config_mails
 import html
 
 try:
-    data = get_post_data()
+    form = get_post_data()
+    action = form.getvalue("action") or ""
+    data = normalize(form, ["email", "lang", "toreplace", "predname"])
     emailtosend = data.get("email", "")
     if not is_valid_email(emailtosend):
         json_response({"status": "invalid email"})
