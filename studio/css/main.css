@@ -1,0 +1,388 @@
+body {
+    margin:0;
+    font-family:Arial,sans-serif;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+.topbar {
+    height: 56px;
+    background: #1f2937;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 28px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.logout-btn {
+    background: transparent;
+    border: none;
+    color: #ddd;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    color: white;
+}
+
+#main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 270px 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 16px;
+    padding: 16px;
+    background: #f5f7fa;
+}
+
+.panel {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border: none;
+    overflow:auto;
+}
+
+.panel h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin:10px 0;
+}
+
+#footer {
+    grid-column:1/span 2;
+    grid-row:2;
+    background: transparent;
+    color: #6b7280;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.panel a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.panel a:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+/* Icônes */
+.icon {
+    width: 18px;
+    height: 18px;
+    stroke: #6b7280;
+    stroke-width: 2;
+    fill: none;
+    transition: all 0.2s ease;
+}
+
+.panel a:hover .icon {
+    stroke: #111827;
+    transform: scale(1.1);
+}
+
+/* Texte */
+.panel a span {
+    flex: 1;
+}
+
+/* Déconnexion (action critique) */
+.panel a.danger {
+    color: #dc2626;
+}
+
+.panel a.danger .icon {
+    stroke: #dc2626;
+}
+
+.panel a.danger:hover {
+    background: #fee2e2;
+}
+
+root {
+    --card-accent: white;
+}
+
+.owner {
+    --card-accent: #22c55e;  
+}
+
+.active {
+    --card-accent: orange;
+}
+
+.deactive {
+    --card-accent: #eee;
+}
+
+.card {
+    width: 260px;
+    height: 180px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: all 0.2s ease;
+    border: none;
+    color:black;
+    float:left;
+    margin-right:30px;
+    margin-bottom:30px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.card::before {
+    content: "";
+    display: block;
+    height: 10px;
+    background: var(--card-accent);
+    border-radius: 12px 12px 0 0;
+}
+
+.container {
+  padding: 10px 10px;
+  height:100%;
+  position:relative;
+}
+
+.card_button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.card_button:hover {
+    background: #e5e7eb;
+}
+
+
+.card_button .icon {
+    width: 16px;
+    height: 16px;
+    stroke: #374151;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.btn-delete .icon {
+    stroke: #9ca3af;
+}
+
+.btn-delete:hover {
+    background: #fee2e2;
+}
+
+.btn-delete:hover .icon {
+    stroke: #dc2626;
+}
+
+.block_buttons {
+    position: absolute;
+    bottom: 36px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.card_title {
+    text-align:center; 
+    font-size:19px;
+    font-weight:bold;
+}
+
+.card_desc {
+    height:100px; 
+    overflow:auto;
+}
+
+.dialog-popup{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    min-width:300px;
+    max-width:450px;
+    z-index:1000;
+    padding-bottom: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    border: none;
+}
+
+.dialog-header {
+    padding:10px;
+    border-radius: 10px 10px 0px 0px;
+    font-weight:bold;
+    background: #f9fafb;
+    border-bottom: 1px solid #eee;
+
+}
+
+/* Sections */
+.dialog-section {
+    margin-bottom: 12px;
+}
+
+/* Titres */
+.dialog-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* Lignes */
+.dialog-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+}
+
+.dialog-row input {
+    padding:7px;
+    width:261px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+}
+
+.dialog-row textarea {
+    padding:5px;
+    width:265px;
+    height:100px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+}
+
+/* Label */
+.label {
+    color: #6b7280;
+}
+
+/* Valeur */
+.value {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Séparateur */
+.dialog-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 12px 0;
+}
+
+/* Base bouton */
+.btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Bouton principal (Apply) */
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+/* Bouton secondaire (Close) */
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+#dialogContent {
+    padding:10px;
+}
+
+.dialog-description {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    color: #111827;
+    line-height: 1.4;
+    max-height: 120px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.status-active {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.status-inactive {
+    color: indianred;
+    font-weight: 600;
+}
+
+.status-active::before {
+    content: "● ";
+}
+
+.status-inactive::before {
+    content: "● ";
+}
