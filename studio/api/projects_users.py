@@ -4,14 +4,15 @@ from utils import *
 
 session = require_auth()
 
-data = get_post_data()
-action = data.get("action")
+form = get_post_data()
+action = form.getvalue("action") or ""
 
 db = get_db()
 cursor = db.cursor(dictionary=True)
 
 # CREATE
 if action == "create":
+    data = normalize(form, ["id_user", "id_project"])
     sql = "INSERT INTO projects_users (id_user, id_project) VALUES (%s,%s)"
     cursor.execute(sql, (
         data["id_user"],
@@ -22,7 +23,8 @@ if action == "create":
 
 # SELECT (projects from user)
 elif action == "list":
-    sql = "SELECT a.* FROM projects as a, projects_users as b WHERE b.id_user=%s AND a.active=1"
+    data = normalize(form, ["userid"])
+    sql = "SELECT DISTINCT a.* FROM projects as a, projects_users as b WHERE b.id_user=%s"
     cursor.execute(sql, (
         data["userid"],
     ))
@@ -31,17 +33,26 @@ elif action == "list":
 
 # UPDATE
 elif action == "update":
+    data = normalize(form, ["id_user", "id_project", "id"])
     sql = "UPDATE projects_users SET id_user=%s, id_project=%s WHERE id=%s"
     cursor.execute(sql, (
         data["id_user"],
         data["id_project"],
-        data["id"]
+        data["id"],
     ))
     db.commit()
     json_response({"status": "ok"})
 
-# DELETE
+# DELETE (withid)
 elif action == "delete":
-    cursor.execute("DELETE FROM projects_users WHERE id=%s", (data["id"]))
+    data = normalize(form, ["id"])
+    cursor.execute("DELETE FROM projects_users WHERE id=%s", (data["id"],))
+    db.commit()
+    json_response({"status": "ok"})
+
+# DELETE (withid)
+elif action == "deletebyproject":
+    data = normalize(form, ["idproject"])
+    cursor.execute("DELETE FROM projects_users WHERE id_project=%s", (data["idproject"],))
     db.commit()
     json_response({"status": "ok"})
