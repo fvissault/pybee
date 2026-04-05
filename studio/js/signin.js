@@ -13,10 +13,10 @@ function signin(){
         alert('Invalid email');
         return
     }
-    /*if (!validPass(password)) {
+    if (!validPass(password)) {
         alert('Invalid password');
         return
-    }*/
+    }
 
     fetch("/pybee/studio/api/users.py", {
         method: "POST",
