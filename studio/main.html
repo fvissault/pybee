@@ -2,59 +2,75 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Beetle studio main</title>
-        <script>
-            async function initMain(){
-                // 1. Récupération session
-                const res = await fetch("/pybee/studio/api/session.py", {
-                    method: "POST",
-                    credentials: "include",
-                    body: new URLSearchParams({ action: "read" })
-                });
-                const session = await res.json();
-                // 2. Vérification
-                if(!session || !session.auth){
-                    location.href = "signin.html";
-                    return;
-                }
-                const now = Math.floor(Date.now() / 1000);
-                if(!session.exp || session.exp < now){
-                    location.href = "signin.html";
-                    return;
-                }
-                // 3. Maintenant seulement → appel projets
-                const res2 = await fetch("/pybee/studio/api/projects_users.py", {
-                    method: "POST",
-                    credentials: "include",
-                    body: new URLSearchParams({
-                        action: "list",
-                        userid: session.userid
-                    })
-                });
-                const projects = await res2.json();
-                console.log(projects)
-                // 4. Affichage
-                let html = "";
-                projects.forEach(p => {
-                    html += `<div>${p.name}</div>`;
-                });
-                document.getElementById("projects").innerHTML = html;
-            }
-
-            function disconnect() {
-                fetch("/pybee/studio/api/session.py", {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify({ action: "destroy" })
-                })
-                .then(() => location.href = "signin.html");
-            }
-        </script>
+        <title data-i18n="text:title"></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/lang.js"></script>
+        <script defer src="js/main.js"></script>
     </head>
     <body onload="initMain()">
-        <h2>Mes projets</h2>
-        <div id="projects"></div>
-        <a href="profile.html">Your profile</a>
-        <button onclick="disconnect()">Logout</button>
+        <header class="topbar">
+            <div class="topbar-left">
+                <img src="images/logo.png" class="logo"/>
+                <span class="title" data-i18n="text:header"></span>
+            </div>
+            <button class="logout-btn" onclick="disconnect()" title="" data-i18n="title:disconnect">⏻</button>
+        </header>
+        <div id="main">
+            <div class="panel">
+                <h4 data-i18n="text:menu"></h4>
+
+                <a href="../docs/index.html" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 18h6M10 14h4M12 2a7 7 0 0 0-4 12.9V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.1A7 7 0 0 0 12 2z"/>
+                    </svg>
+                    <span data-i18n="text:help"></span>
+                </a>
+
+                <a href="#" onclick="displayProfile()">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M20 21a8 8 0 1 0-16 0"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span data-i18n="text:profile"></span>
+                </a>
+
+                <a href="#" onclick="changePassword()">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 17v-2"/>
+                        <path d="M6 10V7a6 6 0 1 1 12 0v3"/>
+                        <rect x="4" y="10" width="16" height="10" rx="2"/>
+                    </svg>
+                    <span data-i18n="text:password"></span>
+                </a>
+
+                <a href="#" onclick="createProject()">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H3z"/>
+                        <path d="M12 13v6M9 16h6"/>
+                    </svg>
+                    <span data-i18n="text:newproject"></span>
+                </a>
+
+                <a href="#" onclick="disconnect()" class="danger">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+                    <span data-i18n="text:disconnect"></span>
+                </a>
+            </div>
+            <div class="panel">
+                <h4 data-i18n="text:myprojects"></h4>
+                <div id="projects"></div>
+            </div>
+            <div id="footer">Beetle studio &copy; 2026</div>
+        </div>
+
+        <div id="dialog" class="dialog-popup">
+            <div id="dialogHeader" class="dialog-header"></div>
+            <div id="dialogContent"></div>
+        </div>
     </body>
 </html>
