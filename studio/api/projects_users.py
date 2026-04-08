@@ -21,6 +21,16 @@ if action == "create":
     db.commit()
     json_response({"status": "ok"})
 
+# SELECT (users from project)
+elif action == "listusers":
+    data = normalize(form, ["projectid"])
+    sql = "SELECT DISTINCT a.* FROM users as a, projects_users as b WHERE b.id_project=%s and a.id=b.id_user"
+    cursor.execute(sql, (
+        data["projectid"],
+    ))
+    projects = cursor.fetchall()
+    json_response(projects)
+
 # SELECT (projects from user)
 elif action == "list":
     data = normalize(form, ["userid"])
