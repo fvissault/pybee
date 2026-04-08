@@ -28,6 +28,16 @@ if action == "create":
         "id": project_id
     })
 
+# SELECT (getprojectbyid)
+elif action == "getprojectbyid":
+    data = normalize(form, ["id"])
+    sql = "SELECT * FROM projects WHERE id=%s"
+    cursor.execute(sql, (
+        data["id"],
+    ))
+    project = cursor.fetchone()
+    json_response(project)
+
 # SELECT (projects from user)
 elif action == "getproject":
     data = normalize(form, ["id"])
