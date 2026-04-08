@@ -150,6 +150,7 @@ async function addNewMember(idproject) {
 
 async function delmember(idproject) {
     const session = await getSession()
+    project_id = idproject
     openDialog("delmember")
 
 }
@@ -158,9 +159,66 @@ function popupDelMember() {
     const head = document.getElementById("dialogHeader")
     head.innerText = t("delmemberproj")
     const content = document.getElementById("dialogContent")
-    content.innerHTML = ``
+    content.innerHTML = `
+        <div class="dialog-section">
+                <div class="dialog-section-title">${t("memchoice")}</div>
+            <div class="dialog-row">
+                <select id="members">
+                    <option value="">${t("selectmem")}</option>
+                </select>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="delThisMember(${project_id})">${t("validate")}</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
+        </div>
+    `
+
+    fetch("/pybee/studio/api/projects_users.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "listuserswithoutowner",
+            projectid: project_id
+        })
+    })
+    .then(r => r.json())
+    .then(data2 => {
+        const select = document.getElementById("members")
+        data2.forEach(user => {
+            const option = document.createElement("option")
+            option.value = user.id
+            option.textContent = `${user.firstname} ${user.lastname}`
+            select.appendChild(option)
+        });
+    });
 }
 
+async function delThisMember(idproject) {
+    const session = await getSession()
+    const selectedmember = document.getElementById("members").options[document.getElementById("members").selectedIndex].value
+    if (selectedmember === "") {
+        alert(t("alertdelmem"))
+    } else {
+        // Ajouter le lien entre l'utilisateur et le projet
+        console.log(selectedmember)
+        fetch("/pybee/studio/api/projects_users.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "deletebyprojectanduser",
+                idproject: project_id,
+                iduser: selectedmember
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            alert(t("alertdelthismem"))
+            closeDialog()
+        });
+    }
+}
 
 function popupCreateProject() {
     const head = document.getElementById("dialogHeader")
@@ -236,9 +294,18 @@ async function createNewProject() {
             })
             .then(r => r.json())
             .then(res2 => {
-                alert(t("alertprojcreated"))
-                initMain()
-                closeDialog()
+                fetch("api/file_access_api.py?action=create_project", {
+                        method:"POST",
+                        headers:{ "Content-Type":"application/json" },
+                        body: JSON.stringify({ project:name.value })
+                })
+                .then(r => r.json())
+                .then(res3 => {
+                    console.log(res3)
+                    alert(t("alertprojcreated"))
+                    initMain()
+                    closeDialog()
+                });
             });
         });
     });
