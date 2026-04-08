@@ -107,6 +107,17 @@ body {
     transition: all 0.2s ease;
 }
 
+.user-mail {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-mail a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .panel a:hover .icon {
     stroke: #111827;
     transform: scale(1.1);
@@ -143,7 +154,7 @@ root {
 }
 
 .deactive {
-    --card-accent: #eee;
+    --card-accent: #bbb;
 }
 
 .card {
@@ -247,8 +258,8 @@ root {
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    min-width:300px;
-    max-width:450px;
+    min-width:350px;
+    max-width:550px;
     z-index:1000;
     padding-bottom: 10px;
     background: white;
@@ -289,19 +300,30 @@ root {
 
 .dialog-row input {
     padding:7px;
-    width:261px;
+    width:314px;
     border-radius:8px;
     background: #f5f7fa;
     font-size:16px;
+    border:1px solid #ddd;
+}
+
+.dialog-row select {
+    padding:7px;
+    width:330px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
 }
 
 .dialog-row textarea {
     padding:5px;
-    width:265px;
+    width:318px;
     height:100px;
     border-radius:8px;
     background: #f5f7fa;
     font-size:16px;
+    border:1px solid #ddd;
 }
 
 /* Label */
@@ -315,9 +337,15 @@ root {
     color: #111827;
 }
 
+.value a {
+    font-weight: bold;
+    color: #6b7280;
+    text-decoration:none;
+}
+
 /* Séparateur */
 .dialog-divider {
-    height: 1px;
+    height: 2px;
     background: #e5e7eb;
     margin: 12px 0;
 }
@@ -385,4 +413,26 @@ root {
 
 .status-inactive::before {
     content: "● ";
+}
+
+/*.card_button:hover .icon {
+    stroke: #111827;
+}*/
+
+/* Ajout (positif) */
+.card_button[title="Ajouter un membre"]:hover .icon {
+    stroke: #16a34a;
+}
+
+/* Suppression (danger) */
+.btn-danger .icon {
+    stroke: #9ca3af;
+}
+
+.btn-danger:hover {
+    background: #fee2e2;
+}
+
+.btn-danger:hover .icon {
+    stroke: #dc2626;
 }
