@@ -211,28 +211,51 @@ async function suppress(projectid) {
 
     const check = confirm(t("confirmdelproj"))
     if (check) {
-        await fetch("/pybee/studio/api/projects.py", {
+        fetch("/pybee/studio/api/projects.py", {
             method: "POST",
             credentials: "include",
             body: new URLSearchParams({
-                action: "delete",
+                action: "getprojectbyid",
                 id: projectid
             })
         })
         .then(r => r.json())
-        .then(data => {
-            fetch("/pybee/studio/api/projects_users.py", {
+        .then(data1 => {
+            console.log(data1)
+            fetch("/pybee/studio/api/projects.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
-                    action: "deletebyproject",
-                    idproject: projectid
+                    action: "delete",
+                    id: projectid
                 })
             })
             .then(r => r.json())
-            .then(res => {
-                alert(t("alertdelproj"))
-                initMain()
+            .then(data2 => {
+                console.log(data2)
+                fetch("/pybee/studio/api/projects_users.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "deletebyproject",
+                        idproject: projectid
+                    })
+                })
+                .then(r => r.json())
+                .then(data3 => {
+                    console.log(data3)
+                    fetch("api/file_access_api.py?action=delete_project", {
+                        method:"POST",
+                        headers:{ "Content-Type":"application/json" },
+                        body: JSON.stringify({ project:data1["name"] })
+                    })
+                    .then(r => r.json())
+                    .then(data4 => {
+                        console.log(data4)
+                        alert(t("alertdelproj"))
+                        initMain()
+                    });
+                });
             });
         });
     }
@@ -306,7 +329,9 @@ const translations = {
         orgcontact: "Contact",
         orgowner: "Propriétaire",
         projmembers: "Intervenants sur le projet",
-        projdetails: "Détails du projet"
+        projdetails: "Détails du projet",
+        alertdelmem: "Sélectionnez le membre que vous souhaitez retirer du projet",
+        alertdelthismem: "Le membre a bien été retiré du projet"
     } , 
 
     en : { 
@@ -365,7 +390,9 @@ const translations = {
         orgcontact: "Contact",
         orgowner: "Owner",
         projmembers: "Project members",
-        projdetails: "Project details"
+        projdetails: "Project details",
+        alertdelmem: "Please select the member you want to remove from the project",
+        alertdelthismem: "The member has been successfully removed from the project"
     },
 
     it : {
@@ -424,7 +451,9 @@ const translations = {
         orgcontact: "Contatto",
         orgowner: "Proprietario",
         projmembers: "Membri del progetto",
-        projdetails: "Dettagli del progetto"
+        projdetails: "Dettagli del progetto",
+        alertdelmem: "Seleziona il membro che desideri rimuovere dal progetto",
+        alertdelthismem: "Il membro è stato rimosso dal progetto"
     },
 
     de : {
@@ -483,7 +512,9 @@ const translations = {
         orgcontact: "Kontakt",
         orgowner: "Eigentümer",
         projmembers: "Projektmitglieder",
-        projdetails: "Projektdetails"
+        projdetails: "Projektdetails",
+        alertdelmem: "Bitte wählen Sie das Mitglied aus, das Sie aus dem Projekt entfernen möchten",
+        alertdelthismem: "Das Mitglied wurde erfolgreich aus dem Projekt entfernt"
     } ,
 
     es : {
@@ -542,7 +573,9 @@ const translations = {
         orgcontact: "Contacto",
         orgowner: "Propietario",
         projmembers: "Miembros del proyecto",
-        projdetails: "Detalles del proyecto"
+        projdetails: "Detalles del proyecto",
+        alertdelmem: "Selecciona el miembro que deseas eliminar del proyecto",
+        alertdelthismem: "El miembro ha sido eliminado del proyecto correctamente"
     }
 }
 
