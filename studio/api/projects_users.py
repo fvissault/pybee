@@ -31,6 +31,16 @@ elif action == "listusers":
     projects = cursor.fetchall()
     json_response(projects)
 
+# SELECT (users from project without owner)
+elif action == "listuserswithoutowner":
+    data = normalize(form, ["projectid"])
+    sql = "SELECT DISTINCT a.* FROM users as a, projects_users as b, projects as c WHERE b.id_project=%s and a.id=b.id_user and c.owner<>a.id"
+    cursor.execute(sql, (
+        data["projectid"],
+    ))
+    projects = cursor.fetchall()
+    json_response(projects)
+
 # SELECT (projects from user)
 elif action == "list":
     data = normalize(form, ["userid"])
@@ -64,5 +74,12 @@ elif action == "delete":
 elif action == "deletebyproject":
     data = normalize(form, ["idproject"])
     cursor.execute("DELETE FROM projects_users WHERE id_project=%s", (data["idproject"],))
+    db.commit()
+    json_response({"status": "ok"})
+
+# DELETE (by id_project and id_user)
+elif action == "deletebyprojectanduser":
+    data = normalize(form, ["idproject", "iduser"])
+    cursor.execute("DELETE FROM projects_users WHERE id_project=%s and id_user=%s", (data["idproject"], data["iduser"],))
     db.commit()
     json_response({"status": "ok"})
