@@ -116,8 +116,24 @@ elif action == "reset":
 else:
     session = require_auth()
 
+    # SELECT (getmembertoadd)
+    if action == "getmembertoadd":
+        data = normalize(form, ["projectid"])
+        sql = """SELECT DISTINCT a.id, a.firstname, a.lastname 
+                 FROM users as a, entities as b 
+                 WHERE a.id_entity=b.id and a.id not in (
+                    SELECT a.id 
+                    FROM users as a, projects_users as b 
+                    WHERE b.id_project=%s and b.id_user=a.id
+                 )"""
+        cursor.execute(sql, (
+            data["projectid"],
+        ))
+        users = cursor.fetchall()
+        json_response(users)
+
     # SELECT (getuser)
-    if action == "getuser":
+    elif action == "getuser":
         data = normalize(form, ["userid"])
         sql = "SELECT a.*, b.name, b.contact_email FROM users as a, entities as b WHERE a.id=%s and b.id=a.id_entity"
         cursor.execute(sql, (
