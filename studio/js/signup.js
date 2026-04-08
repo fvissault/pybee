@@ -45,6 +45,7 @@ function signup(){
         return
     }
 
+    // le mail doit être unique dans la base de données
     fetch("/pybee/studio/api/users.py", {
         method: "POST",
         credentials: "include",
@@ -60,6 +61,7 @@ function signup(){
             email.focus()
             return;
         }
+        // Vérifier que le nom de l'organisation tapé dans l'ihm existe bien dans la base de données
         fetch("/pybee/studio/api/entities.py", {
             method: "POST",
             credentials: "include",
@@ -74,6 +76,7 @@ function signup(){
                 alert(t("alertorg"));
                 return;
             }
+            // création du compte dans la table users
             fetch("/pybee/studio/api/users.py", {
                 method: "POST",
                 credentials: "include",
@@ -88,6 +91,7 @@ function signup(){
             })
             .then(r => r.json())
             .then(res => {
+                // envoyer un email
                 fetch("/pybee/studio/api/mail.py", {
                     method: "POST",
                     credentials: "include",
@@ -104,11 +108,15 @@ function signup(){
                 })
                 .then(r => r.json())
                 .then(res => {
-                    alert(t("alertemailsent"))
-                    location.href = "signin.html"
-                })
-            })
-        })
+                    if (res.error) {
+                        alert("Email non envoyé")
+                    } else {
+                        alert(t("alertemailsent"))
+                        location.href = "signin.html"
+                    }
+                });
+            });
+        });
     })
     .catch(err => {
         alert("Network error");
