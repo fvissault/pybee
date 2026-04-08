@@ -100,12 +100,12 @@ def create_project():
 
     os.makedirs(project_path, exist_ok=True)
 
-    projects = read_projects()
+    #projects = read_projects()
 
-    if project not in projects["projects"]:
-        projects["projects"][project] = []
+    #if project not in projects["projects"]:
+    #    projects["projects"][project] = []
 
-    write_projects(projects)
+    #write_projects(projects)
 
     return {"status": "ok"}
 
@@ -119,12 +119,12 @@ def delete_project():
     if os.path.exists(project_path):
         shutil.rmtree(project_path)
 
-    projects = read_projects()
+    #projects = read_projects()
 
-    if project in projects["projects"]:
-        del projects["projects"][project]
+    #if project in projects["projects"]:
+    #    del projects["projects"][project]
 
-    write_projects(projects)
+    #write_projects(projects)
 
     return {"status": "ok"}
 
