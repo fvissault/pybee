@@ -1,3 +1,6 @@
+function validPass(p) {
+    return /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(p)
+}
 
 let project_id = 0
 let user_id = 0
@@ -40,6 +43,7 @@ function buildPopupContent(cat){
     if (cat == "create") popupCreateProject()
     if (cat == "addmember") popupAddMember()
     if (cat == "delmember") popupDelMember()
+    if (cat == "changepass") popupChangePassword()
     return "<div>No content</div>"
 }
 
@@ -451,4 +455,89 @@ function popupProject(){
             });
         });
     });
+}
+
+async function changePassword() {
+    const session = await getSession()
+    openDialog("changepass")
+}
+
+function popupChangePassword() {
+            const head = document.getElementById("dialogHeader")
+            head.innerText = `${t("changepasstitle")}`
+            const content = document.getElementById("dialogContent")
+            content.innerHTML = `
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <span class="label">${t("newpassword")}</span>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="password" id="password" value="" placeholder="${t("newpassword")}"/>
+                    </div>
+                    <div class="dialog-row">
+                        <span class="label">${t("confirm")}</span>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="password" id="confirm" value="" placeholder="${t("placeholderconfirm")}"/>
+                    </div>
+                </div>
+                <div class="dialog-actions">
+                    <button class="btn btn-primary" onclick="reinitPassword()">${t("validate")}</button>
+                    <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
+                </div>
+            `
+}
+
+async function reinitPassword() {
+    const session = await getSession()
+
+    const password = document.getElementById("password")
+    const confirm = document.getElementById("confirm")
+
+    if (!validPass(password.value)) {
+        alert(t("alertinvalidpass"));
+        password.focus()
+        return
+    }
+    if (password.value !== confirm.value){
+        alert(t("alertinvalidconfirm"));
+        confirm.focus()
+        return;
+    }
+
+    fetch("/pybee/studio/api/users.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getoldpass",
+            newpassword : password.value,
+            email: session.email
+        })
+    })
+    .then(r => r.json())
+    .then(data1 => {
+        console.log(data1)
+        if (data1.status == "nok") {
+            alert(t("alertoldpassused"))
+            password.focus()
+            return
+        } else {
+            fetch("/pybee/studio/api/users.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "reset",
+                    password : password.value,
+                    email: data1.email
+                })
+            })
+            .then(r => r.json())
+            .then(data2 => {
+                console.log(data2)
+                alert(t("alertpasschanged"))
+                closeDialog()
+            });
+        }
+    });
+
 }
