@@ -331,7 +331,15 @@ const translations = {
         projmembers: "Intervenants sur le projet",
         projdetails: "Détails du projet",
         alertdelmem: "Sélectionnez le membre que vous souhaitez retirer du projet",
-        alertdelthismem: "Le membre a bien été retiré du projet"
+        alertdelthismem: "Le membre a bien été retiré du projet",
+        changepasstitle: "Changer de mot de passe",
+        newpassword: "Nouveau mot de passe",
+        confirm: "Confirmation",
+        placeholderconfirm: "Confirmez votre nouveau mot de passe",
+        alertinvalidpass: "Votre nouveau mot de passe n'est pas valide",
+        alertinvalidconfirm: "La confirmation ne corresponds pas au nouveau mot de passe",
+        alertoldpassused: "Votre nouveau mot de passe est identique à l'ancien",
+        alertpasschanged: "Votre mot de passe a bien été modifié"
     } , 
 
     en : { 
@@ -392,7 +400,15 @@ const translations = {
         projmembers: "Project members",
         projdetails: "Project details",
         alertdelmem: "Please select the member you want to remove from the project",
-        alertdelthismem: "The member has been successfully removed from the project"
+        alertdelthismem: "The member has been successfully removed from the project",
+        changepasstitle: "Change password",
+        newpassword: "New password",
+        confirm: "Confirm",
+        placeholderconfirm: "Confirm your new password",
+        alertinvalidpass: "Your new password is not valid",
+        alertinvalidconfirm: "Confirmation does not match the new password",
+        alertoldpassused: "Your new password is the same as the old one",
+        alertpasschanged: "Your password has been successfully changed"
     },
 
     it : {
@@ -453,7 +469,15 @@ const translations = {
         projmembers: "Membri del progetto",
         projdetails: "Dettagli del progetto",
         alertdelmem: "Seleziona il membro che desideri rimuovere dal progetto",
-        alertdelthismem: "Il membro è stato rimosso dal progetto"
+        alertdelthismem: "Il membro è stato rimosso dal progetto",
+        changepasstitle: "Cambia password",
+        newpassword: "Nuova password",
+        confirm: "Conferma",
+        placeholderconfirm: "Conferma la nuova password",
+        alertinvalidpass: "La nuova password non è valida",
+        alertinvalidconfirm: "La conferma non corrisponde alla nuova password",
+        alertoldpassused: "La nuova password è uguale a quella precedente",
+        alertpasschanged: "La password è stata modificata con successo"
     },
 
     de : {
@@ -514,7 +538,15 @@ const translations = {
         projmembers: "Projektmitglieder",
         projdetails: "Projektdetails",
         alertdelmem: "Bitte wählen Sie das Mitglied aus, das Sie aus dem Projekt entfernen möchten",
-        alertdelthismem: "Das Mitglied wurde erfolgreich aus dem Projekt entfernt"
+        alertdelthismem: "Das Mitglied wurde erfolgreich aus dem Projekt entfernt",
+        changepasstitle: "Passwort ändern",
+        newpassword: "Neues Passwort",
+        confirm: "Bestätigen",
+        placeholderconfirm: "Neues Passwort bestätigen",
+        alertinvalidpass: "Ihr neues Passwort ist ungültig",
+        alertinvalidconfirm: "Die Bestätigung stimmt nicht mit dem neuen Passwort überein",
+        alertoldpassused: "Das neue Passwort entspricht dem alten Passwort",
+        alertpasschanged: "Ihr Passwort wurde erfolgreich geändert"
     } ,
 
     es : {
@@ -575,7 +607,15 @@ const translations = {
         projmembers: "Miembros del proyecto",
         projdetails: "Detalles del proyecto",
         alertdelmem: "Selecciona el miembro que deseas eliminar del proyecto",
-        alertdelthismem: "El miembro ha sido eliminado del proyecto correctamente"
+        alertdelthismem: "El miembro ha sido eliminado del proyecto correctamente",
+        changepasstitle: "Cambiar contraseña",
+        newpassword: "Nueva contraseña",
+        confirm: "Confirmar",
+        placeholderconfirm: "Confirma tu nueva contraseña",
+        alertinvalidpass: "Tu nueva contraseña no es válida",
+        alertinvalidconfirm: "La confirmación no coincide con la nueva contraseña",
+        alertoldpassused: "Tu nueva contraseña es igual a la anterior",
+        alertpasschanged: "Tu contraseña ha sido cambiada correctamente"
     }
 }
 
