@@ -36,6 +36,7 @@ if action == "gettokenbyemail":
     ))
     user = cursor.fetchone()
     json_response(user if user else {"error": "get token failed"})
+
 # SELECT (email_by_token)
 elif action == "getemailbytoken":
     data = normalize(form, ["token"])
@@ -45,6 +46,7 @@ elif action == "getemailbytoken":
     ))
     user = cursor.fetchone()
     json_response(user if user else {"error": "get email failed"})
+
 # SELECT (login)
 elif action == "login":
     data = normalize(form, ["email", "password"])
@@ -55,6 +57,7 @@ elif action == "login":
     ))
     user = cursor.fetchone()
     json_response(user if user else {"error": "auth_failed"})
+
 # CREATE
 elif action == "create":
     data = normalize(form, ["id_entity", "firstname", "lastname", "email", "password"])
@@ -72,6 +75,7 @@ elif action == "create":
         json_response({"token": token})
     else:
         json_response({"error": "token not valid"})
+
 # EMAIL UNIQUE
 elif action == "unique_email":
     data = normalize(form, ["email"])
@@ -81,6 +85,7 @@ elif action == "unique_email":
     ))
     user = cursor.fetchone()
     json_response(user if user else {"error": "user don't exists"})
+
 # SELECT (confirm email)
 elif action == "confirm_email":
     data = normalize(form, ["token"])
@@ -94,6 +99,7 @@ elif action == "confirm_email":
         json_response(user if user else {"error": "user don't exists"})
     else:
         json_response({"error": "email don't exists"})
+
 # UPDATE (active)
 elif action == "set_active":
     data = normalize(form, ["email"])
@@ -103,6 +109,7 @@ elif action == "set_active":
     ))
     db.commit()
     json_response({"status": "ok"})
+
 # UPDATE (password)
 elif action == "reset":
     data = normalize(form, ["password", "email"])
@@ -116,8 +123,21 @@ elif action == "reset":
 else:
     session = require_auth()
 
+    # UPDATE (password)
+    if action == "getoldpass":
+        data = normalize(form, ["newpassword", "email"])
+        sql = "SELECT * FROM users WHERE email=%s"
+        cursor.execute(sql, (
+            data["email"],
+        ))
+        user = cursor.fetchone()
+        if user["password"] == hash_password(data["newpassword"]):
+            json_response({"status": "nok"})
+        else:
+            json_response(user if user else {"error": "user don't exists"})
+
     # SELECT (getmembertoadd)
-    if action == "getmembertoadd":
+    elif action == "getmembertoadd":
         data = normalize(form, ["projectid"])
         sql = """SELECT DISTINCT a.id, a.firstname, a.lastname 
                  FROM users as a, entities as b 
