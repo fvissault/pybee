@@ -7,13 +7,15 @@ import shutil
 from urllib.parse import parse_qs
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
-PROJECTS_FILE = os.path.join(ROOT, "projects/projects.json")
-PROJECTS_DIR = os.path.join(ROOT, "projects")
 
 print("Content-Type: application/json\n")
 
 query = parse_qs(os.environ.get("QUERY_STRING", ""))
 action = query.get("action", [""])[0]
+entity = query.get("entity", [""])[0]
+
+PROJECTS_FILE = os.path.join(ROOT, "projects/" + entity + "/projects.json")
+PROJECTS_DIR = os.path.join(ROOT, "projects/" + entity)
 
 length = int(os.environ.get("CONTENT_LENGTH", 0))
 body = sys.stdin.read(length) if length > 0 else ""
