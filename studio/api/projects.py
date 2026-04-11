@@ -38,6 +38,16 @@ elif action == "getprojectbyid":
     project = cursor.fetchone()
     json_response(project)
 
+# SELECT (getprojectandentity)
+elif action == "getprojectandentity":
+    data = normalize(form, ["id"])
+    sql = "SELECT DISTINCT a.name AS project_name, b.name AS entity_name FROM projects AS a, entities AS b WHERE a.id=%s AND a.id_entity=b.id"
+    cursor.execute(sql, (
+        data["id"],
+    ))
+    project = cursor.fetchone()
+    json_response(project)
+
 # SELECT (projects from user)
 elif action == "getproject":
     data = normalize(form, ["id"])
