@@ -1,3 +1,20 @@
+async function getSession() {
+    // 1. Récupération session
+    const res = await fetch("/pybee/studio/api/session.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({ action: "read" })
+    });
+    let session = await res.json();
+    // 2. Vérification
+    if(!session || session.status || !session.auth) {
+        window.opener.location.href = "signin.html";
+        window.close()
+        return;
+    }
+    return session
+}
+
 let projects={}
 let currentProject=null
 let currentFile=null
@@ -32,6 +49,38 @@ const projectTree=document.getElementById("projectTree")
 const workspaceEl=document.getElementById("workspace")
 const workspaceContent=document.querySelector("#workspace-panel .panel-content")
 const trashEl=document.getElementById("trash")
+
+// récupérer l'identifiant du projet
+const params = new URLSearchParams(window.location.search)
+const projectid = params.get("projectid")
+console.log(projectid)
+
+// récupérer le nom du projet et le nom de l'entity auquel le projet appartient
+let project_name = null
+let entity_name = null
+
+async function initPrototypage() {
+    const session = await getSession()
+    if (session) {
+        fetch("/pybee/studio/api/projects.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getprojectandentity",
+                id : projectid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            project_name = data["project_name"]
+            entity_name = data["entity_name"]
+            console.log(project_name)
+            console.log(entity_name)
+            loadProjectFiles()
+        });
+    }
+}
 
 function generateId(type){
     return type + "-" + crypto.randomUUID()
@@ -114,11 +163,6 @@ function removeNode(node){
     if(i !== -1)
         p.children.splice(i,1)
 
-    // si le root devient vide on le supprime
-    if(workspaceRoot && workspaceRoot.children.length === 0){
-        workspaceRoot = null
-    }
-
 }
 
 function findNodeById(node,id){
@@ -138,13 +182,10 @@ function findNodeById(node,id){
 }
 
 function rebuildParents(node,parent=null){
-
     node.parent=parent
-
-    node.children.forEach(c=>{
+    node.children.forEach(c => {
         rebuildParents(c,node)
     })
-
 }
 
 function render(){
@@ -156,9 +197,10 @@ function render(){
 
     if (workspaceRoot.type === "layout") {
         workspaceEl.appendChild(renderLayout(workspaceRoot))
+        document.getElementById("css_layout").style.display = "inline"    
     }
 
-    workspaceRoot.children.forEach(child=>{
+    workspaceRoot.children.forEach(child => {
 
         if(child.type==="zone")
             workspaceEl.appendChild(renderZoneLayout(child))
@@ -273,80 +315,53 @@ function workspaceHasWidgets(){
 
 }
 
-async function loadProjects(){
-
+async function loadProjectFiles(){
     try{
-
-        const res=await fetch("api/file_access_api.py?action=projects")
-        const data=await res.json()
-
-        projects=data.projects||{}
-
-        populateProjectSelect()
-
+        fetch("/pybee/studio/api/projectfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyproject",
+                id : projectid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            projects=data
+            console.log(projects)
+            renderProjectFiles()
+        });
     }catch(e){
-
         projects={}
-
     }
-
 }
 
-function populateProjectSelect(){
-
-    Object.keys(projects).forEach(p=>{
-
-        const opt=document.createElement("option")
-
-        opt.value=p
-        opt.textContent=p
-
-        projectSelect.appendChild(opt)
-
-    })
-
-}
-
-function renderProjectFiles(project){
+function renderProjectFiles() {
 
     projectTree.innerHTML=""
-
-    if(!project)
-        return
-
-    const files=projects[project]||[]
-
+    const files=projects
     files.forEach(f=>{
-
-    const el=document.createElement("div")
-    el.className="tree-file"
-    el.style.display="flex"
-    el.style.alignItems="center"
-
-    const label=document.createElement("span")
-    label.textContent="📄 "+f
-    label.style.cursor="pointer"
-
-    label.addEventListener("click",()=>{
-        loadBST(f)
+        const el=document.createElement("div")
+        el.className="tree-file"
+        el.style.display="flex"
+        el.style.alignItems="center"
+        const label=document.createElement("span")
+        label.textContent="📄 " + f.pagename + "_" + f.id
+        label.style.cursor="pointer"
+        label.addEventListener("click",()=>{
+            loadBST(f.id)
+        })
+        const del=document.createElement("button")
+        del.textContent="🗑"
+        del.style.marginLeft="auto"
+        del.addEventListener("click",(e)=>{
+            e.stopPropagation()
+            deleteBST(f)
+        })
+        el.appendChild(label)
+        el.appendChild(del)
+        projectTree.appendChild(el)
     })
-
-    const del=document.createElement("button")
-    del.textContent="🗑"
-    del.style.marginLeft="auto"
-
-    del.addEventListener("click",(e)=>{
-        e.stopPropagation()
-        deleteBST(f)
-    })
-
-    el.appendChild(label)
-    el.appendChild(del)
-
-    projectTree.appendChild(el)
-
-})
-
 }
 
 async function deleteBST(file){
@@ -385,7 +400,7 @@ async function deleteBST(file){
 
 }
 
-async function loadBST(file){
+async function loadBST(fileid){
 
     if(workspaceRoot){
         if(!confirm("Workspace will be replaced. Continue ?"))
@@ -393,19 +408,25 @@ async function loadBST(file){
     }
 
     try{
-
-        const res=await fetch(`api/file_access_api.py?action=load&project=${currentProject}&file=${file}`)
-        const data=await res.json()
-
-        currentFile=file
-        workspaceRoot=data.workspace||null
-
-        if(workspaceRoot){
-            rebuildParents(workspaceRoot,null)
-        }
-
-        render()
-
+        fetch("/pybee/studio/api/projectfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id : fileid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            console.log(JSON.parse(data.filecontent))
+            currentFile = fileid
+            workspaceRoot = JSON.parse(data.filecontent).workspace||null
+            if(workspaceRoot){
+                rebuildParents(workspaceRoot, null)
+            }
+            render()
+        });
     }catch(e){
 
         console.error(e)
@@ -414,15 +435,7 @@ async function loadBST(file){
 
 }
 
-projectSelect.addEventListener("change",()=>{
 
-    currentProject=projectSelect.value||null
-
-    renderProjectFiles(currentProject)
-
-})
-
-loadProjects()
 
 document.getElementById("newPageBtn").addEventListener("click",()=>{
 
@@ -455,6 +468,8 @@ document.querySelectorAll(".palette-item").forEach(item=>{
 document.addEventListener("dragstart",e=>{
 
     const widgetEl=e.target.closest(".widget")
+
+    console.log(widgetEl)
 
     if(!widgetEl)
         return
@@ -590,7 +605,7 @@ workspaceContent.addEventListener("drop",e=>{
             alert("Workspace already contains widgets.")
             return
         }
-        workspaceRoot=createLayout(draggedLayoutZones)
+        workspaceRoot = createLayout(draggedLayoutZones)
         
         document.getElementById("css_layout").style.display = "inline"
 
@@ -605,6 +620,14 @@ workspaceContent.addEventListener("drop",e=>{
 
         // cas spécial : drop directement dans le workspace
         if(currentDropTarget === workspaceEl){
+            if(!workspaceRoot){
+                workspaceRoot = {
+                    id: generateId("Container"),
+                    type: "container",
+                    props: [],
+                    children: []
+                }
+            }
             newParent = workspaceRoot
         } else {
             newParent = findNodeById(
@@ -773,63 +796,3 @@ function clearProjectSelect(){
 
 }
 
-async function createProject(){
-
-    const name = prompt("Project name:")
-
-    if(!name) return
-
-    const res = await fetch(
-        "api/file_access_api.py?action=create_project",
-        {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body: JSON.stringify({ project:name })
-        }
-    )
-
-    const text = await res.text()
-    const data = JSON.parse(text)
-
-    if(data.status === "ok"){
-        projects[name] = []
-        clearProjectSelect()
-        populateProjectSelect()
-        alert("Project created")
-    }
-}
-
-async function deleteProject(){
-
-    const name = prompt("Project to delete:")
-
-    if(!name) return
-
-    if(!confirm("Delete project '"+name+"' and all its files ?")) return
-
-    const res = await fetch(
-        "api/file_access_api.py?action=delete_project",
-        {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body: JSON.stringify({ project:name })
-        }
-    )
-
-    const data = await res.json()
-
-    if(data.status === "ok"){
-
-        delete projects[name]
-
-        currentProject = null
-        projectSelect.value = ""
-
-        projectTree.innerHTML = ""
-
-        clearProjectSelect()
-        populateProjectSelect()
-
-        alert("Project deleted")
-    }
-}
