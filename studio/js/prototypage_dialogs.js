@@ -409,7 +409,7 @@ function renderTree(){
 
         } else {
             row.innerHTML =
-            `<button class="tree-button" onclick="removeNode(${i})">-</button>
+            `<button class="tree-button" onclick="removeCssProperty(${i})">-</button>
             <span>${node.type}</span>
             <span><b>${node.name}</b></span>`
         }
@@ -499,7 +499,7 @@ function addNode(){
     renderTree()
 }
 
-function removeNode(i){
+function removeCssProperty(i){
     const properties = currentConfigNode
     properties.props.css.splice(i,1)
     renderTree()
