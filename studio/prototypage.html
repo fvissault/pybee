@@ -11,13 +11,13 @@
 
 </head>
 
-<body>
+<body onload="initPrototypage()">
     <!-- Menu -->
     <div id="menu">
         <div style="margin-right:10px;">Beetle Studio - Prototypage</div>
         <button id="newPageBtn">New workspace</button>
-        <button onclick="createProject()">New Project</button>
-        <button onclick="deleteProject()">Delete Project</button>
+        <!--<button onclick="createProject()">New Project</button>
+        <button onclick="deleteProject()">Delete Project</button>-->
         <button onclick="saveFileBST()">Save</button>
     </div>
 
@@ -26,12 +26,6 @@
         <div id="explorer" class="panel">
             <div class="panel-header">Explorateur</div>
             <div class="panel-content">
-                <div style="margin-bottom:10px;font-weight:bold">Projets :</div>
-                <div style="display:flex;margin-bottom:10px">
-                    <select id="projectSelect" style="flex:1">
-                        <option value="">Select a project</option>
-                    </select>
-                </div>
                 <div id="projectTree"></div>
             </div>
         </div>
