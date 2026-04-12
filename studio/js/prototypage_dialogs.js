@@ -244,6 +244,7 @@ function initPropsStruct() {
 }
 
 function buildLayoutCss(cssprops) {
+    console.log(workspaceRoot)
     let result = ""
     let values = []
     for (let i = 0; i < cssprops.length; i++) {
@@ -254,7 +255,7 @@ function buildLayoutCss(cssprops) {
     }
     
     for (let i = 0; i < values.length; i++) {
-        result += `<li><button class="layout-del" style="margin-left:auto">-</button>${values[i]}</li>`
+        result += `<li><button class="layout-del" style="margin-left:auto">-</button> ${values[i]}</li>`
     }
 
     return result
@@ -286,8 +287,11 @@ function addLayoutProp(){
         e.stopPropagation()
         deleteLine(e.currentTarget)
     })
-
-    li.append(del, ` ${lg_cat}:${lg_content}`)
+    if (lg_cat == "other") {
+        li.append(del, ` ${lg_content}`)
+    } else {
+        li.append(del, `  ${lg_cat}:${lg_content}`)
+    }
     list_props.appendChild(li)
 
     const properties = currentConfigNode
