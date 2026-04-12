@@ -44,7 +44,6 @@ const widgetDefinitions = {
     Button: { container: false }
 }
 
-const projectSelect=document.getElementById("projectSelect")
 const projectTree=document.getElementById("projectTree")
 const workspaceEl=document.getElementById("workspace")
 const workspaceContent=document.querySelector("#workspace-panel .panel-content")
@@ -72,11 +71,8 @@ async function initPrototypage() {
         })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
             project_name = data["project_name"]
             entity_name = data["entity_name"]
-            console.log(project_name)
-            console.log(entity_name)
             loadProjectFiles()
         });
     }
@@ -328,7 +324,6 @@ async function loadProjectFiles(){
         .then(r => r.json())
         .then(data => {
             projects=data
-            console.log(projects)
             renderProjectFiles()
         });
     }catch(e){
@@ -356,7 +351,7 @@ function renderProjectFiles() {
         del.style.marginLeft="auto"
         del.addEventListener("click",(e)=>{
             e.stopPropagation()
-            deleteBST(f)
+            deleteBST(f.id)
         })
         el.appendChild(label)
         el.appendChild(del)
@@ -365,39 +360,35 @@ function renderProjectFiles() {
 }
 
 async function deleteBST(file){
-
-    if(!confirm("Delete file '"+file+"' ?"))
-        return
-
-    const res = await fetch(
-        "api/file_access_api.py?action=delete_bst",
-        {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body: JSON.stringify({
-                project: currentProject,
-                file: file
-            })
+    await fetch("/pybee/studio/api/projectfiles.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getbyid",
+            id : file
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.error) {
+            if(!confirm("Delete file '"+ data.pagename + "_" + data.id +"' ?")) {
+                return
+            } else {
+                fetch("/pybee/studio/api/projectfiles.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "deletebyid",
+                        id : file
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    loadProjectFiles()
+                });
+            }
         }
-    )
-
-    const data = await res.json()
-
-    if(data.status === "ok"){
-
-        const list = projects[currentProject]
-        const idx = list.indexOf(file)
-
-        if(idx !== -1)
-            list.splice(idx,1)
-
-        if(currentFile === file)
-            currentFile = null
-
-        renderProjectFiles(currentProject)
-
-    }
-
+    });
 }
 
 async function loadBST(fileid){
@@ -418,10 +409,8 @@ async function loadBST(fileid){
         })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
-            console.log(JSON.parse(data.filecontent))
             currentFile = fileid
-            workspaceRoot = JSON.parse(data.filecontent).workspace||null
+            workspaceRoot = JSON.parse(data.filecontent)||null
             if(workspaceRoot){
                 rebuildParents(workspaceRoot, null)
             }
@@ -713,7 +702,8 @@ function serializeNode(node){
     const out = {
         id: node.id,
         type: node.type,
-        props: node.props||{}
+        props: node.props||{},
+        container:node.container
     }
 
     if(node.zones){
@@ -733,12 +723,10 @@ function serializeNode(node){
 
 async function saveFileBST(){
 
-    newfile = false
-
-    if(!currentProject){
-        alert("Select a project or create one first")
-        return
-    }
+    let newfile = false
+    let overwrite = false
+    let pagename = ""
+    let currentfilefound = null
 
     if(!workspaceRoot){
         alert("Workspace is empty")
@@ -746,53 +734,88 @@ async function saveFileBST(){
     }
 
     if(!currentFile){
-        const name = prompt("File name (.bst):")
-
-        if(!name) return
-
-        currentFile = name.endsWith(".bst") ? name : name + ".bst"
-
+        pagename = prompt("Page name ?")
+        if(!pagename) return
+        await fetch("/pybee/studio/api/projectfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbypagename",
+                pagename: pagename
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.error) {
+                overwrite = true
+                currentfilefound = data.id
+            }
+        });
         newfile = true
     }
 
-    const payload = {
-        project: currentProject,
-        file: currentFile,
-        workspace: serializeNode(workspaceRoot)
-    }
-
-    console.log(currentProject)
-
-    const res = await fetch(
-        "api/file_access_api.py?action=save",
-        {
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body: JSON.stringify(payload)
+    if (newfile) {
+        if (overwrite) {
+            if (confirm("File already exists. Overwrite?")) {
+                // UPDATE
+                fetch("/pybee/studio/api/projectfiles.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "filecontent",
+                        id : currentfilefound,
+                        filecontent: JSON.stringify(serializeNode(workspaceRoot))
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if(res.status === "ok") {
+                        alert("File saved")
+                    } else {
+                        alert("Network error : file not saved")
+                    }
+                });
+            }
+        } else {
+            // INSERT
+            fetch("/pybee/studio/api/projectfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "create",
+                    id_project : projectid,
+                    pagename: pagename,
+                    filecontent: JSON.stringify(serializeNode(workspaceRoot))
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.status === "ok") {
+                    alert("New file created")
+                    loadProjectFiles()
+                } else {
+                    alert("Network error : file not created")
+                }
+            });
         }
-    )
-
-    const data = await res.json()
-
-    if(data.status === "ok"){
-        alert("File saved")
-        if (newfile)
-            projects[currentProject].push(currentFile)
-        renderProjectFiles(currentProject)
+    } else {
+        // UPDATE
+        fetch("/pybee/studio/api/projectfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "filecontent",
+                id : currentFile,
+                filecontent: JSON.stringify(serializeNode(workspaceRoot))
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            if(res.status === "ok") {
+                alert("File saved")
+            } else {
+                alert("Network error : file not saved")
+            }
+        });
     }
 }
-
-function clearProjectSelect(){
-
-    const select = document.getElementById("projectSelect")
-
-    for(let i = select.options.length - 1; i >= 0; i--){
-
-        if(select.options[i].value !== ""){
-            select.remove(i)
-        }
-
-    }
-
-}
-
