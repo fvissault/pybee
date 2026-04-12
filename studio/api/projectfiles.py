@@ -12,11 +12,12 @@ cursor = db.cursor(dictionary=True)
 
 # CREATE
 if action == "create":
-    data = normalize(form, ["id_project", "pagename"])
-    sql = "INSERT INTO projectfiles (id_project, pagename) VALUES (%s,%s)"
+    data = normalize(form, ["id_project", "pagename", "filecontent"])
+    sql = "INSERT INTO projectfiles (id_project, pagename, filecontent) VALUES (%s,%s,%s)"
     cursor.execute(sql, (
         data["id_project"],
-        data["pagename"]
+        data["pagename"],
+        data["filecontent"]
     ))
     db.commit()
 
@@ -34,7 +35,17 @@ elif action == "getbyid":
         data["id"],
     ))
     projectfile = cursor.fetchone()
-    json_response(projectfile)
+    json_response(projectfile if projectfile else {"error": "file don't exists"})
+
+# SELECT (getbypagename)
+elif action == "getbypagename":
+    data = normalize(form, ["pagename"])
+    sql = "SELECT * FROM projectfiles WHERE pagename=%s"
+    cursor.execute(sql, (
+        data["pagename"],
+    ))
+    projectfile = cursor.fetchone()
+    json_response(projectfile if projectfile else {"error": "file don't exists"})
 
 # SELECT (getbyproject)
 elif action == "getbyproject":
@@ -44,7 +55,7 @@ elif action == "getbyproject":
         data["id"],
     ))
     projectfiles = cursor.fetchall()
-    json_response(projectfiles)
+    json_response(projectfiles if projectfiles else {"error": "files don't exists"})
 
 # UPDATE (filecontent)
 elif action == "filecontent":
