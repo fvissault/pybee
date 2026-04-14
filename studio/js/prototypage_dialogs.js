@@ -1,20 +1,19 @@
 let currentConfigNode = null
 
-function openConfigPopup(node, cat){
+function openDialog(node, cat){
     currentConfigNode = node
-    const content = document.getElementById("configContent")
-    content.innerHTML = buildPopupContent(node, cat)
+    buildPopupContent(node, cat)
     if(node.type === "layout" && cat == "lcss") {
         initLayoutPopupEvents()
     }
     if((node.type === "container" || node.type === "layout") && cat == "css") {
         renderTree()
     }
-    document.getElementById("configPopup").style.display="block"
+    document.getElementById("dialog").style.display="block"
 }
 
-function closeConfigPopup(){
-    document.getElementById("configPopup").style.display="none"
+function closeDialog(){
+    document.getElementById("dialog").style.display="none"
 }
 
 function buildPopupContent(node, cat){
@@ -59,8 +58,8 @@ function buildPopupContent(node, cat){
     }
 
     if(node.type==="container") {
-        if (cat == "html") return popupWorkspace(node)
-        if (cat == "css") return popupWorkspaceCss(node)
+        if (cat == "html") popupWorkspace(node)
+        if (cat == "css") popupWorkspaceCss(node)
         if (cat == "js") return popupWorkspaceJs(node)
         if (cat == "model") return popupWorkspaceModel(node)
     }
@@ -85,7 +84,7 @@ function popupButton(node){
         <div style="margin-bottom:5px;"><label for="button_onclick">Onclick function :</label></div>
         <input type="text" value="${onclick}" id="button_onclick" style="width:275px; padding:5px; background-color:#eee;"/><br><br>
         <button class="config_button_apply" onclick="saveButtonProps()">Apply</button>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <button class="config_button_close" onclick="closeDialog()">Close</button>
     `
 }
 
@@ -94,7 +93,7 @@ function saveButtonProps(){
     node.props.id = document.getElementById("button_id").value
     node.props.content = document.getElementById("button_content").value
     node.props.onclick = document.getElementById("button_onclick").value
-    closeConfigPopup()
+    closeDialog()
     render()
 }
 
@@ -111,14 +110,14 @@ function popupText(node){
         <textarea id="prop_text" style="width:275px; height:50px;">${text}</textarea>
         <br><br>
         <button class="config_button_apply" onclick="saveTextProps()">Apply</button>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <button class="config_button_close" onclick="closeDialog()">Close</button>
     `
 }
 
 function saveTextProps(){
     const node=currentConfigNode
     node.props.text=document.getElementById("prop_text").value
-    closeConfigPopup()
+    closeDialog()
     render()
 }
 
@@ -138,7 +137,7 @@ function popupSpan(node){
         <textarea id="span_content" style="width:275px; height:50px; padding:5px; background-color:#eee;">${text}</textarea>
         <br><br>
         <button class="config_button_apply" onclick="saveSpanProps()">Apply</button>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <button class="config_button_close" onclick="closeDialog()">Close</button>
     `
 }
 
@@ -146,7 +145,7 @@ function saveSpanProps(){
     const node=currentConfigNode
     node.props.id = document.getElementById("span_id").value
     node.props.content = document.getElementById("span_content").value
-    closeConfigPopup()
+    closeDialog()
     render()
 }
 
@@ -168,7 +167,7 @@ function popupLayout(node){
         <div style="margin-bottom:5px;"><label for="layout_zone_count">Layout zone count :</label></div>
         <input type="text" value="${zone_count}" id="layout_zone_count" style="width:150px; padding:5px; background-color:#eee;" disabled/><br><br>
         <button class="config_button_apply" onclick="saveLayoutProps()">Apply</button>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <button class="config_button_close" onclick="closeDialog()">Close</button>
     `
 }
 
@@ -188,7 +187,7 @@ function saveLayoutProps(){
 
     const layout_zone_count = parseInt(document.getElementById("layout_zone_count").value)
     node.props.count = layout_zone_count
-    closeConfigPopup()
+    closeDialog()
     render()
 }
 
@@ -218,7 +217,7 @@ function popupLayoutCss(node) {
         <ul id="layoutgrid_props" style="width:350px; padding:0px; margin:0px; list-style-type: none; border:1px solid gray; min-height:100px; background-color:#eee;">
             ${buildLayoutCss(node.props.css||[])}
         </ul>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <button class="config_button_close" onclick="closeDialog()">Close</button>
     `
 }
 
@@ -328,14 +327,28 @@ function popupWorkspace(node){
     const page_name = node.props.name||""
     const page_title = node.props.title||""
 
-    return `
-        <h3 style="text-align:center;">Page</h3>
-        <div style="margin-bottom:5px;"><label for="page_name">Page name :</label></div>
-        <input type="text" value="${page_name}" id="page_name" style="width:340px; padding:5px; background-color:#eee;"/><br><br>
-        <div style="margin-bottom:5px;"><label for="page_title">Page title :</label></div>
-        <input type="text" value="${page_title}" id="page_title" style="width:340px; padding:5px; background-color:#eee;"/><br><br>
-        <button class="config_button_apply" onclick="saveWorkspaceProps()">Apply</button>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de la page"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="page_name">Page name :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${page_name}" id="page_name"/>
+            </div>
+            <div class="dialog-row">
+                <label for="page_title">Page title :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${page_title}" id="page_title"/>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveWorkspaceProps()">Apply</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Close</button>
+        </div>
     `
 }
 
@@ -353,7 +366,7 @@ function saveWorkspaceProps() {
     const page_title = document.getElementById("page_title").value
     node.props.title = page_title.trim()
 
-    closeConfigPopup()
+    closeDialog()
     render()
 
 }
@@ -377,12 +390,20 @@ function saveWorkspaceProps() {
 // *******************************************************************************
 function popupWorkspaceCss(node) {
 
-    return `
-        <h3 style="text-align:center;">Workspace css</h3>
-        <div style="max-height:400px; overflow:auto;">
-            <div id="cssTree" class="tree"></div>
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Workspace css"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <div style="max-height:500px; min-width:350px; overflow:auto;">
+                    <div id="cssTree" class="tree"></div>
+                </div>
+            </div>
         </div>
-        <button class="config_button_close" onclick="closeConfigPopup()">Close</button>
+        <div class="dialog-actions">
+            <button class="btn btn-secondary" onclick="closeDialog()">Close</button>
+        </div>
     `
 }
 
@@ -395,7 +416,7 @@ function renderTree(){
     // bouton racine
     const addRoot = document.createElement("div")
     addRoot.className = "tree-row"
-    addRoot.innerHTML = `<button id="root-button" class="tree-button" onclick="showAddNode()">+</button>`
+    addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode()">+</button>`
     tree.appendChild(addRoot)
 
     if (!properties.props.css) properties.props.css = []
@@ -408,14 +429,12 @@ function renderTree(){
 
         if (node.type == "id") {
             row.innerHTML =
-            `<span>${node.type}</span>
-            <span><b>${node.name}</b></span>`
+            `<span>${node.type} <b>${node.name}</b></span>`
 
         } else {
             row.innerHTML =
-            `<button class="tree-button" onclick="removeCssProperty(${i})">-</button>
-            <span>${node.type}</span>
-            <span><b>${node.name}</b></span>`
+            `<button class="btn btn-secondary" onclick="removeCssProperty(${i})">-</button>
+            <span>${node.type} <b>${node.name}</b></span>`
         }
         tree.appendChild(row)
 
@@ -433,9 +452,9 @@ function renderTree(){
                 `<span>${v}</span>`
             } else {
                 vrow.innerHTML =
-                `<button class="tree-button" onclick="removeValue(${i},${j})">-</button>
+                `<button class="btn btn-secondary" onclick="removeValue(${i},${j})">-</button>
                 <input value="${v}" 
-                onchange="updateValue(${i},${j},this.value)">`
+                onchange="updateValue(${i},${j},this.value)"  style="width:230px;">`
             }
             values.appendChild(vrow)
 
@@ -447,8 +466,8 @@ function renderTree(){
 
         if (node.type !== "id") {
             addVal.innerHTML =
-            `<button class="tree-button" onclick="addValue(${i})">+</button>
-            <input placeholder="new value">`
+            `<button class="btn btn-secondary" onclick="addValue(${i})">+</button>
+            <input placeholder="Nouvelle valeur" style="width:225px;">`
 
             addVal.querySelector("input").onchange = (e)=>{
                 properties.props.css[i].values.push(e.target.value)
@@ -477,12 +496,12 @@ function showAddNode(){
 
     row.innerHTML =
     `
-    <select id="newType">
+    <select id="newType" style="width:70px;">
         <option>tag</option>
         <option>class</option>
     </select>
-    <input id="newName" placeholder="name">
-    <button class="tree-button" onclick="addNode()">add</button>
+    <input id="newName" placeholder="Nom" style="width:210px;">
+    <button class="btn btn-secondary" onclick="addNode()">Ajouter</button>
     `
 
     tree.prepend(row)
@@ -494,6 +513,11 @@ function addNode(){
     const type = document.getElementById("newType").value
     const name = document.getElementById("newName").value
 
+    if (name.trim() === "") {
+        alert("Veuillez renseigner le nom de la ressource")
+        document.getElementById("newName").focus()
+        return
+    }
     properties.props.css.push({
         type:type,
         name:name,
