@@ -3,9 +3,10 @@
 
 <head>
 
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Beetle Studio Prototype</title>
-    <link rel="stylesheet" href="css/prototypage.css">
+    <link rel="stylesheet" href="css/prototypage.css"/>
     <script defer src="js/prototypage.js"></script>
     <script defer src="js/prototypage_dialogs.js"></script>
 
@@ -55,11 +56,11 @@
         <!-- workspace -->
         <div id="workspace-panel" class="panel">
             <div class="panel-header">
-                <button id="config_container" style="margin-right: 6px; height:20px; font-size:12px;" onclick="openConfigPopup(workspaceRoot, 'html')">⚙</button> 
-                <button id="css_layout" style="margin-right: 6px; display:none;" onclick="openConfigPopup(workspaceRoot, 'lcss')">layout css</button> 
-                <button id="css_container" style="margin-right: 6px;" onclick="openConfigPopup(workspaceRoot, 'css')">css</button> 
+                <button id="config_container" style="margin-right: 6px; height:20px; font-size:12px;" onclick="openDialog(workspaceRoot, 'html')">⚙</button> 
+                <button id="css_layout" style="margin-right: 6px; display:none;" onclick="openDialog(workspaceRoot, 'lcss')">layout css</button> 
+                <button id="css_container" style="margin-right: 6px;" onclick="openDialog(workspaceRoot, 'css')">css</button> 
                 <button id="js_container" style="margin-right: 6px;" onclick="openIntFlow()">js</button> 
-                <button id="model_container" style="margin-right: 6px;" onclick="openConfigPopup(workspaceRoot, 'model')">M</button> 
+                <button id="model_container" style="margin-right: 6px;" onclick="openDialog(workspaceRoot, 'model')">M</button> 
                 Workspace</div>
             <div class="panel-content">
                 <div id="workspace"></div>
@@ -70,10 +71,10 @@
         <div id="trash">🗑 Glisser ici pour supprimer</div>
     </div>
 
-<div id="configPopup" class="config-popup">
-    <div class="config-header">Configuration</div>
-    <div id="configContent"></div>
-</div>
+    <div id="dialog" class="dialog-popup">
+        <div id="dialogHeader" class="dialog-header"></div>
+        <div id="dialogContent"></div>
+    </div>
 
 </body>
 </html>
