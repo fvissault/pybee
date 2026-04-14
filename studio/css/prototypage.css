@@ -7,18 +7,25 @@ body {
 }
 
 #menu {
-    height:40px;
-    background:#222;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    padding:0 15px;
+    height: 50px;
+    background: #243447;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
 }
 
 #menu button {
-    padding:5px 10px;
-    margin-right:10px;
     cursor:pointer;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+#menu button:hover {
+    background: rgba(255,255,255,0.2);
 }
 
 #main {
@@ -26,25 +33,29 @@ body {
     display:grid;
     grid-template-columns:220px 220px 1fr;
     grid-template-rows:1fr 80px;
-    gap:5px;
-    padding:5px;
-    background:#ddd;
+    gap:12px;
+    padding:12px;
+    background: #f5f7fb;
     min-height:0;
 }
 
 .panel {
     background:#fff;
-    border:1px solid #aaa;
     display:flex;
     flex-direction:column;
     min-height:0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .panel-header {
-    padding:8px;
     border-bottom:1px solid #ccc;
-    background:#f0f0f0;
     flex-shrink:0;
+    padding: 12px 14px;
+    font-weight: 600;
+    background: transparent;
+    border-bottom: 1px solid #eef1f5;
 }
 
 .panel-content {
@@ -57,22 +68,26 @@ body {
 #explorer {
     grid-column:1;
     grid-row:1;
+    padding: 10px;
 }
 
 #palette {
     grid-column:2;
     grid-row:1;
+    padding: 10px;
 }
 
 #workspace-panel {
     grid-column:3;
     grid-row:1;
+    padding: 10px;
 }
 
-#workspace {
-    background:#f5f5f5;
-    position:relative;
-    min-height:100%;
+#trash {
+    background: #fff1f1;
+    color: #c0392b;
+    border-radius: 12px;
+    font-weight: 500;
 }
 
 #trash {
@@ -86,76 +101,184 @@ body {
 }
 
 .zone {
-    border:2px dashed #bbb;
-    margin:10px 0;
-    padding:10px;
-    min-height:40px;
+    position: relative;
+    border: 2px dashed #d6dde5;
+    border-radius: 10px;
+    padding: 12px;
+    background: #fafbfd;
+    transition: all 0.2s;
+}
+
+.zone:hover {
+    border-color: #4a90e2;
+    background: #f0f6ff;
 }
 
 .widget {
-    background:#cde;
-    margin:10px 0;
-    padding:10px;
-    cursor:grab;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 12px;
+    margin: 10px 0;
+    cursor: grab;
 }
 
 .palette-item {
-    background:#eee;
-    padding:8px;
-    margin-bottom:8px;
-    cursor:grab;
-    border:1px solid #aaa;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e6ebf1;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: all 0.15s ease;
+}
+
+.palette-item:hover {
+    background: #f4f8ff;
+    border-color: #4a90e2;
 }
 
 .insert-line {
-    position:absolute;
-    height:2px;
-    background:red;
-    left:0;
-    right:0;
-    pointer-events:none;
+    position: relative;
+    height: 3px;
+    background: #e74c3c;
+    left: 10px;
+    right: 10px;
+    border-radius: 2px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.insert-line::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 50%;
+    height: 3px;
+    background: #e74c3c;
+    transform: translateY(-50%);
 }
 
 .tree-file {
-    padding:4px 0;
     cursor:pointer;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: background 0.15s;
 }
 
-    
-.config-popup{
+.tree-file:hover {
+    background: #eef3f8;
+}
+
+.dialog-popup{
     display:none;
     position:fixed;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    background:white;
-    border:1px solid #888;
-    min-width:300px;
+    min-width:350px;
+    max-width:550px;
     z-index:1000;
     padding-bottom: 10px;
-    border-radius: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    border: none;
 }
 
-.config-header {
-    background-color:#cde;
+.dialog-header {
     padding:10px;
-    border-bottom:1px solid #888;
     border-radius: 10px 10px 0px 0px;
+    font-weight:bold;
+    background: #f9fafb;
+    border-bottom: 1px solid #eee;
+
 }
 
-.config_button_apply {
+/* Sections */
+.dialog-section {
+    margin-bottom: 12px;
+}
+
+/* Titres */
+.dialog-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* Lignes */
+.dialog-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+}
+
+.dialog-row input {
+    padding:7px;
+    width:314px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
+}
+
+.dialog-row select {
+    padding:7px;
+    width:330px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
+}
+
+.dialog-row textarea {
     padding:5px;
-    margin-top:15px;
-    float:left;
+    width:318px;
+    height:100px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
 }
 
-.config_button_close {
+.dialog-row span {
     padding:5px;
-    margin-top:15px;
-    float:right;
+    font-size:16px;
+}
+/* Base bouton */
+.btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-#configContent {
+/* Bouton principal (Apply) */
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+/* Bouton secondaire (Close) */
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+#dialogContent {
     padding:10px;
 }
 
@@ -179,30 +302,8 @@ body {
     padding-left: 10px;
 }
 
-.tree button {
-    border: 1px solid #bbb;
-    background: #f5f5f5;
-    border-radius: 4px;
-    width: 26px;
-    height: 22px;
-    cursor: pointer;
-}
-
 .tree button:hover {
     background: #e9e9e9;
-}
-
-.tree input, .tree select {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 13px;
-}
-
-.tree input:focus, .tree select:focus {
-    outline: none;
-    border-color: #6aa9ff;
-    box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
 
 /* editeur js */
