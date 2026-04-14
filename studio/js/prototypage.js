@@ -481,134 +481,90 @@ document.addEventListener("dragstart",e=>{
 let currentDropTarget=null
 let currentDropIndex=null
 
-function computeInsertion(zoneEl,mouseY){
-
-    const widgets=[...zoneEl.children].filter(
-        c=>c.classList.contains("widget")
-    )
-
-    for(let i=0;i<widgets.length;i++){
-
-        const rect=widgets[i].getBoundingClientRect()
-
-        if(mouseY>=rect.top && mouseY<=rect.top+10)
-            return{index:i,rectTop:rect.top}
-
-        if(mouseY>=rect.bottom-10 && mouseY<=rect.bottom)
-            return{index:i+1,rectTop:rect.bottom}
-
+function showInsertLine(zoneEl, index){
+    if (!insertLine) {
+        insertLine = document.createElement("div")
+        insertLine.className = "insert-line"
     }
-
-    if(widgets.length===0){
-
-        const rect=zoneEl.getBoundingClientRect()
-
-        return{
-            index:0,
-            rectTop:rect.top
+    const widgets = [...zoneEl.querySelectorAll(":scope > .widget")]
+    let referenceNode = null
+    if (index < widgets.length) {
+        referenceNode = widgets[index]
+    }
+    if (insertLine.parentNode === zoneEl) {
+        if (
+            (referenceNode && insertLine.nextSibling === referenceNode) ||
+            (!referenceNode && insertLine === zoneEl.lastChild)
+        ) {
+            return // déjà au bon endroit → on ne fait rien
         }
-
     }
-
-    const lastRect=widgets[widgets.length-1].getBoundingClientRect()
-
-    if(mouseY>lastRect.bottom)
-        return{
-            index:widgets.length,
-            rectTop:lastRect.bottom
-        }
-
-    return{
-        index:widgets.length,
-        rectTop:lastRect.bottom
+    if (referenceNode) {
+        zoneEl.insertBefore(insertLine, referenceNode)
+    } else {
+        zoneEl.appendChild(insertLine)
     }
-
 }
 
-function showInsertLine(rectTop){
-
-    const workspaceRect=workspaceEl.getBoundingClientRect()
-    const scrollOffset=workspaceContent.scrollTop
-
-    const y=rectTop-workspaceRect.top+scrollOffset
-
-    if(!insertLine){
-
-        insertLine=document.createElement("div")
-        insertLine.className="insert-line"
-
-        workspaceEl.appendChild(insertLine)
-
-    }
-
-    insertLine.style.top=y+"px"
-
-}
-
-workspaceContent.addEventListener("dragover",e=>{
-
+workspaceContent.addEventListener("dragover", e => {
     e.preventDefault()
-
-    let zoneEl=e.target.closest(".zone")
-
-    if(!zoneEl){
-
-        if(workspaceRoot && workspaceRoot.type==="layout")
-            return
-
-        zoneEl=workspaceEl
+    let element = document.elementFromPoint(e.clientX, e.clientY)
+    let zoneEl = element?.closest(".zone")
+    if (!zoneEl) {
+        // fallback : workspace principal
+        zoneEl = workspaceEl
     }
-    const r=computeInsertion(zoneEl,e.clientY)
-
-    if(!r)
-        return
-
-    currentDropTarget=zoneEl
-    currentDropIndex=r.index
-
-    showInsertLine(r.rectTop)
-
+    if (!zoneEl) return
+    const widgets = [...zoneEl.querySelectorAll(":scope > .widget")]
+    element = document.elementFromPoint(e.clientX, e.clientY)
+    const widget = element?.closest(".widget")
+    let index = widgets.length
+    if (widget && zoneEl.contains(widget)) {
+        const rect = widget.getBoundingClientRect()
+        const middle = rect.top + rect.height / 2
+        if (e.clientY < middle) {
+            index = widgets.indexOf(widget)
+        } else {
+            index = widgets.indexOf(widget) + 1
+        }
+    } else {
+        for (let i = 0; i < widgets.length; i++) {
+            const rect = widgets[i].getBoundingClientRect()
+            if (e.clientY < rect.top) {
+                index = i
+                break
+            }
+        }
+    }
+    currentDropTarget = zoneEl
+    currentDropIndex = index
+    showInsertLine(zoneEl, index)
 })
 
 workspaceContent.addEventListener("dragleave",()=>{
-
-    if(insertLine)
-        insertLine.remove()
-
+    if(insertLine) insertLine.remove()
     insertLine=null
-
 })
 
 workspaceContent.addEventListener("drop",e=>{
-
     e.preventDefault()
-
-    if(insertLine)
-        insertLine.remove()
-
+    if(insertLine) insertLine.remove()
     insertLine=null
-
     if(draggedType==="layout"){
-
         if(workspaceHasWidgets()){
             alert("Workspace already contains widgets.")
             return
         }
-        workspaceRoot = createLayout(draggedLayoutZones)
-        
+        workspaceRoot = createLayout(draggedLayoutZones)       
         document.getElementById("css_layout").style.display = "inline"
-
         render()
         return
     }
-
     let newParent = null
-
     // drop dans un container existant
     if(currentDropTarget){
-
         // cas spécial : drop directement dans le workspace
-        if(currentDropTarget === workspaceEl){
+        if(currentDropTarget === workspaceEl) {
             if(!workspaceRoot){
                 workspaceRoot = {
                     id: generateId("Container"),
@@ -619,65 +575,36 @@ workspaceContent.addEventListener("drop",e=>{
             }
             newParent = workspaceRoot
         } else {
-            newParent = findNodeById(
-                workspaceRoot,
-                currentDropTarget.dataset.nodeId
-            )
-
+            newParent = findNodeById(workspaceRoot, currentDropTarget.dataset.nodeId)
             if(!newParent)
                 return
         }
     }
-
     if(newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container){
         return
     }
-
     if(draggedType==="widget"){
-
         if(workspaceRoot && workspaceRoot.type === "layout" && newParent === workspaceRoot) {
             alert("Cannot add root widgets when a layout exists.")
             return
         }
-
         const widget=createWidget("widget")
-
-        insertNode(
-            newParent,
-            widget,
-            currentDropIndex??newParent.children.length
-        )
-
+        insertNode(newParent, widget, currentDropIndex??newParent.children.length)
         render()
-
     }
-
-    if(draggedType==="move-widget" && draggedNodeRef){
-
-        let check=newParent
-
-        while(check){
-
-            if(check===draggedNodeRef)
-                return
-
+    if(draggedType === "move-widget" && draggedNodeRef){
+        let check = newParent
+        while(check) {
+            if(check === draggedNodeRef) return
             check=check.parent
-
         }
-
         removeNode(draggedNodeRef)
-
         let idx=currentDropIndex??newParent.children.length
-
         insertNode(newParent,draggedNodeRef,idx)
-
         render()
-
     }
-
     currentDropTarget=null
     currentDropIndex=null
-
 })
 
 trashEl.addEventListener("dragover",e=>{
@@ -685,54 +612,42 @@ trashEl.addEventListener("dragover",e=>{
 })
 
 trashEl.addEventListener("drop",e=>{
-
     e.preventDefault()
-
     if(draggedType==="move-widget" && draggedNodeRef){
-
         removeNode(draggedNodeRef)
         render()
-
     }
-
 })
 
 function serializeNode(node){
-
     const out = {
         id: node.id,
         type: node.type,
         props: node.props||{},
         container:node.container
     }
-
     if(node.zones){
         out.zones = node.zones.map(zone =>
             zone.map(child => serializeNode(child))
         )
     }
-
     if(node.children){
         out.children = node.children.map(child =>
             serializeNode(child)
         )
     }
-
     return out
 }
 
 async function saveFileBST(){
-
     let newfile = false
     let overwrite = false
     let pagename = ""
     let currentfilefound = null
-
     if(!workspaceRoot){
         alert("Workspace is empty")
         return
     }
-
     if(!currentFile){
         pagename = prompt("Page name ?")
         if(!pagename) return
@@ -753,7 +668,6 @@ async function saveFileBST(){
         });
         newfile = true
     }
-
     if (newfile) {
         if (overwrite) {
             if (confirm("File already exists. Overwrite?")) {
