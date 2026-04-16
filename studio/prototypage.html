@@ -56,12 +56,14 @@
         <!-- workspace -->
         <div id="workspace-panel" class="panel">
             <div class="panel-header">
-                <button id="config_container" style="margin-right: 6px; height:20px; font-size:12px;" onclick="openDialog(workspaceRoot, 'html')">⚙</button> 
-                <button id="css_layout" style="margin-right: 6px; display:none;" onclick="openDialog(workspaceRoot, 'lcss')">layout css</button> 
-                <button id="css_container" style="margin-right: 6px;" onclick="openDialog(workspaceRoot, 'css')">css</button> 
-                <button id="js_container" style="margin-right: 6px;" onclick="openIntFlow()">js</button> 
-                <button id="model_container" style="margin-right: 6px;" onclick="openDialog(workspaceRoot, 'model')">M</button> 
-                Workspace</div>
+                <div>
+                    <button id="config_container" class="btn btn-secondary" style="margin-right:5px; font-size:12px;" onclick="openDialog(workspaceRoot, 'html')" title="Paramétrage">⚙</button> 
+                    <button id="css_container" class="btn btn-secondary" style="margin-right: 5px; font-weight:bold;" onclick="openDialog(workspaceRoot, 'css')" title="CSS">::</button> 
+                    <button id="js_container" class="btn btn-secondary" style="margin-right: 5px;" onclick="openIntFlow()">js</button> 
+                    <button id="model_container" class="btn btn-secondary" style="margin-right: 5px;" onclick="openDialog(workspaceRoot, 'model')">M</button> 
+                    Workspace
+                </div>
+            </div>
             <div class="panel-content">
                 <div id="workspace"></div>
             </div>
