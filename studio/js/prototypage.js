@@ -84,16 +84,16 @@ function generateId(type){
 
 function createNode(type, options={}){
     if (type == "layout") {
-        return{
+        return {
             id:generateId(type),
             type:"layout",
             parent:null,
-            props:{},
+            props:{"id": "parentLayout"},
             children:[]
         }
     }
     if (type == "widget") {
-        return{
+        return {
             id:generateId(draggedWidgetType),
             type:"widget",
             parent:null,
@@ -104,11 +104,11 @@ function createNode(type, options={}){
         }
     }
     if (type == "zone") {
-        return{
+        return {
             id:generateId(type),
             type:"zone",
             parent:null,
-            props:{},
+            props: options,
             children:[]
         }
     }
@@ -119,7 +119,8 @@ function createLayout(zoneCount=4){
     const layout=createNode("layout")
 
     for(let i=0;i<zoneCount;i++){
-        const zone=createNode("zone",{id:"z"+i})
+        const zone=createNode("zone",{id:"z"+i, css: [{name: "z"+i, type:"id", values:["display:grid"]}]})
+
         zone.parent=layout
         layout.children.push(zone)
     }
@@ -192,19 +193,21 @@ function render(){
         return
 
     if (workspaceRoot.type === "layout") {
-        workspaceEl.appendChild(renderLayout(workspaceRoot))
-        document.getElementById("css_layout").style.display = "inline"    
+        layout = renderLayout(workspaceRoot)
+        workspaceEl.appendChild(layout)
+        workspaceRoot.children.forEach(child => {
+            if(child.type==="zone")
+                layout.appendChild(renderZoneLayout(child))
+        })
+    } else {
+        workspaceRoot.children.forEach(child => {
+            //if(child.type==="zone")
+            //    workspaceEl.appendChild(renderZoneLayout(child))
+            if(child.type==="widget")
+                workspaceEl.appendChild(renderWidget(child))
+
+        })
     }
-
-    workspaceRoot.children.forEach(child => {
-
-        if(child.type==="zone")
-            workspaceEl.appendChild(renderZoneLayout(child))
-
-        if(child.type==="widget")
-            workspaceEl.appendChild(renderWidget(child))
-
-    })
 }
 
 function renderZone(zone){
@@ -226,20 +229,36 @@ function renderZoneLayout(zone){
     const zoneEl=document.createElement("div")
 
     zoneEl.className="zone"
+    zoneEl.style.marginTop = "7px"
     zoneEl.dataset.nodeId=zone.id
 
     const label=document.createElement("span")
     label.textContent=zone.id
     
-    const configBtn=document.createElement("button")
-    configBtn.textContent="⚙"
-    configBtn.style.marginRight="6px"
-    configBtn.onclick=(e)=>{
+    const cssBtn=document.createElement("button")
+    cssBtn.textContent="::"
+    cssBtn.title = "CSS"
+    cssBtn.style.fontWeight = "bold"
+    cssBtn.className = "btn btn-secondary"
+    cssBtn.style.marginRight="6px"
+    cssBtn.onclick=(e)=>{
         e.stopPropagation()
-        openConfigPopup(zone)
+        openDialog(zone, 'css')
+    }
+    
+    const htmlBtn=document.createElement("button")
+    htmlBtn.textContent="⚙"
+    htmlBtn.title = "Paramètres"
+    htmlBtn.style.fontSize = "12px"
+    htmlBtn.className = "btn btn-secondary"
+    htmlBtn.style.marginRight="6px"
+    htmlBtn.onclick=(e)=>{
+        e.stopPropagation()
+        openDialog(zone, 'html')
     }
 
-    zoneEl.appendChild(configBtn)
+    zoneEl.appendChild(htmlBtn)
+    zoneEl.appendChild(cssBtn)
     zoneEl.appendChild(label)
 
     zone.children.forEach(c=>{
@@ -259,15 +278,30 @@ function renderLayout(layout){
     const label=document.createElement("span")
     label.textContent=layout.id
     
-    //const configBtn=document.createElement("button")
-    //configBtn.textContent="⚙"
-    //configBtn.style.marginRight="6px"
-    //configBtn.onclick=(e)=>{
-    //    e.stopPropagation()
-    //    openConfigPopup(layout)
-    //}
+    const cssBtn=document.createElement("button")
+    cssBtn.textContent="::"
+    cssBtn.title = "CSS"
+    cssBtn.style.fontWeight = "bold"
+    cssBtn.className = "btn btn-secondary"
+    cssBtn.style.marginRight="6px"
+    cssBtn.onclick=(e)=>{
+        e.stopPropagation()
+        openDialog(workspaceRoot, "lcss")
+    }
+    
+    const htmlBtn=document.createElement("button")
+    htmlBtn.textContent="⚙"
+    htmlBtn.title = "Paramètres"
+    htmlBtn.style.fontSize = "12px"
+    htmlBtn.className = "btn btn-secondary"
+    htmlBtn.style.marginRight="6px"
+    htmlBtn.onclick=(e)=>{
+        e.stopPropagation()
+        openDialog(workspaceRoot, "lhtml")
+    }
 
-    //el.appendChild(configBtn)
+    el.appendChild(htmlBtn)
+    el.appendChild(cssBtn)
     el.appendChild(label)
     el.dataset.nodeId=layout.id
 
@@ -424,8 +458,6 @@ async function loadBST(fileid){
 
 }
 
-
-
 document.getElementById("newPageBtn").addEventListener("click",()=>{
 
     workspaceRoot=null
@@ -449,7 +481,7 @@ document.querySelectorAll(".palette-item").forEach(item=>{
         draggedNodeRef=null
 
         // fermer la fénêtre de configuration éventuellement ouverte
-        document.getElementById("configPopup").style.display="none"
+        document.getElementById("dialog").style.display="none"
     })
 
 })
@@ -556,7 +588,6 @@ workspaceContent.addEventListener("drop",e=>{
             return
         }
         workspaceRoot = createLayout(draggedLayoutZones)       
-        document.getElementById("css_layout").style.display = "inline"
         render()
         return
     }
