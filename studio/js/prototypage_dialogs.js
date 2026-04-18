@@ -10,7 +10,7 @@ function openDialog(node, cat){
         renderTree()
     }
     if(node.type === "zone" && cat == "css") {
-        renderTree(true)
+        renderTreeById()
     }
     document.getElementById("dialog").style.display="block"
 }
@@ -22,54 +22,71 @@ function closeDialog(){
 function buildPopupContent(node, cat){
 
     if(node.type==="widget"){
-
-        switch(node.widgetType){
-
-            case "Button":
-                return popupButton(node)
-
-            case "Text":
-                return popupText(node)
-
-            case "Span":
-                return popupSpan(node)
-
-            case "Image":
-                return popupImage(node)
-
-            case "Block":
-                return popupBlock(node)
-
-            case "Form":
-                return popupForm(node)
-
+        if (cat == "html") {
+            switch(node.widgetType){
+                case "Button":
+                    popupButton(node)
+                    break
+                case "Text":
+                    popupText(node)
+                    break
+                case "Span":
+                    popupSpan(node)
+                    break
+                case "Image":
+                    popupImage(node)
+                    break
+                case "Block":
+                    popupBlock(node)
+                    break
+                case "Form":
+                    popupForm(node)
+                    break
+            }
+        } else if (cat == "css") {
+            switch(node.widgetType){
+                case "Button":
+                    popupButtonCss(node)
+                    break
+                case "Span":
+                    popupLayoutZoneCss(node)
+                    renderTreeById()
+                    break
+                case "Image":
+                    popupImageCss(node)
+                    break
+                case "Block":
+                    popupBlockCss(node)
+                    break
+            }
+        } else if (cat == "events") {
+            popupEvents(node)
+        }
+    } else {
+        if(node.type==="zone") {
+            if (cat == "css") popupLayoutZoneCss(node)
+            if (cat == "html") popupLayoutZone(node)
+        }
+        if(node.type==="layout") {
+            if (cat == "html") popupPage(node)
+            if (cat == "lhtml") popupLayout(node)
+            if (cat == "lcss") {
+                initPropsStruct()
+                popupLayoutCss(node)
+            }
+            if (cat == "css") popupWorkspaceCss(node)
+            if (cat == "js") {
+                return popupWorkspaceJs(node)
+            }
+            if (cat == "model") return popupWorkspaceModel(node)
         }
 
-    }
-
-    if(node.type==="zone") {
-        if (cat == "css") popupLayoutZoneCss(node)
-        if (cat == "html") popupLayoutZone(node)
-    }
-    if(node.type==="layout") {
-        if (cat == "html") popupPage(node)
-        if (cat == "lhtml") popupLayout(node)
-        if (cat == "lcss") {
-            initPropsStruct()
-            popupLayoutCss(node)
+        if(node.type==="container") {
+            if (cat == "html") popupPage(node)
+            if (cat == "css") popupWorkspaceCss(node)
+            if (cat == "js") return popupWorkspaceJs(node)
+            if (cat == "model") return popupWorkspaceModel(node)
         }
-        if (cat == "css") popupWorkspaceCss(node)
-        if (cat == "js") {
-            return popupWorkspaceJs(node)
-        }
-        if (cat == "model") return popupWorkspaceModel(node)
-    }
-
-    if(node.type==="container") {
-        if (cat == "html") popupPage(node)
-        if (cat == "css") popupWorkspaceCss(node)
-        if (cat == "js") return popupWorkspaceJs(node)
-        if (cat == "model") return popupWorkspaceModel(node)
     }
     return "<div>No configuration</div>"
 }
@@ -112,21 +129,29 @@ function popupText(node){
 
     const text=node.props.text||""
 
-    return `
-        <h3 style="text-align:center;">Only text</h3>
-        <div style="margin-bottom:5px;"><label for="prop_text">Text :</label></div>
-        <textarea id="prop_text" style="width:275px; height:50px;">${text}</textarea>
-        <br><br>
-        <button class="config_button_apply" onclick="saveTextProps()">Appliquer</button>
-        <button class="config_button_close" onclick="closeDialog()">Fermer</button>
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du widget"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="content">Contenu :</label>
+            </div>
+            <div class="dialog-row">
+                <textarea id="content">${text}</textarea>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveTextProps()">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
     `
 }
 
 function saveTextProps(){
     const node=currentConfigNode
-    node.props.text=document.getElementById("prop_text").value
+    node.props.text=document.getElementById("content").value
     closeDialog()
-    render()
 }
 
 // *******************************************************************************
@@ -136,25 +161,51 @@ function popupSpan(node){
 
     const text = node.props.content||""
     const id = node.props.id||""
+    const classes = node.props.classes||""
 
-    return `
-        <h3 style="text-align:center;">Span</h3>
-        <div style="margin-bottom:5px;"><label for="span_id">Id :</label></div>
-        <input type="text" value="${id}" id="span_id" style="width:275px; padding:5px; background-color:#eee;"/><br><br>
-        <div style="margin-bottom:5px;"><label for="span_content">Content :</label></div>
-        <textarea id="span_content" style="width:275px; height:50px; padding:5px; background-color:#eee;">${text}</textarea>
-        <br><br>
-        <button class="config_button_apply" onclick="saveSpanProps()">Appliquer</button>
-        <button class="config_button_close" onclick="closeDialog()">Fermer</button>
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du widget"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="page_name">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="page_title">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="page_title">Contenu :</label>
+            </div>
+            <div class="dialog-row">
+                <textarea id="content">${text}</textarea>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveSpanProps()">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
     `
 }
 
 function saveSpanProps(){
     const node=currentConfigNode
-    node.props.id = document.getElementById("span_id").value
-    node.props.content = document.getElementById("span_content").value
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    node.props.classes = document.getElementById("classes").value
+    node.props.content = document.getElementById("content").value
     closeDialog()
-    render()
 }
 
 // *******************************************************************************
@@ -218,7 +269,7 @@ function saveLayoutProps(){
 // *******************************************************************************
 function popupLayoutZoneCss(node) {
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Style de la zone"
+    head.innerText = "Style de l'objet'"
     const id = node.props.id||""
     if (id.trim() != "") {
         const content = document.getElementById("dialogContent")
@@ -573,81 +624,101 @@ function popupWorkspaceCss(node) {
     `
 }
 
-function renderTree(onlyid = false) {
+function renderTreeGeneric(filterFn, withRootButton = false) {
     const properties = currentConfigNode
-
     const tree = document.getElementById("cssTree")
-    if (tree) {
-        tree.innerHTML = ""
 
-        // bouton racine
-        if (!onlyid) {
-            const addRoot = document.createElement("div")
-            addRoot.className = "tree-row"
-            addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode()">+</button>`
-            tree.appendChild(addRoot)
-        }
-        if (!properties.props.css) properties.props.css = []
-        const css = Array.isArray(properties.props.css) ? properties.props.css : []
+    if (!tree) return
 
-        css.forEach((node,i)=>{
+    tree.innerHTML = ""
 
-            const row = document.createElement("div")
-            row.className = "tree-row"
-
-            if (node.type == "id") {
-                row.innerHTML =
-                `<span>${node.type} <b>${node.name}</b></span>`
-
-            } else {
-                row.innerHTML =
-                `<button class="btn btn-secondary" onclick="removeCssProperty(${i})">-</button>
-                <span>${node.type} <b>${node.name}</b></span>`
-            }
-            tree.appendChild(row)
-
-            // valeurs
-            const values = document.createElement("div")
-            values.className = "tree-values"
-
-            node.values.forEach((v,j)=>{
-
-                const vrow = document.createElement("div")
-                vrow.className="tree-row"
-
-                if (node.type == "id" && !onlyid) {
-                    vrow.innerHTML =
-                    `<span>${v}</span>`
-                } else {
-                    vrow.innerHTML =
-                    `<button class="btn btn-secondary" onclick="removeValue(${i},${j})">-</button>
-                    <input value="${v}" 
-                    onchange="updateValue(${i},${j},this.value)"  style="width:230px;">`
-                }
-                values.appendChild(vrow)
-
-            })
-
-            // ajout value
-            const addVal = document.createElement("div")
-            addVal.className="tree-row"
-
-            addVal.innerHTML =
-            `<button class="btn btn-secondary" onclick="addValue(${i})">+</button>
-            <input placeholder="Nouvelle valeur" style="width:225px;">`
-
-            addVal.querySelector("input").onchange = (e)=>{
-                properties.props.css[i].values.push(e.target.value)
-                renderTree()
-            }
-
-            values.appendChild(addVal)
-
-            tree.appendChild(values)
-
-        })
+    if (withRootButton) {
+        const addRoot = document.createElement("div")
+        addRoot.className = "tree-row"
+        addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode()">+</button>`
+        tree.appendChild(addRoot)
     }
 
+    if (!properties.props.css) properties.props.css = []
+    const css = Array.isArray(properties.props.css) ? properties.props.css : []
+
+    css.forEach((node, i) => {
+        if (!filterFn(node)) return
+
+        // Ligne principale
+        const row = document.createElement("div")
+        row.className = "tree-row"
+
+        const removeBtn = node.type !== "id"
+            ? `<button class="btn btn-secondary" onclick="removeCssProperty(${i})">-</button>`
+            : ""
+
+        row.innerHTML = `
+            ${removeBtn}
+            <span>${node.type} <b>${node.name}</b></span>
+        `
+        tree.appendChild(row)
+
+        // Valeurs
+        const values = createValuesBlock(node, i, properties)
+        tree.appendChild(values)
+    })
+}
+
+function createValuesBlock(node, i, properties) {
+    const values = document.createElement("div")
+    values.className = "tree-values"
+    values.id = `values-${i}`   // 👈 clé importante
+
+    renderValuesContent(values, node, i, properties)
+
+    return values
+}
+
+function renderValuesContent(container, node, i, properties) {
+    container.innerHTML = ""
+
+    node.values.forEach((v, j) => {
+        const vrow = document.createElement("div")
+        vrow.className = "tree-row"
+        vrow.innerHTML = `
+            <button class="btn btn-secondary" onclick="removeValue(${i}, ${j})">-</button>
+            <input value="${v}" onchange="updateValue(${i}, ${j},this.value)" style="width:230px;">
+        `
+        container.appendChild(vrow)
+    })
+
+    const addVal = document.createElement("div")
+    addVal.className = "tree-row"
+    addVal.innerHTML = `
+        <button class="btn btn-secondary" onclick="addValue(${i})">+</button>
+        <input placeholder="Nouvelle valeur" style="width:225px;">
+    `
+
+    addVal.querySelector("input").onchange = (e) => {
+        properties.props.css[i].values.push(e.target.value)
+        refreshValues(i)
+    }
+
+    container.appendChild(addVal)
+}
+
+function refreshValues(i) {
+    const properties = currentConfigNode
+    const node = properties.props.css[i]
+
+    const container = document.getElementById(`values-${i}`)
+    if (!container) return
+
+    renderValuesContent(container, node, i, properties)
+}
+
+function renderTreeById() {
+    renderTreeGeneric(node => node.type === "id", false)
+}
+
+function renderTree() {
+    renderTreeGeneric(node => node.type !== "id", true)
 }
 
 function showAddNode(){
@@ -660,15 +731,12 @@ function showAddNode(){
     const row = document.createElement("div")
     row.className="tree-row"
 
-    row.innerHTML =
-    `
-    <select id="newType" style="width:70px;">
-        <option>tag</option>
-        <option>class</option>
-    </select>
-    <input id="newName" placeholder="Nom" style="width:210px;">
-    <button class="btn btn-secondary" onclick="addNode()">Ajouter</button>
-    `
+    row.innerHTML = `<select id="newType" style="width:70px;">
+                        <option>tag</option>
+                        <option>class</option>
+                     </select>
+                     <input id="newName" placeholder="Nom" style="width:210px;">
+                     <button class="btn btn-secondary" onclick="addNode()">Ajouter</button>`
 
     tree.prepend(row)
 }
@@ -702,13 +770,13 @@ function removeCssProperty(i){
 function addValue(i){
     const properties = currentConfigNode
     properties.props.css[i].values.push("")
-    renderTree()
+    refreshValues(i)
 }
 
 function removeValue(i,j){
     const properties = currentConfigNode
     properties.props.css[i].values.splice(j,1)
-    renderTree()
+    refreshValues(i)
 }
 
 function updateValue(i,j,val){
@@ -734,7 +802,194 @@ return "<h3>Image</h3><p>No props yet</p>"
 // popup Block
 // *******************************************************************************
 function popupBlock(node){
-return "<h3>Block</h3><p>No props yet</p>"
+
+    const style = node.props.style||""
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du widget"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="id">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="classes">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="inline_style">Style en ligne :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${style}" id="inline_style"/>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveBlockProps()">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+}
+
+function saveBlockProps() {
+    const node = currentConfigNode
+    const id = document.getElementById("id").value
+    if (id.trim() !== "") {
+        node.props.id = id
+    }
+    const classes = document.getElementById("classes").value
+    if (classes.trim() !== "") {
+        node.props.classes = classes
+    }
+    const style = document.getElementById("inline_style").value
+    if (style.trim() !== "") {
+        node.props.style = style
+    }
+    closeDialog()
+
+}
+
+// *******************************************************************************
+// popup events
+// *******************************************************************************
+function popupEvents(node){
+
+    const style = node.props.style||""
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du widget"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label>Événements :</label>
+            </div>
+
+            <div id="events-container"></div>
+
+            <div class="dialog-row">
+                <button class="btn btn-secondary" onclick="addEventRow()">+ Ajouter un événement</button>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveEvents()">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+        const container = document.getElementById("events-container")
+
+        const events = node.events || {}
+
+        Object.entries(events).forEach(([type, config]) => {
+            const row = createEventRow({
+                type,
+                action: config
+            })
+
+            row.querySelector(".event-type").value = type
+            row.querySelector(".event-action").value = config.type + "(" + config.params + ")"
+
+            container.appendChild(row)
+        })
+}
+
+function saveEvents() {
+    const node = currentConfigNode
+    node.events = collectEvents()
+    closeDialog()
+}
+
+function addEventRow() {
+    const container = document.getElementById("events-container")
+    const row = createEventRow()
+    container.appendChild(row)
+}
+
+function stringifyAction(config) {
+    if (!config) return ""
+
+    if (!config.params || config.params.length === 0) {
+        return config.type
+    }
+
+    return `${config.type}(${config.params})`
+}
+
+const AVAILABLE_EVENTS = [
+    "click",
+    "dblclick",
+    "mouseenter",
+    "mouseleave",
+    "change"
+]
+
+function createEventRow(event = {}) {
+    const row = document.createElement("div")
+    row.className = "dialog-row"
+
+    row.innerHTML = `
+        <select class="event-type" style="width:120px; margin-right:7px;">
+            ${AVAILABLE_EVENTS.map(e => `<option value="${e}">${e}</option>`).join("")}
+        </select>
+
+        <input class="event-action" placeholder="addValue(2)" style="margin-right:7px;">
+
+        <button class="btn btn-secondary remove-event">-</button>
+    `
+    if (event.type) {
+        row.querySelector(".event-type").value = event.type
+    }
+
+    if (event.action) {
+        row.querySelector(".event-action").value = event.action
+    }
+
+    row.querySelector(".remove-event").onclick = () => row.remove()
+
+    return row
+}
+
+function parseAction(str) {
+    const match = str.match(/^(\w+)\((.*)\)$/)
+
+    if (!match) {
+        return { type: str, params: "" }
+    }
+
+    const type = match[1]
+    const params = match[2]
+        //.split(",")
+        //.map(p => p.trim())
+        //.filter(p => p.length > 0)
+
+    return { type, params }
+}
+
+function collectEvents() {
+    const rows = document.querySelectorAll("#events-container .dialog-row")
+    const events = {}
+
+    rows.forEach(row => {
+        const type = row.querySelector(".event-type").value
+        const actionStr = row.querySelector(".event-action").value
+        const parsed = parseAction(actionStr)
+
+        events[type] = {
+            type: parsed.type,
+            params: parsed.params
+        }
+    })
+
+    return events
 }
 
 // *******************************************************************************
