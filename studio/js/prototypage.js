@@ -215,6 +215,7 @@ function renderZone(zone){
     const zoneEl=document.createElement("div")
 
     zoneEl.className="zone"
+    zoneEl.style.marginTop = "7px"
     zoneEl.dataset.nodeId=zone.id
 
     zone.children.forEach(c=>{
@@ -314,21 +315,53 @@ function renderWidget(widget){
 
     el.className="widget"
     
-    const configBtn=document.createElement("button")
-    configBtn.textContent="⚙"
-    configBtn.style.marginRight="6px"
-    configBtn.onclick=(e)=>{
+    const htmlBtn=document.createElement("button")
+    htmlBtn.textContent="⚙"
+    htmlBtn.title = "Paramètres"
+    htmlBtn.style.fontSize = "12px"
+    htmlBtn.className = "btn btn-secondary"
+    htmlBtn.style.marginRight = "6px"
+    htmlBtn.onclick=(e) => {
         e.stopPropagation()
-        openConfigPopup(widget)
+        openDialog(widget, "html")
     }
+    
+    let cssBtn = null
+    let eventsBtn = null
+    if (widget.widgetType != "Text") {
+        cssBtn=document.createElement("button")
+        cssBtn.textContent="::"
+        cssBtn.title = "CSS"
+        cssBtn.style.fontWeight = "bold"
+        cssBtn.className = "btn btn-secondary"
+        cssBtn.style.marginRight="6px"
+        cssBtn.onclick=(e)=>{
+            e.stopPropagation()
+            openDialog(widget, "css")
+        }
 
+        eventsBtn=document.createElement("button")
+        eventsBtn.textContent="e"
+        eventsBtn.title = "Paramètres"
+        eventsBtn.style.fontSize = "14px"
+        eventsBtn.className = "btn btn-secondary"
+        eventsBtn.style.marginRight = "6px"
+        eventsBtn.onclick=(e) => {
+            e.stopPropagation()
+            openDialog(widget, "events")
+        }
+    }
     const label=document.createElement("span")
-    label.textContent=widget.id
+    label.textContent = widget.id
 
-    el.appendChild(configBtn)
+    el.appendChild(htmlBtn)
+    if (widget.widgetType != "Text") {
+        el.appendChild(cssBtn)
+        el.appendChild(eventsBtn)
+    }
     el.appendChild(label)
-    el.dataset.nodeId=widget.id
-    el.draggable=true
+    el.dataset.nodeId = widget.id
+    el.draggable = true
 
     if (widget.container)
         el.appendChild(renderZone(widget.children[0]))
@@ -764,3 +797,43 @@ async function saveFileBST(){
         });
     }
 }
+
+
+/*
+function handleEvent(eventConfig, context) {
+    switch (eventConfig.type) {
+        case "addValue":
+            addValue(eventConfig.params.index)
+            break
+
+        case "removeValue":
+            removeValue(eventConfig.params.index, eventConfig.params.subIndex)
+            break
+
+        // extensible
+    }
+}
+
+function attachEvents(element, node) {
+    if (!node.events) return
+
+    Object.entries(node.events).forEach(([eventName, config]) => {
+        element.addEventListener(eventName, (e) => {
+            handleEvent(config, { event: e, node })
+        })
+    })
+}
+    
+{
+  "type": "button",
+  "events": {
+    "click": {
+      "type": "addValue",
+      "params": { "index": 2 }
+    }
+  },
+  "props": {
+    "label": "Ajouter"
+  }
+}
+*/
