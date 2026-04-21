@@ -58,6 +58,7 @@ function popupText(node){
 
 function saveTextProps(node){
     node.props.text=document.getElementById("content").value
+    render()
     closeDialog()
 }
 
@@ -105,13 +106,15 @@ function popupSpan(node){
 function saveSpanProps(node){
     id = document.getElementById("id").value
     node.props.id = id.trim()
+
     if (id.trim() == "") {
         node.props.css = []
     } else {
         node.props.css = [{name: id.trim(), type: "id", values: []}]
     }
-    node.props.classes = document.getElementById("classes").value
-    node.props.content = document.getElementById("content").value
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.content = document.getElementById("content").value.trim()
+    render()
     closeDialog()
 }
 
@@ -165,6 +168,7 @@ function saveLayoutProps(node){
 
     const layout_zone_count = document.getElementById("layout_zone_count").value
     node.props.zone_count = layout_zone_count.trim()
+    render()
     closeDialog()
 }
 
@@ -212,6 +216,7 @@ function saveLayoutZoneProps(node) {
 
     const classes = document.getElementById("classes").value
     node.props.classe = classes.trim()
+    render()
     closeDialog()
 }
 
@@ -258,8 +263,8 @@ function savePageProps(node){
     }
     node.props.name = pagename.trim()
 
-    const page_title = document.getElementById("page_title").value
-    node.props.title = page_title.trim()
+    node.props.title = document.getElementById("page_title").value.trim()
+    render()
     closeDialog()
 }
 
@@ -321,22 +326,17 @@ function popupBlock(node){
 
 function saveBlockProps(node) {
     const id = document.getElementById("id").value
-    if (id.trim() !== "") {
-        node.props.id = id
-    }
+    node.props.id = id.trim()
+
     if (id.trim() == "") {
         node.props.css = []
     } else {
         node.props.css = [{name: id.trim(), type: "id", values: []}]
     }
-    const classes = document.getElementById("classes").value
-    if (classes.trim() !== "") {
-        node.props.classes = classes
-    }
-    const style = document.getElementById("inline_style").value
-    if (style.trim() !== "") {
-        node.props.style = style
-    }
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.style = document.getElementById("inline_style").value.trim()
+
+    render()
     closeDialog()
 }
 
@@ -390,29 +390,137 @@ function popupLabel(node){
 
 function saveLabelProps(node) {
     const id = document.getElementById("id").value
-    if (id.trim() !== "") {
-        node.props.id = id
-    }
+    node.props.id = id.trim()
+
     if (id.trim() == "") {
         node.props.css = []
     } else {
         node.props.css = [{name: id.trim(), type: "id", values: []}]
     }
-    const classes = document.getElementById("classes").value
-    if (classes.trim() !== "") {
-        node.props.classes = classes
-    }
-    const style = document.getElementById("inline_style").value
-    if (style.trim() !== "") {
-        node.props.style = style
-    }
-    const labelfor = document.getElementById("for").value
-    if (labelfor.trim() !== "") {
-        node.props.labelfor = labelfor
-    }
+
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.style = document.getElementById("inline_style").value.trim()
+    node.props.labelfor = document.getElementById("for").value.trim()
+
+    render()
     closeDialog()
 }
 
+// *******************************************************************************
+// popup Textfield
+// *******************************************************************************
+function popupTextfield(node) {
+
+    const style = node.props.style||""
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+    const value = node.props.value||""
+    const name = node.props.name||""
+    const type = node.props.type||""
+    const placeholder = node.props.placeholder||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du widget"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="id">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="name">Nom :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${name}" id="name"/>
+            </div>
+            <div class="dialog-row">
+                <label for="value">Type :</label>
+            </div>
+            <div class="dialog-row">
+                <select id="type">
+                    <option value="text">Texte</option>
+                    <option value="password">Password</option>
+                    <option value="file">Fichier</option>
+                    <option value="button">Bouton</option>
+                    <option value="color">Couleur</option>
+                    <option value="date">Date</option>
+                    <option value="datetime-local">Date locale</option>
+                    <option value="email">Email</option>
+                    <option value="hidden">Non visible</option>
+                    <option value="checkbox">Case à cocher</option>
+                    <option value="image">Image</option>
+                    <option value="month">Mois</option>
+                    <option value="number">Nombre</option>
+                    <option value="radio">Radio</option>
+                    <option value="range">Intervalle</option>
+                    <option value="reset">Réinitialisation</option>
+                    <option value="search">Recherche</option>
+                    <option value="submit">Soumettre</option>
+                    <option value="tel">Numéro de téléphone</option>
+                    <option value="time">Heure</option>
+                    <option value="url">Url</option>
+                </select>
+            </div>
+            <div class="dialog-row">
+                <label for="value">Initial value :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${value}" id="value"/>
+            </div>
+            <div class="dialog-row">
+                <label for="classes">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="inline_style">Style en ligne :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${style}" id="inline_style"/>
+            </div>
+            <div class="dialog-row">
+                <label for="placeholder">Placeholder :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${placeholder}" id="placeholder"/>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+
+    const selectType = content.querySelector("#type")
+    selectType.value = type || "text"
+
+    content.querySelector("#saveprops").onclick = () => saveTextfieldProps(node)
+}
+
+function saveTextfieldProps(node) {
+    const id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.style = document.getElementById("inline_style").value.trim()
+    node.props.value = document.getElementById("value").value.trim()
+    node.props.name = document.getElementById("name").value.trim()
+    node.props.placeholder = document.getElementById("placeholder").value.trim()
+    node.props.type = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
+
+    render()
+    closeDialog()
+}
 
 // *******************************************************************************
 // popup Form
