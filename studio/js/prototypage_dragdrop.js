@@ -96,6 +96,7 @@ function createNode(type, options={}){
         return {
             id:generateId(draggedWidgetType),
             type:"widget",
+            name: draggedWidgetType,
             parent:null,
             widgetType:draggedWidgetType,
             container: options.container,
@@ -352,7 +353,17 @@ function renderWidget(widget){
         }
     }
     const label=document.createElement("span")
-    label.textContent = widget.id
+    let labeltext = widget.name
+    if (widget.props.id) {
+        labeltext += " : id=" + widget.props.id
+    }
+    if (widget.name === "Text" && widget.props.text) {
+        labeltext += " : " + widget.props.text
+    }
+    if (widget.name === "TextField" && widget.props.type) {
+        labeltext += " : type=" + widget.props.type
+    }
+    label.textContent = labeltext 
 
     el.appendChild(htmlBtn)
     if (widget.widgetType != "Text") {
@@ -512,9 +523,6 @@ document.querySelectorAll(".palette-item").forEach(item=>{
             draggedWidgetType = item.dataset.widget
         }
         draggedNodeRef=null
-
-        // fermer la fénêtre de configuration éventuellement ouverte
-        document.getElementById("dialog").style.display="none"
     })
 
 })
