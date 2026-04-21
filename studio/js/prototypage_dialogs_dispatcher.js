@@ -12,12 +12,28 @@ function openDialog(node, cat){
     if((node.type === "zone" || node.type === "widget") && cat == "css") {
         renderTreeById()
     }
-    document.getElementById("dialog").style.display="block"
+    //document.getElementById("dialog").style.display="block"
+    document.body.style.overflow = "hidden"
+    document.getElementById("dialogOverlay").classList.remove("hidden")
 }
 
 function closeDialog(){
-    document.getElementById("dialog").style.display="none"
+    //document.getElementById("dialog").style.display="none"
+    document.body.style.overflow = ""
+    document.getElementById("dialogOverlay").classList.add("hidden")
 }
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        closeDialog()
+    }
+})
+
+/*document.getElementById("dialogOverlay").addEventListener("click", (e) => {
+    if (e.target.id === "dialogOverlay") {
+        closeDialog()
+    }
+})*/
 
 function buildPopupContent(node, cat){
 
@@ -42,8 +58,8 @@ function buildPopupContent(node, cat){
                 case "Label":
                     popupLabel(node)
                     break
-                case "Textfield":
-                    popupTextfield(node) // A faire
+                case "TextField":
+                    popupTextfield(node)
                     break
                 case "Form":
                     popupForm(node)
