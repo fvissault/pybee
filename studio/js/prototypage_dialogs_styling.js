@@ -34,7 +34,7 @@ function popupWorkspaceCss(node) {
     `
 }
 
-function renderTreeGeneric(filterFn, withRootButton = false) {
+function renderTreeGeneric(filterFn, withRootButton = false, filterType = null) {
     const properties = currentConfigNode
     const tree = document.getElementById("cssTree")
 
@@ -42,15 +42,17 @@ function renderTreeGeneric(filterFn, withRootButton = false) {
 
     tree.innerHTML = ""
 
+    if (!properties.props.css) properties.props.css = []
+    const css = Array.isArray(properties.props.css) ? properties.props.css : []
+
     if (withRootButton) {
         const addRoot = document.createElement("div")
         addRoot.className = "tree-row"
-        addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode()">+</button>`
+
+        addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode('${filterType}')">+</button>`
+
         tree.appendChild(addRoot)
     }
-
-    if (!properties.props.css) properties.props.css = []
-    const css = Array.isArray(properties.props.css) ? properties.props.css : []
 
     css.forEach((node, i) => {
         if (!filterFn(node)) return
@@ -59,9 +61,7 @@ function renderTreeGeneric(filterFn, withRootButton = false) {
         const row = document.createElement("div")
         row.className = "tree-row"
 
-        const removeBtn = node.type !== "id"
-            ? `<button class="btn btn-secondary" onclick="removeCssProperty(${i})">-</button>`
-            : ""
+        const removeBtn = `<button class="btn btn-secondary" onclick="removeCssProperty(${i}, '${filterType}')">-</button>`
 
         row.innerHTML = `
             ${removeBtn}
@@ -124,14 +124,14 @@ function refreshValues(i) {
 }
 
 function renderTreeById() {
-    renderTreeGeneric(node => node.type === "id", false)
+    renderTreeGeneric(node => node.type === "id", true, "id")
 }
 
 function renderTree() {
     renderTreeGeneric(node => node.type !== "id", true)
 }
 
-function showAddNode(){
+function showAddNode(filter){
 
     const tree = document.getElementById("cssTree")
 
@@ -140,41 +140,56 @@ function showAddNode(){
 
     const row = document.createElement("div")
     row.className="tree-row"
+    if (filter === "id") {
+        row.innerHTML = `<input id="newName" placeholder="Nom" style="width:210px;">
+                        <button class="btn btn-secondary" onclick="addNode('${filter}')">Ajouter</button>`
 
-    row.innerHTML = `<select id="newType" style="width:70px;">
-                        <option>tag</option>
-                        <option>class</option>
-                     </select>
-                     <input id="newName" placeholder="Nom" style="width:210px;">
-                     <button class="btn btn-secondary" onclick="addNode()">Ajouter</button>`
-
+    } else {
+        row.innerHTML = `<select id="newType" style="width:70px;">
+                            <option>tag</option>
+                            <option>class</option>
+                        </select>
+                        <input id="newName" placeholder="Nom" style="width:210px;">
+                        <button class="btn btn-secondary" onclick="addNode('${filter}')">Ajouter</button>`
+    }
     tree.prepend(row)
 }
 
-function addNode(){
+function addNode(filter){
     const properties = currentConfigNode
 
-    const type = document.getElementById("newType").value
     const name = document.getElementById("newName").value
-
     if (name.trim() === "") {
         alert("Veuillez renseigner le nom de la ressource")
         document.getElementById("newName").focus()
         return
     }
-    properties.props.css.push({
-        type:type,
-        name:name,
-        values:[]
-    })
-
-    renderTree()
+    if (filter === "id") {
+        properties.props.css.push({
+            type:"id",
+            name:name,
+            values:[]
+        })
+        renderTreeById()
+    } else {
+        const type = document.getElementById("newType").value
+        properties.props.css.push({
+            type:type,
+            name:name,
+            values:[]
+        })
+        renderTree()
+    }
 }
 
-function removeCssProperty(i){
+function removeCssProperty(i, filter){
     const properties = currentConfigNode
     properties.props.css.splice(i,1)
-    renderTree()
+    if (filter === "id") {
+        renderTreeById()
+    } else {
+        renderTree()
+    }
 }
 
 function addValue(i){
