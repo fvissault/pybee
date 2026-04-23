@@ -431,7 +431,7 @@ function popupTextfield(node) {
     head.innerText = "Paramètres du widget"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div style="float:left; margin-right:20px;">
+        <div class="dialog-column">
             <div class="dialog-section">
                 <div class="dialog-row">
                     <label for="id">Id :</label>
@@ -476,7 +476,7 @@ function popupTextfield(node) {
                 <div id="fieldssupp"></div>
             </div>
         </div>
-        <div style="float:right;">
+        <div class="dialog-column">
             <div class="dialog-section">
                 <div class="dialog-row">
                     <label for="value">Initial value :</label>
@@ -516,7 +516,7 @@ function popupTextfield(node) {
                 </div>
             </div>
         </div>
-        <div class="dialog-actions" style="clear:both;">
+        <div class="dialog-actions">
             <button id="saveprops" class="btn btn-primary">Appliquer</button>
             <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
         </div>
