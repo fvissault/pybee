@@ -219,6 +219,10 @@ body {
 
 }
 
+.dialog-actions {
+    clear:both;
+}
+
 /* Sections */
 .dialog-section {
     margin-bottom: 12px;
@@ -231,6 +235,11 @@ body {
     color: #6b7280;
     text-transform: uppercase;
     margin-bottom: 8px;
+}
+
+.dialog-column {
+    float:left; 
+    margin-right:20px;
 }
 
 /* Lignes */
