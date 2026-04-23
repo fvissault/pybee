@@ -418,78 +418,105 @@ function popupTextfield(node) {
     const name = node.props.name||""
     const type = node.props.type||""
     const placeholder = node.props.placeholder||""
+    const min = node.props.min||""
+    const max = node.props.max||""
+    const step = node.props.step||""
+    const maxlength = node.props.maxlength||""
+    const checked = node.props.checked||false
+    const disabled = node.props.disabled||false
+    const readonly = node.props.readonly||false
+    const required = node.props.required||false
 
     const head = document.getElementById("dialogHeader")
     head.innerText = "Paramètres du widget"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="id">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="name">Nom :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${name}" id="name"/>
-            </div>
-            <div class="dialog-row">
-                <label for="value">Type :</label>
-            </div>
-            <div class="dialog-row">
-                <select id="type">
-                    <option value="text">Texte</option>
-                    <option value="password">Password</option>
-                    <option value="file">Fichier</option>
-                    <option value="button">Bouton</option>
-                    <option value="color">Couleur</option>
-                    <option value="date">Date</option>
-                    <option value="datetime-local">Date locale</option>
-                    <option value="email">Email</option>
-                    <option value="hidden">Non visible</option>
-                    <option value="checkbox">Case à cocher</option>
-                    <option value="image">Image</option>
-                    <option value="month">Mois</option>
-                    <option value="number">Nombre</option>
-                    <option value="radio">Radio</option>
-                    <option value="range">Intervalle</option>
-                    <option value="reset">Réinitialisation</option>
-                    <option value="search">Recherche</option>
-                    <option value="submit">Soumettre</option>
-                    <option value="tel">Numéro de téléphone</option>
-                    <option value="time">Heure</option>
-                    <option value="url">Url</option>
-                </select>
-            </div>
-            <div class="dialog-row">
-                <label for="value">Initial value :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${value}" id="value"/>
-            </div>
-            <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
-                <label for="inline_style">Style en ligne :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${style}" id="inline_style"/>
-            </div>
-            <div class="dialog-row">
-                <label for="placeholder">Placeholder :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${placeholder}" id="placeholder"/>
+        <div style="float:left; margin-right:20px;">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="id">Id :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${id}" id="id"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="name">Nom :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${name}" id="name"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="value">Type :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="type" onchange="addfields('${min}', '${max}', '${step}', ${checked}, '${maxlength}')">
+                        <option value="text">Texte</option>
+                        <option value="password">Password</option>
+                        <option value="file">Fichier</option>
+                        <option value="button">Bouton</option>
+                        <option value="color">Couleur</option>
+                        <option value="date">Date</option>
+                        <option value="datetime-local">Date locale</option>
+                        <option value="email">Email</option>
+                        <option value="hidden">Non visible</option>
+                        <option value="checkbox">Case à cocher</option>
+                        <option value="image">Image</option>
+                        <option value="month">Mois</option>
+                        <option value="number">Nombre</option>
+                        <option value="radio">Radio</option>
+                        <option value="range">Intervalle</option>
+                        <option value="reset">Réinitialisation</option>
+                        <option value="search">Recherche</option>
+                        <option value="submit">Soumettre</option>
+                        <option value="tel">Numéro de téléphone</option>
+                        <option value="time">Heure</option>
+                        <option value="url">Url</option>
+                    </select>
+                </div>
+                <div id="fieldssupp"></div>
             </div>
         </div>
-        <div class="dialog-actions">
+        <div style="float:right;">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="value">Initial value :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${value}" id="value"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="classes">Classe(s) de style :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${classes}" id="classes"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="inline_style">Style en ligne :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${style}" id="inline_style"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="placeholder">Placeholder :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${placeholder}" id="placeholder"/>
+                </div>
+                <div class="dialog-row-with-checkbox">
+                    <input type="checkbox" id="disabled"${disabled?" checked":""}/>
+                    <label for="disabled">Indisponible</label>
+                </div>
+                <div class="dialog-row-with-checkbox">
+                    <input type="checkbox" id="readonly"${readonly?" checked":""}/>
+                    <label for="readonly">Lecture seule</label>
+                </div>
+                <div class="dialog-row-with-checkbox">
+                    <input type="checkbox" id="required"${required?" checked":""}/>
+                    <label for="required">Obligatoire</label>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-actions" style="clear:both;">
             <button id="saveprops" class="btn btn-primary">Appliquer</button>
             <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
         </div>
@@ -497,6 +524,8 @@ function popupTextfield(node) {
 
     const selectType = content.querySelector("#type")
     selectType.value = type || "text"
+
+    addfields(min, max, step, checked, maxlength)    
 
     content.querySelector("#saveprops").onclick = () => saveTextfieldProps(node)
 }
@@ -517,9 +546,86 @@ function saveTextfieldProps(node) {
     node.props.name = document.getElementById("name").value.trim()
     node.props.placeholder = document.getElementById("placeholder").value.trim()
     node.props.type = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
-
+    node.props.disabled = document.getElementById("disabled").checked
+    node.props.readonly = document.getElementById("readonly").checked
+    node.props.required = document.getElementById("required").checked
+    if (node.props.type === "range" || node.props.type === "number") {
+        node.props.min = document.getElementById("min").value.trim()
+        node.props.max = document.getElementById("max").value.trim()
+    } else {
+        node.props.min = ""
+        node.props.max = ""
+    }
+    if (node.props.type === "number") {
+        node.props.step = document.getElementById("step").value.trim()
+    } else {
+        node.props.step = ""
+    }
+    if (node.props.type === "checkbox") {
+        node.props.checked = document.getElementById("cbchecked").checked
+    } else {
+        node.props.checked = false
+    }
+    if (node.props.type === "text") {
+        node.props.maxlength = document.getElementById("maxlength").value.trim()
+    } else {
+        node.props.maxlength = ""
+    }
     render()
     closeDialog()
+}
+
+function createInputField(container, label, inputid, inputvalue) {
+    const row = document.createElement("div")
+    row.className = "dialog-row"
+    const l = document.createElement("label")
+    l.for = inputid
+    l.textContent = label
+    row.appendChild(l)
+    container.appendChild(row)
+
+    const rowinput = document.createElement("div")
+    rowinput.className = "dialog-row"
+    const i = document.createElement("input")
+    i.type = "text"
+    i.id = inputid
+    i.value = inputvalue
+    rowinput.appendChild(i)
+    container.appendChild(rowinput)
+}
+
+function createCheckField(container, label, inputid, inputvalue) {
+    const row = document.createElement("div")
+    row.className = "dialog-row-with-checkbox"
+    const input = document.createElement("input")
+    input.type = "checkbox"
+    input.id = inputid
+    input.checked = inputvalue
+    row.appendChild(input)
+    const labelcheck = document.createElement("label")
+    labelcheck.for = inputid
+    labelcheck.textContent = label
+    row.appendChild(labelcheck)
+    container.appendChild(row)
+}
+
+function addfields(min, max, step, checked, maxlength) {
+    const fieldsupp = document.getElementById("fieldssupp")
+    fieldsupp.textContent = ""
+    const choice = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
+    if (choice === "range" || choice === "number") {
+        createInputField(fieldsupp, "Minimum :", "min", min)
+        createInputField(fieldsupp, "Maximum :", "max", max)
+        if (choice == "number") {
+            createInputField(fieldsupp, "Pas :", "step", step)
+        }
+    } else if (choice == "checkbox" || choice == "radio") {
+        createCheckField(fieldsupp, "Case cochée", "cbchecked", checked)
+    } else if (choice == "text") {
+        createInputField(fieldsupp, "Longueur maximale :", "maxlength", maxlength)
+    } else {
+        fieldsupp.textContent = ""
+    }
 }
 
 // *******************************************************************************
