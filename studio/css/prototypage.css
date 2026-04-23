@@ -202,7 +202,7 @@ body {
     left:50%;
     transform:translate(-50%,-50%);
     min-width:350px;
-    max-width:550px;
+    /*max-width:550px;*/
     padding-bottom: 10px;
     background: white;
     border-radius: 12px;
@@ -240,13 +240,23 @@ body {
     padding: 6px 0;
 }
 
-.dialog-row input {
+.dialog-row-with-checkbox {
+    display: flex;
+    /*justify-content: space-between;*/
+    padding: 6px 0;
+}
+
+.dialog-row input[type="text"] {
     padding:7px;
     width:314px;
     border-radius:8px;
     background: #f5f7fa;
     font-size:16px;
     border:1px solid #ddd;
+}
+
+.dialog-row-with-checkbox input[type="checkbox"] {
+    width:20px;
 }
 
 .dialog-row select {
@@ -340,6 +350,15 @@ body {
     align-items: center;
     gap: 8px;
     margin: 3px 0;
+}
+
+.tree-row input {
+    padding:4px;
+    width:314px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
 }
 
 .tree-values {
