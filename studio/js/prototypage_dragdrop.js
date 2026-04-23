@@ -20,11 +20,12 @@ let currentProject=null
 let currentFile=null
 
 let workspaceRoot = {
-                        id:generateId("Container"),
-                        type:"container",
-                        props:[],
-                        children:[]
-                    }
+    id:generateId("Container"),
+    type:"container",
+    props:[],
+    children:[]
+}
+
 let draggedType=null
 let draggedNodeRef=null
 let draggedOldParent=null
@@ -52,7 +53,7 @@ const trashEl=document.getElementById("trash")
 // récupérer l'identifiant du projet
 const params = new URLSearchParams(window.location.search)
 const projectid = params.get("projectid")
-console.log(projectid)
+//console.log(projectid)
 
 // récupérer le nom du projet et le nom de l'entity auquel le projet appartient
 let project_name = null
@@ -329,7 +330,7 @@ function renderWidget(widget){
     
     let cssBtn = null
     let eventsBtn = null
-    if (widget.widgetType != "Text") {
+    if (widget.widgetType != "Text" && widget.widgetType != "Form") {
         cssBtn=document.createElement("button")
         cssBtn.textContent="::"
         cssBtn.title = "CSS"
@@ -366,7 +367,7 @@ function renderWidget(widget){
     label.textContent = labeltext 
 
     el.appendChild(htmlBtn)
-    if (widget.widgetType != "Text") {
+    if (widget.widgetType != "Text" && widget.widgetType != "Form") {
         el.appendChild(cssBtn)
         el.appendChild(eventsBtn)
     }
@@ -425,6 +426,7 @@ function renderProjectFiles() {
             loadBST(f.id)
         })
         const del=document.createElement("button")
+        del.className = "btn btn-secondary"
         del.textContent="🗑"
         del.style.marginLeft="auto"
         del.addEventListener("click",(e)=>{
