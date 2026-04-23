@@ -280,7 +280,62 @@ function popupWorkspaceJs(node) {
 // popup Image
 // *******************************************************************************
 function popupImage(node){
-return "<h3>Image</h3><p>No props yet</p>"
+    const style = node.props.style||""
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+    const src = node.props.src||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de l'image"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="id">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="classes">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="inline_style">Style en ligne :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${style}" id="inline_style"/>
+            </div>
+            <div class="dialog-row">
+                <label for="inline_style">Source :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${src}" id="src"/>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+    content.querySelector("#saveprops").onclick = () => saveImageProps(node)
+}
+
+function saveImageProps(node) {
+    const id = document.getElementById("id").value
+    node.props.id = id.trim()
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.style = document.getElementById("inline_style").value.trim()
+    node.props.src = document.getElementById("sc").value.trim()
+    render()
+    closeDialog()
 }
 
 // *******************************************************************************
@@ -410,7 +465,6 @@ function saveLabelProps(node) {
 // popup Textfield
 // *******************************************************************************
 function popupTextfield(node) {
-
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -632,7 +686,93 @@ function addfields(min, max, step, checked, maxlength) {
 // popup Form
 // *******************************************************************************
 function popupForm(node){
-return "<h3>Form</h3><p>No props yet</p>"
+    const action = node.props.action||""
+    const method = node.props.method||""
+    const id = node.props.id||""
+    const name = node.props.name||""
+    const enctype = node.props.enctype||""
+    const target = node.props.target||""
+    const novalidate = node.props.novalidate||false
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du formulaire"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-column">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="id">Id :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${id}" id="id"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="name">Nom :</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${name}" id="name"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="value">Methode :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="method">
+                        <option value="post">Données cachées (POST)</option>
+                        <option value="get">Données passées dans l'url (GET)</option>
+                    </select>
+                </div>
+                <div class="dialog-row">
+                    <label for="value">Cible :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="target">
+                        <option value="_self">La page courante par défaut</option>
+                        <option value="_blank">Page vide</option>
+                        <option value="_parent">Page parente</option>
+                        <option value="_top">Première page</option>
+                    </select>
+                </div>
+                <div class="dialog-row">
+                    <label for="value">Type d'encodage :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="enctype">
+                        <option value="application/x-www-form-urlencoded">Type d'encodage par défaut</option>
+                        <option value="multipart/form-data">Type d'encodage pour les textfields de type 'fichier'</option>
+                        <option value="text/plain">Type d'encodage pour le débuggage</option>
+                    </select>
+                </div>
+                <div class="dialog-row-with-checkbox">
+                    <input type="checkbox" id="novalidate"${novalidate?" checked":""}/>
+                    <label for="novalidate">Empêcher la validation du formulaire</label>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+
+    const selectEnctype = content.querySelector("#enctype")
+    selectEnctype.value = enctype || "application/x-www-form-urlencoded"
+    const selectTarget = content.querySelector("#target")
+    selectTarget.value = target || "_self"
+    const selectMethod = content.querySelector("#method")
+    selectMethod.value = method || "post"
+
+    content.querySelector("#saveprops").onclick = () => saveFormProps(node)
+}
+
+function saveFormProps(node) {
+    node.props.id = document.getElementById("id").value.trim()
+    node.props.name = document.getElementById("name").value.trim()
+    node.props.method = document.getElementById("method").options[document.getElementById("method").selectedIndex].value
+    node.props.target = document.getElementById("target").options[document.getElementById("target").selectedIndex].value
+    node.props.enctype = document.getElementById("enctype").options[document.getElementById("enctype").selectedIndex].value
+    node.props.novalidate = document.getElementById("novalidate").checked
+    render()
+    closeDialog()
 }
 
 function getWorkspace(){
