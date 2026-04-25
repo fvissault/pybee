@@ -6,16 +6,32 @@ body {
     flex-direction:column;
 }
 
-#menu {
-    height: 50px;
-    background: #243447;
-    color: #fff;
+.topbar {
+    height: 56px;
+    background: #1f2937;
+    color: white;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 16px;
 }
 
-#menu button {
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    height: 28px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.topbar-left button {
     cursor:pointer;
     background: rgba(255,255,255,0.1);
     border: none;
@@ -25,14 +41,14 @@ body {
     margin-right: 7px;
 }
 
-#menu button:hover {
+.topbar-left button:hover {
     background: rgba(255,255,255,0.2);
 }
 
 #main {
     flex:1;
     display:grid;
-    grid-template-columns:220px 220px 1fr;
+    grid-template-columns:220px 245px 1fr;
     grid-template-rows:1fr 80px;
     gap:12px;
     padding:12px;
@@ -48,12 +64,13 @@ body {
     border: none;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    overflow:auto;
 }
 
 .panel-header {
     border-bottom:1px solid #ccc;
     flex-shrink:0;
-    padding: 12px 14px;
+    padding: 7px 14px;
     font-weight: 600;
     background: transparent;
     border-bottom: 1px solid #eef1f5;
@@ -64,6 +81,57 @@ body {
     overflow:auto;
     padding:5px;
     min-height:0;
+}
+
+.palette_section {
+    border: 1px solid #ccc;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    width:223px;
+}
+
+.palette_header {
+    background: #eee;
+    padding: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    width:211px;
+}
+
+.palette-content {
+    padding: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    width:210px;
+}
+
+.palette_section.collapsed .palette-content {
+    display: none;
+}
+
+.palette-item {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #e6ebf1;
+    padding: 10px 10px 5px 10px;
+    margin-bottom: 10px;
+    transition: all 0.15s ease;
+}
+
+.palette-item:hover {
+    background: #f4f8ff;
+    border-color: #4a90e2;
+}
+
+.icon {
+    width: 26px;
+    height: 26px;
+    stroke: #6b7280;
+    stroke-width: 2;
+    fill: none;
+    transition: all 0.2s ease;
 }
 
 #explorer {
@@ -127,20 +195,6 @@ body {
     padding: 12px;
     margin: 10px 0;
     /*cursor: grab;*/
-}
-
-.palette-item {
-    background: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #e6ebf1;
-    padding: 10px;
-    margin-bottom: 10px;
-    transition: all 0.15s ease;
-}
-
-.palette-item:hover {
-    background: #f4f8ff;
-    border-color: #4a90e2;
 }
 
 .insert-line {
