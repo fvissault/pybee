@@ -64,6 +64,9 @@ function buildPopupContent(node, cat){
                 case "Form":
                     popupForm(node)
                     break
+                case "Anchor":
+                    popupA(node)
+                    break
             }
         } else if (cat == "css") {
             popupCss(node)
@@ -83,16 +86,12 @@ function buildPopupContent(node, cat){
                 popupLayoutCss(node)
             }
             if (cat == "css") popupWorkspaceCss(node)
-            if (cat == "js") {
-                return popupWorkspaceJs(node)
-            }
             if (cat == "model") return popupWorkspaceModel(node)
         }
 
         if(node.type==="container") {
             if (cat == "html") popupPage(node)
             if (cat == "css") popupWorkspaceCss(node)
-            if (cat == "js") return popupWorkspaceJs(node)
             if (cat == "model") return popupWorkspaceModel(node)
         }
     }
