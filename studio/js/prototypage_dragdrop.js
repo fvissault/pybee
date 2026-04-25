@@ -35,18 +35,54 @@ let draggedLayoutZones = 4
 let draggedWidgetType = null
 
 const widgetDefinitions = {
-    Block: { container: true },
-    Form: { container: true },
-    Ul: { container: true },
-    Ol: { container: true },
-    Li: { container: true },
-    Text: { container: false },
-    Span: { container: false },
-    Label: { container: false },
-    TextField: { container: false },
-    Image: { container: false },
-    Button: { container: false },
-    Anchor: { container: false }
+    Block: {
+        name: t("block"), 
+        container: true 
+    },
+    Form: { 
+        name: t("form"), 
+        container: true 
+    },
+    Ul: { 
+        name: t("ul"), 
+        container: true 
+    },
+    Ol: { 
+        name: t("ol"), 
+        container: true 
+    },
+    Li: { 
+        name: t("li"), 
+        container: true 
+    },
+    Text: { 
+        name: t("text"), 
+        container: false 
+    },
+    Span: { 
+        name: t("span"), 
+        container: false 
+    },
+    Label: { 
+        name: t("label"), 
+        container: false 
+    },
+    TextField: { 
+        name: t("textfield"), 
+        container: false 
+    },
+    Image: { 
+        name: t("img"), 
+        container: false 
+    },
+    Button: { 
+        name: t("button"), 
+        container: false 
+    },
+    Anchor: { 
+        name: t("anchor"), 
+        container: false 
+    }
 }
 
 const projectTree=document.getElementById("projectTree")
@@ -108,7 +144,7 @@ function createNode(type, options={}){
         return {
             id:generateId(draggedWidgetType),
             type:"widget",
-            name: draggedWidgetType,
+            name: options.name,
             parent:null,
             widgetType:draggedWidgetType,
             container: options.container,
@@ -145,7 +181,7 @@ function createWidget(){
 
     const def = widgetDefinitions[draggedWidgetType]
 
-    const widget=createNode("widget", {container:def.container})
+    const widget=createNode("widget", {container:def.container, name:def.name})
 
     if (def.container) {
         const zone=createNode("zone",{id:widget.id+"-zone"})
