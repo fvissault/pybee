@@ -67,6 +67,15 @@ function buildPopupContent(node, cat){
                 case "Anchor":
                     popupA(node)
                     break
+                case "Ul":
+                    popupUl(node)
+                    break
+                case "Ol":
+                    popupOl(node)
+                    break
+                case "Li":
+                    popupLi(node)
+                    break
             }
         } else if (cat == "css") {
             popupCss(node)
