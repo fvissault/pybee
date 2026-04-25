@@ -37,12 +37,16 @@ let draggedWidgetType = null
 const widgetDefinitions = {
     Block: { container: true },
     Form: { container: true },
+    Ul: { container: true },
+    Ol: { container: true },
+    Li: { container: true },
     Text: { container: false },
     Span: { container: false },
     Label: { container: false },
     TextField: { container: false },
     Image: { container: false },
-    Button: { container: false }
+    Button: { container: false },
+    Anchor: { container: false }
 }
 
 const projectTree=document.getElementById("projectTree")
@@ -75,6 +79,13 @@ async function initPrototypage() {
             project_name = data["project_name"]
             entity_name = data["entity_name"]
             loadProjectFiles()
+
+            document.querySelectorAll(".palette_section").forEach(item=>{
+                item.onclick = () => {
+                    item.classList.toggle("collapsed");
+                };
+            })
+
         });
     }
 }
@@ -341,16 +352,18 @@ function renderWidget(widget){
             e.stopPropagation()
             openDialog(widget, "css")
         }
-
-        eventsBtn=document.createElement("button")
-        eventsBtn.textContent="e"
-        eventsBtn.title = "Paramètres"
-        eventsBtn.style.fontSize = "14px"
-        eventsBtn.className = "btn btn-secondary"
-        eventsBtn.style.marginRight = "6px"
-        eventsBtn.onclick=(e) => {
-            e.stopPropagation()
-            openDialog(widget, "events")
+        
+        if (widget.widgetType != "Anchor") {
+            eventsBtn=document.createElement("button")
+            eventsBtn.textContent="e"
+            eventsBtn.title = "Paramètres"
+            eventsBtn.style.fontSize = "14px"
+            eventsBtn.className = "btn btn-secondary"
+            eventsBtn.style.marginRight = "6px"
+            eventsBtn.onclick=(e) => {
+                e.stopPropagation()
+                openDialog(widget, "events")
+            }
         }
     }
     const label=document.createElement("span")
@@ -369,7 +382,9 @@ function renderWidget(widget){
     el.appendChild(htmlBtn)
     if (widget.widgetType != "Text" && widget.widgetType != "Form") {
         el.appendChild(cssBtn)
-        el.appendChild(eventsBtn)
+        if (widget.widgetType != "Anchor") {
+            el.appendChild(eventsBtn)
+        }
     }
     el.appendChild(label)
     el.dataset.nodeId = widget.id
