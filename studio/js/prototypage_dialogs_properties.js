@@ -1,32 +1,171 @@
 // *******************************************************************************
+// popup Anchor
+// *******************************************************************************
+function popupA(node){
+
+    const text = node.props.content||""
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+    const href = node.props.href||""
+    const target = node.props.target||""
+    const type = node.props.type||""
+    const download = node.props.download||false
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de l'ancre"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="id">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="classes">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="href">URL de la page :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${href}" id="href"/>
+            </div>
+            <div class="dialog-row">
+                <label for="target">Cible :</label>
+            </div>
+            <div class="dialog-row">
+                <select id="target">
+                    <option value="">Par défaut</option>
+                    <option value="_blank">Nouvelle page vide</option>
+                    <option value="_parent">Page parente à la page courante</option>
+                    <option value="_top">Première page parente</option>
+                </select>
+            </div>
+            <div class="dialog-row">
+                <label for="type">Type de média :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${type}" id="type" placeholder="Mime type comme 'text/html'"/>
+            </div>
+            <div class="dialog-row">
+                <label for="content">Contenu :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" id="content" value="${text}"/>
+            </div>
+            <div class="dialog-row-with-checkbox">
+                <input type="checkbox" id="download"${download?" checked":""}/>
+                <label for="page_title">Lien de téléchargement</label>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
+    `
+    content.querySelector("#saveprops").onclick = () => saveAnchorProps(node)
+
+    const selectType = content.querySelector("#target")
+    selectType.value = target || ""
+}
+
+function saveAnchorProps(node) {
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    const classes = document.getElementById("classes").value.trim()
+    if (classes != "") node.props.classes = classes
+    const content = document.getElementById("content").value.trim()
+    if (content == "") {
+        alert("Le contenu de l'ancre est obligatoire")
+        document.getElementById("content").focus()
+        return
+    }
+    node.props.content = document.getElementById("content").value.trim()
+    node.props.href = document.getElementById("href").value.trim()
+
+    const target = document.getElementById("target").options[document.getElementById("target").selectedIndex].value
+    if (target != "") node.props.target = target
+
+    const type = document.getElementById("type").value.trim()
+    if (type !== "") node.props.type = type
+
+    node.props.download = document.getElementById("download").checked
+
+    render()
+    closeDialog()
+}
+
+// *******************************************************************************
 // popup Button
 // *******************************************************************************
 function popupButton(node){
 
-    const text=node.props.content||"Button"
+    const text = node.props.content||""
     const id = node.props.id||""
-    const onclick = node.props.onclick||""
+    const classes = node.props.classes||""
 
-    return `
-        <h3 style="text-align:center;">Button</h3>
-        <div style="margin-bottom:5px;"><label for="button_id">Id :</label></div>
-        <input type="text" value="${id}" id="button_id" style="width:275px; padding:5px; background-color:#eee;"/><br><br>
-        <div style="margin-bottom:5px;"><label for="button_content">Content :</label></div>
-        <input id="button_content" value="${text}" style="width:275px; padding:5px; background-color:#eee;"/><br><br>
-        <div style="margin-bottom:5px;"><label for="button_onclick">Onclick function :</label></div>
-        <input type="text" value="${onclick}" id="button_onclick" style="width:275px; padding:5px; background-color:#eee;"/><br><br>
-        <button class="config_button_apply" onclick="saveButtonProps()">Appliquer</button>
-        <button class="config_button_close" onclick="closeDialog()">Fermer</button>
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres du bouton"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="page_name">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="page_title">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="page_title">Contenu :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" id="content" value="${text}"/>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>
     `
+    content.querySelector("#saveprops").onclick = () => saveButtonProps(node)
 }
 
-function saveButtonProps(){
-    const node=currentConfigNode
-    node.props.id = document.getElementById("button_id").value
-    node.props.content = document.getElementById("button_content").value
-    node.props.onclick = document.getElementById("button_onclick").value
-    closeDialog()
+function saveButtonProps(node){
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    const classes = document.getElementById("classes").value.trim()
+    if (classes != "") node.props.classes = classes
+    const content = document.getElementById("content").value.trim()
+    if (content == "") {
+        alert("Le contenu du bouton est obligatoire")
+        document.getElementById("content").focus()
+        return
+    }
+    node.props.content = document.getElementById("content").value.trim()
     render()
+    closeDialog()
 }
 
 // *******************************************************************************
@@ -96,7 +235,7 @@ function popupSpan(node){
             </div>
         </div>
         <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary" onclick="saveSpanProps()">Appliquer</button>
+            <button id="saveprops" class="btn btn-primary">Appliquer</button>
             <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
         </div>
     `
@@ -268,14 +407,6 @@ function savePageProps(node){
     closeDialog()
 }
 
-
-// *******************************************************************************
-// popup js
-// *******************************************************************************
-function popupWorkspaceJs(node) {
-    return `<h3>Image</h3><p>No props yet</p>`
-}
-
 // *******************************************************************************
 // popup Image
 // *******************************************************************************
@@ -333,7 +464,7 @@ function saveImageProps(node) {
     }
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
-    node.props.src = document.getElementById("sc").value.trim()
+    node.props.src = document.getElementById("src").value.trim()
     render()
     closeDialog()
 }
