@@ -1,8 +1,159 @@
+function makeIdClasses(id, classes) {
+    return `<div class="dialog-row">
+                <label for="id">Id :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="classes">Classe(s) de style :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${classes}" id="classes"/>
+            </div>`
+}
+
+function makeDialogButtons() {
+    return `<div class="dialog-actions">
+                <button id="saveprops" class="btn btn-primary">Appliquer</button>
+                <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+            </div>`
+}
+
+// *******************************************************************************
+// popup Item de liste
+// *******************************************************************************
+function popupLi(node) {
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+    const beginvalue = node.props.beginvalue||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de l'item de liste"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + 
+                            `<div class="dialog-row">
+                                <label for="id">Cet item de liste est pour :</label>
+                            </div>
+                            <div class="dialog-row">
+                                <select id="for" onchange="toggleFieldSupp()">
+                                    <option value="ul">Une liste non ordonnée</option>
+                                    <option value="ol">Une liste ordonnée</option>
+                                </select>
+                            </div>
+                            <div id="fieldssupp" style="display:none;">
+                                <div class="dialog-row">
+                                    <label for="id">Valeur de début :</label>
+                                </div>
+                                <div class="dialog-row">
+                                    <input type="text" id="beginvalue" value="${beginvalue}"/>
+                                </div>
+                            </div>
+                         </div>` + makeDialogButtons()
+    content.querySelector("#saveprops").onclick = () => saveLiProps(node)
+}
+
+function toggleFieldSupp() {
+    const fieldsupp = document.getElementById("fieldssupp")
+    const selectfor = document.getElementById("for").options[document.getElementById("for").selectedIndex].value
+    if (selectfor == "ol") {
+        fieldsupp.style.display = 'block'
+    } else {
+        fieldsupp.style.display = 'none'
+        document.getElementById("beginvalue").value = ""
+    }
+}
+
+function saveLiProps(node) {
+    const beginvalue = document.getElementById("beginvalue").value.trim()
+    const selectfor = document.getElementById("for").options[document.getElementById("for").selectedIndex].value
+    if (selectfor == "ol") {
+        if (beginvalue == "") {
+            alert("Veuillez renseigner la valeur de début")
+            document.getElementById("beginvalue").focus()
+            return
+        }
+        node.props.value = beginvalue
+    } else {
+        node.props.value = ""
+    }
+
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    node.props.classes = document.getElementById("classes").value.trim()
+
+    render()
+    closeDialog()
+}
+
+// *******************************************************************************
+// popup Liste ordonnée
+// *******************************************************************************
+function popupOl(node) {
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de la liste ordonnée"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
+    content.querySelector("#saveprops").onclick = () => saveOlProps(node)
+}
+
+function saveOlProps(node) {
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    node.props.classes = document.getElementById("classes").value.trim()
+
+    render()
+    closeDialog()
+}
+
+// *******************************************************************************
+// popup Liste non ordonnée
+// *******************************************************************************
+function popupUl(node) {
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Paramètres de la liste non ordonnée"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
+    content.querySelector("#saveprops").onclick = () => saveUlProps(node)
+}
+
+function saveUlProps(node) {
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    node.props.classes = document.getElementById("classes").value.trim()
+
+    render()
+    closeDialog()
+}
+
 // *******************************************************************************
 // popup Anchor
 // *******************************************************************************
-function popupA(node){
-
+function popupA(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -15,20 +166,8 @@ function popupA(node){
     head.innerText = "Paramètres de l'ancre"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="id">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                 <label for="href">URL de la page :</label>
             </div>
             <div class="dialog-row">
@@ -59,14 +198,9 @@ function popupA(node){
             </div>
             <div class="dialog-row-with-checkbox">
                 <input type="checkbox" id="download"${download?" checked":""}/>
-                <label for="page_title">Lien de téléchargement</label>
+                <label for="download">Lien de téléchargement</label>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveAnchorProps(node)
 
     const selectType = content.querySelector("#target")
@@ -92,12 +226,11 @@ function saveAnchorProps(node) {
     }
     node.props.content = document.getElementById("content").value.trim()
     node.props.href = document.getElementById("href").value.trim()
-
-    const target = document.getElementById("target").options[document.getElementById("target").selectedIndex].value
-    if (target != "") node.props.target = target
+    node.props.target = document.getElementById("target").options[document.getElementById("target").selectedIndex].value
 
     const type = document.getElementById("type").value.trim()
     if (type !== "") node.props.type = type
+    else node.props.type = ""
 
     node.props.download = document.getElementById("download").checked
 
@@ -108,8 +241,7 @@ function saveAnchorProps(node) {
 // *******************************************************************************
 // popup Button
 // *******************************************************************************
-function popupButton(node){
-
+function popupButton(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -118,31 +250,14 @@ function popupButton(node){
     head.innerText = "Paramètres du bouton"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="page_name">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Contenu :</label>
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
+                <label for="content">Contenu :</label>
             </div>
             <div class="dialog-row">
                 <input type="text" id="content" value="${text}"/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveButtonProps(node)
 }
 
@@ -171,12 +286,11 @@ function saveButtonProps(node){
 // *******************************************************************************
 // popup Text
 // *******************************************************************************
-function popupText(node){
-
+function popupText(node) {
     const text=node.props.text||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du widget"
+    head.innerText = "Paramètres du texte brut"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">
@@ -186,12 +300,7 @@ function popupText(node){
             <div class="dialog-row">
                 <textarea id="content">${text}</textarea>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveTextProps(node)
 }
 
@@ -204,8 +313,7 @@ function saveTextProps(node){
 // *******************************************************************************
 // popup Span
 // *******************************************************************************
-function popupSpan(node){
-
+function popupSpan(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -214,31 +322,14 @@ function popupSpan(node){
     head.innerText = "Paramètres du widget"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="page_name">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Contenu :</label>
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
+                <label for="content">Contenu :</label>
             </div>
             <div class="dialog-row">
                 <textarea id="content">${text}</textarea>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveSpanProps(node)
 }
 
@@ -260,8 +351,7 @@ function saveSpanProps(node){
 // *******************************************************************************
 // popup Layout html
 // *******************************************************************************
-function popupLayout(node){
-
+function popupLayout(node) {
     const zone_count = node.children.length
     const id = workspaceRoot.props.id||""
     const classes = workspaceRoot.props.classes||""
@@ -270,43 +360,22 @@ function popupLayout(node){
     head.innerText = "Paramètres de la page"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="page_name">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                 <label for="layout_zone_count">Zone count in layout :</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${zone_count}" id="layout_zone_count" disabled/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveLayoutProps(node)
 }
 
 function saveLayoutProps(node){
     const id = document.getElementById("id").value
     node.props.id = id.trim()
-
-    const classes = document.getElementById("classes").value
-    node.props.classe = classes.trim()
-
-    const layout_zone_count = document.getElementById("layout_zone_count").value
-    node.props.zone_count = layout_zone_count.trim()
+    node.props.classe = document.getElementById("classes").value.trim()
+    node.props.zone_count = document.getElementById("layout_zone_count").trim()
     render()
     closeDialog()
 }
@@ -321,26 +390,7 @@ function popupLayoutZone(node) {
     const head = document.getElementById("dialogHeader")
     head.innerText = "Paramètres de la zone"
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="page_name">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveLayoutZoneProps(node)
 }
 
@@ -353,8 +403,7 @@ function saveLayoutZoneProps(node) {
         node.props.css = [{name: id.trim(), type: "id", values: ["display:grid"]}]
     }
 
-    const classes = document.getElementById("classes").value
-    node.props.classe = classes.trim()
+    node.props.classe = document.getElementById("classes").value.trim()
     render()
     closeDialog()
 }
@@ -362,8 +411,7 @@ function saveLayoutZoneProps(node) {
 // *******************************************************************************
 // popup Page html
 // *******************************************************************************
-function popupPage(){
-
+function popupPage() {
     const page_name = workspaceRoot.props.name||""
     const page_title = workspaceRoot.props.title||""
 
@@ -384,16 +432,11 @@ function popupPage(){
             <div class="dialog-row">
                 <input type="text" value="${page_title}" id="page_title"/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => savePageProps(workspaceRoot)
 }
 
-function savePageProps(node){
+function savePageProps(node) {
     const pagename = document.getElementById("page_name").value
     if (pagename == "") {
         alert("Le nom de la page est obligatoire")
@@ -401,7 +444,6 @@ function savePageProps(node){
         return
     }
     node.props.name = pagename.trim()
-
     node.props.title = document.getElementById("page_title").value.trim()
     render()
     closeDialog()
@@ -410,7 +452,7 @@ function savePageProps(node){
 // *******************************************************************************
 // popup Image
 // *******************************************************************************
-function popupImage(node){
+function popupImage(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -420,20 +462,8 @@ function popupImage(node){
     head.innerText = "Paramètres de l'image"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="id">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                 <label for="inline_style">Style en ligne :</label>
             </div>
             <div class="dialog-row">
@@ -445,12 +475,7 @@ function popupImage(node){
             <div class="dialog-row">
                 <input type="text" value="${src}" id="src"/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveImageProps(node)
 }
 
@@ -472,8 +497,7 @@ function saveImageProps(node) {
 // *******************************************************************************
 // popup Block
 // *******************************************************************************
-function popupBlock(node){
-
+function popupBlock(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -482,43 +506,26 @@ function popupBlock(node){
     head.innerText = "Paramètres du widget"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="id">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
-            </div>
-            <div class="dialog-row">
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                 <label for="inline_style">Style en ligne :</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveBlockProps(node)
 }
 
 function saveBlockProps(node) {
     const id = document.getElementById("id").value
     node.props.id = id.trim()
-
     if (id.trim() == "") {
         node.props.css = []
     } else {
         node.props.css = [{name: id.trim(), type: "id", values: []}]
     }
+
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
 
@@ -529,8 +536,7 @@ function saveBlockProps(node) {
 // *******************************************************************************
 // popup Label
 // *******************************************************************************
-function popupLabel(node){
-
+function popupLabel(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
@@ -540,24 +546,12 @@ function popupLabel(node){
     head.innerText = "Paramètres du widget"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="id">Id :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${id}" id="id"/>
-            </div>
-            <div class="dialog-row">
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                 <label for="for">Label for :</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${labelfor}" id="for"/>
-            </div>
-            <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${classes}" id="classes"/>
             </div>
             <div class="dialog-row">
                 <label for="inline_style">Style en ligne :</label>
@@ -565,12 +559,7 @@ function popupLabel(node){
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveLabelProps(node)
 }
 
@@ -617,14 +606,8 @@ function popupTextfield(node) {
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-column">
-            <div class="dialog-section">
-                <div class="dialog-row">
-                    <label for="id">Id :</label>
-                </div>
-                <div class="dialog-row">
-                    <input type="text" value="${id}" id="id"/>
-                </div>
-                <div class="dialog-row">
+            <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
                     <label for="name">Nom :</label>
                 </div>
                 <div class="dialog-row">
@@ -670,12 +653,6 @@ function popupTextfield(node) {
                     <input type="text" value="${value}" id="value"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="classes">Classe(s) de style :</label>
-                </div>
-                <div class="dialog-row">
-                    <input type="text" value="${classes}" id="classes"/>
-                </div>
-                <div class="dialog-row">
                     <label for="inline_style">Style en ligne :</label>
                 </div>
                 <div class="dialog-row">
@@ -700,12 +677,7 @@ function popupTextfield(node) {
                     <label for="required">Obligatoire</label>
                 </div>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
 
     const selectType = content.querySelector("#type")
     selectType.value = type || "text"
@@ -878,12 +850,7 @@ function popupForm(node){
                     <label for="novalidate">Empêcher la validation du formulaire</label>
                 </div>
             </div>
-        </div>
-        <div class="dialog-actions">
-            <button id="saveprops" class="btn btn-primary">Appliquer</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
-        </div>
-    `
+        </div>` + makeDialogButtons()
 
     const selectEnctype = content.querySelector("#enctype")
     selectEnctype.value = enctype || "application/x-www-form-urlencoded"
