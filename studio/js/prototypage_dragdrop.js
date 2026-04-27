@@ -40,8 +40,6 @@ let draggedLayoutZones = 4
 let draggedWidgetType = null
 
 document.getElementById("workspace_content").innerText = "Création d'une page"
-document.getElementById("workspace_file").innerText = ""
-
 
 const widgetDefinitions = {
     Block: {
