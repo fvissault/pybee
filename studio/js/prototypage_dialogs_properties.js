@@ -1,12 +1,12 @@
 function makeIdClasses(id, classes) {
     return `<div class="dialog-row">
-                <label for="id">Id :</label>
+                <label for="id">${t("idgen")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${id}" id="id"/>
             </div>
             <div class="dialog-row">
-                <label for="classes">Classe(s) de style :</label>
+                <label for="classes">${t("stypeclass")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${classes}" id="classes"/>
@@ -15,9 +15,54 @@ function makeIdClasses(id, classes) {
 
 function makeDialogButtons() {
     return `<div class="dialog-actions">
-                <button id="saveprops" class="btn btn-primary">Appliquer</button>
-                <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+                <button id="saveprops" class="btn btn-primary">${t("apply")}</button>
+                <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
             </div>`
+}
+
+// *******************************************************************************
+// popup Titre H1 - H6
+// *******************************************************************************
+function popupTitle(node) {
+    const size = node.props.size||4
+    const id = node.props.id||""
+    const classes = node.props.classes||""
+
+    const head = document.getElementById("dialogHeader")
+    head.innerText = t("titletitle")
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">` + makeIdClasses(id, classes) +
+            `<div class="dialog-row">
+                <label for="size">${t("sizetitle")}</label>
+            </div>
+            <div class="dialog-row">
+                <input type="number" min="1" max="6" id="size" value="${size}"/>
+            </div>
+        </div>` + makeDialogButtons()
+    content.querySelector("#saveprops").onclick = () => saveTitleProps(node)
+}
+
+function saveTitleProps(node){
+    id = document.getElementById("id").value
+    node.props.id = id.trim()
+
+    if (id.trim() == "") {
+        node.props.css = []
+    } else {
+        node.props.css = [{name: id.trim(), type: "id", values: []}]
+    }
+    const classes = document.getElementById("classes").value.trim()
+    if (classes != "") node.props.classes = classes
+    const size = document.getElementById("size").value.trim()
+    if (size == "") {
+        alert(t("alertsize"))
+        document.getElementById("size").focus()
+        return
+    }
+    node.props.size = size
+    render()
+    closeDialog()
 }
 
 // *******************************************************************************
@@ -29,21 +74,21 @@ function popupLi(node) {
     const beginvalue = node.props.beginvalue||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de l'item de liste"
+    head.innerText = t("lititle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + 
                             `<div class="dialog-row">
-                                <label for="id">Cet item de liste est pour :</label>
+                                <label for="for">${t("lifor")}</label>
                             </div>
                             <div class="dialog-row">
                                 <select id="for" onchange="toggleFieldSupp()">
-                                    <option value="ul">Une liste non ordonnée</option>
-                                    <option value="ol">Une liste ordonnée</option>
+                                    <option value="ul">${t("liforul")}</option>
+                                    <option value="ol">${t("liforol")}</option>
                                 </select>
                             </div>
                             <div id="fieldssupp" style="display:none;">
                                 <div class="dialog-row">
-                                    <label for="id">Valeur de début :</label>
+                                    <label for="beginvalue">${t("liforval")}</label>
                                 </div>
                                 <div class="dialog-row">
                                     <input type="text" id="beginvalue" value="${beginvalue}"/>
@@ -69,7 +114,7 @@ function saveLiProps(node) {
     const selectfor = document.getElementById("for").options[document.getElementById("for").selectedIndex].value
     if (selectfor == "ol") {
         if (beginvalue == "") {
-            alert("Veuillez renseigner la valeur de début")
+            alert(t("alertval"))
             document.getElementById("beginvalue").focus()
             return
         }
@@ -95,47 +140,18 @@ function saveLiProps(node) {
 // *******************************************************************************
 // popup Liste ordonnée
 // *******************************************************************************
-function popupOl(node) {
+function popupGeneric(node, title) {
     const id = node.props.id||""
     const classes = node.props.classes||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de la liste ordonnée"
+    head.innerText = title
     const content = document.getElementById("dialogContent")
     content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveOlProps(node)
+    content.querySelector("#saveprops").onclick = () => saveGenericProps(node)
 }
 
-function saveOlProps(node) {
-    id = document.getElementById("id").value
-    node.props.id = id.trim()
-
-    if (id.trim() == "") {
-        node.props.css = []
-    } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
-    }
-    node.props.classes = document.getElementById("classes").value.trim()
-
-    render()
-    closeDialog()
-}
-
-// *******************************************************************************
-// popup Liste non ordonnée
-// *******************************************************************************
-function popupUl(node) {
-    const id = node.props.id||""
-    const classes = node.props.classes||""
-
-    const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de la liste non ordonnée"
-    const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveUlProps(node)
-}
-
-function saveUlProps(node) {
+function saveGenericProps(node) {
     id = document.getElementById("id").value
     node.props.id = id.trim()
 
@@ -163,42 +179,42 @@ function popupA(node) {
     const download = node.props.download||false
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de l'ancre"
+    head.innerText = t("atitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="href">URL de la page :</label>
+                <label for="href">${t("aurl")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${href}" id="href"/>
             </div>
             <div class="dialog-row">
-                <label for="target">Cible :</label>
+                <label for="target">${t("atarget")}</label>
             </div>
             <div class="dialog-row">
                 <select id="target">
-                    <option value="">Par défaut</option>
-                    <option value="_blank">Nouvelle page vide</option>
-                    <option value="_parent">Page parente à la page courante</option>
-                    <option value="_top">Première page parente</option>
+                    <option value="">${t("adefault")}</option>
+                    <option value="_blank">${t("ablank")}</option>
+                    <option value="_parent">${t("aparent")}</option>
+                    <option value="_top">${t("atop")}</option>
                 </select>
             </div>
             <div class="dialog-row">
-                <label for="type">Type de média :</label>
+                <label for="type">${t("amedia")}</label>
             </div>
             <div class="dialog-row">
-                <input type="text" value="${type}" id="type" placeholder="Mime type comme 'text/html'"/>
+                <input type="text" value="${type}" id="type" placeholder="${t("amediaplaceholder")}"/>
             </div>
             <div class="dialog-row">
-                <label for="content">Contenu :</label>
+                <label for="content">${t("acontent")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" id="content" value="${text}"/>
             </div>
             <div class="dialog-row-with-checkbox">
                 <input type="checkbox" id="download"${download?" checked":""}/>
-                <label for="download">Lien de téléchargement</label>
+                <label for="download">${t("adownload")}</label>
             </div>
         </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveAnchorProps(node)
@@ -220,7 +236,7 @@ function saveAnchorProps(node) {
     if (classes != "") node.props.classes = classes
     const content = document.getElementById("content").value.trim()
     if (content == "") {
-        alert("Le contenu de l'ancre est obligatoire")
+        alert(t("alertacontent"))
         document.getElementById("content").focus()
         return
     }
@@ -247,12 +263,12 @@ function popupButton(node) {
     const classes = node.props.classes||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du bouton"
+    head.innerText = t("buttontitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="content">Contenu :</label>
+                <label for="content">${t("buttoncontent")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" id="content" value="${text}"/>
@@ -274,7 +290,7 @@ function saveButtonProps(node){
     if (classes != "") node.props.classes = classes
     const content = document.getElementById("content").value.trim()
     if (content == "") {
-        alert("Le contenu du bouton est obligatoire")
+        alert(t("alertbutton"))
         document.getElementById("content").focus()
         return
     }
@@ -290,12 +306,12 @@ function popupText(node) {
     const text=node.props.text||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du texte brut"
+    head.innerText = t("texttitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">
             <div class="dialog-row">
-                <label for="content">Contenu :</label>
+                <label for="content">${t("textcontent")}</label>
             </div>
             <div class="dialog-row">
                 <textarea id="content">${text}</textarea>
@@ -319,12 +335,12 @@ function popupSpan(node) {
     const classes = node.props.classes||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du widget"
+    head.innerText = t("spantitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="content">Contenu :</label>
+                <label for="content">${t("spancontent")}</label>
             </div>
             <div class="dialog-row">
                 <textarea id="content">${text}</textarea>
@@ -357,12 +373,12 @@ function popupLayout(node) {
     const classes = workspaceRoot.props.classes||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de la page"
+    head.innerText = t("layouttitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="layout_zone_count">Zone count in layout :</label>
+                <label for="layout_zone_count">${t("layoutzonecount")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${zone_count}" id="layout_zone_count" disabled/>
@@ -416,18 +432,18 @@ function popupPage() {
     const page_title = workspaceRoot.props.title||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de la page"
+    head.innerText = t("pagetitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">
             <div class="dialog-row">
-                <label for="page_name">Page name :</label>
+                <label for="page_name">${t("pagename")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${page_name}" id="page_name"/>
             </div>
             <div class="dialog-row">
-                <label for="page_title">Page title :</label>
+                <label for="page_title">${t("pagepagettile")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${page_title}" id="page_title"/>
@@ -439,7 +455,7 @@ function popupPage() {
 function savePageProps(node) {
     const pagename = document.getElementById("page_name").value
     if (pagename == "") {
-        alert("Le nom de la page est obligatoire")
+        alert(t("alertpagename"))
         document.getElementById("page_name").focus()
         return
     }
@@ -459,18 +475,18 @@ function popupImage(node) {
     const src = node.props.src||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres de l'image"
+    head.innerText = t("imgtitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="inline_style">Style en ligne :</label>
+                <label for="inline_style">${t("imgstyle")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
             <div class="dialog-row">
-                <label for="inline_style">Source :</label>
+                <label for="inline_style">${t("imgsource")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${src}" id="src"/>
@@ -503,12 +519,12 @@ function popupBlock(node) {
     const classes = node.props.classes||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du widget"
+    head.innerText = t("blocktitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="inline_style">Style en ligne :</label>
+                <label for="inline_style">${t("blockstyle")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
@@ -543,18 +559,18 @@ function popupLabel(node) {
     const labelfor = node.props.labelfor||""
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du widget"
+    head.innerText = t("labeltitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                <label for="for">Label for :</label>
+                <label for="for">${t("labelfor")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${labelfor}" id="for"/>
             </div>
             <div class="dialog-row">
-                <label for="inline_style">Style en ligne :</label>
+                <label for="inline_style">${t("labelstyle")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
@@ -602,43 +618,43 @@ function popupTextfield(node) {
     const required = node.props.required||false
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du widget"
+    head.innerText = t("tftitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-column">
             <div class="dialog-section">` + makeIdClasses(id, classes) +
             `<div class="dialog-row">
-                    <label for="name">Nom :</label>
+                    <label for="name">${t("tfname")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${name}" id="name"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="value">Type :</label>
+                    <label for="value">${t("tftype")}</label>
                 </div>
                 <div class="dialog-row">
                     <select id="type" onchange="addfields('${min}', '${max}', '${step}', ${checked}, '${maxlength}')">
-                        <option value="text">Texte</option>
-                        <option value="password">Password</option>
-                        <option value="file">Fichier</option>
-                        <option value="button">Bouton</option>
-                        <option value="color">Couleur</option>
-                        <option value="date">Date</option>
-                        <option value="datetime-local">Date locale</option>
-                        <option value="email">Email</option>
-                        <option value="hidden">Non visible</option>
-                        <option value="checkbox">Case à cocher</option>
-                        <option value="image">Image</option>
-                        <option value="month">Mois</option>
-                        <option value="number">Nombre</option>
-                        <option value="radio">Radio</option>
-                        <option value="range">Intervalle</option>
-                        <option value="reset">Réinitialisation</option>
-                        <option value="search">Recherche</option>
-                        <option value="submit">Soumettre</option>
-                        <option value="tel">Numéro de téléphone</option>
-                        <option value="time">Heure</option>
-                        <option value="url">Url</option>
+                        <option value="text">${t("tftype1")}</option>
+                        <option value="password">${t("tftype2")}</option>
+                        <option value="file">${t("tftype3")}</option>
+                        <option value="button">${t("tftype4")}</option>
+                        <option value="color">${t("tftype5")}</option>
+                        <option value="date">${t("tftype6")}</option>
+                        <option value="datetime-local">${t("tftype7")}</option>
+                        <option value="email">${t("tftype8")}</option>
+                        <option value="hidden">${t("tftype9")}</option>
+                        <option value="checkbox">${t("tftype10")}</option>
+                        <option value="image">${t("tftype11")}</option>
+                        <option value="month">${t("tftype12")}</option>
+                        <option value="number">${t("tftype13")}</option>
+                        <option value="radio">${t("tftype14")}</option>
+                        <option value="range">${t("tftype15")}</option>
+                        <option value="reset">${t("tftype16")}</option>
+                        <option value="search">${t("tftype17")}</option>
+                        <option value="submit">${t("tftype18")}</option>
+                        <option value="tel">${t("tftype19")}</option>
+                        <option value="time">${t("tftype20")}</option>
+                        <option value="url">${t("tftype21")}</option>
                     </select>
                 </div>
                 <div id="fieldssupp"></div>
@@ -647,34 +663,34 @@ function popupTextfield(node) {
         <div class="dialog-column">
             <div class="dialog-section">
                 <div class="dialog-row">
-                    <label for="value">Initial value :</label>
+                    <label for="value">${t("tfinitialval")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${value}" id="value"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="inline_style">Style en ligne :</label>
+                    <label for="inline_style">${t("tfstyle")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${style}" id="inline_style"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="placeholder">Placeholder :</label>
+                    <label for="placeholder">${t("tfplaceholder")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${placeholder}" id="placeholder"/>
                 </div>
                 <div class="dialog-row-with-checkbox">
                     <input type="checkbox" id="disabled"${disabled?" checked":""}/>
-                    <label for="disabled">Indisponible</label>
+                    <label for="disabled">${t("tfdisabled")}</label>
                 </div>
                 <div class="dialog-row-with-checkbox">
                     <input type="checkbox" id="readonly"${readonly?" checked":""}/>
-                    <label for="readonly">Lecture seule</label>
+                    <label for="readonly">${t("tfreadonly")}</label>
                 </div>
                 <div class="dialog-row-with-checkbox">
                     <input type="checkbox" id="required"${required?" checked":""}/>
-                    <label for="required">Obligatoire</label>
+                    <label for="required">${t("tfrequired")}</label>
                 </div>
             </div>
         </div>` + makeDialogButtons()
@@ -771,15 +787,15 @@ function addfields(min, max, step, checked, maxlength) {
     fieldsupp.textContent = ""
     const choice = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
     if (choice === "range" || choice === "number") {
-        createInputField(fieldsupp, "Minimum :", "min", min)
-        createInputField(fieldsupp, "Maximum :", "max", max)
+        createInputField(fieldsupp, t("tfmin"), "min", min)
+        createInputField(fieldsupp, t("tfmax"), "max", max)
         if (choice == "number") {
-            createInputField(fieldsupp, "Pas :", "step", step)
+            createInputField(fieldsupp, t("tfstep"), "step", step)
         }
     } else if (choice == "checkbox" || choice == "radio") {
-        createCheckField(fieldsupp, "Case cochée", "cbchecked", checked)
+        createCheckField(fieldsupp, t("tfcheck"), "cbchecked", checked)
     } else if (choice == "text") {
-        createInputField(fieldsupp, "Longueur maximale :", "maxlength", maxlength)
+        createInputField(fieldsupp, t("tflongmax"), "maxlength", maxlength)
     } else {
         fieldsupp.textContent = ""
     }
@@ -798,56 +814,56 @@ function popupForm(node){
     const novalidate = node.props.novalidate||false
 
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Paramètres du formulaire"
+    head.innerText = t("formtitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-column">
             <div class="dialog-section">
                 <div class="dialog-row">
-                    <label for="id">Id :</label>
+                    <label for="id">${t("formid")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${id}" id="id"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="name">Nom :</label>
+                    <label for="name">${t("formname")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${name}" id="name"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="value">Methode :</label>
+                    <label for="value">${t("formmethod")}</label>
                 </div>
                 <div class="dialog-row">
                     <select id="method">
-                        <option value="post">Données cachées (POST)</option>
-                        <option value="get">Données passées dans l'url (GET)</option>
+                        <option value="post">${t("formpost")}</option>
+                        <option value="get">${t("formget")}</option>
                     </select>
                 </div>
                 <div class="dialog-row">
-                    <label for="value">Cible :</label>
+                    <label for="value">${t("formtarget")}</label>
                 </div>
                 <div class="dialog-row">
                     <select id="target">
-                        <option value="_self">La page courante par défaut</option>
-                        <option value="_blank">Page vide</option>
-                        <option value="_parent">Page parente</option>
-                        <option value="_top">Première page</option>
+                        <option value="_self">${t("formself")}</option>
+                        <option value="_blank">${t("formblank")}</option>
+                        <option value="_parent">${t("formparent")}</option>
+                        <option value="_top">${t("formtop")}</option>
                     </select>
                 </div>
                 <div class="dialog-row">
-                    <label for="value">Type d'encodage :</label>
+                    <label for="value">${t("formenc")}</label>
                 </div>
                 <div class="dialog-row">
                     <select id="enctype">
-                        <option value="application/x-www-form-urlencoded">Type d'encodage par défaut</option>
-                        <option value="multipart/form-data">Type d'encodage pour les textfields de type 'fichier'</option>
-                        <option value="text/plain">Type d'encodage pour le débuggage</option>
+                        <option value="application/x-www-form-urlencoded">${t("formencdef")}</option>
+                        <option value="multipart/form-data">${t("formencfile")}</option>
+                        <option value="text/plain">${t("formencplain")}</option>
                     </select>
                 </div>
                 <div class="dialog-row-with-checkbox">
                     <input type="checkbox" id="novalidate"${novalidate?" checked":""}/>
-                    <label for="novalidate">Empêcher la validation du formulaire</label>
+                    <label for="novalidate">${t("formnoval")}</label>
                 </div>
             </div>
         </div>` + makeDialogButtons()
