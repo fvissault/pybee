@@ -68,13 +68,31 @@ function buildPopupContent(node, cat){
                     popupA(node)
                     break
                 case "Ul":
-                    popupUl(node)
+                    popupGeneric(node, "Paramètres de la liste non ordonnée")
                     break
                 case "Ol":
-                    popupOl(node)
+                    popupGeneric(node, "Paramètres de la liste ordonnée")
                     break
                 case "Li":
                     popupLi(node)
+                    break
+                case "Title":
+                    popupTitle(node)
+                    break
+                case "Header":
+                    popupGeneric(node, "Paramètres de l'entête")
+                    break
+                case "Footer":
+                    popupGeneric(node, "Paramètres du pied")
+                    break
+                case "Article":
+                    popupGeneric(node, "Paramètres de l'article")
+                    break
+                case "Fieldset":
+                    popupGeneric(node, "Paramètres du groupe d'objets")
+                    break
+                case "Paragraph":
+                    popupGeneric(node, "Paramètres du paragraphe")
                     break
             }
         } else if (cat == "css") {
