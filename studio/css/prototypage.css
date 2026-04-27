@@ -318,6 +318,14 @@ body {
     border:1px solid #ddd;
 }
 
+.dialog-row input[type="number"] {
+    padding:7px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
+}
+
 .dialog-row-with-checkbox input[type="checkbox"] {
     width:20px;
 }
