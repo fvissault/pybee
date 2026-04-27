@@ -22,7 +22,10 @@ let currentFile=null
 let workspaceRoot = {
     id:generateId("Container"),
     type:"container",
-    props:[],
+    props:{},
+    css:{},
+    js:{},
+    events:{},
     children:[]
 }
 
@@ -55,6 +58,26 @@ const widgetDefinitions = {
         name: t("li"), 
         container: true 
     },
+    Paragraph: { 
+        name: t("paragraph"), 
+        container: true 
+    },
+    Fieldset: { 
+        name: t("fieldset"), 
+        container: true 
+    },
+    Article: { 
+        name: t("article"), 
+        container: true 
+    },
+    Header: { 
+        name: t("header"), 
+        container: true 
+    },
+    Footer: { 
+        name: t("footer"), 
+        container: true 
+    },
     Text: { 
         name: t("text"), 
         container: false 
@@ -81,6 +104,10 @@ const widgetDefinitions = {
     },
     Anchor: { 
         name: t("anchor"), 
+        container: false 
+    },
+    Title: { 
+        name: t("htitle"), 
         container: false 
     }
 }
@@ -184,7 +211,7 @@ function createWidget(){
     const widget=createNode("widget", {container:def.container, name:def.name})
 
     if (def.container) {
-        const zone=createNode("zone",{id:widget.id+"-zone"})
+        const zone=createNode("zone")
 
         zone.parent=widget
         widget.children.push(zone)
@@ -407,10 +434,10 @@ function renderWidget(widget){
     if (widget.props.id) {
         labeltext += " : id=" + widget.props.id
     }
-    if (widget.name === "Text" && widget.props.text) {
+    if (widget.widgetType === "Text" && widget.props.text) {
         labeltext += " : " + widget.props.text
     }
-    if (widget.name === "TextField" && widget.props.type) {
+    if (widget.widgetType === "TextField" && widget.props.type) {
         labeltext += " : type=" + widget.props.type
     }
     label.textContent = labeltext 
@@ -464,30 +491,32 @@ async function loadProjectFiles(){
 function renderProjectFiles() {
 
     projectTree.innerHTML=""
-    const files=projects
-    files.forEach(f=>{
-        const el=document.createElement("div")
-        el.className="tree-file"
-        el.style.display="flex"
-        el.style.alignItems="center"
-        const label=document.createElement("span")
-        label.textContent="📄 " + f.pagename + "_" + f.id
-        label.style.cursor="pointer"
-        label.addEventListener("click",()=>{
-            loadBST(f.id)
+    const files = projects
+    if (!projects.error) {
+        files.forEach(f=>{
+            const el=document.createElement("div")
+            el.className="tree-file"
+            el.style.display="flex"
+            el.style.alignItems="center"
+            const label=document.createElement("span")
+            label.textContent="📄 " + f.pagename + "_" + f.id
+            label.style.cursor="pointer"
+            label.addEventListener("click",()=>{
+                loadBST(f.id)
+            })
+            const del=document.createElement("button")
+            del.className = "btn btn-secondary"
+            del.textContent="🗑"
+            del.style.marginLeft="auto"
+            del.addEventListener("click",(e)=>{
+                e.stopPropagation()
+                deleteBST(f.id)
+            })
+            el.appendChild(label)
+            el.appendChild(del)
+            projectTree.appendChild(el)
         })
-        const del=document.createElement("button")
-        del.className = "btn btn-secondary"
-        del.textContent="🗑"
-        del.style.marginLeft="auto"
-        del.addEventListener("click",(e)=>{
-            e.stopPropagation()
-            deleteBST(f.id)
-        })
-        el.appendChild(label)
-        el.appendChild(del)
-        projectTree.appendChild(el)
-    })
+    }
 }
 
 async function deleteBST(file){
@@ -744,12 +773,37 @@ trashEl.addEventListener("drop",e=>{
     }
 })
 
-function serializeNode(node){
-    const out = {
-        id: node.id,
-        type: node.type,
-        props: node.props||{},
-        container:node.container
+function serializeNode(node) {
+    let out = null
+    if (node.type === "widget") {
+        out = {
+            id: node.id,
+            type: node.type,
+            widgetType: node.widgetType,
+            name: node.name,
+            props: node.props||{},
+            css: node.css||{},
+            events: node.events||{},
+            js: node.js||{},
+            container:node.container
+        }
+    } else if (node.type === "container" || node.type === "layout") {
+        out = {
+            id: node.id,
+            type: node.type,
+            name: node.name,
+            props: node.props||{},
+            css: node.css||{},
+            events: node.events||{},
+            js: node.js||{},
+            container:node.container
+        }
+    } else {
+        out = {
+            id: node.id,
+            type: node.type,
+            container:node.container
+        }
     }
     if(node.zones){
         out.zones = node.zones.map(zone =>
