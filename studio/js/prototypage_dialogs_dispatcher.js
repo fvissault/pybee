@@ -1,18 +1,15 @@
 let currentConfigNode = null
 
-function openDialog(node, cat){
+async function openDialog(node, cat){
+    const session = await getSession()
     currentConfigNode = node
     buildPopupContent(node, cat)
     if(node.type === "layout" && cat == "lcss") {
         initLayoutPopupEvents()
     }
-    if((node.type === "container" || node.type === "layout") && cat == "css") {
-        renderTree()
-    }
-    if((node.type === "zone" || node.type === "widget") && cat == "css") {
-        renderTreeById()
-    }
-    //document.getElementById("dialog").style.display="block"
+    if((node.type === "container" || node.type === "layout") && cat == "css") renderTree()
+    if((node.type === "zone" || node.type === "widget") && cat == "css") renderTreeById()
+
     document.body.style.overflow = "hidden"
     document.getElementById("dialogOverlay").classList.remove("hidden")
 }
@@ -28,12 +25,6 @@ document.addEventListener("keydown", (e) => {
         closeDialog()
     }
 })
-
-/*document.getElementById("dialogOverlay").addEventListener("click", (e) => {
-    if (e.target.id === "dialogOverlay") {
-        closeDialog()
-    }
-})*/
 
 function buildPopupContent(node, cat){
 
