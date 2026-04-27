@@ -16,8 +16,10 @@ async function getSession() {
 }
 
 let projects={}
-let currentProject=null
-let currentFile=null
+let currentProject = null
+let currentFile = null
+let tosave = false
+let perspective = "page"
 
 let workspaceRoot = {
     id:generateId("Container"),
@@ -36,6 +38,10 @@ let draggedOldIndex=null
 let insertLine=null
 let draggedLayoutZones = 4
 let draggedWidgetType = null
+
+document.getElementById("workspace_content").innerText = "Création d'une page"
+document.getElementById("workspace_file").innerText = ""
+
 
 const widgetDefinitions = {
     Block: {
@@ -152,6 +158,12 @@ async function initPrototypage() {
         });
     }
 }
+
+window.addEventListener("beforeunload", function (e) {
+    if (!tosave) return
+    e.preventDefault()
+    e.returnValue = ""
+});
 
 function generateId(type){
     return type + "-" + crypto.randomUUID()
@@ -460,15 +472,12 @@ function renderWidget(widget){
 }
 
 function workspaceHasWidgets(){
-
-    if(!workspaceRoot)
-        return false
-
+    if(!workspaceRoot) return false
     return workspaceRoot.children.some(n => n.type === "widget")
-
 }
 
 async function loadProjectFiles(){
+    const session = await getSession()
     try{
         fetch("/pybee/studio/api/projectfiles.py", {
             method: "POST",
@@ -489,7 +498,6 @@ async function loadProjectFiles(){
 }
 
 function renderProjectFiles() {
-
     projectTree.innerHTML=""
     const files = projects
     if (!projects.error) {
@@ -552,13 +560,11 @@ async function deleteBST(file){
 }
 
 async function loadBST(fileid){
-
-    if(workspaceRoot){
+    if (workspaceRoot) {
         if(!confirm("Workspace will be replaced. Continue ?"))
             return
     }
-
-    try{
+    try {
         fetch("/pybee/studio/api/projectfiles.py", {
             method: "POST",
             credentials: "include",
@@ -571,66 +577,76 @@ async function loadBST(fileid){
         .then(data => {
             currentFile = fileid
             workspaceRoot = JSON.parse(data.filecontent)||null
-            if(workspaceRoot){
-                rebuildParents(workspaceRoot, null)
-            }
+            if (workspaceRoot) rebuildParents(workspaceRoot, null)
             render()
+            document.getElementById("workspace_content").innerText = "Lecture de la page : " + data.pagename
         });
-    }catch(e){
-
+    } catch(e) {
         console.error(e)
-
     }
 
 }
 
-document.getElementById("newPageBtn").addEventListener("click",()=>{
+document.getElementById("newComposantBtn").addEventListener("click",()=>{
+    workspaceRoot = {
+        id:generateId("Composant"),
+        type:"container",
+        props:{},
+        css:{},
+        js:{},
+        events:{},
+        children:[]
+    }
+    workspaceEl.innerHTML = ""
+    currentFile = null
+    perspective = "composant"
+    document.getElementById("workspace_content").innerText = "Création d'un composant"
+})
 
-    workspaceRoot=null
-    workspaceEl.innerHTML=""
-    currentFile=null
+document.getElementById("newPageBtn").addEventListener("click",()=>{
+    workspaceRoot = {
+        id:generateId("Container"),
+        type:"container",
+        props:{},
+        css:{},
+        js:{},
+        events:{},
+        children:[]
+    }
+    workspaceEl.innerHTML = ""
+    currentFile = null
+    perspective = "page"
+    document.getElementById("workspace_content").innerText = "Création d'une page"
 })
 
 document.querySelectorAll(".palette-item").forEach(item=>{
-
     item.addEventListener("dragstart",()=>{
-
         draggedType=item.dataset.type
-
         if(draggedType==="layout"){
-            draggedLayoutZones=parseInt(item.dataset.zones)
+            draggedLayoutZones = parseInt(item.dataset.zones)
         }
-
         if(draggedType === "widget"){
             draggedWidgetType = item.dataset.widget
         }
         draggedNodeRef=null
     })
-
 })
 
 document.addEventListener("dragstart",e=>{
-
+    const session = getSession()
     const widgetEl=e.target.closest(".widget")
-
-    console.log(widgetEl)
-
-    if(!widgetEl)
-        return
+    //console.log(widgetEl)
+    if(!widgetEl) return
 
     draggedType="move-widget"
-
     draggedNodeRef=findNodeById(
         workspaceRoot,
         widgetEl.dataset.nodeId
     )
-
-    if(!draggedNodeRef)
-        return
+    if(!draggedNodeRef) return
 
     draggedOldParent=draggedNodeRef.parent
     draggedOldIndex=draggedOldParent.children.indexOf(draggedNodeRef)
-
 })
 
 let currentDropTarget=null
@@ -723,7 +739,10 @@ workspaceContent.addEventListener("drop",e=>{
                 workspaceRoot = {
                     id: generateId("Container"),
                     type: "container",
-                    props: [],
+                    props: {},
+                    css:{},
+                    js:{},
+                    events:{},
                     children: []
                 }
             }
@@ -734,9 +753,8 @@ workspaceContent.addEventListener("drop",e=>{
                 return
         }
     }
-    if(newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container){
-        return
-    }
+    if (newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container) return
+
     if(draggedType==="widget"){
         if(workspaceRoot && workspaceRoot.type === "layout" && newParent === workspaceRoot) {
             alert("Cannot add root widgets when a layout exists.")
@@ -759,6 +777,11 @@ workspaceContent.addEventListener("drop",e=>{
     }
     currentDropTarget=null
     currentDropIndex=null
+
+    const savebtn = document.getElementById("savebtn")
+    savebtn.style.backgroundColor = "indianred"
+    tosave = true
+
 })
 
 trashEl.addEventListener("dragover",e=>{
@@ -771,6 +794,9 @@ trashEl.addEventListener("drop",e=>{
         removeNode(draggedNodeRef)
         render()
     }
+    const savebtn = document.getElementById("savebtn")
+    savebtn.style.backgroundColor = "indianred"
+    tosave = true
 })
 
 function serializeNode(node) {
@@ -863,6 +889,7 @@ async function saveFileBST(){
                 .then(r => r.json())
                 .then(res => {
                     if(res.status === "ok") {
+                        tosave = false
                         alert("File saved")
                     } else {
                         alert("Network error : file not saved")
@@ -912,43 +939,3 @@ async function saveFileBST(){
         });
     }
 }
-
-
-/*
-function handleEvent(eventConfig, context) {
-    switch (eventConfig.type) {
-        case "addValue":
-            addValue(eventConfig.params.index)
-            break
-
-        case "removeValue":
-            removeValue(eventConfig.params.index, eventConfig.params.subIndex)
-            break
-
-        // extensible
-    }
-}
-
-function attachEvents(element, node) {
-    if (!node.events) return
-
-    Object.entries(node.events).forEach(([eventName, config]) => {
-        element.addEventListener(eventName, (e) => {
-            handleEvent(config, { event: e, node })
-        })
-    })
-}
-    
-{
-  "type": "button",
-  "events": {
-    "click": {
-      "type": "addValue",
-      "params": { "index": 2 }
-    }
-  },
-  "props": {
-    "label": "Ajouter"
-  }
-}
-*/
