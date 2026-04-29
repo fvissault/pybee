@@ -427,42 +427,202 @@ function saveLayoutZoneProps(node) {
 // *******************************************************************************
 // popup Page html
 // *******************************************************************************
-function popupPage() {
-    const page_name = workspaceRoot.props.name||""
-    const page_title = workspaceRoot.props.title||""
+async function popupPage() {
+    let content = null
+    if (perspective === "page") {
+        const page_name = workspaceRoot.props.name||""
+        const page_title = workspaceRoot.props.title||""
 
-    const head = document.getElementById("dialogHeader")
-    head.innerText = t("pagetitle")
-    const content = document.getElementById("dialogContent")
-    content.innerHTML = `
-        <div class="dialog-section">
-            <div class="dialog-row">
-                <label for="page_name">${t("pagename")}</label>
+        const head = document.getElementById("dialogHeader")
+        head.innerText = t("pagetitle")
+        content = document.getElementById("dialogContent")
+        content.innerHTML = `
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="page_name">${t("pagename")}</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${page_name}" id="page_name"/>
+                </div>
+                <div class="dialog-row">
+                    <label for="page_title">${t("pagepagettile")}</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${page_title}" id="page_title"/>
+                </div>
+            </div>` + makeDialogButtons()
+    } else {
+        const session = await getSession()
+        console.log(session)
+        const composant_authorid = workspaceRoot.props.author_id||""
+        let user = {}
+        await fetch("/pybee/studio/api/users.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getuser",
+                userid : composant_authorid===""?session.userid:composant_authorid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.error) {
+                user = data
+            }
+        });
+
+        const composant_name = workspaceRoot.props.name||""
+        const composant_desc = workspaceRoot.props.description||""
+        const composant_vers = workspaceRoot.props.version||""
+        const entity_name = workspaceRoot.props.entity_name||""
+        const active = workspaceRoot.props.active||false
+        const icon = workspaceRoot.props.icon||`<rect x="3" y="3" width="18" height="18" rx="2"/>
+<rect x="6" y="6" width="5" height="5" rx="1"/>
+<rect x="13" y="6" width="5" height="5" rx="1"/>
+<rect x="9" y="13" width="6" height="5" rx="1"/>
+<circle cx="20" cy="20" r="3" fill="var(--color-component)" stroke="none"/>`
+        
+        const head = document.getElementById("dialogHeader")
+        head.innerText = "Paramètres du composant"
+        content = document.getElementById("dialogContent")
+        content.innerHTML = `
+            <div class="dialog-column">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label for="comp_name">Nom du composant :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${composant_name}" id="comp_name"${user.id!==parseInt(session.userid)?" disabled":""}/>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="comp_desc">Description :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <textarea id="comp_desc" spellcheck="false" style="width:415px;"${user.id!==parseInt(session.userid)?" disabled":""}>${composant_desc}</textarea>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="comp_vers">Version :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${composant_vers}" id="comp_vers"${user.id!==parseInt(session.userid)?" disabled":""}/>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="type">Type :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <select id="type"${user.id!==parseInt(session.userid)?" disabled":""}>
+                            <option value="public">Public</option>
+                            <option value="private">Privé</option>
+                        </select>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="entity_name">Appartient à l'entreprise :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${user.name}" id="entity_name"${user.id!==parseInt(session.userid)?" disabled":""}/>
+                    </div>
+                    <div class="dialog-row-with-checkbox">
+                        <input type="checkbox" id="active"${active?" checked":""}${user.id!==parseInt(session.userid)?" disabled":""}/>
+                        <label for="readonly">Composant actif</label>
+                    </div>
+                </div>
             </div>
-            <div class="dialog-row">
-                <input type="text" value="${page_name}" id="page_name"/>
-            </div>
-            <div class="dialog-row">
-                <label for="page_title">${t("pagepagettile")}</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${page_title}" id="page_title"/>
-            </div>
-        </div>` + makeDialogButtons()
+            <div class="dialog-column">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label for="author">Auteur :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${user.firstname + ' ' + user.lastname}"${user.id!==parseInt(session.userid)?" disabled":""}/>
+                        <input type="hidden" value="${user.id}" id="author"/>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="comp_icon">Icône svg uniquement :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <div class="palette-item">
+                            <svg id="example" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                ${icon}
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="dialog-row">
+                        <textarea id="comp_icon" onchange="refreshIcon()" spellcheck="false" style="font-size:13px; width:544px; height:110px;"${user.id!==parseInt(session.userid)?" disabled":""}>${icon}</textarea>
+                    </div>
+                </div>
+            </div>` + makeDialogButtons()
+    }
     content.querySelector("#saveprops").onclick = () => savePageProps(workspaceRoot)
 }
 
+function refreshIcon() {
+    const icon = document.getElementById("comp_icon").value
+    const example = document.getElementById("example")
+    example.innerHTML = icon
+}
+
 function savePageProps(node) {
-    const pagename = document.getElementById("page_name").value
-    if (pagename == "") {
-        alert(t("alertpagename"))
-        document.getElementById("page_name").focus()
-        return
+    if (perspective === "page") {
+        const pagename = document.getElementById("page_name").value
+        if (pagename == "") {
+            alert(t("alertpagename"))
+            document.getElementById("page_name").focus()
+            return
+        }
+        node.props.name = pagename.trim()
+        node.props.title = document.getElementById("page_title").value.trim()
+    } else {
+        const composant_name = document.getElementById("comp_name").value
+        if (composant_name.trim() === "") {
+            alert("Le nom de votre composant est obligatoire")
+            document.getElementById("comp_name").focus()
+            return
+        }
+        const composant_authorid = document.getElementById("author").value
+        const composant_description = document.getElementById("comp_desc").value
+        const composant_version = document.getElementById("comp_vers").value
+        const composant_icon = document.getElementById("comp_icon").value
+        const composant_type = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
+        const composant_entity = document.getElementById("entity_name").value
+        if (composant_entity.trim() === "") {
+            alert("Votre composant doit appartenir à une entreprise")
+            document.getElementById("entity_name").focus()
+            return
+        }
+        try {
+            fetch("/pybee/studio/api/entities.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getByName",
+                    name : composant_entity
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Nous ne connaissons pas cette entreprise")
+                    document.getElementById("entity_name").focus()
+                    return
+                } else {
+                    node.props.name = composant_name
+                    node.props.icon = composant_icon
+                    node.props.description = composant_description
+                    node.props.author_id = composant_authorid
+                    node.props.type = composant_type
+                    node.props.icon = composant_icon
+                    node.props.entity = composant_entity
+                    node.props.entity_id = data.id
+                    node.props.version = composant_version
+                    node.props.active = document.getElementById("active").checked
+                    render()
+                    closeDialog()
+                }
+            });
+        } catch(e) {
+            alert("Erreur réseau : votre composant n'a pas été sauvegardé")
+        }
     }
-    node.props.name = pagename.trim()
-    node.props.title = document.getElementById("page_title").value.trim()
-    render()
-    closeDialog()
 }
 
 // *******************************************************************************
