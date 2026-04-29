@@ -6,6 +6,7 @@ import cgi
 import time
 import re
 import sys
+import datetime
 
 SECRET = "cle_secrete"
 
@@ -24,6 +25,11 @@ def normalize(form, expected_fields):
         data[key] = value
     return data
 
+def clean_row(row):
+    for k, v in row.items():
+        if isinstance(v, (datetime.date, datetime.datetime)):
+            row[k] = v.isoformat()
+    return row
 
 def json_response(data):
     print("Content-Type: application/json\n")
