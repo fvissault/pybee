@@ -85,8 +85,8 @@ const translations = {
         zonetitle: "Paramètres de la zone",
         // pour la popup page
         pagetitle: "Paramètres de la page",
-        pagename: "Page name :",
-        pagepagettile: "Page title :",
+        pagename: "Nom de la page :",
+        pagepagettile: "Titre de la page :",
         alertpagename: "Le nom de la page est obligatoire",
         // pour la popup image
         imgtitle: "Paramètres de l'image",
