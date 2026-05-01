@@ -900,8 +900,6 @@ async function saveFileBST() {
                 }
             });
         } else {
-            //console.log(workspaceRoot.props.name)
-            //console.log(workspaceRoot.props.entity_id)
             await fetch("/pybee/studio/api/composants.py", {
                 method: "POST",
                 credentials: "include",
@@ -913,7 +911,6 @@ async function saveFileBST() {
             })
             .then(r => r.json())
             .then(data => {
-                console.log("search", data)
                 if (!data.error) {
                     overwrite = true
                     currentfilefound = data.id
@@ -922,174 +919,110 @@ async function saveFileBST() {
                     newfile = true
                 }
             });
-            //console.log("newfile", newfile)
-            //console.log("overwrite", overwrite)
-            //console.log("currentfilefound", currentfilefound)
         }
     }
     if (newfile) {
-        if (overwrite) {
-            if (perspective === "page") {
-                if (confirm("File already exists. Overwrite?")) {
-                    // UPDATE
-                    fetch("/pybee/studio/api/projectfiles.py", {
-                        method: "POST",
-                        credentials: "include",
-                        body: new URLSearchParams({
-                            action: "filecontent",
-                            id : currentfilefound,
-                            filecontent: JSON.stringify(serializeNode(workspaceRoot))
-                        })
-                    })
-                    .then(r => r.json())
-                    .then(res => {
-                        if(res.status === "ok") {
-                            tosave = false
-                            document.getElementById("savebtn").className = ""
-                            //alert("File saved")
-                            document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.pagename
-                        } else {
-                            alert("Network error : file not saved")
-                        }
-                    });
-                }
-            } else {
-                if (confirm("Composant already exists. Overwrite?")) {
-                    // UPDATE
-                    fetch("/pybee/studio/api/composants.py", {
-                        method: "POST",
-                        credentials: "include",
-                        body: new URLSearchParams({
-                            action: "update",
-                            name: workspaceRoot.props.name,
-                            description: workspaceRoot.props.description,
-                            content: JSON.stringify(serializeNode(workspaceRoot)),
-                            version: workspaceRoot.props.version,
-                            type: workspaceRoot.props.type,
-                            id_author: workspaceRoot.props.author_id,
-                            id_entity: workspaceRoot.props.entity_id,
-                            active: workspaceRoot.props.active?1:0,
-                            id : currentfilefound
-                        })
-                    })
-                    .then(r => r.json())
-                    .then(res => {
-                        console.log("update1", res)
-                        if(res.status === "ok") {
-                            tosave = false
-                            document.getElementById("savebtn").className = ""
-                            //alert("Composant saved")
-                            document.getElementById("workspace_content").innerText = "Composant sauvegardé : " + workspaceRoot.props.name
-                        } else {
-                            alert("Network error : Composant not saved")
-                        }
-                    });
-                }
-            }
-        } else {
-            if (perspective === "page") {
-                // INSERT page
-                fetch("/pybee/studio/api/projectfiles.py", {
-                    method: "POST",
-                    credentials: "include",
-                    body: new URLSearchParams({
-                        action: "create",
-                        id_project : projectid,
-                        pagename: pagename,
-                        filecontent: JSON.stringify(serializeNode(workspaceRoot))
-                    })
-                })
-                .then(r => r.json())
-                .then(res => {
-                    if(res.status === "ok") {
-                        //alert("New file created")
-                        document.getElementById("workspace_content").innerText = "Nouvelle page créée : " + pagename
-                        loadProjectFiles()
-                    } else {
-                        alert("Network error : file not created")
-                    }
-                });
-            } else {
-                // INSERT composant
-                console.log("Avant le fetch create")
-                fetch("/pybee/studio/api/composants.py", {
-                    method: "POST",
-                    credentials: "include",
-                    body: new URLSearchParams({
-                        action: "create",
-                        name: workspaceRoot.props.name,
-                        icon: workspaceRoot.props.icon,
-                        description: workspaceRoot.props.description,
-                        content: JSON.stringify(serializeNode(workspaceRoot)),
-                        version: workspaceRoot.props.version,
-                        type: workspaceRoot.props.type,
-                        id_author: workspaceRoot.props.author_id,
-                        id_entity: workspaceRoot.props.entity_id,
-                        active: workspaceRoot.props.active?1:0
-                    })
-                })
-                .then(r => r.json())
-                .then(res => {
-                    console.log("create", res)
-                    if(res.status === "ok") {
-                        //alert("New composant created")
-                        document.getElementById("workspace_content").innerText = "Nouveau composant créé : " + workspaceRoot.props.name
-                        loadProjectFiles()
-                    } else {
-                        alert("Network error : composant not created")
-                    }
-                });
-            }
-        }
-    } else {
         if (perspective === "page") {
-            // UPDATE
+            // INSERT page
             fetch("/pybee/studio/api/projectfiles.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
-                    action: "filecontent",
-                    id : currentFile,
+                    action: "create",
+                    id_project : projectid,
+                    pagename: pagename,
                     filecontent: JSON.stringify(serializeNode(workspaceRoot))
                 })
             })
             .then(r => r.json())
             .then(res => {
                 if(res.status === "ok") {
-                    //alert("File saved")
-                    document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.pagename
+                    document.getElementById("workspace_content").innerText = "Nouvelle page créée : " + pagename
+                    loadProjectFiles()
                 } else {
-                    alert("Network error : file not saved")
+                    alert("Network error : file not created")
                 }
             });
         } else {
+            // INSERT composant
             fetch("/pybee/studio/api/composants.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
-                    action: "update",
+                    action: "create",
                     name: workspaceRoot.props.name,
+                    icon: workspaceRoot.props.icon,
                     description: workspaceRoot.props.description,
                     content: JSON.stringify(serializeNode(workspaceRoot)),
                     version: workspaceRoot.props.version,
                     type: workspaceRoot.props.type,
                     id_author: workspaceRoot.props.author_id,
                     id_entity: workspaceRoot.props.entity_id,
-                    active: workspaceRoot.props.active?1:0,
-                    id : currentfilefound
+                    active: workspaceRoot.props.active?1:0
                 })
             })
             .then(r => r.json())
             .then(res => {
-                console.log("update2", res)
                 if(res.status === "ok") {
-                    tosave = false
-                    document.getElementById("savebtn").className = ""
-                    document.getElementById("workspace_content").innerText = "Composant sauvegardé : " + workspaceRoot.props.name
+                    document.getElementById("workspace_content").innerText = "Nouveau composant créé : " + workspaceRoot.props.name
+                    loadProjectFiles()
                 } else {
-                    alert("Network error : Composant not saved")
+                    alert("Network error : composant not created")
                 }
             });
+        }
+    } else {
+        if (perspective === "page") {
+            if (confirm("Cette page existe déjà. Voulez-vous la remplacer par celle-la?")) {
+                // UPDATE
+                fetch("/pybee/studio/api/projectfiles.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "filecontent",
+                        id : currentFile,
+                        filecontent: JSON.stringify(serializeNode(workspaceRoot))
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if(res.status === "ok") {
+                        document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.pagename
+                    } else {
+                        alert("Network error : file not saved")
+                    }
+                });
+            }
+        } else {
+            if (confirm("Ce compoant existe déjà. Voulez-vous le remplacer par celui-ci?")) {
+                fetch("/pybee/studio/api/composants.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "update",
+                        name: workspaceRoot.props.name,
+                        icon: workspaceRoot.props.icon,
+                        description: workspaceRoot.props.description,
+                        content: JSON.stringify(serializeNode(workspaceRoot)),
+                        version: workspaceRoot.props.version,
+                        type: workspaceRoot.props.type,
+                        id_author: parseInt(workspaceRoot.props.author_id),
+                        id_entity: workspaceRoot.props.entity_id,
+                        active: workspaceRoot.props.active?1:0,
+                        id : currentfilefound
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if(res.status === "ok") {
+                        tosave = false
+                        document.getElementById("savebtn").className = ""
+                        document.getElementById("workspace_content").innerText = "Composant sauvegardé : " + workspaceRoot.props.name
+                    } else {
+                        alert("Network error : Composant not saved")
+                    }
+                });
+            }
         }
     }
 }
