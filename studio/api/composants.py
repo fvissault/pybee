@@ -31,28 +31,30 @@ if action == "create":
         db.commit()
         json_response({"status": "ok"})
     except Exception as e:
-        traceback.print_exc()
         json_response({"status": "nok", "message": str(e)})
 
 # UPDATE
 elif action == "update":
-    data = normalize(form, ["name", "icon" "description", "type", "id_entity", "id_author", "version", "content", "active", "id"])
-    sql = "UPDATE composants SET name=%s, icon=%s, description=%s, content=%s, version=%s, type=%s, id_author=%s, id_entity=%s, active=%s, modif_date=now() WHERE id=%s"
-    cursor.execute(sql, (
-        data["name"],
-        data["icon"],
-        data["description"],
-        data["content"],
-        data["version"],
-        data["type"],
-        data["id_author"],
-        data["id_entity"],
-        data["active"],
-        data["id"],
-    ))
-    db.commit()
-    json_response({"status": "ok"})
-    
+    try:
+        data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "active", "id"])
+        sql = "UPDATE composants SET name=%s, icon=%s, description=%s, content=%s, version=%s, type=%s, id_author=%s, id_entity=%s, active=%s, modif_date=now() WHERE id=%s"
+        cursor.execute(sql, (
+            data["name"],
+            data["icon"],
+            data["description"],
+            data["content"],
+            data["version"],
+            data["type"],
+            data["id_author"],
+            data["id_entity"],
+            data["active"],
+            data["id"],
+        ))
+        db.commit()
+        json_response({"status": "ok"})
+    except Exception as e:
+        json_response({"status": "nok", "message": str(e)})
+
 elif action == "getbyname":
     try:
         data = normalize(form, ["name", "id_entity"])
@@ -66,7 +68,6 @@ elif action == "getbyname":
             composant = clean_row(composant)
         json_response(composant if composant else {"error": "Composant don't exists"})
     except Exception as e:
-        #traceback.print_exc()
         json_response({"status": "nok", "message": str(e)})
 
 # DELETE
