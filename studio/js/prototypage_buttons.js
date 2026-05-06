@@ -9,10 +9,13 @@ function resetComponent() {
         css:{},
         js:{},
         events:{},
-        children:[]
+        children:[],
+        popups:[]
     }
     workspaceEl.innerHTML = ""
     currentPage = null
+    currentComponent = "new-component"
+    currentPopup = null
     perspective = "component"
     document.getElementById("workspace_content").innerText = "Création d'un composant"
 }
@@ -41,7 +44,9 @@ function resetPage() {
         children:[]
     }
     workspaceEl.innerHTML = ""
-    currentPage = null
+    currentPage = "new-page"
+    currentComponent = null
+    currentPopup = null
     perspective = "page"
     document.getElementById("workspace_content").innerText = "Création d'une page"
 }
@@ -58,3 +63,34 @@ document.getElementById("newPageBtn").addEventListener("click",()=>{
         resetPage()
     }
 })
+
+function resetPopup(componentid, componentname) {
+    workspaceRoot = {
+        id:generateId("Popup"),
+        type:"container",
+        props:{},
+        css:{},
+        js:{},
+        events:{},
+        children:[]
+    }
+    workspaceEl.innerHTML = ""
+    currentPage = null
+    currentComponent = componentid
+    currentPopup = "new-popup"
+    perspective = "popup"
+    document.getElementById("workspace_content").innerText = "Création d'une fenêtre de paramétrage pour le composant : " + componentname
+}
+
+function createPopup(componentid, componentname) {
+    if (tosave) {
+        let check = confirm("Voulez-vous enregistrer votre travail?")
+        if (!check) {
+            resetPopup(componentid, componentname)
+            tosave = false
+            document.getElementById("savebtn").className = ""
+        }
+    } else {
+        resetPopup(componentid, componentname)
+    }
+}
