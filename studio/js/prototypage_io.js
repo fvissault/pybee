@@ -31,10 +31,12 @@ async function deleteBST(file){
 }
 
 async function loadBST(pageid){
-    if (workspaceRoot) {
-        if(!confirm("Workspace will be replaced. Continue ?"))
+    if (tosave) {
+        if(!confirm("Votre espace de travail va être remplacé. On continue quand même ?"))
             return
     }
+    tosave = false
+    document.getElementById("savebtn").className = ""
     try {
         fetch("/pybee/studio/api/projectfiles.py", {
             method: "POST",
@@ -60,10 +62,12 @@ async function loadBST(pageid){
 }
 
 async function loadComponent(componentid){
-    if (workspaceRoot) {
-        if(!confirm("Workspace will be replaced. Continue ?"))
+    if (tosave) {
+        if(!confirm("Votre espace de travail va être remplacé. On continue quand même ?"))
             return
     }
+    tosave = false
+    document.getElementById("savebtn").className = ""
     try {
         fetch("/pybee/studio/api/components.py", {
             method: "POST",
@@ -89,10 +93,12 @@ async function loadComponent(componentid){
 }
 
 async function loadPopup(componentid, popupid){
-    if (workspaceRoot) {
-        if(!confirm("Workspace will be replaced. Continue ?"))
+    if (tosave) {
+        if(!confirm("Votre espace de travail va être remplacé. On continue quand même ?"))
             return
     }
+    tosave = false
+    document.getElementById("savebtn").className = ""
     try {
         fetch("/pybee/studio/api/components.py", {
             method: "POST",
