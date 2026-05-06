@@ -15,8 +15,8 @@ session = require_auth()
 # CREATE
 if action == "create":
     try:
-        data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "active"])
-        sql = "INSERT INTO composants (name, icon, description, content, version, type, id_author, id_entity, active, creation_date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s, now())"
+        data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "popups" "active"])
+        sql = "INSERT INTO composants (name, icon, description, content, popups, version, type, id_author, id_entity, active, creation_date) VALUES (%s,%s,%s,%s,'',%s,%s,%s,%s,%s, now())"
         cursor.execute(sql, (
             data["name"],
             data["icon"],
@@ -36,13 +36,14 @@ if action == "create":
 # UPDATE
 elif action == "update":
     try:
-        data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "active", "id"])
-        sql = "UPDATE composants SET name=%s, icon=%s, description=%s, content=%s, version=%s, type=%s, id_author=%s, id_entity=%s, active=%s, modif_date=now() WHERE id=%s"
+        data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "popups", "active", "id"])
+        sql = "UPDATE composants SET name=%s, icon=%s, description=%s, content=%s, popups=%s, version=%s, type=%s, id_author=%s, id_entity=%s, active=%s, modif_date=now() WHERE id=%s"
         cursor.execute(sql, (
             data["name"],
             data["icon"],
             data["description"],
             data["content"],
+            data["popups"],
             data["version"],
             data["type"],
             data["id_author"],
