@@ -292,7 +292,7 @@ async function loadProjectFiles(){
         })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             pages=data
         });
 
@@ -305,7 +305,7 @@ async function loadProjectFiles(){
         })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             components=data
         });
         renderProjectFiles()
