@@ -117,6 +117,7 @@ async function loadPopup(componentid, popupid){
     }
 
 }
+
 function serializeNode(node) {
     let out = null
     if (node.type === "widget") {
@@ -193,8 +194,8 @@ async function saveFileBST() {
                     newfile = true
                 }
             });
-        } else {
-            await fetch("/pybee/studio/api/composants.py", {
+        } else if (perspective === "component") {
+            await fetch("/pybee/studio/api/components.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
@@ -237,9 +238,9 @@ async function saveFileBST() {
                     alert("Network error : file not created")
                 }
             });
-        } else {
+        } else if (perspective === "component") {
             // INSERT composant
-            fetch("/pybee/studio/api/composants.py", {
+            fetch("/pybee/studio/api/components.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
@@ -261,7 +262,7 @@ async function saveFileBST() {
                     document.getElementById("workspace_content").innerText = "Nouveau composant créé : " + workspaceRoot.props.name
                     loadProjectFiles()
                 } else {
-                    alert("Network error : composant not created")
+                    alert("Network error : component not created")
                 }
             });
         }
@@ -287,9 +288,9 @@ async function saveFileBST() {
                     }
                 });
             }
-        } else {
-            if (confirm("Ce compoant existe déjà. Voulez-vous le remplacer par celui-ci?")) {
-                fetch("/pybee/studio/api/composants.py", {
+        } else if (perspective === "component") {
+            if (confirm("Ce composant existe déjà. Voulez-vous le remplacer par celui-ci?")) {
+                fetch("/pybee/studio/api/components.py", {
                     method: "POST",
                     credentials: "include",
                     body: new URLSearchParams({
@@ -317,6 +318,62 @@ async function saveFileBST() {
                     }
                 });
             }
+        } else {
+            // sauvegarde d'une popup
+            fetch("/pybee/studio/api/components.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbyid",
+                    id : currentComponent
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                console.log("data = ", data)
+                console.log("currentPopup = ", currentPopup)
+                if(!data.error) {
+                    if (currentPopup === "new-popup") {
+                        if (!data.popups) data.popups = []
+                        // création d'un popup
+                        data.popups.push(workspaceRoot)
+                    } else {
+                        data.popups[currentPopup] = workspaceRoot
+                    }
+                    console.log("data = ", data)
+                    console.log("currentComponent = ", currentComponent)
+                    console.log("serializeNode(data.popups) = ", serializeNode(data.popups))
+                    fetch("/pybee/studio/api/components.py", {
+                        method: "POST",
+                        credentials: "include",
+                        body: new URLSearchParams({
+                            action: "update",
+                            name: data.name,
+                            icon: data.icon,
+                            description: data.description,
+                            content: data.content,
+                            popups: JSON.stringify(data.popups.map(p => serializeNode(p))),
+                            version: data.version,
+                            type: data.type,
+                            id_author: data.id_author,
+                            id_entity: data.id_entity,
+                            active: data.active?1:0,
+                            id : currentComponent
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        console.log(res)
+                        if(res.status === "ok") {
+                            tosave = false
+                            document.getElementById("savebtn").className = ""
+                            document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
+                        } else {
+                            alert("Network error : Popup not saved")
+                        }
+                    });
+                }
+            });
         }
     }
 }
