@@ -113,15 +113,57 @@ async function loadPopup(componentid, popupid){
             currentPopup = popupid
             currentComponent = componentid
             perspective = "component"
-            workspaceRoot = JSON.parse(data.content.popups[popupid].content)||null
+            let popups = JSON.parse(data.popups)
+            workspaceRoot = popups[popupid] || null
             if (workspaceRoot) rebuildParents(workspaceRoot, null)
             render()
-            document.getElementById("workspace_content").innerText = "Lecture de la popup : " + data.content.popups[popupid].name + " du composant : " + data.name
+            document.getElementById("workspace_content").innerText = `Lecture de la popup : admin ${popupid + 1} ${popups[popupid].props.name?popups[popupid].props.name:""} du composant : ${data.name}`
         });
     } catch(e) {
         console.error(e)
     }
+}
 
+function deletePopup(componentid, popupid) {
+    console.log(componentid, popupid)
+    if(!confirm("Souhaitez-vous vraiment supprimer cette popup ?"))
+        return
+    try {
+        fetch("/pybee/studio/api/components.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id : componentid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            let popups = JSON.parse(data.popups)
+            popups.splice(popupid, 1)
+            // mettre popups dans la base
+            fetch("/pybee/studio/api/components.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "updatepopups",
+                    popups: JSON.stringify(popups.map(p => serializeNode(p))),
+                    id : componentid
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.status === "ok") {
+                    document.getElementById("workspace_content").innerText = `Suppression de la popup : admin ${popupid + 1} du composant : ${data.name} effectuée`
+                    loadProjectFiles()
+                } else {
+                    alert("Network error : Composant not saved")
+                }
+            });
+        });
+    } catch(e) {
+        console.error(e)
+    }
 }
 
 function serializeNode(node) {
@@ -289,6 +331,7 @@ async function saveFileBST() {
                 .then(res => {
                     if(res.status === "ok") {
                         document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.pagename
+                        loadProjectFiles()
                     } else {
                         alert("Network error : file not saved")
                     }
@@ -319,6 +362,7 @@ async function saveFileBST() {
                         tosave = false
                         document.getElementById("savebtn").className = ""
                         document.getElementById("workspace_content").innerText = "Composant sauvegardé : " + workspaceRoot.props.name
+                        loadProjectFiles()
                     } else {
                         alert("Network error : Composant not saved")
                     }
@@ -336,19 +380,14 @@ async function saveFileBST() {
             })
             .then(r => r.json())
             .then(data => {
-                console.log("data = ", data)
-                console.log("currentPopup = ", currentPopup)
                 if(!data.error) {
+                    let pops = JSON.parse(data.popups)
                     if (currentPopup === "new-popup") {
-                        if (!data.popups) data.popups = []
                         // création d'un popup
-                        data.popups.push(workspaceRoot)
+                        pops.push(workspaceRoot)
                     } else {
-                        data.popups[currentPopup] = workspaceRoot
+                        pops[currentPopup] = workspaceRoot
                     }
-                    console.log("data = ", data)
-                    console.log("currentComponent = ", currentComponent)
-                    console.log("serializeNode(data.popups) = ", serializeNode(data.popups))
                     fetch("/pybee/studio/api/components.py", {
                         method: "POST",
                         credentials: "include",
@@ -358,7 +397,7 @@ async function saveFileBST() {
                             icon: data.icon,
                             description: data.description,
                             content: data.content,
-                            popups: JSON.stringify(data.popups.map(p => serializeNode(p))),
+                            popups: JSON.stringify(pops.map(p => serializeNode(p))),
                             version: data.version,
                             type: data.type,
                             id_author: data.id_author,
@@ -374,6 +413,7 @@ async function saveFileBST() {
                             tosave = false
                             document.getElementById("savebtn").className = ""
                             document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
+                            loadProjectFiles()
                         } else {
                             alert("Network error : Popup not saved")
                         }
