@@ -16,7 +16,7 @@ session = require_auth()
 if action == "create":
     try:
         data = normalize(form, ["name", "icon", "description", "type", "id_entity", "id_author", "version", "content", "popups" "active"])
-        sql = "INSERT INTO composants (name, icon, description, content, popups, version, type, id_author, id_entity, active, creation_date) VALUES (%s,%s,%s,%s,'',%s,%s,%s,%s,%s, now())"
+        sql = "INSERT INTO composants (name, icon, description, content, popups, version, type, id_author, id_entity, active, creation_date) VALUES (%s,%s,%s,%s,'[]',%s,%s,%s,%s,%s, now())"
         cursor.execute(sql, (
             data["name"],
             data["icon"],
@@ -49,6 +49,20 @@ elif action == "update":
             data["id_author"],
             data["id_entity"],
             data["active"],
+            data["id"],
+        ))
+        db.commit()
+        json_response({"status": "ok"})
+    except Exception as e:
+        json_response({"status": "nok", "message": str(e)})
+
+# UPDATE POPUPS
+elif action == "updatepopups":
+    try:
+        data = normalize(form, ["popups", "id"])
+        sql = "UPDATE composants SET popups=%s, modif_date=now() WHERE id=%s"
+        cursor.execute(sql, (
+            data["popups"],
             data["id"],
         ))
         db.commit()
