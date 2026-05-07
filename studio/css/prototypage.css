@@ -432,6 +432,10 @@ body {
     background: #e5e7eb;
 }
 
+.btn-delete:hover svg {
+    stroke: #ef4444;
+}
+
 #dialogContent {
     padding:10px;
 }
