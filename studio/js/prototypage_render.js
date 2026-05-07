@@ -7,6 +7,14 @@ function createNewButton(textcontent, title) {
     return btn
 }
 
+function createNewZone(zoneid) {
+    const zoneEl = document.createElement("div")
+    zoneEl.className="zone"
+    zoneEl.style.marginTop = "7px"
+    zoneEl.dataset.nodeId = zoneid
+    return zoneEl
+}
+
 function render(){
     workspaceEl.innerHTML=""
     if(!workspaceRoot)
@@ -28,10 +36,7 @@ function render(){
 }
 
 function renderZone(zone){
-    const zoneEl=document.createElement("div")
-    zoneEl.className="zone"
-    zoneEl.style.marginTop = "7px"
-    zoneEl.dataset.nodeId=zone.id
+    const zoneEl = createNewZone(zone.id)
     zone.children.forEach(c=>{
         zoneEl.appendChild(renderWidget(c))
     })
@@ -39,10 +44,7 @@ function renderZone(zone){
 }
 
 function renderZoneLayout(zone){
-    const zoneEl=document.createElement("div")
-    zoneEl.className="zone"
-    zoneEl.style.marginTop = "7px"
-    zoneEl.dataset.nodeId=zone.id
+    const zoneEl = createNewZone(zone.id)
     const label=document.createElement("span")
     label.textContent=zone.id
     const cssBtn = createNewButton("::", "CSS")
