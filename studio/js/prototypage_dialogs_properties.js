@@ -541,7 +541,7 @@ async function popupPage() {
                     </div>
                     <div class="dialog-row">
                         <div class="palette-item">
-                            <svg id="example" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg id="example" class="icon" viewBox="0 0 24 24">
                                 ${icon}
                             </svg>
                         </div>
