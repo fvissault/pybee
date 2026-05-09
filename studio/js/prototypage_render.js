@@ -287,3 +287,44 @@ function renderProjectFiles() {
         })
     }
 }
+
+async function renderComponentSection(entityid = 1) {
+    const componentcontainer = document.getElementById("compcontainer")
+
+    fetch("/pybee/studio/api/components.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getorgcomponents",
+            id_entity : entityid
+        })
+    })
+    .then(r => r.json())
+    .then(res => {
+        console.log(res)
+        if(!res.status) {
+            res.forEach(c => {
+                const newcomponent = document.createElement("div")
+                newcomponent.className = "palette-item"
+                newcomponent.draggable = "true"
+                newcomponent.dataset.type = "widget"
+                newcomponent.dataset.widget = c.name
+                newcomponent.title = c.name
+                
+                newcomponent.innerHTML = `<svg class="icon" viewbox="0 0 24 24">${c.icon}</svg>`
+
+                componentcontainer.appendChild(newcomponent)
+
+                widgetDefinitions[c.name] = { name: "Composant : " + c.name, container: false }
+
+                newcomponent.addEventListener("dragstart",()=>{
+                    draggedType = newcomponent.dataset.type
+                    draggedWidgetType = newcomponent.dataset.widget
+                    draggedNodeRef = null
+                })
+            })
+        } else {
+            alert("Network error : Composant not saved")
+        }
+    });
+}
