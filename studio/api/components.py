@@ -72,7 +72,7 @@ elif action == "updatepopups":
 
 elif action == "getbyid":
     try:
-        data = normalize(form, ["name", "id"])
+        data = normalize(form, ["id"])
         sql = "SELECT * FROM composants WHERE id=%s"
         cursor.execute(sql, (
             data["id"],
@@ -101,9 +101,21 @@ elif action == "getbyname":
 
 elif action == "getallcomponents":
     try:
-        data = normalize(form, ["name", "id_entity"])
         sql = "SELECT * FROM composants"
         cursor.execute(sql)
+        composants = cursor.fetchall()
+        composants = [clean_row(c) for c in composants]
+        json_response(composants)
+    except Exception as e:
+        json_response({"status": "nok", "message": str(e)})
+
+elif action == "getorgcomponents":
+    try:
+        data = normalize(form, ["id_entity"])
+        sql = "SELECT * FROM composants where id_entity=%s"
+        cursor.execute(sql, (
+            data["id_entity"],
+        ))
         composants = cursor.fetchall()
         composants = [clean_row(c) for c in composants]
         json_response(composants)
