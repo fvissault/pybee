@@ -156,6 +156,7 @@ async function initPrototypage() {
                 };
             })
 
+            renderComponentSection()
         });
     }
 }
@@ -166,11 +167,11 @@ window.addEventListener("beforeunload", function (e) {
     e.returnValue = ""
 });
 
-function generateId(type){
+function generateId(type) {
     return type + "-" + crypto.randomUUID()
 }
 
-function createNode(type, options={}){
+function createNode(type, options={}) {
     if (type == "layout") {
         return {
             id:generateId(type),
@@ -186,102 +187,96 @@ function createNode(type, options={}){
             type:"widget",
             name: options.name,
             parent:null,
-            widgetType:draggedWidgetType,
+            widgetType: draggedWidgetType,
             container: options.container,
-            props:{},
-            children:[]
+            props: {},
+            children: []
         }
     }
     if (type == "zone") {
         return {
             id:generateId(type),
-            type:"zone",
-            parent:null,
+            type: "zone",
+            parent: null,
             props: options,
-            children:[]
+            children: []
         }
     }
 }
 
-function createLayout(zoneCount=4){
+function createLayout(zoneCount=4) {
 
-    const layout=createNode("layout")
+    const layout = createNode("layout")
 
-    for(let i=0;i<zoneCount;i++){
-        const zone=createNode("zone",{id:"z"+i, css: [{name: "z"+i, type:"id", values:["display:grid"]}]})
+    for(let i = 0; i < zoneCount; i++) {
+        const zone = createNode("zone",{id:"z"+i, css: [{name: "z"+i, type:"id", values:["display:grid"]}]})
 
-        zone.parent=layout
+        zone.parent = layout
         layout.children.push(zone)
     }
 
     return layout
 }
 
-function createWidget(){
+function createWidget() {
 
     const def = widgetDefinitions[draggedWidgetType]
 
-    const widget=createNode("widget", {container:def.container, name:def.name})
+    const widget = createNode("widget", {container:def.container, name:def.name})
 
     if (def.container) {
-        const zone=createNode("zone")
+        const zone = createNode("zone")
 
-        zone.parent=widget
+        zone.parent = widget
         widget.children.push(zone)
     }
 
     return widget
 }
 
-function insertNode(parent,node,index){
+function insertNode(parent,node,index) {
     node.parent=parent
     parent.children.splice(index,0,node)
 }
 
-function removeNode(node){
+function removeNode(node) {
 
-    if(!node || !node.parent)
+    if (!node || !node.parent)
         return
 
     const p = node.parent
     const i = p.children.indexOf(node)
 
-    if(i !== -1)
+    if (i !== -1)
         p.children.splice(i,1)
 
 }
 
-function findNodeById(node,id){
-
-    if(!node)
-        return null
-
-    if(node.id===id)
-        return node
-
+function findNodeById(node,id) {
+    if (!node) return null
+    if (node.id === id) return node
     for(const c of node.children){
-        const r=findNodeById(c,id)
-        if(r) return r
+        const r = findNodeById(c,id)
+        if (r) return r
     }
-
     return null
 }
 
-function rebuildParents(node,parent=null){
-    node.parent=parent
+function rebuildParents(node,parent=null) {
+    node.parent = parent
     node.children.forEach(c => {
         rebuildParents(c,node)
     })
 }
 
-function workspaceHasWidgets(){
-    if(!workspaceRoot) return false
+function workspaceHasWidgets() {
+    if (!workspaceRoot) return false
     return workspaceRoot.children.some(n => n.type === "widget")
 }
 
-async function loadProjectFiles(){
+async function loadProjectFiles() {
     const session = await getSession()
-    try{
+    try {
         await fetch("/pybee/studio/api/projectfiles.py", {
             method: "POST",
             credentials: "include",
@@ -309,46 +304,43 @@ async function loadProjectFiles(){
             components=data
         });
         renderProjectFiles()
-    }catch(e){
-        pages={}
-        components={}
+    } catch(e) {
+        pages = {}
+        components = {}
     }
 }
 
-document.querySelectorAll(".palette-item").forEach(item=>{
-    item.addEventListener("dragstart",()=>{
-        draggedType=item.dataset.type
-        if(draggedType==="layout"){
+document.querySelectorAll(".palette-item").forEach(item => {
+    item.addEventListener("dragstart",() => {
+        draggedType = item.dataset.type
+        if(draggedType === "layout") {
             draggedLayoutZones = parseInt(item.dataset.zones)
         }
-        if(draggedType === "widget"){
+        if(draggedType === "widget") {
             draggedWidgetType = item.dataset.widget
         }
-        draggedNodeRef=null
+        draggedNodeRef = null
     })
 })
 
-document.addEventListener("dragstart",e=>{
+document.addEventListener("dragstart",e => {
     const session = getSession()
-    const widgetEl=e.target.closest(".widget")
+    const widgetEl = e.target.closest(".widget")
     //console.log(widgetEl)
-    if(!widgetEl) return
+    if (!widgetEl) return
 
-    draggedType="move-widget"
-    draggedNodeRef=findNodeById(
-        workspaceRoot,
-        widgetEl.dataset.nodeId
-    )
-    if(!draggedNodeRef) return
+    draggedType = "move-widget"
+    draggedNodeRef = findNodeById(workspaceRoot, widgetEl.dataset.nodeId)
+    if (!draggedNodeRef) return
 
-    draggedOldParent=draggedNodeRef.parent
-    draggedOldIndex=draggedOldParent.children.indexOf(draggedNodeRef)
+    draggedOldParent = draggedNodeRef.parent
+    draggedOldIndex = draggedOldParent.children.indexOf(draggedNodeRef)
 })
 
-let currentDropTarget=null
-let currentDropIndex=null
+let currentDropTarget = null
+let currentDropIndex = null
 
-function showInsertLine(zoneEl, index){
+function showInsertLine(zoneEl, index) {
     if (!insertLine) {
         insertLine = document.createElement("div")
         insertLine.className = "insert-line"
@@ -408,12 +400,12 @@ workspaceContent.addEventListener("dragover", e => {
     showInsertLine(zoneEl, index)
 })
 
-workspaceContent.addEventListener("dragleave",()=>{
+workspaceContent.addEventListener("dragleave",() => {
     if(insertLine) insertLine.remove()
     insertLine=null
 })
 
-workspaceContent.addEventListener("drop",e=>{
+workspaceContent.addEventListener("drop",e => {
     e.preventDefault()
     if(insertLine) insertLine.remove()
     insertLine=null
@@ -460,31 +452,31 @@ workspaceContent.addEventListener("drop",e=>{
         insertNode(newParent, widget, currentDropIndex??newParent.children.length)
         render()
     }
-    if(draggedType === "move-widget" && draggedNodeRef){
+    if(draggedType === "move-widget" && draggedNodeRef) {
         let check = newParent
         while(check) {
             if(check === draggedNodeRef) return
             check=check.parent
         }
         removeNode(draggedNodeRef)
-        let idx=currentDropIndex??newParent.children.length
+        let idx = currentDropIndex??newParent.children.length
         insertNode(newParent,draggedNodeRef,idx)
         render()
     }
-    currentDropTarget=null
-    currentDropIndex=null
+    currentDropTarget = null
+    currentDropIndex = null
 
     tosave = true
     document.getElementById("savebtn").className = "tosave"
 })
 
-trashEl.addEventListener("dragover",e=>{
+trashEl.addEventListener("dragover",e => {
     e.preventDefault()
 })
 
-trashEl.addEventListener("drop",e=>{
+trashEl.addEventListener("drop",e => {
     e.preventDefault()
-    if(draggedType==="move-widget" && draggedNodeRef){
+    if(draggedType === "move-widget" && draggedNodeRef) {
         removeNode(draggedNodeRef)
         render()
     }
