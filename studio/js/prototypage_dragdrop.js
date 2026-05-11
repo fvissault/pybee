@@ -484,3 +484,6 @@ trashEl.addEventListener("drop",e => {
     document.getElementById("savebtn").className = "tosave"
 })
 
+function setToSave(value){
+    tosave = value
+}
