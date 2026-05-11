@@ -115,7 +115,14 @@ function buildPopupContent(node, cat){
     }
 }
 
-
 function openIntFlow(){
   window.open("intflow.html")
+}
+
+function updateWorkspaceJS(js) {
+    workspaceRoot.js = js
+}
+
+function getWorkspace() {
+    return workspaceRoot
 }
