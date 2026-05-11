@@ -330,7 +330,7 @@ async function saveFileBST() {
                 .then(r => r.json())
                 .then(res => {
                     if(res.status === "ok") {
-                        document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.pagename
+                        document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.name
                         loadProjectFiles()
                     } else {
                         alert("Network error : file not saved")
