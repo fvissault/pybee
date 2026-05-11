@@ -4,15 +4,26 @@
         <meta charset="UTF-8">
         <title>Beetle Intern Flow</title>
         <link rel="stylesheet" href="css/intflow.css">
+        <script src="js/lang.js"></script>
+        <script defer src="js/intflow_lang.js"></script>
+        <script defer src="js/intflow_render.js"></script>
         <script defer src="js/intflow.js"></script>
+        <script defer src="js/intflow_buttons.js"></script>
     </head>
     <body>
-        <div id="header" style="height:40px; background:#222; color:#fff; display:flex; align-items:center; padding:0 15px;">
-            Beetle Studio - InternFlow Editor
-        </div>
+        <header class="topbar">
+            <div class="topbar-left">
+                <img src="images/logo.png" class="logo"/>
+                <span class="title" data-i18n="text:intflow_header"></span>
+                <!--<button id="savebtn" onclick="save()" data-i18n="text:save"></button>-->
+                <button id="closebtn" onclick="closefct()" data-i18n="text:close"></button>
+                <span id="workspace_message"></span>
+            </div>
+        </header>
         <div id="main">
-            <div id="palette_container"></div>
-            <div id="workspace"></div>
+            <div id="palette_container" class="panel"></div>
+            <div id="workspace" class="panel"></div>
+            <div id="trash" data-i18n="text:trash"></div>
         </div>
     </body>
 </html>
