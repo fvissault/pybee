@@ -280,6 +280,8 @@ async function saveFileBST() {
             .then(r => r.json())
             .then(res => {
                 if(res.status === "ok") {
+                    tosave = false
+                    document.getElementById("savebtn").className = ""
                     document.getElementById("workspace_content").innerText = "Nouvelle page créée : " + pagename
                     loadProjectFiles()
                 } else {
@@ -307,6 +309,8 @@ async function saveFileBST() {
             .then(r => r.json())
             .then(res => {
                 if(res.status === "ok") {
+                    tosave = false
+                    document.getElementById("savebtn").className = ""
                     document.getElementById("workspace_content").innerText = "Nouveau composant créé : " + workspaceRoot.props.name
                     loadProjectFiles()
                 } else {
@@ -330,6 +334,8 @@ async function saveFileBST() {
                 .then(r => r.json())
                 .then(res => {
                     if(res.status === "ok") {
+                        tosave = false
+                        document.getElementById("savebtn").className = ""
                         document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.name
                         loadProjectFiles()
                     } else {
