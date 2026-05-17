@@ -17,6 +17,7 @@
     <script defer src="js/prototypage_dialogs_properties.js"></script>
     <script defer src="js/prototypage_dialogs_styling.js"></script>
     <script defer src="js/prototypage_dialogs_events.js"></script>
+    <script defer src="js/prototypage_generation.js"></script>
 
 </head>
 
@@ -29,6 +30,7 @@
             <button id="newPageBtn" data-i18n="text:newworkspace"></button>
             <button id="newComposantBtn" data-i18n="text:newcomposant"></button>
             <button id="savebtn" onclick="saveFileBST()" data-i18n="text:save"></button>
+            <button id="generate" onclick="console.log(generate(workspaceRoot.js))">Génération</button>
             <span id="workspace_content"></span>
         </div>
     </header>
