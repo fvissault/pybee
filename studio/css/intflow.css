@@ -83,7 +83,7 @@ body {
     border: none;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    overflow:auto;
+    /*overflow:auto;*/
 }
 
 .panel-header {
@@ -112,7 +112,7 @@ body {
     grid-column:2;
     grid-row:1;
     padding: 10px;
-    overflow: auto; 
+    /*overflow: auto; */
 }
 
 #main {
@@ -136,18 +136,15 @@ body {
     font-size: 10px;
     color: #666;
     padding: 0px 0px 10px 0px;
+    display:none;
 }
 
 .node { 
     border: 1px solid #333; 
     padding: 5px; 
     margin: 5px; 
-}
-
-.slot { 
-    border: 1px dashed #aaa; 
-    margin: 5px; 
-    padding: 5px; 
+    border-radius: 5px;
+    background: #e6ebf1;
 }
 
 button { 
@@ -215,4 +212,61 @@ button {
     color: #c0392b;
     border-radius: 12px;
     font-weight: 500;
+}
+
+.expression {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.inline-node {
+    display: inline-flex;
+    align-items: center;
+}
+
+.await-expr {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.slot {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    vertical-align: middle;
+    border: 1px dashed #aaa; 
+    margin: 5px; 
+    padding: 5px; 
+    border-radius: 5px;
+    background: #fefbab;
+}
+
+input[type="text"] {
+    padding:7px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
+}
+
+select {
+    padding:7px;
+    border-radius:8px;
+    background: #f5f7fa;
+    font-size:16px;
+    border:1px solid #ddd;
+}
+
+.slot-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.slot-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
