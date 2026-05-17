@@ -29,7 +29,7 @@ let workspaceRoot = {
     type:"container",
     props:{},
     css:{},
-    js:{},
+    js:[],
     events:{},
     children:[]
 }
