@@ -40,7 +40,13 @@ function renderNode(node){
         dropAfter.style.background = "transparent"
     }
 
-    const el = document.createElement("div")
+    const isInlineExpr = [
+        "function",
+        "await",
+        "call"
+    ].includes(node.type)
+
+    const el = document.createElement(!isInlineExpr ? "span" : "div")
     el.className = "node"
     el._node = node
 
@@ -58,9 +64,6 @@ function renderNode(node){
     // ID
     const idEl = document.createElement("div")
     idEl.className = "nodeid"
-    //idEl.style.fontSize = "10px"
-    //idEl.style.color = "#666"
-    //idEl.style.padding = "0px 0px 10px 0px"
     idEl.innerText = node.id
     el.appendChild(idEl)
 
@@ -171,22 +174,10 @@ function renderNode(node){
         }
         /* ================= LET ================= */
         case "let": {
-
             const line = document.createElement("div")
-
+            line.className = "inline-statement"
             const name = createInput(node, "name", el)
-
-            if(!node.props.value){
-                node.props.value = [
-                    { slots: [] },
-                    { op: "" }
-                ]
-            }
-
-            const exprUI = renderExpression(node.props.value)
-
-            line.append("let ", name, " = ", exprUI)
-
+            line.append("let ", name, " = ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -251,77 +242,56 @@ function renderNode(node){
             break
         }        
         case "foreach": {
-
             // OPTIONS
             const options = document.createElement("div")
             options.appendChild(createCheckbox(node, "useIndex", "index", el))
             options.appendChild(createCheckbox(node, "useArray", "array", el))
             options.appendChild(createCheckbox(node, "useThisArg", "thisArg", el))
             el.appendChild(options)
-
             // LIGNE PRINCIPALE
             const line = document.createElement("div")
             const arrayInput = createInput(node, "array", el, true) // <-- tableau parcouru
-
             // paramètres
             const params = ["item"]
-
-            if(node.props.useIndex){
+            if (node.props.useIndex) {
                 params.push("index")
             }
-
-            if(node.props.useArray){
+            if (node.props.useArray) {
                 // ici EDITABLE
                 const arrayParamInput = createInput(node, "arrayName", el, true)
                 params.push(arrayParamInput)
             }
-
             // construction des paramètres
             let paramsNode
-
-            if(params.length === 1){
+            if (params.length === 1) {
                 paramsNode = document.createTextNode("item")
             } else {
                 paramsNode = document.createDocumentFragment()
                 paramsNode.append("(")
 
                 params.forEach((p, i) => {
-                if(i > 0) paramsNode.append(", ")
-
-                if(typeof p === "string"){
-                    paramsNode.append(p)
-                } else {
-                    paramsNode.append(p)
-                }
+                    if(i > 0) paramsNode.append(", ")
+                    if (typeof p === "string") {
+                        paramsNode.append(p)
+                    } else {
+                        paramsNode.append(p)
+                    }
                 })
-
                 paramsNode.append(")")
             }
-
-            line.append(
-                arrayInput,
-                ".forEach(",
-                paramsNode,
-                " => {"
-            )
-
+            line.append(arrayInput, ".forEach(", paramsNode, " => {")
             el.appendChild(line)
-
             // BODY
             el.appendChild(renderSlot(node, "body"))
-
             // FERMETURE
             const close = document.createElement("div")
-
             if(node.props.useThisArg){
                 const thisArgInput = createInput(node, "thisArg", el, true)
                 close.append("}, ", thisArgInput, ")")
             } else {
                 close.innerText = "})"
             }
-
             el.appendChild(close)
-
             break
         }
         /* ================= BREAK ================= */
@@ -338,6 +308,85 @@ function renderNode(node){
             el.appendChild(line)
             break
         }
+        /* ================= AWAIT ================= */
+        case "await": {
+            const line = document.createElement("div")
+            line.className = "await-expr"
+            line.append("await", renderSlot(node, "body"))
+            el.appendChild(line)
+            // BODY
+            //el.appendChild(renderSlot(node, "body"))
+            break
+        }
+        /* ================= ASYNC ================= */
+        case "async": {
+            const line = document.createElement("div")
+            const nameInput = createInput(node, "name", el)
+            const paramsInput = createInput(node, "parameters", el)
+            line.append("async function ", nameInput, " ( ", paramsInput, " ) {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            const close = document.createElement("div")
+            close.innerText = "}"
+            el.appendChild(close)
+            break
+        }
+        /* ================= LITERAL ================= */
+        case "literal": {
+            const line = document.createElement("div")
+            const input = createInput(node, "value", el)
+            line.append(input)
+            el.appendChild(line)
+            break
+        }
+        /* ================= ADD ================= */
+        case "add": {
+            node.props.parenthesis = true
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " + ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= SUB ================= */
+        case "sub": {
+            node.props.parenthesis = true
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " - ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= MUL ================= */
+        case "mul": {
+            node.props.parenthesis = false
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " * ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= DIV ================= */
+        case "div": {
+            node.props.parenthesis = false
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " / ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= AND ================= */
+        case "and": {
+            node.props.parenthesis = false
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " && ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= OR ================= */
+        case "or": {
+            node.props.parenthesis = true
+            const line = document.createElement("div")
+            line.append(renderSlot(node, "left"), " || ", renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
     }
     el.appendChild(dropAfter)
     return el
@@ -346,21 +395,40 @@ function renderNode(node){
 function renderExpression(exprArray) {
 
     const container = document.createElement("span")
+    container.className = "expression"
 
     exprArray.forEach((item, index) => {
 
-        // SLOT
-        if (item.slots !== undefined) {
-            container.appendChild(renderExprSlot(item))
+        // EXPRESSION
+        if (item.type === "expression") {
+            container.appendChild(renderExpression(item.slots.body))
         }
-
-        // OPERATOR
-        if (item.op !== undefined) {
-            container.appendChild(renderOperator(exprArray, index))
+        // BINARY
+        if (item.type === "binary") {
+            container.appendChild(renderBinary(item.slots))
         }
-
+        // LITERAL
+        if (item.type !== "expression" && item.type !== "binary") {
+            container.appendChild(renderNode(item))
+        }
     })
+    return container
+}
 
+function renderBinary(binArray) {
+    const container = document.createElement("span")
+    container.className = "expression"
+    // LEFT EXPRESSION
+    if (item.left.type === "expression") {
+        container.appendChild(renderExpression(item.left.slots.body))
+    }
+
+    container.appendChild(renderOperator(item.props))
+
+    // RIGHT EXPRESSION
+    if (item.right.type === "expression") {
+        container.appendChild(renderExpression(item.right.slots.body))
+    }
     return container
 }
 
@@ -373,6 +441,7 @@ function renderExprSlot(item) {
         slotEl.appendChild(renderNode(item.slots[0]))
     } else {
         const input = document.createElement("input")
+        input.type = "text"
         input.placeholder = "value"
         if (item.value) input.value = item.value
         input.oninput = e => {
@@ -396,44 +465,28 @@ function renderExprSlot(item) {
     return slotEl
 }
 
-function renderOperator(exprArray, index){
-
-    const item = exprArray[index]
-
+function renderOperator(itemProps){
     const select = document.createElement("select");
-
-    ["", "+", "-", "*", "/"].forEach(op=>{
+    ["", "+", "-", "*", "/", "||", "&&", "!"].forEach(op=>{
         const o = document.createElement("option")
         o.value = op
+        if (op === "+" || op === "-") itemProps.parenthesis = true
+        else itemProps.parenthesis = false
         o.textContent = op || "..."
         select.appendChild(o)
     })
-
-    select.value = item.op
-
+    select.value = itemProps.op
     select.onchange = () => {
-
-        item.op = select.value
-
-        // AJOUT dynamique
-        if (item.op && index === exprArray.length - 1) {
-            exprArray.push({ slots: [] })
-            exprArray.push({ op: "" })
-        }
-
-        // SUPPRESSION
-        if (!item.op) {
-            exprArray.splice(index + 1)
-        }
-
+        itemProps.op = select.value
+        if (select.value === "+" || select.value === "-") itemProps.parenthesis = true
+        else itemProps.parenthesis = false
         render()
     }
-
     return select
 }
 
 function renderSlot(node, slotName) {
-    const slotEl = document.createElement("div")
+    const slotEl = document.createElement("span")
     slotEl.className = "slot"
 
     slotEl.ondragover = (e) => {
@@ -539,7 +592,8 @@ const PALETTE = [
       { type: "array_get", label: "Array get" },
       { type: "object_create", label: "Object {}" },
       { type: "object_get", label: "Object get" },
-      { type: "object_set", label: "Object set" }
+      { type: "object_set", label: "Object set" },
+      { type: "literal", label: "Literal" }
     ]
   },
   {
