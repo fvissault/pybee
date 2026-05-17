@@ -93,22 +93,52 @@ const NODE_DEFS = {
         slots: []
     },
     let: {
-        props: { 
-            name: "varName", 
-            value: [
-                { slots: [] },
-                { op: "" }
-            ] 
-        },
-        slots: []
+        props: { name: "varName" },
+        slots: ["body"]
     },
     const: {
-        props: { name: "constName", value: "expression" },
-        slots: []
+        props: { name: "constName" },
+        slots: ["body"]
     },
     objbyid: {
         props: { name: "constName", id: "objectId" },
         slots: []
+    },
+    await: {
+        props: {},
+        slots: ["body"]
+    },
+    async: {
+        props: {},
+        slots: ["body"]
+    },
+    literal: {
+        props: { value: "value" },
+        slots: []
+    },
+    add: {
+        props: { op: "+", parenthesis: true },
+        slots: ["left", "right"]
+    },
+    sub: {
+        props: { op: "-", parenthesis: true },
+        slots: ["left", "right"]
+    },
+    mul: {
+        props: { op: "*", parenthesis: false },
+        slots: ["left", "right"]
+    },
+    div: {
+        props: { op: "/", parenthesis: false },
+        slots: ["left", "right"]
+    },
+    and: {
+        props: { op: "&&", parenthesis: false },
+        slots: ["left", "right"]
+    },
+    or: {
+        props: { op: "||", parenthesis: true },
+        slots: ["left", "right"]
     }
 }
 
@@ -323,7 +353,8 @@ function preserveFocusAndRefresh(el, key, cursorPos){
 function createInput(node, key, el, refresh = false){
     const input = document.createElement("input")
     input.placeholder = node.props[key] ?? ""
-    input.style.width = "120px"
+    input.style.width = "200px"
+    input.type = "text"
     input.dataset.key = key
     input.oninput = (e) => {
         node.props[key] = e.target.value
@@ -361,4 +392,4 @@ trash.ondrop = ()=>{
 /*==================================================================================
  * Initialisation de l'ide
  *==================================================================================*/
-init()
+//init()
