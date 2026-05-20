@@ -82,6 +82,15 @@ function renderNode(node){
             el.appendChild(close)
             break
         }
+        /* ================= CALL ================= */
+        case "call": {
+            const line = document.createElement("div")
+            const nameInput = createInput(node, "name", el)
+            const paramsInput = createInput(node, "parameters", el)
+            line.append(nameInput, " ( ", paramsInput, " )")
+            el.appendChild(line)
+            break
+        }
         /* ================= EVENT LISTENER ================= */
         case "listener": {
             const options = document.createElement("div")
@@ -167,17 +176,23 @@ function renderNode(node){
         /* ================= RETURN ================= */
         case "return": {
             const line = document.createElement("div")
-            const valueInput = createInput(node, "value", el)
-            line.append("return ", valueInput)
+            line.append("return ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
         /* ================= LET ================= */
         case "let": {
             const line = document.createElement("div")
-            line.className = "inline-statement"
             const name = createInput(node, "name", el)
             line.append("let ", name, " = ", renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= ASSIGN ================= */
+        case "assign": {
+            const line = document.createElement("div")
+            const name = createInput(node, "name", el)
+            line.append(name, " = ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -185,8 +200,7 @@ function renderNode(node){
         case "const": {
             const line = document.createElement("div")
             const name = createInput(node, "name", el)
-            const rightexp = createInput(node, "value", el)
-            line.append("const ", name, " = ", rightexp)
+            line.append("const ", name, " = ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -387,9 +401,45 @@ function renderNode(node){
             el.appendChild(line)
             break
         }
+        /* ================= TRY ================= */
+        case "try": {
+            const line = document.createElement("div")
+            line.append("try {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            const catchentry = document.createElement("div")
+            catchentry.innerText = "catch (e) {"
+            el.appendChild(catchentry)
+            el.appendChild(renderSlot(node, "catch-body"))
+            el.appendChild(closingBracket())
+
+            //const finallyoption = document.createElement("div")
+            //finallyoption.appendChild(createCheckbox(node, "hasFinally", "Finally?", el))
+            //el.appendChild(finallyoption)
+            //if (node.props.hasFinally) {
+                const finallyentry = document.createElement("div")
+
+                finallyentry.appendChild(createCheckbox(node, "hasFinally", "finally", el))
+                el.appendChild(finallyentry)
+
+                if (node.props.hasFinally) {
+                    finallyentry.append("{")
+                    el.appendChild(renderSlot(node, "finally-body"))
+                    el.appendChild(closingBracket())
+                }
+            //}
+            break
+        }
     }
     el.appendChild(dropAfter)
     return el
+}
+
+function closingBracket() {
+    const div = document.createElement("div")
+    div.innerText = "}"
+    return div
 }
 
 function renderExpression(exprArray) {
@@ -487,7 +537,7 @@ function renderOperator(itemProps){
 
 function renderSlot(node, slotName) {
     const slotEl = document.createElement("span")
-    slotEl.className = "slot"
+    slotEl.className = node.slotLayout
 
     slotEl.ondragover = (e) => {
         e.preventDefault()
@@ -602,7 +652,7 @@ const PALETTE = [
       { type: "async", label: "Async function" },
       { type: "await", label: "Await" },
       { type: "then", label: "Then" },
-      { type: "catch", label: "Catch" },
+      { type: "try", label: "Try" },
       { type: "fetch", label: "Fetch" }
     ]
   },
