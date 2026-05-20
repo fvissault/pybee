@@ -28,11 +28,17 @@ function init(){
 const NODE_DEFS = {
     function: {
         props: { name: "newFunction", parameters: "parameters" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    call: {
+        props: { name: "functionName", parameters: "parameters" },
+        slots: []
     },
     listener: {
         props: { selectorType: "id", target: "objectId", event: "click" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     log: {
         props: { message: "message" },
@@ -48,29 +54,35 @@ const NODE_DEFS = {
     },
     for: {
         props: { varName: "i", from: 0, to: 10 },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     forin: {
         props: { varName: "varName", object: "" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     forof: {
         props: { varName: "varName", object: "" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     foreach: {
         props: { 
             array: "items", useIndex: false, useArray: false, arrayName: "array", useThisArg: false, thisArg: "object" 
         },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     while: {
         props: { condition: "condition" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     dowhile: {
         props: { condition: "condition" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     break: {
         props: {},
@@ -82,23 +94,33 @@ const NODE_DEFS = {
     },
     if: {
         props: { condition: "condition" },
-        slots: ["then"]
+        slots: ["then"],
+        slotLayout:"slot-block"
     },
     ifelse: {
         props: { condition: "condition" },
-        slots: ["then", "else"]
+        slots: ["then", "else"],
+        slotLayout:"slot-block"
     },
     return: {
-        props: { value: "expression" },
-        slots: []
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     let: {
         props: { name: "varName" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    assign: {
+        props: { name: "varName" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     const: {
         props: { name: "constName" },
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     objbyid: {
         props: { name: "constName", id: "objectId" },
@@ -106,11 +128,13 @@ const NODE_DEFS = {
     },
     await: {
         props: {},
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     async: {
         props: {},
-        slots: ["body"]
+        slots: ["body"],
+        slotLayout:"slot-block"
     },
     literal: {
         props: { value: "value" },
@@ -118,27 +142,38 @@ const NODE_DEFS = {
     },
     add: {
         props: { op: "+", parenthesis: true },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
     },
     sub: {
         props: { op: "-", parenthesis: true },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
     },
     mul: {
         props: { op: "*", parenthesis: false },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
     },
     div: {
         props: { op: "/", parenthesis: false },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
     },
     and: {
         props: { op: "&&", parenthesis: false },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
     },
     or: {
         props: { op: "||", parenthesis: true },
-        slots: ["left", "right"]
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    try: {
+        props: { hasFinally: false },
+        slots: ["body", "catch-body", "finally-body"],
+        slotLayout:"slot-block"
     }
 }
 
@@ -191,7 +226,7 @@ workspaceEl.ondragover = (e)=>{
 }
 
 workspaceEl.ondrop = (e)=>{
-    console.log("workspaceEl.ondrop", { draggedNode, draggedFrom, dragSource })
+    //console.log("workspaceEl.ondrop", { draggedNode, draggedFrom, dragSource })
     e.preventDefault()
 
     if(!draggedNode) return
@@ -227,7 +262,8 @@ function createNode(type){
         id: generateId(type),
         type,
         props: structuredClone(def.props),
-        slots: Object.fromEntries(def.slots.map(s => [s, []]))
+        slots: Object.fromEntries(def.slots.map(s => [s, []])),
+        slotLayout: def.slotLayout?def.slotLayout:""
     }
 }
 
