@@ -112,7 +112,7 @@ body {
     grid-column:2;
     grid-row:1;
     padding: 10px;
-    /*overflow: auto; */
+    overflow: auto;
 }
 
 #main {
@@ -214,34 +214,22 @@ button {
     font-weight: 500;
 }
 
-.expression {
+/*.expression {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-}
+}*/
 
-.inline-node {
+/*.inline-node {
     display: inline-flex;
     align-items: center;
-}
+}*/
 
-.await-expr {
+/*.await-expr {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-}
-
-.slot {
-    display: inline-flex;
-    align-items: center;
-    min-height: 28px;
-    vertical-align: middle;
-    border: 1px dashed #aaa; 
-    margin: 5px; 
-    padding: 5px; 
-    border-radius: 5px;
-    background: #fefbab;
-}
+}*/
 
 input[type="text"] {
     padding:7px;
@@ -260,13 +248,41 @@ select {
 }
 
 .slot-block {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     gap: 10px;
+    min-height: 28px;
+    min-width: 28px;
+    border: 1px dashed #aaa; 
+    margin: 5px; 
+    padding: 5px; 
+    border-radius: 5px;
+    background: #fefbab;
 }
 
 .slot-inline {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    min-height: 28px;
+    min-width: 28px;
+    vertical-align: middle;
+    border: 1px dashed #aaa; 
+    margin: 5px; 
+    padding: 5px; 
+    border-radius: 5px;
+    background: #fefbab;
 }
+
+/*.slot {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    min-width: 28px;
+    vertical-align: middle;
+    border: 1px dashed #aaa; 
+    margin: 5px; 
+    padding: 5px; 
+    border-radius: 5px;
+    background: #fefbab;
+}*/
