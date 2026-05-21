@@ -413,22 +413,60 @@ function renderNode(node){
             el.appendChild(catchentry)
             el.appendChild(renderSlot(node, "catch-body"))
             el.appendChild(closingBracket())
-
-            //const finallyoption = document.createElement("div")
-            //finallyoption.appendChild(createCheckbox(node, "hasFinally", "Finally?", el))
-            //el.appendChild(finallyoption)
-            //if (node.props.hasFinally) {
-                const finallyentry = document.createElement("div")
-
-                finallyentry.appendChild(createCheckbox(node, "hasFinally", "finally", el))
-                el.appendChild(finallyentry)
-
-                if (node.props.hasFinally) {
-                    finallyentry.append("{")
-                    el.appendChild(renderSlot(node, "finally-body"))
-                    el.appendChild(closingBracket())
-                }
-            //}
+            const finallyentry = document.createElement("div")
+            finallyentry.appendChild(createCheckbox(node, "hasFinally", "finally", el))
+            el.appendChild(finallyentry)
+            if (node.props.hasFinally) {
+                finallyentry.append("{")
+                el.appendChild(renderSlot(node, "finally-body"))
+                el.appendChild(closingBracket())
+            }
+            break
+        }
+        /* ================= ARROW ================= */
+        case "arrow": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "parameters", el, true)
+            line.append("(", paramInput, ") => {", renderSlot(node, "body"), "}")
+            el.appendChild(line)
+            break
+        }
+        /* ================= THEN ================= */
+        case "then": {
+            const line = document.createElement("div")
+            line.append(".then (", renderSlot(node, "body"), ")")
+            el.appendChild(line)
+            break
+        }
+        /* ================= FETCH ================= */
+        case "fetch": {
+            const line = document.createElement("div")
+            const urlInput = createInput(node, "url", el, true)
+            line.append("fetch (", urlInput, ", {", )
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "options"))
+            const endfetch = document.createElement("div")
+            endfetch.innerText = "})"
+            el.appendChild(endfetch)
+            const catchentry = document.createElement("div")
+            if (node.props.hasCatch) {
+                catchentry.appendChild(createCheckbox(node, "hasCatch", ".catch", el))
+                catchentry.append("(e) {")
+                el.appendChild(catchentry)
+                el.appendChild(renderSlot(node, "catch-body"))
+                el.appendChild(closingBracket())
+            } else {
+                catchentry.appendChild(createCheckbox(node, "hasCatch", ".catch", el))
+                el.appendChild(catchentry)
+            }
+            const finallyentry = document.createElement("div")
+            finallyentry.appendChild(createCheckbox(node, "hasFinally", ".finally", el))
+            el.appendChild(finallyentry)
+            if (node.props.hasFinally) {
+                finallyentry.append("{")
+                el.appendChild(renderSlot(node, "finally-body"))
+                el.appendChild(closingBracket())
+            }
             break
         }
     }
@@ -439,6 +477,12 @@ function renderNode(node){
 function closingBracket() {
     const div = document.createElement("div")
     div.innerText = "}"
+    return div
+}
+
+function closingParenthesis() {
+    const div = document.createElement("div")
+    div.innerText = ")"
     return div
 }
 
@@ -651,9 +695,9 @@ const PALETTE = [
     items: [
       { type: "async", label: "Async function" },
       { type: "await", label: "Await" },
-      { type: "then", label: "Then" },
       { type: "try", label: "Try" },
-      { type: "fetch", label: "Fetch" }
+      { type: "fetch", label: "Fetch" },
+      { type: "then", label: "Then" }
     ]
   },
   {
