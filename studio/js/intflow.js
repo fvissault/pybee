@@ -174,6 +174,21 @@ const NODE_DEFS = {
         props: { hasFinally: false },
         slots: ["body", "catch-body", "finally-body"],
         slotLayout:"slot-block"
+    },
+    arrow: { // ( [input parameters] ) => { [slot body] }
+        props: { parameters: [] },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    then: { // .then( [slot body ] )
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    fetch: { // fetch( [input url] )
+        props: { url: "", hasFinally: false, hasCatch: false },
+        slots: ["options", "catch-body", "finally-body"],
+        slotLayout:"slot-block"
     }
 }
 
@@ -279,15 +294,15 @@ function removeNodeFromParent(){
     }
 }
 
-function createCheckbox(node, key, label, el){
+function createCheckbox(node, key, label, el) {
     const wrapper = document.createElement("label")
-    wrapper.style.marginRight = "10px"
+    wrapper.style.marginRight = "5px"
 
     const checkbox = document.createElement("input")
     checkbox.type = "checkbox"
     checkbox.checked = node.props[key] ?? false
 
-    checkbox.onchange = (e)=>{
+    checkbox.onchange = (e) => {
         node.props[key] = e.target.checked
         refreshNode(el)
     }
@@ -388,7 +403,11 @@ function preserveFocusAndRefresh(el, key, cursorPos){
 
 function createInput(node, key, el, refresh = false){
     const input = document.createElement("input")
-    input.placeholder = node.props[key] ?? ""
+    if (node.props[key] === "") {
+        input.placeholder = key ?? ""
+    } else {
+        input.value = node.props[key]
+    }
     input.style.width = "200px"
     input.type = "text"
     input.dataset.key = key
