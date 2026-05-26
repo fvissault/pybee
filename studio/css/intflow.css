@@ -144,7 +144,46 @@ body {
     padding: 5px; 
     margin: 5px; 
     border-radius: 5px;
-    background: #e6ebf1;
+    background: #f7f8fa;
+}
+
+.node:hover {
+    background: #eef3fb;
+}
+
+.node.function {
+    border-left: 10px solid #4a90e2;
+}
+
+.node.if,
+.node.ifelse,
+.node.try {
+    border-left: 10px solid #9b59b6;
+}
+
+.node.let {
+    border-left: 10px solid #27ae60;
+}
+
+.node.fetch {
+    border-left: 10px solid #00bcd4;
+}
+
+.node.object_create {
+    border-left: 10px solid orange;
+}
+
+.node.dowhile,
+.node.while,
+.node.foreach,
+.node.for {
+    border-left: 10px solid indianred;
+}
+
+.node-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 button { 
@@ -286,3 +325,16 @@ select {
     border-radius: 5px;
     background: #fefbab;
 }*/
+
+.collapse-btn {
+    border: 1px solid gray;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.node-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
