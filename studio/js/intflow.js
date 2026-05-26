@@ -17,186 +17,38 @@ function init(){
         const ws = opener.getWorkspace()
         tree = ws.js || []
     }
+    
     renderPalette("palette_container")
     render()
 }
 
 
-/*==================================================================================
- * Définition des objets de la palette
- *==================================================================================*/
-const NODE_DEFS = {
-    function: {
-        props: { name: "newFunction", parameters: "parameters" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    call: {
-        props: { name: "functionName", parameters: "parameters" },
-        slots: []
-    },
-    listener: {
-        props: { selectorType: "id", target: "objectId", event: "click" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    log: {
-        props: { message: "message" },
-        slots: []
-    },
-    warn: {
-        props: { message: "message" },
-        slots: []
-    },
-    error: {
-        props: { message: "message" },
-        slots: []
-    },
-    for: {
-        props: { varName: "i", from: 0, to: 10 },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    forin: {
-        props: { varName: "varName", object: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    forof: {
-        props: { varName: "varName", object: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    foreach: {
-        props: { 
-            array: "items", useIndex: false, useArray: false, arrayName: "array", useThisArg: false, thisArg: "object" 
-        },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    while: {
-        props: { condition: "condition" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    dowhile: {
-        props: { condition: "condition" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    break: {
-        props: {},
-        slots: []
-    },
-    continue: {
-        props: {},
-        slots: []
-    },
-    if: {
-        props: { condition: "condition" },
-        slots: ["then"],
-        slotLayout:"slot-block"
-    },
-    ifelse: {
-        props: { condition: "condition" },
-        slots: ["then", "else"],
-        slotLayout:"slot-block"
-    },
-    return: {
-        props: {},
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    let: {
-        props: { name: "varName" },
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    assign: {
-        props: { name: "varName" },
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    const: {
-        props: { name: "constName" },
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    objbyid: {
-        props: { name: "constName", id: "objectId" },
-        slots: []
-    },
-    await: {
-        props: {},
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    async: {
-        props: {},
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    literal: {
-        props: { value: "value" },
-        slots: []
-    },
-    add: {
-        props: { op: "+", parenthesis: true },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    sub: {
-        props: { op: "-", parenthesis: true },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    mul: {
-        props: { op: "*", parenthesis: false },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    div: {
-        props: { op: "/", parenthesis: false },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    and: {
-        props: { op: "&&", parenthesis: false },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    or: {
-        props: { op: "||", parenthesis: true },
-        slots: ["left", "right"],
-        slotLayout:"slot-inline"
-    },
-    try: {
-        props: { hasFinally: false },
-        slots: ["body", "catch-body", "finally-body"],
-        slotLayout:"slot-block"
-    },
-    arrow: { // ( [input parameters] ) => { [slot body] }
-        props: { parameters: [] },
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    then: { // .then( [slot body ] )
-        props: {},
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
-    fetch: { // fetch( [input url] )
-        props: { url: "", hasFinally: false, hasCatch: false },
-        slots: ["options", "catch-body", "finally-body"],
-        slotLayout:"slot-block"
+
+function isNodeAllowedInParent(parentNode, childType) {
+    const rules = RULES[parentNode.type];
+
+    if (!rules) return true;
+
+    const allowed = rules.allowed ?? ["all"];
+    const forbidden = rules.forbidden ?? [];
+
+    if (forbidden.includes("all")) {
+        if (!allowed.includes("all")) {
+            if (!allowed.includes(childType)) {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false;
+        }
+    } else {
+        if (forbidden.includes(childType)) return false
     }
+
+    return false
 }
 
-const RULES = {
-  foreach: {
-    forbidden: ["break"]
-  }
-}
 
 function resetDrag(){
   draggedNode = null
@@ -411,6 +263,19 @@ function createInput(node, key, el, refresh = false){
     input.style.width = "200px"
     input.type = "text"
     input.dataset.key = key
+    input.draggable = false
+    input.addEventListener("pointerdown", (e) => {
+        let el = input
+        while (el) {
+            if (el.classList?.contains("node")) {
+                el.draggable = false
+            }
+            el = el.parentElement
+        }
+    }, true)
+    input.addEventListener("blur", () => {
+        restoreDraggable(document.getElementById("workspace"))
+    })
     input.oninput = (e) => {
         node.props[key] = e.target.value
         if (refresh) preserveFocusAndRefresh(el, key, e.target.selectionStart)
@@ -421,18 +286,11 @@ function createInput(node, key, el, refresh = false){
     return input
 }
 
-function isNodeAllowedInParent(parentNode, childType){
-  const rules = RULES[parentNode.type]
-
-  if(!rules) return true
-
-  if(rules.forbidden?.includes(childType)){
-    return false
-  }
-
-  return true
+function restoreDraggable(root) {
+    root.querySelectorAll(".node").forEach(n => {
+        if (n.draggable === false) n.draggable = true
+    })
 }
-
 /*==================================================================================
  * DROP ON TRASH
  *==================================================================================*/
@@ -443,8 +301,3 @@ trash.ondrop = ()=>{
     resetDrag()
     render()
 }
-
-/*==================================================================================
- * Initialisation de l'ide
- *==================================================================================*/
-//init()
