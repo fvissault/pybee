@@ -130,7 +130,8 @@ function createNode(type){
         type,
         props: structuredClone(def.props),
         slots: Object.fromEntries(def.slots.map(s => [s, []])),
-        slotLayout: def.slotLayout?def.slotLayout:""
+        slotLayout: def.slotLayout?def.slotLayout:"",
+        ui: { collapsed : true }
     }
 }
 
