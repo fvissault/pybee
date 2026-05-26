@@ -3,12 +3,12 @@
  *==================================================================================*/
 const NODE_DEFS = {
     function: {
-        props: { name: "newFunction", parameters: "parameters" },
+        props: { name: "", parameters: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     call: {
-        props: { name: "functionName", parameters: "parameters" },
+        props: { name: "", parameters: "" },
         slots: []
     },
     listener: {
@@ -17,29 +17,29 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     log: {
-        props: { message: "message" },
+        props: { message: "" },
         slots: []
     },
     warn: {
-        props: { message: "message" },
+        props: { message: "" },
         slots: []
     },
     error: {
-        props: { message: "message" },
+        props: { message: "" },
         slots: []
     },
     for: {
-        props: { varName: "i", from: 0, to: 10 },
+        props: { varName: "", from: 0, to: 10 },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     forin: {
-        props: { varName: "varName", object: "" },
+        props: { varName: "", object: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     forof: {
-        props: { varName: "varName", object: "" },
+        props: { varName: "", object: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
@@ -51,12 +51,12 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     while: {
-        props: { condition: "condition" },
+        props: { condition: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     dowhile: {
-        props: { condition: "condition" },
+        props: { condition: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
@@ -69,12 +69,12 @@ const NODE_DEFS = {
         slots: []
     },
     if: {
-        props: { condition: "condition" },
+        props: { condition: "" },
         slots: ["then"],
         slotLayout:"slot-block"
     },
     ifelse: {
-        props: { condition: "condition" },
+        props: { condition: "" },
         slots: ["then", "else"],
         slotLayout:"slot-block"
     },
@@ -84,17 +84,17 @@ const NODE_DEFS = {
         slotLayout:"slot-inline"
     },
     let: {
-        props: { name: "varName" },
+        props: { name: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     assign: {
-        props: { name: "varName" },
+        props: { name: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     const: {
-        props: { name: "constName" },
+        props: { name: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -113,7 +113,7 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     literal: {
-        props: { value: "value" },
+        props: { value: "" },
         slots: []
     },
     add: {
@@ -182,31 +182,31 @@ const NODE_DEFS = {
  * Règles d'ajout entre les nodes
  *==================================================================================*/
 const RULES = {
-  foreach: {
-    forbidden: ["break"],
-    allowed: ["all"],
-    node_allowed: Infinity
-  },
-  object_create: {
-    forbidden: ["all"],
-    allowed: ["object_set"],
-    node_allowed: Infinity
-  },
-  object_set: {
-    forbidden: ["all"],
-    allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
-    node_allowed: 1
-  },
-  array_create: {
-    forbidden: ["all"],
-    allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
-    node_allowed: Infinity
-  },
-  let: {
-    forbidden: ["all"],
-    allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch"],
-    node_allowed: 1
-  }
+    foreach: {
+        forbidden: ["break"],
+        allowed: ["all"],
+        node_allowed: Infinity
+    },
+    object_create: {
+        forbidden: ["all"],
+        allowed: ["object_set"],
+        node_allowed: Infinity
+    },
+    object_set: {
+        forbidden: ["all"],
+        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+        node_allowed: 1
+    },
+    array_create: {
+        forbidden: ["all"],
+        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+        node_allowed: Infinity
+    },
+    let: {
+        forbidden: ["all"],
+        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch"],
+        node_allowed: 1
+    }
 }
 
 /*==================================================================================
@@ -298,3 +298,21 @@ const PALETTE = [
         ]
     }
 ];
+
+
+const COLLAPSIBLE = new Set([
+    "function",
+    "fetch",
+    "try",
+    "if",
+    "ifelse",
+    "switch",
+    "object_create",
+    "array_create",
+    "let",
+    "for",
+    "foreach",
+    "while",
+    "dowhile"
+])
+
