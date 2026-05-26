@@ -46,7 +46,7 @@ function renderNode(node){
         "call"
     ].includes(node.type)
 
-    const el = document.createElement(!isInlineExpr ? "span" : "div")
+    const el = document.createElement("div") /*document.createElement(!isInlineExpr ? "span" : "div")*/
     el.className = "node"
     el._node = node
 
@@ -431,13 +431,6 @@ function renderNode(node){
             el.appendChild(line)
             break
         }
-        /* ================= THEN ================= */
-        case "then": {
-            const line = document.createElement("div")
-            line.append(".then (", renderSlot(node, "body"), ")")
-            el.appendChild(line)
-            break
-        }
         /* ================= FETCH ================= */
         case "fetch": {
             const line = document.createElement("div")
@@ -448,13 +441,41 @@ function renderNode(node){
             const endfetch = document.createElement("div")
             endfetch.innerText = "})"
             el.appendChild(endfetch)
+
+            for(let i = 1; i <= node.props.slotsthencount; i++) {
+                let thenentry = document.createElement("div")
+                if (node.props[`hasThen-body-${i}`]) {
+                    thenentry.appendChild(createCheckbox(node, `hasThen-body-${i}`, ".then", el))
+                    thenentry.append("(")
+                    el.appendChild(thenentry)
+                    el.appendChild(renderSlot(node, `then-body-${i}`))
+                    el.appendChild(closingParenthesis())
+                } else {
+                    thenentry.appendChild(createCheckbox(node, `hasThen-body-${i}`, ".then", el))
+                    el.appendChild(thenentry)
+                }
+            }
+
+            // bouton +then
+            const thenplus = document.createElement("button")
+            thenplus.innerText = "+then"
+            thenplus.onclick = () => {
+                node.props.slotsthencount += 1
+                node.slots[`then-body-${node.props.slotsthencount}`] = []
+                node.props[`hasThen-body-${node.props.slotsthencount}`] = false
+                render()
+            }
+            el.appendChild(thenplus)
+
             const catchentry = document.createElement("div")
             if (node.props.hasCatch) {
                 catchentry.appendChild(createCheckbox(node, "hasCatch", ".catch", el))
-                catchentry.append("(e) {")
+                catchentry.append("((e) => {")
                 el.appendChild(catchentry)
                 el.appendChild(renderSlot(node, "catch-body"))
-                el.appendChild(closingBracket())
+                let div = document.createElement("div")
+                div.innerText = "})"
+                el.appendChild(div)
             } else {
                 catchentry.appendChild(createCheckbox(node, "hasCatch", ".catch", el))
                 el.appendChild(catchentry)
@@ -463,10 +484,42 @@ function renderNode(node){
             finallyentry.appendChild(createCheckbox(node, "hasFinally", ".finally", el))
             el.appendChild(finallyentry)
             if (node.props.hasFinally) {
-                finallyentry.append("{")
+                finallyentry.append("(() => {")
                 el.appendChild(renderSlot(node, "finally-body"))
-                el.appendChild(closingBracket())
+                let div = document.createElement("div")
+                div.innerText = "})"
+                el.appendChild(div)
             }
+            break
+        }
+        /* ================= OBJECT_CREATE ================= */
+        case "object_create": {
+            const line = document.createElement("div")
+            line.append("{")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            let div = document.createElement("div")
+            div.innerText = "}"
+            el.appendChild(div)
+            break
+        }
+        /* ================= OBJECT_SET ================= */
+        case "object_set": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "key", el, true)
+            line.append(paramInput, ":", renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= ARRAY_CREATE ================= */
+        case "array_create": {
+            const line = document.createElement("div")
+            line.append("[")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            let div = document.createElement("div")
+            div.innerText = "]"
+            el.appendChild(div)
             break
         }
     }
@@ -486,101 +539,8 @@ function closingParenthesis() {
     return div
 }
 
-function renderExpression(exprArray) {
-
-    const container = document.createElement("span")
-    container.className = "expression"
-
-    exprArray.forEach((item, index) => {
-
-        // EXPRESSION
-        if (item.type === "expression") {
-            container.appendChild(renderExpression(item.slots.body))
-        }
-        // BINARY
-        if (item.type === "binary") {
-            container.appendChild(renderBinary(item.slots))
-        }
-        // LITERAL
-        if (item.type !== "expression" && item.type !== "binary") {
-            container.appendChild(renderNode(item))
-        }
-    })
-    return container
-}
-
-function renderBinary(binArray) {
-    const container = document.createElement("span")
-    container.className = "expression"
-    // LEFT EXPRESSION
-    if (item.left.type === "expression") {
-        container.appendChild(renderExpression(item.left.slots.body))
-    }
-
-    container.appendChild(renderOperator(item.props))
-
-    // RIGHT EXPRESSION
-    if (item.right.type === "expression") {
-        container.appendChild(renderExpression(item.right.slots.body))
-    }
-    return container
-}
-
-function renderExprSlot(item) {
-
-    const slotEl = document.createElement("span")
-    slotEl.className = "slot"
-
-    if (item.slots.length > 0) {
-        slotEl.appendChild(renderNode(item.slots[0]))
-    } else {
-        const input = document.createElement("input")
-        input.type = "text"
-        input.placeholder = "value"
-        if (item.value) input.value = item.value
-        input.oninput = e => {
-            item.value = e.target.value
-        }
-        slotEl.appendChild(input)
-    }
-
-    // D&D (important : remplacement, pas push)
-    slotEl.ondragover = e => e.preventDefault()
-
-    slotEl.ondrop = () => {
-        if(!draggedNode) return
-
-        item.slots = [draggedNode]
-
-        draggedNode = null
-        render()
-    }
-
-    return slotEl
-}
-
-function renderOperator(itemProps){
-    const select = document.createElement("select");
-    ["", "+", "-", "*", "/", "||", "&&", "!"].forEach(op=>{
-        const o = document.createElement("option")
-        o.value = op
-        if (op === "+" || op === "-") itemProps.parenthesis = true
-        else itemProps.parenthesis = false
-        o.textContent = op || "..."
-        select.appendChild(o)
-    })
-    select.value = itemProps.op
-    select.onchange = () => {
-        itemProps.op = select.value
-        if (select.value === "+" || select.value === "-") itemProps.parenthesis = true
-        else itemProps.parenthesis = false
-        render()
-    }
-    return select
-}
-
 function renderSlot(node, slotName) {
-    const slotEl = document.createElement("span")
+    const slotEl = document.createElement("div")
     slotEl.className = node.slotLayout
 
     slotEl.ondragover = (e) => {
@@ -601,7 +561,8 @@ function renderSlot(node, slotName) {
 
         // validation (très important)
         if (!isNodeAllowedInParent(node, draggedNode.type)) {
-            alert("Non autorisé ici")
+            alert(`${draggedNode.type} est interdit dans ${node.type}`)
+            resetDrag()
             return
         }
 
@@ -628,98 +589,6 @@ function renderSlot(node, slotName) {
     })
     return slotEl
 }
-
-/*==================================================================================
- * Définition de la palette
- *==================================================================================*/
-const PALETTE = [
-  {
-    category: "Functions",
-    items: [
-      { type: "function", label: "Function" },
-      { type: "call", label: "Call function" },
-      { type: "arrow", label: "Arrow function" }
-    ]
-  },
-  {
-    category: "Flow",
-    items: [
-      { type: "if", label: "If" },
-      { type: "ifelse", label: "If / Else" },
-      { type: "switch", label: "Switch" },
-      { type: "for", label: "For loop" },
-      { type: "foreach", label: "ForEach loop" },
-      { type: "while", label: "While loop" },
-      { type: "dowhile", label: "Do while" },
-      { type: "break", label: "Break" },
-      { type: "continue", label: "Continue" },
-      { type: "return", label: "Return" }
-    ]
-  },
-  {
-    category: "Variables & constants",
-    items: [
-      { type: "let", label: "Let" },
-      { type: "const", label: "Const" },
-      { type: "assign", label: "Assign (=)" }
-    ]
-  },
-  {
-    category: "Expressions",
-    items: [
-      { type: "add", label: "+" },
-      { type: "sub", label: "-" },
-      { type: "mul", label: "*" },
-      { type: "div", label: "/" },
-      { type: "equals", label: "===" },
-      { type: "notequals", label: "!==" },
-      { type: "and", label: "&&" },
-      { type: "or", label: "||" },
-      { type: "not", label: "!" }
-    ]
-  },
-  {
-    category: "Data",
-    items: [
-      { type: "array_create", label: "Array []" },
-      { type: "array_push", label: "Array push" },
-      { type: "array_get", label: "Array get" },
-      { type: "object_create", label: "Object {}" },
-      { type: "object_get", label: "Object get" },
-      { type: "object_set", label: "Object set" },
-      { type: "literal", label: "Literal" }
-    ]
-  },
-  {
-    category: "Async",
-    items: [
-      { type: "async", label: "Async function" },
-      { type: "await", label: "Await" },
-      { type: "try", label: "Try" },
-      { type: "fetch", label: "Fetch" },
-      { type: "then", label: "Then" }
-    ]
-  },
-  {
-    category: "DOM",
-    items: [
-      { type: "objbyid", label: "Get by id" },
-      { type: "query", label: "Query selector" },
-      { type: "listener", label: "Event listener" },
-      { type: "set_text", label: "Set text" },
-      { type: "set_html", label: "Set HTML" },
-      { type: "append", label: "Append child" }
-    ]
-  },
-  {
-    category: "Debug",
-    items: [
-      { type: "log", label: "Log" },
-      { type: "warn", label: "Warn" },
-      { type: "error", label: "Error" }
-    ]
-  }
-];
 
 /*==================================================================================
  * Construction de la palette
