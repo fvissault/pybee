@@ -46,8 +46,8 @@ function renderNode(node){
         "call"
     ].includes(node.type)
 
-    const el = document.createElement("div") /*document.createElement(!isInlineExpr ? "span" : "div")*/
-    el.className = "node"
+    const el = document.createElement("div")
+    el.className = `node ${node.type}`
     el._node = node
 
     // d&d
@@ -61,12 +61,69 @@ function renderNode(node){
 
     el.prepend(dropBefore)
 
+    const node_header = document.createElement("div")
+    node_header.className = "node-header"
+    const toggle = document.createElement("button")
+    toggle.className = "collapse-btn"
+    toggle.textContent = node.ui?.collapsed ? "▾" : "▴"
+
+    toggle.onclick = (e) => {
+        e.stopPropagation()
+        node.ui.collapsed = !node.ui.collapsed
+        render()
+    }
+    if (COLLAPSIBLE.has(node.type)) {
+        node_header.appendChild(toggle)
+        el.appendChild(node_header)
+    }
+
     // ID
     const idEl = document.createElement("div")
     idEl.className = "nodeid"
     idEl.innerText = node.id
     el.appendChild(idEl)
 
+    if (node.ui?.collapsed && COLLAPSIBLE.has(node.type)) {
+        const summary = document.createElement("div")
+        summary.textContent = getCollapsedLabel(node)
+        node_header.appendChild(summary)
+    } else {
+        renderNodeContent(node, el)
+    }
+    el.appendChild(dropAfter)
+    return el
+}
+
+function getCollapsedLabel(node) {
+    switch(node.type) {
+        case "let":
+            return `let ${node.props.name || "?"} = ...`
+        case "function":
+            return `function ${node.props.name || "anonymous"}(...)`
+        case "fetch":
+            return `fetch("${node.props.url || "?"}", {...})...`
+        case "object_create":
+            return `{...}`
+        case "array_create":
+            return `[...]`
+        case "ifelse":
+            return `if (${node.props.condition || "?"}) {...} else {...}`
+        case "if":
+            return `if (${node.props.condition || "?"}) {...}`
+        case "for":
+            return `for (${node.props.varName || "?"}) {...}`
+        case "while":
+            return `while (${node.props.condition || "?"}) {...}`
+        case "foreach":
+            return `${node.props.array || "?"}.forEach (item => {...})`
+        case "dowhile":
+            return `do {...} while (${node.props.condition || "?"})`
+        default:
+            return node.type
+    }
+}
+
+function renderNodeContent(node, el) {
     // SWITCH TYPE
     switch (node.type) {
         /* ================= FUNCTION ================= */
@@ -523,8 +580,6 @@ function renderNode(node){
             break
         }
     }
-    el.appendChild(dropAfter)
-    return el
 }
 
 function closingBracket() {
