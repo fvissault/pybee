@@ -141,7 +141,9 @@ body {
 
 .node { 
     border: 1px solid #333; 
-    padding: 5px; 
+    border-left: 10px solid #f737e1;
+    padding-left: 5px; 
+    padding-right: 5px; 
     margin: 5px; 
     border-radius: 5px;
     background: #f7f8fa;
@@ -151,6 +153,7 @@ body {
     background: #eef3fb;
 }
 
+.node.async,
 .node.function {
     border-left: 10px solid #4a90e2;
 }
@@ -169,6 +172,7 @@ body {
     border-left: 10px solid #00bcd4;
 }
 
+.node.array_create,
 .node.object_create {
     border-left: 10px solid orange;
 }
