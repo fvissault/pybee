@@ -31,13 +31,18 @@ function isNodeAllowedInParent(parentNode, childType) {
 
     const allowed = rules.allowed ?? ["all"];
     const forbidden = rules.forbidden ?? [];
+    const node_allowed = rules.node_allowed ?? 0;
 
     if (forbidden.includes("all")) {
         if (!allowed.includes("all")) {
             if (!allowed.includes(childType)) {
                 return false
             } else {
-                return true
+                if (parentNode.slots.body && parentNode.slots.body.length < node_allowed) {
+                    return true
+                } else {
+                    return false
+                }
             }
         } else {
             return false;
@@ -84,6 +89,26 @@ function findParentArray(arr, target){
     return null
 }
 
+function findParentNode(nodes, targetNode, parent = null) {
+    for (const node of nodes) {
+
+        if (node === targetNode) {
+            return parent
+        }
+
+        // Parcourt récursif des propriétés contenant des enfants
+        for (const key in node) {
+            const value = node[key]
+
+            if (Array.isArray(value)) {
+                const found = findParentNode(value, targetNode, node)
+                if (found) return found
+            }
+        }
+    }
+
+    return null
+}
 
 /* =========================
    STATE
@@ -187,10 +212,11 @@ function createSelect(node, key, options, el){
 
 function handleDropAtPosition(targetNode, position){
 
-  if(!draggedNode) return
+    if(!draggedNode) return
 
-  const parentArray = findParentArray(tree, targetNode)
-  if(!parentArray) return
+    const parentArray = findParentArray(tree, targetNode)
+    if(!parentArray) return
+    const parentNode = findParentNode(tree, targetNode)
 
     let index = parentArray.indexOf(targetNode)
 
@@ -220,6 +246,13 @@ function handleDropAtPosition(targetNode, position){
         if(oldIndex !== -1){
             draggedFrom.splice(oldIndex, 1)
         }
+    }
+
+    if (!isNodeAllowedInParent(parentNode, draggedNode.type)) {
+        alert(`${draggedNode.type} est interdit dans ${parentNode?.type ?? "root"}`)
+        resetDrag()
+        renderNode(targetNode)
+        return
     }
     
     const insertIndex = position === "before" ? index : index + 1
