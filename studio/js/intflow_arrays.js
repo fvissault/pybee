@@ -108,13 +108,14 @@ const NODE_DEFS = {
         slotLayout:"slot-inline"
     },
     async: {
-        props: {},
+        props: { name: "", parameters: "" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     literal: {
         props: { value: "" },
-        slots: []
+        slots: [],
+        slotLayout:"slot-block"
     },
     add: {
         props: { op: "+", parenthesis: true },
@@ -174,7 +175,7 @@ const NODE_DEFS = {
     array_create: {
         props: {},
         slots: ["body"],
-        slotLayout:"slot-inline"
+        slotLayout:"slot-block"
     }
 }
 
@@ -302,6 +303,7 @@ const PALETTE = [
 
 const COLLAPSIBLE = new Set([
     "function",
+    "async",
     "fetch",
     "try",
     "if",
