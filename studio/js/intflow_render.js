@@ -100,6 +100,8 @@ function getCollapsedLabel(node) {
             return `let ${node.props.name || "?"} = ...`
         case "function":
             return `function ${node.props.name || "anonymous"}(...)`
+        case "async":
+            return `async function ${node.props.name || "anonymous"}(...)`
         case "fetch":
             return `fetch("${node.props.url || "?"}", {...})...`
         case "object_create":
@@ -618,6 +620,7 @@ function renderSlot(node, slotName) {
         if (!isNodeAllowedInParent(node, draggedNode.type)) {
             alert(`${draggedNode.type} est interdit dans ${node.type}`)
             resetDrag()
+            render()
             return
         }
 
