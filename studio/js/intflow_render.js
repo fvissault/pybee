@@ -120,6 +120,8 @@ function getCollapsedLabel(node) {
             return `${node.props.array || "?"}.forEach (item => {...})`
         case "dowhile":
             return `do {...} while (${node.props.condition || "?"})`
+        case "chain":
+            return `${node.props.arrayname || "?"}.chain`
         default:
             return node.type
     }
@@ -581,6 +583,56 @@ function renderNodeContent(node, el) {
             el.appendChild(div)
             break
         }
+        /* ================= ARRAY_CREATE ================= */
+        case "chain": {
+            const dotplus = document.createElement("button")
+            dotplus.className = "btn btn-primary"
+            dotplus.innerText = "+"
+            dotplus.onclick = () => {
+                node.props.dotslotcount += 1
+                node.slots[`dotplus-${node.props.dotslotcount}`] = []
+                node.props[`hasdotplus-${node.props.dotslotcount}`] = false
+                render()
+            }
+            const dotdel = document.createElement("button")
+            dotdel.className = "btn btn-secondary"
+            dotdel.innerText = "🗑"
+            dotdel.onclick = () => {
+                delete node.slots[`dotplus-${node.props.dotslotcount}`]
+                delete node.props[`hasdotplus-${node.props.dotslotcount}`]
+                node.props.dotslotcount -= 1
+                render()
+            }
+
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "arrayname", el, true)
+            line.append(paramInput, " .", renderSlot(node, "body"))
+
+            for(let i = 1; i <= node.props.dotslotcount; i++) {
+                const slot = renderSlot(node, `dotplus-${i}`)
+                slot.onclick = (e) => {
+                    e.stopPropagation();
+                    if (node.props[`hasdotplus-${i}`]) {
+                        node.props[`hasdotplus-${i}`] = false
+                        slot.classList.add("slot-disabled")
+                    } else {
+                        node.props[`hasdotplus-${i}`] = true
+                        slot.classList.remove("slot-disabled")
+                    }
+                    render()
+                }
+
+                if (!node.props[`hasdotplus-${i}`]) {
+                    node.props[`hasdotplus-${i}`] = false
+                    slot.classList.add("slot-disabled")
+                    line.append(slot)
+                }
+                line.append(".", slot)
+            }
+            line.append(node.props.dotslotcount > 0?dotdel:"", dotplus)
+            el.appendChild(line)
+            break
+        }
     }
 }
 
@@ -619,6 +671,12 @@ function renderSlot(node, slotName) {
         // validation (très important)
         if (!isNodeAllowedInParent(node, draggedNode.type)) {
             alert(`${draggedNode.type} est interdit dans ${node.type}`)
+            resetDrag()
+            render()
+            return
+        }
+        if (!isNodeCountAllowedInParent(node, slotName)) {
+            alert("Ce slot est complet")
             resetDrag()
             render()
             return
