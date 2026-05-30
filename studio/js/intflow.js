@@ -26,23 +26,16 @@ function init(){
 
 function isNodeAllowedInParent(parentNode, childType) {
     const rules = RULES[parentNode.type];
-
     if (!rules) return true;
-
     const allowed = rules.allowed ?? ["all"];
     const forbidden = rules.forbidden ?? [];
     const node_allowed = rules.node_allowed ?? 0;
-
     if (forbidden.includes("all")) {
         if (!allowed.includes("all")) {
             if (!allowed.includes(childType)) {
                 return false
             } else {
-                if (parentNode.slots.body && parentNode.slots.body.length < node_allowed) {
-                    return true
-                } else {
-                    return false
-                }
+                return true
             }
         } else {
             return false;
@@ -50,10 +43,30 @@ function isNodeAllowedInParent(parentNode, childType) {
     } else {
         if (forbidden.includes(childType)) return false
     }
-
     return false
 }
 
+function isNodeCountAllowedInParent(parentNode, slotName) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    const node_allowed = rules.node_allowed ?? 0;
+    if (parentNode.slots[slotName] && parentNode.slots[slotName].length < node_allowed) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function isNodeCountAllowedInParentArray(parentNode, parentArray) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    const node_allowed = rules.node_allowed ?? 0;
+    if (parentArray && parentArray.length < node_allowed) {
+        return true
+    } else {
+        return false
+    }
+}
 
 function resetDrag(){
   draggedNode = null
@@ -97,12 +110,14 @@ function findParentNode(nodes, targetNode, parent = null) {
         }
 
         // Parcourt récursif des propriétés contenant des enfants
-        for (const key in node) {
-            const value = node[key]
+        if (node.slots) {
+            for (const slotName in node.slots) {
+                const slot = node.slots[slotName]
 
-            if (Array.isArray(value)) {
-                const found = findParentNode(value, targetNode, node)
-                if (found) return found
+                if (Array.isArray(slot)) {
+                    const found = findParentNode(slot, targetNode, node)
+                    if (found) return found
+                }
             }
         }
     }
@@ -251,7 +266,14 @@ function handleDropAtPosition(targetNode, position){
     if (!isNodeAllowedInParent(parentNode, draggedNode.type)) {
         alert(`${draggedNode.type} est interdit dans ${parentNode?.type ?? "root"}`)
         resetDrag()
-        renderNode(targetNode)
+        render()
+        return
+    }
+
+    if (!isNodeCountAllowedInParentArray(parentNode, parentArray)) {
+        alert("Ce slot est complet")
+        resetDrag()
+        render()
         return
     }
     
