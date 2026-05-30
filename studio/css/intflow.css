@@ -164,14 +164,20 @@ body {
     border-left: 10px solid #9b59b6;
 }
 
+.node.const,
 .node.let {
     border-left: 10px solid #27ae60;
 }
 
+.node.chain,
 .node.fetch {
     border-left: 10px solid #00bcd4;
 }
 
+.node.map,
+.node.filter,
+.node.join,
+.node.split,
 .node.array_create,
 .node.object_create {
     border-left: 10px solid orange;
@@ -257,23 +263,6 @@ button {
     font-weight: 500;
 }
 
-/*.expression {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}*/
-
-/*.inline-node {
-    display: inline-flex;
-    align-items: center;
-}*/
-
-/*.await-expr {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-}*/
-
 input[type="text"] {
     padding:7px;
     border-radius:8px;
@@ -317,18 +306,10 @@ select {
     background: #fefbab;
 }
 
-/*.slot {
-    display: inline-flex;
-    align-items: center;
-    min-height: 28px;
-    min-width: 28px;
-    vertical-align: middle;
-    border: 1px dashed #aaa; 
-    margin: 5px; 
-    padding: 5px; 
-    border-radius: 5px;
-    background: #fefbab;
-}*/
+.slot-disabled {
+    opacity: 0.4;
+    filter: grayscale(3);
+}
 
 .collapse-btn {
     border: 1px solid gray;
@@ -341,4 +322,49 @@ select {
     display: inline-flex;
     align-items: center;
     gap: 2px;
+}
+
+.btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Bouton principal (Apply) */
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2563eb;
+}
+
+/* Bouton secondaire (Close) */
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    margin-right:5px;
+}
+
+.btn-secondary:hover {
+    color: red;
+    background: #ddd;
+}
+
+/* Bouton ternaire */
+.btn-ternary {
+    background: #f0f1f2;
+    color: #374151;
+}
+
+.btn-ternary:hover {
+    background: #e5e7eb;
+}
+
+.btn-delete:hover svg {
+    stroke: #ef4444;
 }
