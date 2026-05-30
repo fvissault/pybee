@@ -176,6 +176,31 @@ const NODE_DEFS = {
         props: {},
         slots: ["body"],
         slotLayout:"slot-block"
+    },
+    chain: { // ( [input array].[slot][button +.], [input array].[slot].[slot1][button +.] )
+        props: { arrayname: "", dotslotcount: 0 },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    join: { 
+        props: { separator: "" },
+        slots: [],
+        slotLayout:"slot-inline"
+    },
+    split: { 
+        props: { separator: "" },
+        slots: [],
+        slotLayout:"slot-inline"
+    },
+    map: { 
+        props: { array: "", useIndex: false, useArray: false },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    filter: { 
+        props: { array: "", useIndex: false, useArray: false },
+        slots: ["body"],
+        slotLayout:"slot-inline"
     }
 }
 
@@ -206,6 +231,11 @@ const RULES = {
     let: {
         forbidden: ["all"],
         allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch"],
+        node_allowed: 1
+    },
+    chain: {
+        forbidden: ["all"],
+        allowed: ["call", "map", "join", "filter"],
         node_allowed: 1
     }
 }
@@ -242,7 +272,8 @@ const PALETTE = [
         items: [
             { type: "let", label: "Let" },
             { type: "const", label: "Const" },
-            { type: "assign", label: "Assign (=)" }
+            { type: "assign", label: "Assign (=)" },
+            { type: "chain", label: "Chain (.)" }
         ]
     },
     {
@@ -267,6 +298,10 @@ const PALETTE = [
             { type: "object_create", label: "Object {}" },
             { type: "object_get", label: "Object get" },
             { type: "object_set", label: "Object set" },
+            { type: "join", label: "Join" },
+            { type: "split", label: "Split" },
+            { type: "map", label: "Map" },
+            { type: "filter", label: "Filter" },
             { type: "literal", label: "Literal" }
         ]
     },
@@ -315,6 +350,11 @@ const COLLAPSIBLE = new Set([
     "for",
     "foreach",
     "while",
-    "dowhile"
+    "dowhile",
+    "chain",
+    "map",
+    "filter",
+    "join",
+    "split"
 ])
 
