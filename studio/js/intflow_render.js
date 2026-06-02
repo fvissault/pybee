@@ -64,7 +64,7 @@ function renderNode(node){
     const node_header = document.createElement("div")
     node_header.className = "node-header"
     const toggle = document.createElement("button")
-    toggle.className = "collapse-btn"
+    toggle.className = "btn btn-primary"
     toggle.textContent = node.ui?.collapsed ? "▾" : "▴"
 
     toggle.onclick = (e) => {
@@ -122,6 +122,16 @@ function getCollapsedLabel(node) {
             return `do {...} while (${node.props.condition || "?"})`
         case "chain":
             return `${node.props.arrayname || "?"}.chain`
+        case "arrow":
+            return `(element, ...) => {...}`
+        case "filter":
+            return `filter (...)`
+        case "map":
+            return `map (...)`
+        case "join":
+            return `join (...)`
+        case "split":
+            return `split (...)`
         default:
             return node.type
     }
@@ -486,10 +496,36 @@ function renderNodeContent(node, el) {
         }
         /* ================= ARROW ================= */
         case "arrow": {
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useIndex", "index", el))
+            options.appendChild(createCheckbox(node, "useArray", "array", el))
+            el.appendChild(options)
+
+            const params = ["element"]
+            if (node.props.useIndex) {
+                const indexParamInput = createInput(node, "indexName", el, true)
+                params.push(indexParamInput)
+            }
+            if (node.props.useArray) {
+                // ici EDITABLE
+                const arrayParamInput = createInput(node, "arrayName", el, true)
+                params.push(arrayParamInput)
+            }
+            let paramsNode = document.createDocumentFragment()
+            paramsNode.append("(")
+
+            params.forEach((p, i) => {
+                if(i > 0) paramsNode.append(", ")
+                paramsNode.append(p)
+            })
+            paramsNode.append(")")
+
             const line = document.createElement("div")
-            const paramInput = createInput(node, "parameters", el, true)
-            line.append("(", paramInput, ") => {", renderSlot(node, "body"), "}")
+            line.append(paramsNode, " => {")
             el.appendChild(line)
+
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
             break
         }
         /* ================= FETCH ================= */
@@ -583,7 +619,7 @@ function renderNodeContent(node, el) {
             el.appendChild(div)
             break
         }
-        /* ================= ARRAY_CREATE ================= */
+        /* ================= CHAIN ================= */
         case "chain": {
             const dotplus = document.createElement("button")
             dotplus.className = "btn btn-primary"
@@ -611,6 +647,7 @@ function renderNodeContent(node, el) {
             for(let i = 1; i <= node.props.dotslotcount; i++) {
                 const slot = renderSlot(node, `dotplus-${i}`)
                 slot.onclick = (e) => {
+                    if (e.target.closest("input, button, select, textarea, label")) return
                     e.stopPropagation();
                     if (node.props[`hasdotplus-${i}`]) {
                         node.props[`hasdotplus-${i}`] = false
@@ -630,6 +667,20 @@ function renderNodeContent(node, el) {
                 line.append(".", slot)
             }
             line.append(node.props.dotslotcount > 0?dotdel:"", dotplus)
+            el.appendChild(line)
+            break
+        }
+        /* ================= FILTER ================= */
+        case "filter": {
+            const line = document.createElement("div")
+            line.append("filter (", renderSlot(node, "body"), ")")
+            el.appendChild(line)
+            break
+        }
+        /* ================= MAP ================= */
+        case "map": {
+            const line = document.createElement("div")
+            line.append("map (", renderSlot(node, "body"), ")")
             el.appendChild(line)
             break
         }
