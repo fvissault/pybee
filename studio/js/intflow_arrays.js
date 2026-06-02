@@ -153,7 +153,7 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     arrow: { // ( [input parameters] ) => { [slot body] }
-        props: { parameters: [] },
+        props: { indexName: "", arrayName:"", useIndex: false, useArray: false },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -230,12 +230,27 @@ const RULES = {
     },
     let: {
         forbidden: ["all"],
-        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch"],
+        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
+        node_allowed: 1
+    },
+    const: {
+        forbidden: ["all"],
+        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
         node_allowed: 1
     },
     chain: {
         forbidden: ["all"],
         allowed: ["call", "map", "join", "filter"],
+        node_allowed: 1
+    },
+    map: {
+        forbidden: ["all"],
+        allowed: ["arrow"],
+        node_allowed: 1
+    },
+    filter: {
+        forbidden: ["all"],
+        allowed: ["arrow"],
         node_allowed: 1
     }
 }
@@ -339,6 +354,7 @@ const PALETTE = [
 const COLLAPSIBLE = new Set([
     "function",
     "async",
+    "arrow",
     "fetch",
     "try",
     "if",
