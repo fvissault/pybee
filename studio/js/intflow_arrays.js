@@ -193,13 +193,23 @@ const NODE_DEFS = {
         slotLayout:"slot-inline"
     },
     map: { 
-        props: { array: "", useIndex: false, useArray: false },
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    flatmap: { 
+        props: {},
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     filter: { 
         props: { array: "", useIndex: false, useArray: false },
         slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    flat: { 
+        props: { depth: 1 },
+        slots: [],
         slotLayout:"slot-inline"
     }
 }
@@ -240,10 +250,15 @@ const RULES = {
     },
     chain: {
         forbidden: ["all"],
-        allowed: ["call", "map", "join", "split", "filter"],
+        allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap"],
         node_allowed: 1
     },
     map: {
+        forbidden: ["all"],
+        allowed: ["arrow"],
+        node_allowed: 1
+    },
+    flatmap: {
         forbidden: ["all"],
         allowed: ["arrow"],
         node_allowed: 1
@@ -317,6 +332,8 @@ const PALETTE = [
             { type: "split", label: "Split" },
             { type: "map", label: "Map" },
             { type: "filter", label: "Filter" },
+            { type: "flat", label: "Flat" },
+            { type: "flatmap", label: "Flat map" },
             { type: "literal", label: "Literal" }
         ]
     },
@@ -369,8 +386,10 @@ const COLLAPSIBLE = new Set([
     "dowhile",
     "chain",
     "map",
+    "flatmap",
     "filter",
     "join",
-    "split"
+    "split",
+    "flat"
 ])
 
