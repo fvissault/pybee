@@ -132,6 +132,10 @@ function getCollapsedLabel(node) {
             return `join (...)`
         case "split":
             return `split (...)`
+        case "flat":
+            return `flat (depth = ${node.props.depth || "?"})`
+        case "flatmap":
+            return `flatmap (...)`
         default:
             return node.type
     }
@@ -700,11 +704,24 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-
-
-
         /* ================= FLAT ================= */
+        case "flat": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "depth", el, true)
+            line.append("flat ( ", paramInput, " )")
+            el.appendChild(line)
+            break
+        }
         /* ================= FLATMAP(ARROW) ================= */
+        case "flatmap": {
+            const line = document.createElement("div")
+            line.append("flatmap (", renderSlot(node, "body"), ")")
+            el.appendChild(line)
+            break
+        }
+
+
+
         /* ================= FIND(ARROW) ================= */
         /* ================= FINDINDEX(ARROW) ================= */
         /* ================= FINDLAST(ARROW) ================= */
