@@ -240,7 +240,7 @@ const RULES = {
     },
     chain: {
         forbidden: ["all"],
-        allowed: ["call", "map", "join", "filter"],
+        allowed: ["call", "map", "join", "split", "filter"],
         node_allowed: 1
     },
     map: {
