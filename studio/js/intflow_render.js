@@ -670,20 +670,65 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= FILTER ================= */
+        /* ================= FILTER(ARROW) ================= */
         case "filter": {
             const line = document.createElement("div")
             line.append("filter (", renderSlot(node, "body"), ")")
             el.appendChild(line)
             break
         }
-        /* ================= MAP ================= */
+        /* ================= MAP(ARROW) ================= */
         case "map": {
             const line = document.createElement("div")
             line.append("map (", renderSlot(node, "body"), ")")
             el.appendChild(line)
             break
         }
+        /* ================= JOIN(INPUT) ================= */
+        case "join": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "separator", el, true)
+            line.append("join ( ", paramInput, " )")
+            el.appendChild(line)
+            break
+        }
+        /* ================= SPLIT(INPUT) ================= */
+        case "split": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "separator", el, true)
+            line.append("split ( ", paramInput, " )")
+            el.appendChild(line)
+            break
+        }
+
+
+
+        /* ================= FLAT ================= */
+        /* ================= FLATMAP(ARROW) ================= */
+        /* ================= FIND(ARROW) ================= */
+        /* ================= FINDINDEX(ARROW) ================= */
+        /* ================= FINDLAST(ARROW) ================= */
+        /* ================= INCLUDES(INPUT) ================= */
+        /* ================= INDEXOF(INPUT) ================= */
+        /* ================= LASTINDEXOF(INPUT) ================= */
+        /* ================= KEYS ================= */
+        /* ================= POP ================= */
+        /* ================= PUSH(INPUT) ================= */
+        /* ================= REDUCE(ARROW, INPUT(initialvalue)) ================= */
+        /* ================= REVERSE ================= */
+        /* ================= SHIFT ================= */
+        /* ================= SLICE(INPUT(start), INPUT(end)) ================= */
+        /* ================= SOME(ARROW, INPUT(thisArg)) ================= */
+        /* ================= SORT(INPUT(comparefct)) ================= */
+        /* ================= SPLICE(INPUT(start), INPUT(deletecount), INPUT(itemtoadd)) ================= */
+        /* ================= UNSHIFT(INPUT(elements)) ================= */
+        /* ================= VALUES ================= */
+        /* ================= WITH(INPUT(index), INPUT(value)) ================= */
+        /* ================= AT(INPUT(index)) ================= */
+        /* ================= CONCAT(INPUT(values)) ================= */
+        /* ================= ENTRIES ================= */
+        /* ================= EVERY(ARROW, INPUT(thisArg)) ================= */
+        /* ================= FILL(INPUT(value), INPUT(start), INPUT(end)) ================= */
     }
 }
 
