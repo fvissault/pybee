@@ -175,6 +175,8 @@ body {
     border-left: 10px solid #00bcd4;
 }
 
+.node.flatmap,
+.node.flat,
 .node.map,
 .node.filter,
 .node.join,
