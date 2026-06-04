@@ -211,6 +211,11 @@ const NODE_DEFS = {
         props: { depth: 1 },
         slots: [],
         slotLayout:"slot-inline"
+    },
+    find: { 
+        props: { useThisArg: false, thisArg: "this argument" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
     }
 }
 
@@ -250,7 +255,7 @@ const RULES = {
     },
     chain: {
         forbidden: ["all"],
-        allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap"],
+        allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap", "find"],
         node_allowed: 1
     },
     map: {
@@ -334,6 +339,7 @@ const PALETTE = [
             { type: "filter", label: "Filter" },
             { type: "flat", label: "Flat" },
             { type: "flatmap", label: "Flat map" },
+            { type: "find", label: "Find" },
             { type: "literal", label: "Literal" }
         ]
     },
@@ -390,6 +396,7 @@ const COLLAPSIBLE = new Set([
     "filter",
     "join",
     "split",
-    "flat"
+    "flat",
+    "find"
 ])
 
