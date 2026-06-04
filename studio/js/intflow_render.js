@@ -136,6 +136,8 @@ function getCollapsedLabel(node) {
             return `flat (depth = ${node.props.depth || "?"})`
         case "flatmap":
             return `flatmap (...)`
+        case "find":
+            return `find (...)`
         default:
             return node.type
     }
@@ -559,6 +561,7 @@ function renderNodeContent(node, el) {
 
             // bouton +then
             const thenplus = document.createElement("button")
+            thenplus.className = "btn btn-primary"
             thenplus.innerText = "+then"
             thenplus.onclick = () => {
                 node.props.slotsthencount += 1
@@ -719,10 +722,23 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
+        /* ================= FIND(ARROW, INPUT(thisArg)) ================= */
+        case "find": {
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useThisArg", "thisArg", el))
+            el.appendChild(options)
+            // LIGNE PRINCIPALE
+            const line = document.createElement("div")
+            if (node.props.useThisArg){
+                const thisArgInput = createInput(node, "thisArg", el, true)
+                line.append("find (", renderSlot(node, "body"), ", ", thisArgInput, " )")
+            } else {
+                line.append("find (", renderSlot(node, "body"), ")")
+            }
+            el.appendChild(line)
+            break
+        }
 
-
-
-        /* ================= FIND(ARROW) ================= */
         /* ================= FINDINDEX(ARROW) ================= */
         /* ================= FINDLAST(ARROW) ================= */
         /* ================= INCLUDES(INPUT) ================= */
@@ -746,6 +762,12 @@ function renderNodeContent(node, el) {
         /* ================= ENTRIES ================= */
         /* ================= EVERY(ARROW, INPUT(thisArg)) ================= */
         /* ================= FILL(INPUT(value), INPUT(start), INPUT(end)) ================= */
+        /* ================= > ================= */
+        /* ================= < ================= */
+        /* ================= >= ================= */
+        /* ================= <= ================= */
+        /* ================= == ================= */
+        /* ================= != ================= */
     }
 }
 
