@@ -232,7 +232,7 @@ function renderProjectFiles() {
             const el = createItemContainer()
             const label = createItemLabel("📄 " + f.name)
             label.addEventListener("click", () => {
-                loadJS(f.id)
+                loadJS(f.name)
             })
             const del = createDelButton("Supprimer le fichier IntFlow")
             del.addEventListener("click", (e) => {
