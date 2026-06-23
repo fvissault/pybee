@@ -17,6 +17,7 @@ async function getSession() {
 
 let pages = {}
 let components = {}
+let js = {}
 let currentProject = null
 let currentPage = null
 let currentComponent = null
@@ -303,10 +304,25 @@ async function loadProjectFiles() {
             //console.log(data)
             components=data
         });
+
+        await fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyproject",
+                id : projectid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            //console.log(data)
+            js=data
+        });
         renderProjectFiles()
     } catch(e) {
         pages = {}
         components = {}
+        js = {}
     }
 }
 
