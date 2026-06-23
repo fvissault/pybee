@@ -11,11 +11,27 @@ const workspaceEl = document.getElementById("workspace")
 /*==================================================================================
  * Initialisation de la page
  *==================================================================================*/
-function init(){
-    const opener = window.opener
-    if(opener && opener.getWorkspace){
-        const ws = opener.getWorkspace()
-        tree = ws.js || []
+async function init() {
+    const session = await window.opener.getSession()
+    const fileid = window.opener.jsfileid
+    try {
+        fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id : fileid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(fileid)
+            console.log(data)
+            tree = JSON.parse(data.content) || []
+            render()
+        });
+    } catch(e) {
+        console.error(e)
     }
     
     renderPalette("palette_container")
