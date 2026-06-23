@@ -1,17 +1,28 @@
 /*==================================================================================
  * SAVE FUNCTION
  *==================================================================================*/
-/*function save() {
-    if(window.opener && window.opener.updateWorkspaceJS) {
-        window.opener.updateWorkspaceJS(tree)
-        const savebtn = document.getElementById("savebtn")
-        savebtn.className = ""
-        tosave = false
-        window.opener.savebtn.className = "tosave"
-        window.opener.tosave = true
-        alert("Votre travail est sauvegardé !")
+function save() {
+    try {
+        const fileid = window.opener.jsfileid
+        fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "updatecontent",
+                content: JSON.stringify(tree),
+                id : fileid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === "ok") {
+                alert("Votre fichier de flus interne est sauvegardé")
+            }
+        });
+    } catch(e) {
+        console.error(e)
     }
-}*/
+}
 
 function closefct(){
     if (tosave) {
