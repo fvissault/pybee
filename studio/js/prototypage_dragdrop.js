@@ -18,6 +18,7 @@ async function getSession() {
 let pages = {}
 let components = {}
 let js = {}
+let jsfileid = null
 let currentProject = null
 let currentPage = null
 let currentComponent = null
