@@ -175,6 +175,22 @@ body {
     border-left: 10px solid #00bcd4;
 }
 
+.node.concat,
+.node.unshift,
+.node.push,
+.node.entries,
+.node.lastindexof,
+.node.indexof,
+.node.includes,
+.node.pop,
+.node.shift,
+.node.keys,
+.node.values,
+.node.reverse,
+.node.every,
+.node.some,
+.node.findindex,
+.node.findlast,
 .node.find,
 .node.flatmap,
 .node.flat,
