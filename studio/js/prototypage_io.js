@@ -62,27 +62,26 @@ async function deleteBST(file){
     });
 }
 
-async function loadJS(fileid){
-    try {
-        fetch("/pybee/studio/api/jsfiles.py", {
-            method: "POST",
-            credentials: "include",
-            body: new URLSearchParams({
-                action: "getbyid",
-                id : fileid
-            })
+async function loadJS(nameoffile) {
+    fetch("/pybee/studio/api/jsfiles.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getbyname",
+            name: nameoffile
         })
-        .then(r => r.json())
-        .then(data => {
-            console.log(data)
-            // ouvrir Intflow avec le contenu
-            js = JSON.parse(data.content) || []
+    })
+    .then(r => r.json())
+    .then(res => {
+        console.log(res)
+        if(!res.error) {
+            jsfileid = res.id
+            window.jsfileid = jsfileid
             openIntFlow()
-        });
-    } catch(e) {
-        console.error(e)
-    }
-
+        } else {
+            alert("Network error : New file not created")
+        }
+    });
 }
 
 async function loadBST(pageid){
