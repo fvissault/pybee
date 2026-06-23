@@ -24,24 +24,52 @@ function init(){
 
 
 
+function isNodeAllowedInNode(parentNode, childType, targetSlotName) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    for (slot in NODE_DEFS[parentNode.type].slots) {
+        let slotname = NODE_DEFS[parentNode.type].slots[slot]
+        const allowed = rules[slotname].allowed ?? ["all"];
+        const forbidden = rules[slotname].forbidden ?? [];
+        if (targetSlotName == slotname) {
+            if (forbidden.includes("all")) {
+                if (!allowed.includes("all")) {
+                    if (!allowed.includes(childType)) {
+                        return false
+                    } else {
+                        return true
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                if (!forbidden.includes(childType)) return true
+            }
+        }
+    }
+    return false
+}
+
 function isNodeAllowedInParent(parentNode, childType) {
     const rules = RULES[parentNode.type];
     if (!rules) return true;
-    const allowed = rules.allowed ?? ["all"];
-    const forbidden = rules.forbidden ?? [];
-    const node_allowed = rules.node_allowed ?? 0;
-    if (forbidden.includes("all")) {
-        if (!allowed.includes("all")) {
-            if (!allowed.includes(childType)) {
-                return false
+    for (slot in NODE_DEFS[parentNode.type].slots) {
+        let slotname = NODE_DEFS[parentNode.type].slots[slot]
+        const allowed = rules[slotname].allowed ?? ["all"];
+        const forbidden = rules[slotname].forbidden ?? [];
+        if (forbidden.includes("all")) {
+            if (!allowed.includes("all")) {
+                if (!allowed.includes(childType)) {
+                    return false
+                } else {
+                    return true
+                }
             } else {
-                return true
+                return false;
             }
         } else {
-            return false;
+            if (forbidden.includes(childType)) return false
         }
-    } else {
-        if (forbidden.includes(childType)) return false
     }
     return false
 }
@@ -49,7 +77,7 @@ function isNodeAllowedInParent(parentNode, childType) {
 function isNodeCountAllowedInParent(parentNode, slotName) {
     const rules = RULES[parentNode.type];
     if (!rules) return true;
-    const node_allowed = rules.node_allowed ?? 0;
+    const node_allowed = rules[slotName].node_allowed ?? 0;
     if (parentNode.slots[slotName] && parentNode.slots[slotName].length < node_allowed) {
         return true
     } else {
@@ -60,12 +88,14 @@ function isNodeCountAllowedInParent(parentNode, slotName) {
 function isNodeCountAllowedInParentArray(parentNode, parentArray) {
     const rules = RULES[parentNode.type];
     if (!rules) return true;
-    const node_allowed = rules.node_allowed ?? 0;
-    if (parentArray && parentArray.length < node_allowed) {
-        return true
-    } else {
-        return false
+    for (slot in NODE_DEFS[parentNode.type].slots) {
+        let slotname = NODE_DEFS[parentNode.type].slots[slot]
+        const node_allowed = rules[slotname].node_allowed ?? 0;
+        if (parentNode.slots[slotname].length === node_allowed) {
+            return true
+        }
     }
+    return false
 }
 
 function resetDrag(){
@@ -251,29 +281,19 @@ function handleDropAtPosition(targetNode, position){
                 index--
             }
         }
-    } else if (dragSource === "workspace") {
-        const oldIndex = draggedFrom.indexOf(draggedNode)
-        removeNodeFromParent()
-        if(draggedFrom === parentArray && oldIndex < index){
-            index--
-        }
-
-        if(oldIndex !== -1){
-            draggedFrom.splice(oldIndex, 1)
-        }
     }
 
     if (!isNodeAllowedInParent(parentNode, draggedNode.type)) {
         alert(`${draggedNode.type} est interdit dans ${parentNode?.type ?? "root"}`)
-        resetDrag()
         render()
+        resetDrag()
         return
     }
 
-    if (!isNodeCountAllowedInParentArray(parentNode, parentArray)) {
+    if (isNodeCountAllowedInParentArray(parentNode, parentArray)) {
         alert("Ce slot est complet")
-        resetDrag()
         render()
+        resetDrag()
         return
     }
     
@@ -316,7 +336,12 @@ function createInput(node, key, el, refresh = false){
     } else {
         input.value = node.props[key]
     }
-    input.style.width = "200px"
+    let vallength = input.value.length
+    if (vallength > 0) {
+        input.style.width = `${vallength * 8 + 10}px`
+    } else {
+        input.style.width = "100px"
+    }
     input.type = "text"
     input.dataset.key = key
     input.draggable = false
@@ -334,6 +359,13 @@ function createInput(node, key, el, refresh = false){
     })
     input.oninput = (e) => {
         node.props[key] = e.target.value
+        let vallength = input.value.length
+        if (vallength > 0) {
+            input.style.width = `${vallength * 8 + 10}px`
+        } else {
+            input.placeholder = key ?? ""
+            input.style.width = "100px"
+        }
         if (refresh) preserveFocusAndRefresh(el, key, e.target.selectionStart)
 
         window.opener.savebtn.className = "tosave"
