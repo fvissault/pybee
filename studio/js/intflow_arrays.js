@@ -69,14 +69,14 @@ const NODE_DEFS = {
         slots: []
     },
     if: {
-        props: { condition: "" },
-        slots: ["then"],
-        slotLayout:"slot-block"
+        props: {},
+        slots: ["condition", "then"],
+        slotLayout:"slot-inline"
     },
     ifelse: {
-        props: { condition: "" },
-        slots: ["then", "else"],
-        slotLayout:"slot-block"
+        props: {},
+        slots: ["condition", "then", "else"],
+        slotLayout:"slot-inline"
     },
     return: {
         props: {},
@@ -114,8 +114,7 @@ const NODE_DEFS = {
     },
     literal: {
         props: { value: "" },
-        slots: [],
-        slotLayout:"slot-block"
+        slots: []
     },
     add: {
         props: { op: "+", parenthesis: true },
@@ -144,6 +143,46 @@ const NODE_DEFS = {
     },
     or: {
         props: { op: "||", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    equals: {
+        props: { op: "===", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    notequals: {
+        props: { op: "!==", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    equal: {
+        props: { op: "==", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    notequal: {
+        props: { op: "!=", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    inf: {
+        props: { op: "<", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    infequal: {
+        props: { op: "<=", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    sup: {
+        props: { op: ">", parenthesis: true },
+        slots: ["left", "right"],
+        slotLayout:"slot-inline"
+    },
+    supequal: {
+        props: { op: ">=", parenthesis: true },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
@@ -177,28 +216,26 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-block"
     },
-    chain: { // ( [input array].[slot][button +.], [input array].[slot].[slot1][button +.] )
+    chain: { 
         props: { arrayname: "", dotslotcount: 0 },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     join: { 
         props: { separator: "" },
-        slots: [],
-        slotLayout:"slot-inline"
+        slots: []
     },
     split: { 
         props: { separator: "" },
-        slots: [],
-        slotLayout:"slot-inline"
+        slots: []
     },
     map: { 
-        props: {},
+        props: { useThisArg: false, thisArg: "this argument" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     flatmap: { 
-        props: {},
+        props: { useThisArg: false, thisArg: "this argument" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -209,13 +246,80 @@ const NODE_DEFS = {
     },
     flat: { 
         props: { depth: 1 },
-        slots: [],
-        slotLayout:"slot-inline"
+        slots: []
     },
     find: { 
         props: { useThisArg: false, thisArg: "this argument" },
         slots: ["body"],
         slotLayout:"slot-inline"
+    },
+    findindex: { 
+        props: { useThisArg: false, thisArg: "this argument" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    findlast: { 
+        props: { useThisArg: false, thisArg: "this argument" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    some: { 
+        props: { useThisArg: false, thisArg: "this argument" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    every: { 
+        props: { useThisArg: false, thisArg: "this argument" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    pop: { 
+        props: {},
+        slots: []
+    },
+    shift: { 
+        props: {},
+        slots: []
+    },
+    keys: { 
+        props: {},
+        slots: []
+    },
+    values: { 
+        props: {},
+        slots: []
+    },
+    reverse: { 
+        props: {},
+        slots: []
+    },
+    entries: { 
+        props: {},
+        slots: []
+    },
+    includes: { 
+        props: { search: "", useFrom: false, from: "0" },
+        slots: []
+    },
+    indexof: { 
+        props: { search: "", useFrom: false, from: "0" },
+        slots: []
+    },
+    lastindexof: { 
+        props: { search: "", useFrom: false, from: "0" },
+        slots: []
+    },
+    push: { 
+        props: { element: "", inputcount: 0 },
+        slots: []
+    },
+    unshift: { 
+        props: { element: "", inputcount: 0 },
+        slots: []
+    },
+    concat: { 
+        props: { element: "", inputcount: 0 },
+        slots: []
     }
 }
 
@@ -224,54 +328,306 @@ const NODE_DEFS = {
  *==================================================================================*/
 const RULES = {
     foreach: {
-        forbidden: ["break"],
-        allowed: ["all"],
-        node_allowed: Infinity
+        body: {
+            forbidden: ["break"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
     },
     object_create: {
-        forbidden: ["all"],
-        allowed: ["object_set"],
-        node_allowed: Infinity
+        body: {
+            forbidden: ["all"],
+            allowed: ["object_set"],
+            node_allowed: Infinity
+        }
     },
     object_set: {
-        forbidden: ["all"],
-        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+            node_allowed: 1
+        }
     },
     array_create: {
-        forbidden: ["all"],
-        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
-        node_allowed: Infinity
+        body: {
+            forbidden: ["all"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+            node_allowed: Infinity
+        }
     },
     let: {
-        forbidden: ["all"],
-        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
+            node_allowed: 1
+        }
     },
     const: {
-        forbidden: ["all"],
-        allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
+            node_allowed: 1
+        }
     },
     chain: {
-        forbidden: ["all"],
-        allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap", "find"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
+            node_allowed: 1
+        }
     },
     map: {
-        forbidden: ["all"],
-        allowed: ["arrow"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
     },
     flatmap: {
-        forbidden: ["all"],
-        allowed: ["arrow"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
     },
     filter: {
-        forbidden: ["all"],
-        allowed: ["arrow"],
-        node_allowed: 1
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    find: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    findindex: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    findlast: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    some: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    every: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["arrow", "literal"],
+            node_allowed: 1
+        }
+    },
+    if: {
+        condition: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        then: {
+            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
+    },
+    ifelse: {
+        condition: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        then: {
+            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        },
+        else: {
+            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
+    },
+    and: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    or: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    equals: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    equal: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    notequals: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    notequal: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    inf: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    infequal: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    sup: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    supequal: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            node_allowed: 1
+        }
+    },
+    add: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        }
+    },
+    sub: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        }
+    },
+    mul: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        }
+    },
+    div: {
+        left: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        },
+        right: {
+            forbidden: ["all"],
+            allowed: ["literal", "add", "sub", "mul", "div"],
+            node_allowed: 1
+        }
     }
 }
 
@@ -319,20 +675,23 @@ const PALETTE = [
             { type: "mul", label: "*" },
             { type: "div", label: "/" },
             { type: "equals", label: "===" },
+            { type: "equal", label: "==" },
             { type: "notequals", label: "!==" },
+            { type: "notequal", label: "!=" },
+            { type: "sup", label: ">" },
+            { type: "supequal", label: ">=" },
+            { type: "inf", label: "<" },
+            { type: "infequal", label: "<=" },
             { type: "and", label: "&&" },
             { type: "or", label: "||" },
             { type: "not", label: "!" }
         ]
     },
     {
-        category: "Data",
+        category: "Array",
         items: [
             { type: "array_create", label: "Array []" },
             { type: "array_get", label: "Array get" },
-            { type: "object_create", label: "Object {}" },
-            { type: "object_get", label: "Object get" },
-            { type: "object_set", label: "Object set" },
             { type: "join", label: "Join" },
             { type: "split", label: "Split" },
             { type: "map", label: "Map" },
@@ -340,7 +699,34 @@ const PALETTE = [
             { type: "flat", label: "Flat" },
             { type: "flatmap", label: "Flat map" },
             { type: "find", label: "Find" },
+            { type: "findindex", label: "Find index" },
+            { type: "findlast", label: "Find last" },
+            { type: "some", label: "Some" },
+            { type: "every", label: "Every" },
+            { type: "pop", label: "Pop" },
+            { type: "shift", label: "Shift" },
+            { type: "keys", label: "Keys" },
+            { type: "values", label: "Values" },
+            { type: "entries", label: "Entries" },
+            { type: "reverse", label: "Reverse" },
+            { type: "includes", label: "Includes" },
+            { type: "indexof", label: "indexOf" },
+            { type: "lastindexof", label: "lastIndexOf" },
+            { type: "push", label: "Push" },
+            { type: "unshift", label: "Unshift" },
+            { type: "concat", label: "Concat" },
             { type: "literal", label: "Literal" }
+        ]
+    },
+    {
+        category: "Object",
+        items: [
+            { type: "object_create", label: "Object {}" },
+            { type: "object_get", label: "Object get" },
+            { type: "object_set", label: "Object set" },
+            { type: "object_keys", label: "Keys" }, // méthode statique
+            { type: "object_values", label: "Values" }, // méthode statique
+            { type: "object_entries", label: "Entries" }, // méthode statique
         ]
     },
     {
@@ -397,6 +783,16 @@ const COLLAPSIBLE = new Set([
     "join",
     "split",
     "flat",
-    "find"
+    "find",
+    "findindex",
+    "findlast",
+    "some",
+    "every",
+    "includes",
+    "indexof",
+    "lastindexof",
+    "push",
+    "unshift",
+    "concat"
 ])
 
