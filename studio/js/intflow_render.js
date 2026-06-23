@@ -99,9 +99,9 @@ function getCollapsedLabel(node) {
         case "let":
             return `let ${node.props.name || "?"} = ...`
         case "function":
-            return `function ${node.props.name || "anonymous"}(...)`
+            return `function ${node.props.name || "anonymous"} (${node.props.parameters || ""}) {...}`
         case "async":
-            return `async function ${node.props.name || "anonymous"}(...)`
+            return `async function ${node.props.name || "anonymous"} (${node.props.parameters || ""}) {...}`
         case "fetch":
             return `fetch("${node.props.url || "?"}", {...})...`
         case "object_create":
@@ -109,9 +109,9 @@ function getCollapsedLabel(node) {
         case "array_create":
             return `[...]`
         case "ifelse":
-            return `if (${node.props.condition || "?"}) {...} else {...}`
+            return `if (...) {...} else {...}`
         case "if":
-            return `if (${node.props.condition || "?"}) {...}`
+            return `if (...) {...}`
         case "for":
             return `for (${node.props.varName || "?"}) {...}`
         case "while":
@@ -124,20 +124,33 @@ function getCollapsedLabel(node) {
             return `${node.props.arrayname || "?"}.chain`
         case "arrow":
             return `(element, ...) => {...}`
-        case "filter":
-            return `filter (...)`
-        case "map":
-            return `map (...)`
-        case "join":
-            return `join (...)`
-        case "split":
-            return `split (...)`
         case "flat":
             return `flat (depth = ${node.props.depth || "?"})`
         case "flatmap":
-            return `flatmap (...)`
+            return `flatMap (...)`
+        case "findindex":
+            return `findIndex (...)`
+        case "findlast":
+            return `findLast (...)`
+        case "filter":
+        case "map":
         case "find":
-            return `find (...)`
+        case "some":
+        case "every":
+            return `${node.type} (...)`
+        case "split":
+        case "join":
+            return `${node.type} (${node.props.separator || "?"})` 
+        case "indexof":
+            return `indexOf (${node.props.search || "?"}, ...)` 
+        case "lastindexof":
+            return `lastIndexOf (${node.props.search || "?"}, ...)` 
+        case "includes":
+            return `${node.type} (${node.props.search || "?"}, ...)` 
+        case "concat":
+        case "unshift":
+        case "push":
+            return `${node.type} (${node.props.element || "?"}${node.props.inputcount==0?"":", ..."})` 
         default:
             return node.type
     }
@@ -199,34 +212,19 @@ function renderNodeContent(node, el) {
             break
         }
         /* ================= LOG ================= */
+        case "error":
+        case "warn":
         case "log": {
             const line = document.createElement("div")
             const messageInput = createInput(node, "message", el)
-            line.append("console.log(", messageInput, ")")
-            el.appendChild(line)
-            break
-        }
-        /* ================= WARN ================= */
-        case "warn": {
-            const line = document.createElement("div")
-            const messageInput = createInput(node, "message", el)
-            line.append("console.warn(", messageInput, ")")
-            el.appendChild(line)
-            break
-        }
-        /* ================= ERROR ================= */
-        case "error": {
-            const line = document.createElement("div")
-            const messageInput = createInput(node, "message", el)
-            line.append("console.error(", messageInput, ")")
+            line.append("console.", node.type, "(", messageInput, ")")
             el.appendChild(line)
             break
         }
         /* ================= IFELSE ================= */
         case "ifelse": {
             const line = document.createElement("div")
-            const condInput = createInput(node, "condition", el)
-            line.append("if ( ", condInput, " ) {")
+            line.append("if ( ", renderSlot(node, "condition"), " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "then"))
             const elseLine = document.createElement("div")
@@ -241,8 +239,7 @@ function renderNodeContent(node, el) {
         /* ================= IF ================= */
         case "if": {
             const line = document.createElement("div")
-            const condInput = createInput(node, "condition", el)
-            line.append("if ( ", condInput, " ) {")
+            line.append("if ( ", renderSlot(node, "condition"), " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "then"))
             const close = document.createElement("div")
@@ -257,11 +254,12 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= LET ================= */
+        /* ================= CONST, LET ================= */
+        case "const":
         case "let": {
             const line = document.createElement("div")
             const name = createInput(node, "name", el)
-            line.append("let ", name, " = ", renderSlot(node, "body"))
+            line.append(node.type, " ", name, " = ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -270,14 +268,6 @@ function renderNodeContent(node, el) {
             const line = document.createElement("div")
             const name = createInput(node, "name", el)
             line.append(name, " = ", renderSlot(node, "body"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= CONST ================= */
-        case "const": {
-            const line = document.createElement("div")
-            const name = createInput(node, "name", el)
-            line.append("const ", name, " = ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -386,16 +376,10 @@ function renderNodeContent(node, el) {
             break
         }
         /* ================= BREAK ================= */
+        case "continue":
         case "break": {
             const line = document.createElement("div")
-            line.append("break")
-            el.appendChild(line)
-            break
-        }
-        /* ================= CONTINUE ================= */
-        case "continue": {
-            const line = document.createElement("div")
-            line.append("continue")
+            line.append(node.type)
             el.appendChild(line)
             break
         }
@@ -430,51 +414,39 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= ADD ================= */
+        /* ================= ADD, SUB, MUL, DIV, AND, OR, EQUALS, NOTEQUALS, EQUAL, NOTEQUAL, INFEQUAL, INF, SUPEQUAL, SUP ================= */
+        case "infequal":
+        case "inf":
+        case "supequal":
+        case "sup":
+        case "notequal":
+        case "equal":
+        case "notequals":
+        case "equals":
+        case "or":
+        case "and":
+        case "div":
+        case "mul":
+        case "sub":
         case "add": {
+            let op = ""
+            if (node.type === "add") op = " + "
+            if (node.type === "sub") op = " - "
+            if (node.type === "mul") op = " * "
+            if (node.type === "div") op = " / "
+            if (node.type === "and") op = " && "
+            if (node.type === "or") op = " || "
+            if (node.type === "equals") op = " === "
+            if (node.type === "notequals") op = " !== "
+            if (node.type === "equal") op = " == "
+            if (node.type === "notequal") op = " != "
+            if (node.type === "inf") op = " < "
+            if (node.type === "infequal") op = " <= "
+            if (node.type === "sup") op = " > "
+            if (node.type === "supequal") op = " >= "
             node.props.parenthesis = true
             const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " + ", renderSlot(node, "right"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= SUB ================= */
-        case "sub": {
-            node.props.parenthesis = true
-            const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " - ", renderSlot(node, "right"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= MUL ================= */
-        case "mul": {
-            node.props.parenthesis = false
-            const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " * ", renderSlot(node, "right"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= DIV ================= */
-        case "div": {
-            node.props.parenthesis = false
-            const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " / ", renderSlot(node, "right"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= AND ================= */
-        case "and": {
-            node.props.parenthesis = false
-            const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " && ", renderSlot(node, "right"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= OR ================= */
-        case "or": {
-            node.props.parenthesis = true
-            const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), " || ", renderSlot(node, "right"))
+            line.append(renderSlot(node, "left"), op, renderSlot(node, "right"))
             el.appendChild(line)
             break
         }
@@ -677,33 +649,12 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= FILTER(ARROW) ================= */
-        case "filter": {
-            const line = document.createElement("div")
-            line.append("filter (", renderSlot(node, "body"), ")")
-            el.appendChild(line)
-            break
-        }
-        /* ================= MAP(ARROW) ================= */
-        case "map": {
-            const line = document.createElement("div")
-            line.append("map (", renderSlot(node, "body"), ")")
-            el.appendChild(line)
-            break
-        }
         /* ================= JOIN(INPUT) ================= */
+        case "split":
         case "join": {
             const line = document.createElement("div")
             const paramInput = createInput(node, "separator", el, true)
-            line.append("join ( ", paramInput, " )")
-            el.appendChild(line)
-            break
-        }
-        /* ================= SPLIT(INPUT) ================= */
-        case "split": {
-            const line = document.createElement("div")
-            const paramInput = createInput(node, "separator", el, true)
-            line.append("split ( ", paramInput, " )")
+            line.append(node.type, " ( ", paramInput, " )")
             el.appendChild(line)
             break
         }
@@ -715,15 +666,33 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= FLATMAP(ARROW) ================= */
-        case "flatmap": {
-            const line = document.createElement("div")
-            line.append("flatmap (", renderSlot(node, "body"), ")")
-            el.appendChild(line)
-            break
-        }
-        /* ================= FIND(ARROW, INPUT(thisArg)) ================= */
-        case "find": {
+        /* ================= FINDINDEX, FIND, FILTER, MAP, FLATMAP, FINDLAST, SOME, EVERY(ARROW, INPUT(thisArg)) ================= */
+        case "every":
+        case "some":
+        case "findlast":
+        case "filter":
+        case "map":
+        case "flatmap":
+        case "find":
+        case "findindex": {
+            let typetext = ""
+            switch (node.type) {
+                case "flatmap":{
+                    typetext = "flatMap"
+                    break
+                }
+                case "findindex":{
+                    typetext = "findIndex"
+                    break
+                }
+                case "findlast":{
+                    typetext = "findLast"
+                    break
+                }
+                default: {
+                    typetext = node.type
+                }
+            }
             const options = document.createElement("div")
             options.appendChild(createCheckbox(node, "useThisArg", "thisArg", el))
             el.appendChild(options)
@@ -731,36 +700,92 @@ function renderNodeContent(node, el) {
             const line = document.createElement("div")
             if (node.props.useThisArg){
                 const thisArgInput = createInput(node, "thisArg", el, true)
-                line.append("find (", renderSlot(node, "body"), ", ", thisArgInput, " )")
+                line.append(typetext, " (", renderSlot(node, "body"), ", ", thisArgInput, " )")
             } else {
-                line.append("find (", renderSlot(node, "body"), ")")
+                line.append(typetext, " (", renderSlot(node, "body"), ")")
             }
             el.appendChild(line)
             break
         }
+        /* ================= ENTRIES, KEYS, POP, VALUES, SHIFT, REVERSE ================= */
+        case "entries":
+        case "reverse":
+        case "pop":
+        case "shift":
+        case "values":
+        case "keys": {
+            const line = document.createElement("div")
+            line.append(node.type, "()")
+            el.appendChild(line)
+            break
+        }
+        /* ================= LASTINDEXOF, INDEXOF, INCLUDES(INPUT) ================= */
+        case "lastindexof":
+        case "indexof":
+        case "includes": {
+            const line = document.createElement("div")
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useFrom", "Use from", el))
+            el.appendChild(options)
+            const searchInput = createInput(node, "search", el, true)
+            let typetext = node.type
+            if (node.type === "indexof") typetext = "indexOf"
+            if (node.type === "lastindexof") typetext = "lastIndexOf"
+            if (node.props.useFrom) {
+                const fromInput = createInput(node, "from", el, true)
+                line.append(typetext, " ( ", searchInput, ", ", fromInput, " )")
+            } else {
+                line.append(typetext, " ( ", searchInput, " )")
+            }
+            el.appendChild(line)
+            break
+        }
+        /* ================= UNSHIFT, PUSH(INPUTS) ================= */
+        case "concat":
+        case "unshift":
+        case "push": {
+            const plusbtn = document.createElement("button")
+            plusbtn.className = "btn btn-primary"
+            plusbtn.innerText = "+"
+            plusbtn.onclick = () => {
+                node.props.inputcount += 1
+                node.props[`hasinput-${node.props.inputcount}`] = false
+                node.props[`element-${node.props.inputcount}`] = ""
+                render()
+            }
+            const delbtn = document.createElement("button")
+            delbtn.className = "btn btn-secondary"
+            delbtn.innerText = "🗑"
+            delbtn.onclick = () => {
+                delete node.props[`hasinput-${node.props.inputcount}`]
+                delete node.props[`element-${node.props.inputcount}`]
+                node.props.inputcount -= 1
+                render()
+            }
 
-        /* ================= FINDINDEX(ARROW) ================= */
-        /* ================= FINDLAST(ARROW) ================= */
-        /* ================= INCLUDES(INPUT) ================= */
-        /* ================= INDEXOF(INPUT) ================= */
-        /* ================= LASTINDEXOF(INPUT) ================= */
-        /* ================= KEYS ================= */
-        /* ================= POP ================= */
-        /* ================= PUSH(INPUT) ================= */
+            const line = document.createElement("div")
+            const elementInput = createInput(node, "element", el, true)
+            line.append(node.type, " (", elementInput)
+
+            for(let i = 1; i <= node.props.inputcount; i++) {
+                const elInput = createInput(node, `element-${i}`, el, true)
+                elInput.placeholder = "element"
+                line.append(", ", elInput)
+            }
+            line.append(")")
+            line.append(node.props.inputcount > 0?delbtn:"", plusbtn)
+            el.appendChild(line)
+            break
+        }
+
+
         /* ================= REDUCE(ARROW, INPUT(initialvalue)) ================= */
-        /* ================= REVERSE ================= */
-        /* ================= SHIFT ================= */
         /* ================= SLICE(INPUT(start), INPUT(end)) ================= */
-        /* ================= SOME(ARROW, INPUT(thisArg)) ================= */
         /* ================= SORT(INPUT(comparefct)) ================= */
         /* ================= SPLICE(INPUT(start), INPUT(deletecount), INPUT(itemtoadd)) ================= */
-        /* ================= UNSHIFT(INPUT(elements)) ================= */
-        /* ================= VALUES ================= */
         /* ================= WITH(INPUT(index), INPUT(value)) ================= */
         /* ================= AT(INPUT(index)) ================= */
         /* ================= CONCAT(INPUT(values)) ================= */
-        /* ================= ENTRIES ================= */
-        /* ================= EVERY(ARROW, INPUT(thisArg)) ================= */
         /* ================= FILL(INPUT(value), INPUT(start), INPUT(end)) ================= */
         /* ================= > ================= */
         /* ================= < ================= */
@@ -804,16 +829,16 @@ function renderSlot(node, slotName) {
         if(draggedNode === node) return
 
         // validation (très important)
-        if (!isNodeAllowedInParent(node, draggedNode.type)) {
-            alert(`${draggedNode.type} est interdit dans ${node.type}`)
-            resetDrag()
+        if (!isNodeAllowedInNode(node, draggedNode.type, slotName)) {
+            alert(`${draggedNode.type} est interdit dans le slot ${slotName} de ${node.type}`)
             render()
+            resetDrag()
             return
         }
         if (!isNodeCountAllowedInParent(node, slotName)) {
             alert("Ce slot est complet")
-            resetDrag()
             render()
+            resetDrag()
             return
         }
 
