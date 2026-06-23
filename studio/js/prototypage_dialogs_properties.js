@@ -1093,6 +1093,8 @@ function saveCommonFilePopup() {
             console.log(res)
             if(res.status === "ok") {
                 alert("Votre nouveau fichier de flux interne est bien créé")
+                jsfileid = res.id
+                window.jsfileid = jsfileid
                 closeDialog()
             } else {
                 alert("Network error : New file not created")
