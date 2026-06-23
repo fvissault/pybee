@@ -176,7 +176,7 @@ function createDelButton(title) {
 function renderProjectFiles() {
     projectTree.innerHTML = ""
     // --- Helper pour créer une section ---
-    function createSection(title, isOpen = true) {
+    function createSection(title, isOpen = true, commonSection = false) {
         const section = document.createElement("div")
         section.className = "tree-section"
         const header = document.createElement("div")
@@ -194,6 +194,21 @@ function renderProjectFiles() {
         label.textContent = title
         header.appendChild(arrow)
         header.appendChild(label)
+        if (commonSection) {
+            const newCommonFile = document.createElement("button")
+            newCommonFile.className = "btn btn-primary"
+            newCommonFile.title = "Nouveau fichier commun"
+            newCommonFile.style.padding = "2px 7px 4px"
+            newCommonFile.innerText = "+"
+            newCommonFile.style.marginLeft = "auto"
+            newCommonFile.style.marginRight = "11px"
+            newCommonFile.style.width = "30px"
+            newCommonFile.addEventListener("click", (e) => {
+                e.stopPropagation()
+                commonFilePopup(projectid)
+            })
+            header.appendChild(newCommonFile)
+        }
         const content = document.createElement("div")
         content.style.display = isOpen ? "block" : "none"
         header.addEventListener("click", () => {
@@ -207,6 +222,27 @@ function renderProjectFiles() {
         section.appendChild(content)
         projectTree.appendChild(section)
         return content
+    }
+
+    // --- SECTION FICHIERS COMMUNS ---
+    const communsContainer = createSection("Fichiers communs", true, true)
+
+    if (!js.error) {
+        js.forEach(f => {
+            const el = createItemContainer()
+            const label = createItemLabel("📄 " + f.name)
+            label.addEventListener("click", () => {
+                loadJS(f.id)
+            })
+            const del = createDelButton("Supprimer le fichier IntFlow")
+            del.addEventListener("click", (e) => {
+                e.stopPropagation()
+                deleteJS(f.id)
+            })
+            el.appendChild(label)
+            el.appendChild(del)
+            communsContainer.appendChild(el)
+        })
     }
 
     // --- SECTION PAGES ---
@@ -231,7 +267,7 @@ function renderProjectFiles() {
     }
 
     // --- SECTION COMPONENTS ---
-    const componentsContainer = createSection("Components", true)
+    const componentsContainer = createSection("Composants", true)
 
     if (typeof components !== "undefined" && !components.error) {
         components.forEach(c => {
