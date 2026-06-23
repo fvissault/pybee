@@ -1052,3 +1052,53 @@ function saveFormProps(node) {
 function getWorkspace(){
   return workspaceRoot
 }
+
+async function commonFilePopup(projectid) {
+    const session = await getSession()
+    document.getElementById("dialogOverlay").classList.remove("hidden")
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Création d'un nouveau fichier de flux interne"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-column">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="id">Nom de votre nouveau fichier (sans extension)</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="" id="filename"/>
+                </div>
+            </div>
+        </div>` + makeDialogButtons()
+
+    content.querySelector("#saveprops").onclick = () => saveCommonFilePopup()
+}
+
+function saveCommonFilePopup() {
+    const nameoffile = document.getElementById("filename").value.trim()
+    if (nameoffile !== "") {
+        fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "create",
+                id_project: projectid,
+                content_type: "commonjs",
+                name: nameoffile,
+                content: "[]"
+            })
+        })
+        .then(r => r.json())
+        .then(res => {
+            console.log(res)
+            if(res.status === "ok") {
+                alert("Votre nouveau fichier de flux interne est bien créé")
+                closeDialog()
+            } else {
+                alert("Network error : New file not created")
+            }
+        });
+    } else {
+        document.getElementById("filename").focus()
+    }
+}
