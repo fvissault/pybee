@@ -1,3 +1,35 @@
+async function deleteJS(fileid){
+    await fetch("/pybee/studio/api/jsfiles.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getbyid",
+            id : fileid
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (!data.error) {
+            if(!confirm("Supprimer le fichier de flux interne '" + data.name + "' ?")) {
+                return
+            } else {
+                fetch("/pybee/studio/api/jsfiles.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "deletebyid",
+                        id : fileid
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    loadProjectFiles()
+                });
+            }
+        }
+    });
+}
+
 async function deleteBST(file){
     await fetch("/pybee/studio/api/projectfiles.py", {
         method: "POST",
@@ -28,6 +60,29 @@ async function deleteBST(file){
             }
         }
     });
+}
+
+async function loadJS(fileid){
+    try {
+        fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id : fileid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            // ouvrir Intflow avec le contenu
+            js = JSON.parse(data.content) || []
+            openIntFlow()
+        });
+    } catch(e) {
+        console.error(e)
+    }
+
 }
 
 async function loadBST(pageid){
