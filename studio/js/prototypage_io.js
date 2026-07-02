@@ -42,7 +42,7 @@ async function deleteBST(file){
     .then(r => r.json())
     .then(data => {
         if (!data.error) {
-            if(!confirm("Delete file '"+ data.pagename + "_" + data.id +"' ?")) {
+            if(!confirm("Delete file '"+ data.pagename + "' ?")) {
                 return
             } else {
                 fetch("/pybee/studio/api/projectfiles.py", {
@@ -54,34 +54,34 @@ async function deleteBST(file){
                     })
                 })
                 .then(r => r.json())
-                .then(data => {
-                    loadProjectFiles()
+                .then(res1 => {
+                    fetch("/pybee/studio/api/jsfiles.py", {
+                        method: "POST",
+                        credentials: "include",
+                        body: new URLSearchParams({
+                            action: "deletebyname",
+                            name : data.pagename
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res2 => {
+                        loadProjectFiles()
+                    });
                 });
             }
         }
     });
 }
 
-async function loadJS(nameoffile) {
-    fetch("/pybee/studio/api/jsfiles.py", {
-        method: "POST",
-        credentials: "include",
-        body: new URLSearchParams({
-            action: "getbyname",
-            name: nameoffile
-        })
-    })
-    .then(r => r.json())
-    .then(res => {
-        console.log(res)
-        if(!res.error) {
-            jsfileid = res.id
-            window.jsfileid = jsfileid
-            openIntFlow()
-        } else {
-            alert("Network error : New file not created")
-        }
-    });
+async function loadJS(id) {
+    const session = await getSession()
+    if (session) {
+        jsfileid = id
+        window.jsfileid = jsfileid
+        openIntFlow()
+    } else {
+        alert("Session de travail expirée")
+    }
 }
 
 async function loadBST(pageid){
@@ -102,6 +102,7 @@ async function loadBST(pageid){
         })
         .then(r => r.json())
         .then(data => {
+            console.log(data)
             currentPage = pageid
             perspective = "page"
             workspaceRoot = JSON.parse(data.filecontent)||null
@@ -316,6 +317,11 @@ async function saveFileBST() {
                     newfile = true
                 }
             });
+        }
+    } else {
+        if (workspaceRoot.props.name.trim() === "") {
+            alert("Votre page doit être nommée pour pouvoir être sauvegardée")
+            return
         }
     }
     if (newfile) {
