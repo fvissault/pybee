@@ -607,6 +607,7 @@ function renderNodeContent(node, el) {
                 node.props.dotslotcount += 1
                 node.slots[`dotplus-${node.props.dotslotcount}`] = []
                 node.props[`hasdotplus-${node.props.dotslotcount}`] = false
+                RULES["chain"][`dotplus-${node.props.dotslotcount}`] = RULES["chain"]["body"]
                 render()
             }
             const dotdel = document.createElement("button")
@@ -615,6 +616,7 @@ function renderNodeContent(node, el) {
             dotdel.onclick = () => {
                 delete node.slots[`dotplus-${node.props.dotslotcount}`]
                 delete node.props[`hasdotplus-${node.props.dotslotcount}`]
+                delete RULES["chain"][`dotplus-${node.props.dotslotcount}`]
                 node.props.dotslotcount -= 1
                 render()
             }
