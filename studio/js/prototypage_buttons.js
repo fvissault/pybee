@@ -33,7 +33,7 @@ document.getElementById("newComposantBtn").addEventListener("click", ()=> {
     }
 })
 
-function resetPage() {
+/*function resetPage() {
     workspaceRoot = {
         id:generateId("Container"),
         type:"container",
@@ -49,9 +49,9 @@ function resetPage() {
     currentPopup = null
     perspective = "page"
     document.getElementById("workspace_content").innerText = "Création d'une page"
-}
+}*/
 
-document.getElementById("newPageBtn").addEventListener("click",()=>{
+/*document.getElementById("newPageBtn").addEventListener("click",()=>{
     if (tosave) {
         let check = confirm("Voulez-vous enregistrer votre travail?")
         if (!check) {
@@ -62,7 +62,7 @@ document.getElementById("newPageBtn").addEventListener("click",()=>{
     } else {
         resetPage()
     }
-})
+})*/
 
 function resetPopup(componentid, componentname) {
     workspaceRoot = {
