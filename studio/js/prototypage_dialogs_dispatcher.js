@@ -115,8 +115,14 @@ function buildPopupContent(node, cat){
     }
 }
 
-function openIntFlow(){
-  window.open("intflow.html")
+function openIntFlow() {
+    if (!intflow || intflow.closed) {
+        intflow = window.open("intflow.html", "intflow")
+    } else {
+        intflow.location.reload()
+        intflow.focus();
+        //intflow.init();
+    }
 }
 
 function updateWorkspaceJS(js) {
