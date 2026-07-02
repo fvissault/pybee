@@ -43,11 +43,10 @@ async function init() {
 function isNodeAllowedInNode(parentNode, childType, targetSlotName) {
     const rules = RULES[parentNode.type];
     if (!rules) return true;
-    for (slot in NODE_DEFS[parentNode.type].slots) {
-        let slotname = NODE_DEFS[parentNode.type].slots[slot]
-        const allowed = rules[slotname].allowed ?? ["all"];
-        const forbidden = rules[slotname].forbidden ?? [];
-        if (targetSlotName == slotname) {
+    for (slot in parentNode.slots) {
+        const allowed = rules[slot].allowed ?? ["all"];
+        const forbidden = rules[slot].forbidden ?? [];
+        if (targetSlotName == slot) {
             if (forbidden.includes("all")) {
                 if (!allowed.includes("all")) {
                     if (!allowed.includes(childType)) {
