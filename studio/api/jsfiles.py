@@ -58,6 +58,17 @@ elif action == "getbyproject":
     jsfiles = cursor.fetchall()
     json_response(jsfiles if jsfiles else {"error": "files don't exists"})
 
+# SELECT (getbytype)
+elif action == "getbytype":
+    data = normalize(form, ["id", "content_type"])
+    sql = "SELECT * FROM jsfiles WHERE id_project=%s and content_type=%s"
+    cursor.execute(sql, (
+        data["id"],
+        data["content_type"],
+    ))
+    jsfiles = cursor.fetchall()
+    json_response(jsfiles if jsfiles else {"error": "files don't exists"})
+
 # UPDATE (filecontent)
 elif action == "updatecontent":
     data = normalize(form, ["content", "id"])
