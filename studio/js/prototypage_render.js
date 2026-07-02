@@ -176,7 +176,7 @@ function createDelButton(title) {
 function renderProjectFiles() {
     projectTree.innerHTML = ""
     // --- Helper pour créer une section ---
-    function createSection(title, isOpen = true, commonSection = false) {
+    function createSection(title, isOpen = true, commonSection = "") {
         const section = document.createElement("div")
         section.className = "tree-section"
         const header = document.createElement("div")
@@ -194,10 +194,10 @@ function renderProjectFiles() {
         label.textContent = title
         header.appendChild(arrow)
         header.appendChild(label)
-        if (commonSection) {
+        if (commonSection === "common" || commonSection === "pages") {
             const newCommonFile = document.createElement("button")
             newCommonFile.className = "btn btn-primary"
-            newCommonFile.title = "Nouveau fichier commun"
+            newCommonFile.title = "Nouveau fichier"
             newCommonFile.style.padding = "2px 7px 4px"
             newCommonFile.innerText = "+"
             newCommonFile.style.marginLeft = "auto"
@@ -205,7 +205,8 @@ function renderProjectFiles() {
             newCommonFile.style.width = "30px"
             newCommonFile.addEventListener("click", (e) => {
                 e.stopPropagation()
-                commonFilePopup(projectid)
+                if (commonSection === "common") commonFilePopup(projectid, "commonjs")
+                if (commonSection === "pages") commonFilePopup(projectid, 'pagejs')
             })
             header.appendChild(newCommonFile)
         }
@@ -225,28 +226,93 @@ function renderProjectFiles() {
     }
 
     // --- SECTION FICHIERS COMMUNS ---
-    const communsContainer = createSection("Fichiers communs", true, true)
+    const communsContainer = createSection("Js du projet", true, "common")
 
     if (!js.error) {
         js.forEach(f => {
-            const el = createItemContainer()
-            const label = createItemLabel("📄 " + f.name)
-            label.addEventListener("click", () => {
-                loadJS(f.name)
-            })
-            const del = createDelButton("Supprimer le fichier IntFlow")
-            del.addEventListener("click", (e) => {
-                e.stopPropagation()
-                deleteJS(f.id)
-            })
-            el.appendChild(label)
-            el.appendChild(del)
-            communsContainer.appendChild(el)
+            if (f.content_type === "commonjs") {
+                const el = createItemContainer()
+                const label = createItemLabel("📄 " + f.name)
+                label.addEventListener("click", () => {
+                    loadJS(f.id)
+                })
+                const del = createDelButton("Supprimer le fichier IntFlow")
+                del.addEventListener("click", (e) => {
+                    e.stopPropagation()
+                    deleteJS(f.id)
+                })
+                el.appendChild(label)
+                el.appendChild(del)
+                communsContainer.appendChild(el)
+            }
+        })
+    }
+
+    // --- SECTION FICHIERS JAVASCRIPT DES PAGES ---
+    const jspagesContainer = createSection("Js des pages", true)
+
+    if (!js.error) {
+        js.forEach(f => {
+            if (f.content_type === "pagejs") {
+                const el = createItemContainer()
+                const label = createItemLabel("📄 " + f.name)
+                label.addEventListener("click", () => {
+                    loadJS(f.id)
+                })
+                el.appendChild(label)
+                jspagesContainer.appendChild(el)
+            }
+        })
+    }
+
+    // --- SECTION FICHIERS JAVASCRIPT DES COMPOSANTS ---
+    const jscomponentsContainer = createSection("Js des composants", true)
+
+    if (!js.error) {
+        js.forEach(f => {
+            if (f.content_type === "componentjs") {
+                const el = createItemContainer()
+                const label = createItemLabel("📄 " + f.name)
+                label.addEventListener("click", () => {
+                    loadJS(f.name)
+                })
+                const del = createDelButton("Supprimer le fichier IntFlow")
+                del.addEventListener("click", (e) => {
+                    e.stopPropagation()
+                    deleteJS(f.id)
+                })
+                el.appendChild(label)
+                el.appendChild(del)
+                jscomponentsContainer.appendChild(el)
+            }
+        })
+    }
+
+    // --- SECTION FICHIERS JAVASCRIPT DES PAGES ADMIN DES COMPOSANTS ---
+    const jsadmcomponentsContainer = createSection("Js des admin composants", true)
+
+    if (!js.error) {
+        js.forEach(f => {
+            if (f.content_type === "compadmjs") {
+                const el = createItemContainer()
+                const label = createItemLabel("📄 " + f.name)
+                label.addEventListener("click", () => {
+                    loadJS(f.name)
+                })
+                const del = createDelButton("Supprimer le fichier IntFlow")
+                del.addEventListener("click", (e) => {
+                    e.stopPropagation()
+                    deleteJS(f.id)
+                })
+                el.appendChild(label)
+                el.appendChild(del)
+                jsadmcomponentsContainer.appendChild(el)
+            }
         })
     }
 
     // --- SECTION PAGES ---
-    const pagesContainer = createSection("Pages", true)
+    const pagesContainer = createSection("Pages", true, "pages")
 
     if (!pages.error) {
         pages.forEach(f => {
