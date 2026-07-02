@@ -571,6 +571,7 @@ function savePageProps(node) {
         }
         node.props.name = pagename.trim()
         node.props.title = document.getElementById("page_title").value.trim()
+        closeDialog()
     } else {
         const composant_name = document.getElementById("comp_name").value
         if (composant_name.trim() === "") {
@@ -1053,7 +1054,7 @@ function getWorkspace(){
   return workspaceRoot
 }
 
-async function commonFilePopup(projectid) {
+async function commonFilePopup(projectid, type) {
     const session = await getSession()
     document.getElementById("dialogOverlay").classList.remove("hidden")
     const head = document.getElementById("dialogHeader")
@@ -1070,20 +1071,42 @@ async function commonFilePopup(projectid) {
                 </div>
             </div>
         </div>` + makeDialogButtons()
-
-    content.querySelector("#saveprops").onclick = () => saveCommonFilePopup()
+    content.querySelector("#saveprops").onclick = () => saveFilePopup(type)
 }
 
-function saveCommonFilePopup() {
+async function saveFilePopup(type) {
     const nameoffile = document.getElementById("filename").value.trim()
     if (nameoffile !== "") {
-        fetch("/pybee/studio/api/jsfiles.py", {
+        if (type === "pagejs") {
+            const content = { id: generateId("Container"), type:'container', props:{}, css:{}, events:{}, children:[]}
+            await fetch("/pybee/studio/api/projectfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "create",
+                    id_project: projectid,
+                    filecontent: JSON.stringify(serializeNode(content)),
+                    pagename: nameoffile
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                console.log(res)
+                if(res.status === "ok") {
+                    alert("Votre nouvelle page est bien créée")
+                } else {
+                    alert("Network error : New file not created")
+                }
+            });
+        }
+
+        await fetch("/pybee/studio/api/jsfiles.py", {
             method: "POST",
             credentials: "include",
             body: new URLSearchParams({
                 action: "create",
                 id_project: projectid,
-                content_type: "commonjs",
+                content_type: type,
                 name: nameoffile,
                 content: "[]"
             })
@@ -1093,8 +1116,7 @@ function saveCommonFilePopup() {
             console.log(res)
             if(res.status === "ok") {
                 alert("Votre nouveau fichier de flux interne est bien créé")
-                jsfileid = res.id
-                window.jsfileid = jsfileid
+                loadProjectFiles()
                 closeDialog()
             } else {
                 alert("Network error : New file not created")
