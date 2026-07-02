@@ -25,6 +25,7 @@ let currentComponent = null
 let currentPopup = null
 let tosave = false
 let perspective = "page"
+let intflow = null
 
 let workspaceRoot = {
     id:generateId("Container"),
