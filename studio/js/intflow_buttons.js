@@ -4,6 +4,7 @@
 function save() {
     try {
         const fileid = window.opener.jsfileid
+        console.log(tree)
         fetch("/pybee/studio/api/jsfiles.py", {
             method: "POST",
             credentials: "include",
