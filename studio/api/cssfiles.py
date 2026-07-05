@@ -1,4 +1,4 @@
-#!C:\Users\frede\AppData\Local\Programs\Python\Python312\python.exe
+#!C:\Users\A648326\AppData\Local\Programs\Python\Python312\python.exe
 from db import get_db
 from utils import *
 
