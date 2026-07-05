@@ -320,6 +320,49 @@ const NODE_DEFS = {
     concat: { 
         props: { element: "", inputcount: 0 },
         slots: []
+    },
+    class: { 
+        props: { classname: "", useExtends: "", extends: "" },
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    constructor: { 
+        props: { parameters: "" },
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    method: { 
+        props: { methodname: "", parameters: "", useStatic: "", usePrivate: "" },
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    new: { 
+        props: { classname: "", parameters: "" },
+        slots: []
+    },
+    super: { 
+        props: { parameters: "" },
+        slots: []
+    },
+    property: {
+        props: { name: "", useStatic: "", usePrivate: "", useGetterSetter: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    switch: {
+        props: { varname: "" },
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    case: {
+        props: { varvalue: "" },
+        slots: ["body"],
+        slotLayout:"slot-block"
+    },
+    default: {
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-block"
     }
 }
 
@@ -628,6 +671,55 @@ const RULES = {
             allowed: ["literal", "add", "sub", "mul", "div"],
             node_allowed: 1
         }
+    },
+    class: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["constructor", "method", "property"],
+            node_allowed: Infinity
+        }
+    },
+    constructor: {
+        body: {
+            forbidden: ["constructor", "method"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
+    },
+    method: {
+        body: {
+            forbidden: ["constructor", "super", "method"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
+    },
+    property: {
+        body: {
+            forbidden: ["constructor", "super", "method"],
+            allowed: ["all"],
+            node_allowed: 1
+        }
+    },
+    switch: {
+        body: {
+            forbidden: ["all"],
+            allowed: ["case", "default"],
+            node_allowed: Infinity
+        }
+    },
+    case: {
+        body: {
+            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
+    },
+    default: {
+        body: {
+            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
+            allowed: ["all"],
+            node_allowed: Infinity
+        }
     }
 }
 
@@ -649,6 +741,8 @@ const PALETTE = [
             { type: "if", label: "If" },
             { type: "ifelse", label: "If / Else" },
             { type: "switch", label: "Switch" },
+            { type: "case", label: "Case" },
+            { type: "default", label: "Default" },
             { type: "for", label: "For loop" },
             { type: "foreach", label: "ForEach loop" },
             { type: "while", label: "While loop" },
@@ -688,7 +782,7 @@ const PALETTE = [
         ]
     },
     {
-        category: "Array",
+        category: "Arrays",
         items: [
             { type: "array_create", label: "Array []" },
             { type: "array_get", label: "Array get" },
@@ -719,7 +813,7 @@ const PALETTE = [
         ]
     },
     {
-        category: "Object",
+        category: "Objects",
         items: [
             { type: "object_create", label: "Object {}" },
             { type: "object_get", label: "Object get" },
@@ -727,6 +821,17 @@ const PALETTE = [
             { type: "object_keys", label: "Keys" }, // méthode statique
             { type: "object_values", label: "Values" }, // méthode statique
             { type: "object_entries", label: "Entries" }, // méthode statique
+        ]
+    },
+    {
+        category: "Classes",
+        items: [
+            { type: "class", label: "Class" },
+            { type: "property", label: "Property" },
+            { type: "constructor", label: "Constructor" },
+            { type: "method", label: "Method" },
+            { type: "super", label: "Super" },
+            { type: "new", label: "New" }
         ]
     },
     {
@@ -769,6 +874,8 @@ const COLLAPSIBLE = new Set([
     "if",
     "ifelse",
     "switch",
+    "case",
+    "default",
     "object_create",
     "array_create",
     "let",
@@ -793,6 +900,10 @@ const COLLAPSIBLE = new Set([
     "lastindexof",
     "push",
     "unshift",
-    "concat"
+    "concat",
+    "class",
+    "constructor",
+    "method",
+    "property"
 ])
 
