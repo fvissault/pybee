@@ -151,6 +151,20 @@ function getCollapsedLabel(node) {
         case "unshift":
         case "push":
             return `${node.type} (${node.props.element || "?"}${node.props.inputcount==0?"":", ..."})` 
+        case "method":
+            return `${node.type} ${node.props.useStatic?"static ":""}${node.props.usePrivate?"#":""}${node.props.methodname || "?"} (${node.props.parameters || "?"})` 
+        case "constructor":
+            return `${node.type} (${node.props.parameters || "?"})` 
+        case "class":
+            return `${node.type} ${node.props.classname || "?"} ${node.props.useExtends?" extends " + (node.props.extends!=""?node.props.extends:"?"):""}` 
+        case "property":
+            return `${node.type} ${node.props.useStatic?"static ":""}${node.props.usePrivate?"#":""}${node.props.name || "?"}${node.props.useGetterSetter?" with accessors":""}` 
+        case "switch":
+            return `${node.type} on ${node.props.varname || "?"} {...}` 
+        case "case":
+            return `in ${node.type} ${node.props.varvalue || "?"}: {...}` 
+        case "default":
+            return `by ${node.type}: {...}` 
         default:
             return node.type
     }
@@ -780,6 +794,108 @@ function renderNodeContent(node, el) {
             break
         }
 
+        /* ================= CLASS ================= */
+        case "class": {
+            const line = document.createElement("div")
+            const classNameInput = createInput(node, "classname", el, true)
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useExtends", "Extends", el))
+            el.appendChild(options)
+            if (node.props.useExtends) {
+                const extendsInput = createInput(node, "extends", el, true)
+                line.append("class ", classNameInput, " extends ", extendsInput, " {")
+            } else {
+                line.append("class ", classNameInput, " {")
+            }
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= CONSTRUCTOR ================= */
+        case "constructor": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "parameters", el, true)
+            line.append(node.type, " (", paramInput, ") {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= CLASS METHOD ================= */
+        case "method": {
+            const line = document.createElement("div")
+            const methodInput = createInput(node, "methodname", el, true)
+            const paramInput = createInput(node, "parameters", el, true)
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useStatic", "Static", el))
+            options.appendChild(createCheckbox(node, "usePrivate", "Private", el))
+            el.appendChild(options)
+            line.append(node.props.useStatic?"static ":"", node.props.usePrivate?"#":"", methodInput , " (", paramInput, ") {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= SUPER ================= */
+        case "super": {
+            const line = document.createElement("div")
+            const paramInput = createInput(node, "parameters", el, true)
+            line.append(node.type, " (", paramInput, ")")
+            el.appendChild(line)
+            break
+        }
+        /* ================= NEW ================= */
+        case "new": {
+            const line = document.createElement("div")
+            const classNameInput = createInput(node, "classname", el, true)
+            const paramInput = createInput(node, "parameters", el, true)
+            line.append("new ", classNameInput , " (", paramInput, ")")
+            el.appendChild(line)
+            break
+        }
+        /* ================= PROPERTY ================= */
+        case "property": {
+            const line = document.createElement("div")
+            const name = createInput(node, "name", el)
+            const options = document.createElement("div")
+            options.appendChild(createCheckbox(node, "useStatic", "Static", el))
+            options.appendChild(createCheckbox(node, "usePrivate", "Private", el))
+            options.appendChild(createCheckbox(node, "useGetterSetter", "Accessors", el))
+            el.appendChild(options)
+            line.append(node.props.useStatic?"static ":"", node.props.usePrivate?"#":"", name, " = ", renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= SWITCH ================= */
+        case "switch": {
+            const line = document.createElement("div")
+            const varname = createInput(node, "varname", el)
+            line.append("switch on ", varname, " {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= CASE ================= */
+        case "case": {
+            const line = document.createElement("div")
+            const varvalue = createInput(node, "varvalue", el)
+            line.append("in case ", varvalue, ": {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= DEFAULT ================= */
+        case "default": {
+            const line = document.createElement("div")
+            line.append("by default: {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
+            break
+        }
 
         /* ================= REDUCE(ARROW, INPUT(initialvalue)) ================= */
         /* ================= SLICE(INPUT(start), INPUT(end)) ================= */
@@ -789,12 +905,6 @@ function renderNodeContent(node, el) {
         /* ================= AT(INPUT(index)) ================= */
         /* ================= CONCAT(INPUT(values)) ================= */
         /* ================= FILL(INPUT(value), INPUT(start), INPUT(end)) ================= */
-        /* ================= > ================= */
-        /* ================= < ================= */
-        /* ================= >= ================= */
-        /* ================= <= ================= */
-        /* ================= == ================= */
-        /* ================= != ================= */
     }
 }
 
