@@ -153,6 +153,14 @@ body {
     background: #eef3fb;
 }
 
+.node.class,
+.node.constructor,
+.node.method,
+.node.super,
+.node.property {
+    border-left: 10px solid #b4e24a;
+}
+
 .node.arrow,
 .node.async,
 .node.function {
@@ -161,6 +169,9 @@ body {
 
 .node.if,
 .node.ifelse,
+.node.switch,
+.node.case,
+.node.default,
 .node.try {
     border-left: 10px solid #9b59b6;
 }
