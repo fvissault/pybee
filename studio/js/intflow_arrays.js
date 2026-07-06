@@ -12,21 +12,24 @@ const NODE_DEFS = {
         slots: []
     },
     listener: {
-        props: { selectorType: "id", target: "objectId", event: "click" },
+        props: { element: "", fromType: "document", selectorType: "id", target: "", event: "click" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
     log: {
-        props: { message: "" },
-        slots: []
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     warn: {
-        props: { message: "" },
-        slots: []
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     error: {
-        props: { message: "" },
-        slots: []
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
     },
     for: {
         props: { varName: "", from: 0, to: 10 },
@@ -282,11 +285,11 @@ const NODE_DEFS = {
         slots: []
     },
     keys: { 
-        props: {},
+        props: { object: "" },
         slots: []
     },
     values: { 
-        props: {},
+        props: { object: "" },
         slots: []
     },
     reverse: { 
@@ -294,7 +297,7 @@ const NODE_DEFS = {
         slots: []
     },
     entries: { 
-        props: {},
+        props: { object: "" },
         slots: []
     },
     includes: { 
@@ -372,7 +375,7 @@ const NODE_DEFS = {
 const RULES = {
     foreach: {
         body: {
-            forbidden: ["break"],
+            forbidden: ["break", "new", "object_create", "array_create", "chain", "map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat", "add", "sub", "mul", "div", "and", "or", "not"],
             allowed: ["all"],
             node_allowed: Infinity
         }
@@ -387,28 +390,28 @@ const RULES = {
     object_set: {
         body: {
             forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "new"],
             node_allowed: 1
         }
     },
     array_create: {
         body: {
             forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "new"],
             node_allowed: Infinity
         }
     },
     let: {
         body: {
             forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow", "new"],
             node_allowed: 1
         }
     },
     const: {
         body: {
             forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow"],
+            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow", "new"],
             node_allowed: 1
         }
     },
@@ -720,6 +723,27 @@ const RULES = {
             allowed: ["all"],
             node_allowed: Infinity
         }
+    },
+    log: {
+        body: {
+            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
+            allowed: ["all"],
+            node_allowed: 1
+        }
+    },
+    warn: {
+        body: {
+            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
+            allowed: ["all"],
+            node_allowed: 1
+        }
+    },
+    error: {
+        body: {
+            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
+            allowed: ["all"],
+            node_allowed: 1
+        }
     }
 }
 
@@ -758,7 +782,8 @@ const PALETTE = [
             { type: "let", label: "Let" },
             { type: "const", label: "Const" },
             { type: "assign", label: "Assign (=)" },
-            { type: "chain", label: "Chain (.)" }
+            { type: "chain", label: "Chain (.)" },
+            { type: "literal", label: "Literal" }
         ]
     },
     {
@@ -808,8 +833,7 @@ const PALETTE = [
             { type: "lastindexof", label: "lastIndexOf" },
             { type: "push", label: "Push" },
             { type: "unshift", label: "Unshift" },
-            { type: "concat", label: "Concat" },
-            { type: "literal", label: "Literal" }
+            { type: "concat", label: "Concat" }
         ]
     },
     {
@@ -904,6 +928,42 @@ const COLLAPSIBLE = new Set([
     "class",
     "constructor",
     "method",
-    "property"
+    "property",
+    "log",
+    "warn",
+    "error",
+    "listener"
 ])
 
+const EVENTS = [
+    { value: "click", label: "click"},
+    { value: "input", label: "input"},
+    { value: "change", label: "change"},
+    { value: "focus", label: "focus"},
+    { value: "focusin", label: "focusin"},
+    { value: "focusout", label: "focusout"},
+    { value: "blur", label: "blur"},
+    { value: "dblclick", label: "dblclick"},
+    { value: "mousedown", label: "mousedown"},
+    { value: "mouseup", label: "mouseup"},
+    { value: "mousemove", label: "mousemove"},
+    { value: "mouseenter", label: "mouseenter"},
+    { value: "mouseleave", label: "mouseleave"},
+    { value: "mouseover", label: "mouseover"},
+    { value: "mouseout", label: "mouseout"},
+    { value: "contextmenu", label: "contextmenu"},
+    { value: "wheel", label: "wheel"},
+    { value: "keydown", label: "keydown"},
+    { value: "keyup", label: "keyup"},
+    { value: "dragstart", label: "dragstart"},
+    { value: "drag", label: "drag"},
+    { value: "dragend", label: "dragend"},
+    { value: "dragenter", label: "dragenter"},
+    { value: "dragover", label: "dragover"},
+    { value: "dragleave", label: "dragleave"},
+    { value: "drop", label: "drop"},
+    { value: "resize", label: "resize"},
+    { value: "scroll", label: "scroll"},
+    { value: "load", label: "load"},
+    { value: "DOMContentLoaded", label: "DOMContentLoaded"}
+]
