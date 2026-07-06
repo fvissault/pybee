@@ -165,6 +165,12 @@ function getCollapsedLabel(node) {
             return `in ${node.type} ${node.props.varvalue || "?"}: {...}` 
         case "default":
             return `by ${node.type}: {...}` 
+        case "log":
+        case "warn":
+        case "error":
+            return `${node.type} (...)` 
+        case "listener":
+            return `${node.type} on ${node.props.fromType}${node.props.fromType=="element"?" " + node.props.element:""}${node.props.fromType=="document"?" element " + node.props.target:""}, event is ${node.props.event}` 
         default:
             return node.type
     }
@@ -198,26 +204,62 @@ function renderNodeContent(node, el) {
         /* ================= EVENT LISTENER ================= */
         case "listener": {
             const options = document.createElement("div")
+            const fromSelect = createSelect(node, "fromType", [
+                { value: "document", label: "document" },
+                { value: "window", label: "window" },
+                { value: "element", label: "element" }
+            ], el)
             const selectorSelect = createSelect(node, "selectorType", [
                 { value: "id", label: "getElementById" },
-                { value: "query", label: "querySelector" }
+                { value: "class", label: "getElementByClassName" },
+                { value: "tag", label: "getElementByTagName" },
+                { value: "query", label: "querySelector" },
+                { value: "queryall", label: "querySelectorAll" }
             ], el)
+            options.append("On: ", fromSelect, " ")
             options.append("Selector: ", selectorSelect)
             el.appendChild(options)
 
             const line = document.createElement("div")
             const targetInput = createInput(node, "target", el)
-            targetInput.placeholder = node.props.selectorType === "id"? "buttonId": ".class, #id, div > span"
-            const eventInput = createSelect(node, "event", [
-                { value: "click", label: "click"},
-                { value: "input", label: "input"},
-                { value: "change", label: "change"}
-            ], el)
-            if(node.props.selectorType === "id"){
-                line.append("document.getElementById(\"", targetInput, "\").addEventListener(\"", eventInput, "\", () => {")
-            } else {
-                line.append("document.querySelector(\"", targetInput, "\").addEventListener(\"", eventInput, "\", () => {")
+            if (node.props.selectorType === "id")
+                targetInput.placeholder = "id"
+            if (node.props.selectorType === "class")
+                targetInput.placeholder = "class"
+            if (node.props.selectorType === "tag")
+                targetInput.placeholder = "tag"
+            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
+                targetInput.placeholder = ".class, #id, div > span"
+
+            const eventInput = createSelect(node, "event", EVENTS, el)
+            if (node.props.fromType === "document")
+                line.append("on document, ")
+            if (node.props.fromType === "window")
+                line.append("on window, ")
+            if (node.props.fromType === "element")
+                line.append("on element ")
+
+            if (node.props.fromType === "document") {
+                node.props.element = ""
+                if (node.props.selectorType === "id")
+                    line.append("get element by id(")
+                if (node.props.selectorType === "class")
+                    line.append("get element by class(")
+                if (node.props.selectorType === "tag")
+                    line.append("get element by tag(")
+                if (node.props.selectorType === "query")
+                    line.append("get element by query(")
+                if (node.props.selectorType === "queryall")
+                    line.append("get element by queryall(")
+                line.append(targetInput, ").")
+            } else if (node.props.fromType === "element") {
+                selectorSelect.setAttribute("disabled", true)
+                const elementInput = createInput(node, "element", el)
+                line.append(elementInput, ".")
+            } else if (node.props.fromType === "window") {
+                selectorSelect.setAttribute("disabled", true)
             }
+            line.append("addEventListener(", eventInput, ", (event) => {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
             const close = document.createElement("div")
@@ -225,13 +267,12 @@ function renderNodeContent(node, el) {
             el.appendChild(close)
             break
         }
-        /* ================= LOG ================= */
+        /* ================= LOG, WARN, ERROR ================= */
         case "error":
         case "warn":
         case "log": {
             const line = document.createElement("div")
-            const messageInput = createInput(node, "message", el)
-            line.append("console.", node.type, "(", messageInput, ")")
+            line.append(node.type, "(", renderSlot(node, "body"), ")")
             el.appendChild(line)
             break
         }
@@ -723,15 +764,22 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= ENTRIES, KEYS, POP, VALUES, SHIFT, REVERSE ================= */
-        case "entries":
+        /* ================= POP, SHIFT, REVERSE ================= */
         case "reverse":
         case "pop":
-        case "shift":
+        case "shift": {
+            const line = document.createElement("div")
+            line.append(node.type, "()")
+            el.appendChild(line)
+            break
+        }
+        /* ================= ENTRIES, KEYS, VALUES ================= */
+        case "entries":
         case "values":
         case "keys": {
             const line = document.createElement("div")
-            line.append(node.type, "()")
+            const objInput = createInput(node, "object", el, true)
+            line.append(node.type, "(", objInput, ")")
             el.appendChild(line)
             break
         }
