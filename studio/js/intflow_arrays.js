@@ -12,7 +12,7 @@ const NODE_DEFS = {
         slots: []
     },
     listener: {
-        props: { element: "", fromType: "document", selectorType: "id", target: "", event: "click" },
+        props: { element: "", fromType: "document", selectorType: "query", target: "", event: "click" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
@@ -74,12 +74,15 @@ const NODE_DEFS = {
     if: {
         props: {},
         slots: ["condition", "then"],
-        slotLayout:"slot-inline"
+        slotLayout: {
+            condition: "slot-inline",
+            then: "slot-block"
+        }
     },
     ifelse: {
         props: {},
         slots: ["condition", "then", "else"],
-        slotLayout:"slot-inline"
+        slotLayout:"slot-block"
     },
     return: {
         props: {},
@@ -92,18 +95,14 @@ const NODE_DEFS = {
         slotLayout:"slot-inline"
     },
     assign: {
-        props: { name: "" },
-        slots: ["body"],
+        props: {  op: "=", parenthesis: false },
+        slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     const: {
         props: { name: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
-    },
-    objbyid: {
-        props: { name: "constName", id: "objectId" },
-        slots: []
     },
     await: {
         props: {},
@@ -194,12 +193,12 @@ const NODE_DEFS = {
         slots: ["body", "catch-body", "finally-body"],
         slotLayout:"slot-block"
     },
-    arrow: { // ( [input parameters] ) => { [slot body] }
+    arrow: { 
         props: { indexName: "", arrayName:"", useIndex: false, useArray: false },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    fetch: { // fetch( [input url] )
+    fetch: { 
         props: { url: "", hasFinally: false, hasCatch: false, slotsthencount: 0 },
         slots: ["options", "catch-body", "finally-body"],
         slotLayout:"slot-block"
@@ -366,385 +365,451 @@ const NODE_DEFS = {
         props: {},
         slots: ["body"],
         slotLayout:"slot-block"
+    },
+    doc_selector: {
+        props: { selectorType: "query", target: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    el_selector: {
+        props: { element: "", selectorType: "query", target: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
     }
 }
 
+const statements = ["listener", "log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
+const operators = ["add", "sub", "mul", "div"]
+const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal"]
+const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
+const classes = ["constructor", "method", "property"]
+const switchcases = ["case", "default"]
+const dom = ["doc_selector", "el_selector"]
+
+const FAMILIES = {
+    statements: statements,
+    operators: operators,
+    logicals: logicals,
+    transformers: transformers,
+    classes: classes,
+    switchcases: switchcases,
+    dom: dom
+};
+
+function computeNodesAllowedRules() {
+    for (const node in RULES) {
+        for (const slot in RULES[node]) {
+            const a = RULES[node][slot].allowed;
+            if (Array.isArray(a)) continue;
+            const allowed = [];
+            for (const token of a.split("+")) {
+                if (token.startsWith("@")) {
+                    const family = token.substring(1);
+                    if (FAMILIES[family]) {
+                        allowed.push(...FAMILIES[family]);
+                    } else {
+                        console.warn(`Famille inconnue : ${family}`);
+                    }
+                } else {
+                    allowed.push(token);
+                }
+            }
+            // Suppression des doublons
+            RULES[node][slot].allowed = [...new Set(allowed)];
+        }
+    }
+}
 /*==================================================================================
  * Règles d'ajout entre les nodes
  *==================================================================================*/
 const RULES = {
+    function: {
+        body: {
+            allowed: "function+async+call+@statements+try+fetch+new+@dom",
+            node_allowed: Infinity
+        }
+    },
     foreach: {
         body: {
-            forbidden: ["break", "new", "object_create", "array_create", "chain", "map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat", "add", "sub", "mul", "div", "and", "or", "not"],
-            allowed: ["all"],
+            allowed: "call+@statements+continue+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     object_create: {
         body: {
-            forbidden: ["all"],
             allowed: ["object_set"],
             node_allowed: Infinity
         }
     },
     object_set: {
         body: {
-            forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "new"],
+            allowed: "call+literal+@operators+object_create+array_create+new+@dom",
             node_allowed: 1
         }
     },
     array_create: {
         body: {
-            forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "new"],
+            allowed: "call+literal+@operators+object_create+object_set+array_create+chain+new+@dom",
             node_allowed: Infinity
         }
     },
     let: {
         body: {
-            forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow", "new"],
+            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
             node_allowed: 1
         }
     },
     const: {
         body: {
-            forbidden: ["all"],
-            allowed: ["literal", "call", "add", "sub", "mul", "div", "and", "or", "not", "object_create", "array_create", "await", "fetch", "chain", "arrow", "new"],
+            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
             node_allowed: 1
         }
     },
     chain: {
         body: {
-            forbidden: ["all"],
-            allowed: ["call", "map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
+            allowed: "call+@transformers",
             node_allowed: 1
         }
     },
     map: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     flatmap: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     filter: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     find: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     findindex: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     findlast: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     some: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     every: {
         body: {
-            forbidden: ["all"],
-            allowed: ["arrow", "literal"],
+            allowed: ["arrow"],
             node_allowed: 1
         }
     },
     if: {
         condition: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "call+literal+@logicals",
             node_allowed: 1
         },
         then: {
-            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
-            allowed: ["all"],
+            allowed: "function+async+call+@statements+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     ifelse: {
         condition: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "call+literal+@logicals",
             node_allowed: 1
         },
         then: {
-            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
-            allowed: ["all"],
+            allowed: "function+async+call+@statements+try+fetch+new+@dom",
             node_allowed: Infinity
         },
         else: {
-            forbidden: ["map", "join", "split", "filter", "flat", "flatmap", "find", "findindex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "includes", "indexof", "entries", "push", "unshift", "concat"],
-            allowed: ["all"],
+            allowed: "function+async+call+@statements+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     and: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+           allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     or: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     equals: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     equal: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     notequals: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     notequal: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     inf: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     infequal: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     sup: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     supequal: {
         left: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["and", "or", "literal", "add", "sub", "mul", "div", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"],
+            allowed: "@logicals+@operators+literal",
             node_allowed: 1
         }
     },
     add: {
         left: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         }
     },
     sub: {
         left: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         }
     },
     mul: {
         left: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         }
     },
     div: {
         left: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         },
         right: {
-            forbidden: ["all"],
-            allowed: ["literal", "add", "sub", "mul", "div"],
+            allowed: "call+literal+@operators",
             node_allowed: 1
         }
     },
     class: {
         body: {
-            forbidden: ["all"],
-            allowed: ["constructor", "method", "property"],
+            allowed: "@classes",
             node_allowed: Infinity
         }
     },
     constructor: {
         body: {
-            forbidden: ["constructor", "method"],
-            allowed: ["all"],
+            allowed: "call+@statements+await+try+fetch+new+super+@dom",
             node_allowed: Infinity
         }
     },
     method: {
         body: {
-            forbidden: ["constructor", "super", "method"],
-            allowed: ["all"],
+            allowed: "call+@statements+await+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     property: {
         body: {
-            forbidden: ["constructor", "super", "method"],
-            allowed: ["all"],
+            allowed: "call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
             node_allowed: 1
         }
     },
     switch: {
         body: {
-            forbidden: ["all"],
-            allowed: ["case", "default"],
+            allowed: "@switchcases",
             node_allowed: Infinity
         }
     },
     case: {
         body: {
-            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
-            allowed: ["all"],
+            allowed: "call+@statements+break+await+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     default: {
         body: {
-            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
-            allowed: ["all"],
+            allowed: "call+@statements+break+await+try+fetch+new+@dom",
             node_allowed: Infinity
         }
     },
     log: {
         body: {
-            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
-            allowed: ["all"],
+            allowed: "call+await+@operators+@logicals+literal+new+@dom",
             node_allowed: 1
         }
     },
     warn: {
         body: {
-            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
-            allowed: ["all"],
+            allowed: "call+await+@operators+@logicals+literal+new+@dom",
             node_allowed: 1
         }
     },
     error: {
         body: {
-            forbidden: ["class", "property", "super", "constructor", "method", "function", "break", "continue", "async"],
-            allowed: ["all"],
+            allowed: "call+await+@operators+@logicals+literal+new+@dom",
+            node_allowed: 1
+        }
+    },
+    doc_selector: {
+        body: {
+            allowed: "litteral+call",
+            node_allowed: 1
+        }
+    },
+    el_selector: {
+        body: {
+            allowed: "litteral+call",
             node_allowed: 1
         }
     }
+}
+
+function isNodeAllowedInNode(parentNode, childType, targetSlotName) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    for (slot in parentNode.slots) {
+        const allowed = rules[slot].allowed ?? ["all"];
+        if (targetSlotName == slot) {
+            if (allowed.includes(childType)) {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
+    // si pas trouvé, alors pas autorisé
+    return false
+}
+
+function isNodeAllowedInParent(parentNode, childType) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    for (slot in parentNode.slots) {
+        const allowed = rules[slot].allowed ?? ["all"];
+        if (allowed.includes(childType)) {
+            return true
+        } else {
+            return false
+        }
+    }
+    return false
+}
+
+function isNodeCountAllowedInParent(parentNode, slotName) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    const node_allowed = rules[slotName].node_allowed ?? 0;
+    if (parentNode.slots[slotName] && parentNode.slots[slotName].length < node_allowed) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function isNodeCountAllowedInParentArray(parentNode, parentArray) {
+    const rules = RULES[parentNode.type];
+    if (!rules) return true;
+    for (slot in NODE_DEFS[parentNode.type].slots) {
+        let slotname = NODE_DEFS[parentNode.type].slots[slot]
+        const node_allowed = rules[slotname].node_allowed ?? 0;
+        if (parentNode.slots[slotname].length === node_allowed) {
+            return true
+        }
+    }
+    return false
 }
 
 /*==================================================================================
@@ -842,9 +907,9 @@ const PALETTE = [
             { type: "object_create", label: "Object {}" },
             { type: "object_get", label: "Object get" },
             { type: "object_set", label: "Object set" },
-            { type: "object_keys", label: "Keys" }, // méthode statique
-            { type: "object_values", label: "Values" }, // méthode statique
-            { type: "object_entries", label: "Entries" }, // méthode statique
+            { type: "object_keys", label: "Keys" },
+            { type: "object_values", label: "Values" },
+            { type: "object_entries", label: "Entries" },
         ]
     },
     {
@@ -870,12 +935,18 @@ const PALETTE = [
     {
         category: "DOM",
         items: [
-            { type: "objbyid", label: "Get by id" },
-            { type: "query", label: "Query selector" },
+            { type: "document", label: "Document" },                    // document.[slot]
+            { type: "window", label: "Window" },                        // window.[slot]
+            { type: "element", label: "Element" },                      // [input element_name].[slot]
+            { type: "doc_selector", label: "Document selector" },       // [select fct] on [input name].[slot]
+            { type: "el_selector", label: "Element selector" },         // [select fct] on [input name].[slot]
             { type: "listener", label: "Event listener" },
-            { type: "set_text", label: "Set text" },
-            { type: "set_html", label: "Set HTML" },
-            { type: "append", label: "Append child" }
+            { type: "set_style", label: "Set style property" },         // style.[input property] = [input value]
+            { type: "set_text", label: "Set text" },                    // innerText = [input value]
+            { type: "set_html", label: "Set HTML" },                    // innerHTML = [input value]
+            { type: "create_element", label: "Create element" },        // create element [input tag name]
+            { type: "append", label: "Append" },                        // [input object].append([slot] [button +]) OU [input object].append([slot 1], [slot 2] [button supp][button +])
+            { type: "append_child", label: "Append child" }             // [input object].appendChild([slot])
         ]
     },
     {
@@ -932,7 +1003,9 @@ const COLLAPSIBLE = new Set([
     "log",
     "warn",
     "error",
-    "listener"
+    "listener",
+    "doc_selector",
+    "el_selector"
 ])
 
 const EVENTS = [
@@ -966,4 +1039,20 @@ const EVENTS = [
     { value: "scroll", label: "scroll"},
     { value: "load", label: "load"},
     { value: "DOMContentLoaded", label: "DOMContentLoaded"}
+]
+
+const DOC_SELECTORS = [
+    { value: "id", label: "getElementById" },
+    { value: "class", label: "getElementByClassName" },
+    { value: "tag", label: "getElementByTagName" },
+    { value: "query", label: "querySelector" },
+    { value: "queryall", label: "querySelectorAll" }
+]
+
+const EL_SELECTORS = [
+    { value: "nosel", label: "No selector" },
+    { value: "class", label: "getElementByClassName" },
+    { value: "tag", label: "getElementByTagName" },
+    { value: "query", label: "querySelector" },
+    { value: "queryall", label: "querySelectorAll" }
 ]
