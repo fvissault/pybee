@@ -54,14 +54,20 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     while: {
-        props: { condition: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
+        props: {},
+        slots: ["condition", "body"],
+        slotLayout: {
+            condition: "slot-inline",
+            body: "slot-block"
+        }
     },
     dowhile: {
-        props: { condition: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
+        props: {},
+        slots: ["condition", "body"],
+        slotLayout: {
+            condition: "slot-inline",
+            body: "slot-block"
+        }
     },
     break: {
         props: {},
@@ -82,7 +88,11 @@ const NODE_DEFS = {
     ifelse: {
         props: {},
         slots: ["condition", "then", "else"],
-        slotLayout:"slot-block"
+        slotLayout: {
+            condition: "slot-inline",
+            then: "slot-block",
+            else: "slot-block"
+        }
     },
     return: {
         props: {},
