@@ -153,6 +153,21 @@ body {
     background: #eef3fb;
 }
 
+.node.doc_selector,
+.node.el_selector,
+.node.document,
+.node.window,
+.node.element,
+.node.listener,
+.node.set_style,
+.node.set_text,
+.node.set_html,
+.node.create_element,
+.node.append,
+.node.append_child {
+    border-left: 10px solid #e24a4a;
+}
+
 .node.class,
 .node.constructor,
 .node.method,
