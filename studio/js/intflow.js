@@ -14,6 +14,7 @@ const workspaceEl = document.getElementById("workspace")
 async function init() {
     const session = await window.opener.getSession()
     const fileid = window.opener.jsfileid
+    computeNodesAllowedRules()
     try {
         fetch("/pybee/studio/api/jsfiles.py", {
             method: "POST",
@@ -25,8 +26,6 @@ async function init() {
         })
         .then(r => r.json())
         .then(data => {
-            console.log(fileid)
-            console.log(data)
             tree = JSON.parse(data.content) || []
             render()
         });
@@ -40,78 +39,6 @@ async function init() {
 
 
 
-function isNodeAllowedInNode(parentNode, childType, targetSlotName) {
-    const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    for (slot in parentNode.slots) {
-        const allowed = rules[slot].allowed ?? ["all"];
-        const forbidden = rules[slot].forbidden ?? [];
-        if (targetSlotName == slot) {
-            if (forbidden.includes("all")) {
-                if (!allowed.includes("all")) {
-                    if (!allowed.includes(childType)) {
-                        return false
-                    } else {
-                        return true
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                if (!forbidden.includes(childType)) return true
-            }
-        }
-    }
-    return false
-}
-
-function isNodeAllowedInParent(parentNode, childType) {
-    const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    for (slot in NODE_DEFS[parentNode.type].slots) {
-        let slotname = NODE_DEFS[parentNode.type].slots[slot]
-        const allowed = rules[slotname].allowed ?? ["all"];
-        const forbidden = rules[slotname].forbidden ?? [];
-        if (forbidden.includes("all")) {
-            if (!allowed.includes("all")) {
-                if (!allowed.includes(childType)) {
-                    return false
-                } else {
-                    return true
-                }
-            } else {
-                return false;
-            }
-        } else {
-            if (forbidden.includes(childType)) return false
-        }
-    }
-    return false
-}
-
-function isNodeCountAllowedInParent(parentNode, slotName) {
-    const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    const node_allowed = rules[slotName].node_allowed ?? 0;
-    if (parentNode.slots[slotName] && parentNode.slots[slotName].length < node_allowed) {
-        return true
-    } else {
-        return false
-    }
-}
-
-function isNodeCountAllowedInParentArray(parentNode, parentArray) {
-    const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    for (slot in NODE_DEFS[parentNode.type].slots) {
-        let slotname = NODE_DEFS[parentNode.type].slots[slot]
-        const node_allowed = rules[slotname].node_allowed ?? 0;
-        if (parentNode.slots[slotname].length === node_allowed) {
-            return true
-        }
-    }
-    return false
-}
 
 function resetDrag(){
   draggedNode = null
@@ -166,8 +93,15 @@ function findParentNode(nodes, targetNode, parent = null) {
             }
         }
     }
-
     return null
+}
+
+function findSlotName(parentNode, targetNode) {
+    for (let key in parentNode.slots) {
+        if (Array.isArray(parentNode.slots[key]) && parentNode.slots[key].includes(targetNode))
+            return key;
+    }
+    return null;
 }
 
 /* =========================
@@ -278,27 +212,9 @@ function handleDropAtPosition(targetNode, position){
     if(!parentArray) return
     const parentNode = findParentNode(tree, targetNode)
 
-    let index = parentArray.indexOf(targetNode)
+    const slot = findSlotName(parentNode, targetNode);
 
-    if(dragSource === "workspace" && draggedFrom === parentArray){
-        const oldIndex = draggedFrom.indexOf(draggedNode)
-        const newIndex = parentArray.indexOf(targetNode)
-
-        if(draggedNode === targetNode){
-            resetDrag()
-            return
-        }
-
-        if(oldIndex !== -1){
-            draggedFrom.splice(oldIndex, 1)
-
-            if(oldIndex < index){
-                index--
-            }
-        }
-    }
-
-    if (!isNodeAllowedInParent(parentNode, draggedNode.type)) {
+    if (!isNodeAllowedInNode(parentNode, draggedNode.type, slot)) {
         alert(`${draggedNode.type} est interdit dans ${parentNode?.type ?? "root"}`)
         render()
         resetDrag()
@@ -310,6 +226,22 @@ function handleDropAtPosition(targetNode, position){
         render()
         resetDrag()
         return
+    }
+
+    let index = parentArray.indexOf(targetNode)
+    if(dragSource === "workspace" && draggedFrom === parentArray){
+        const oldIndex = draggedFrom.indexOf(draggedNode)
+
+        if (draggedNode === targetNode) {
+            resetDrag()
+            return
+        }
+
+        if(oldIndex !== -1){
+            draggedFrom.splice(oldIndex, 1)
+            let index = parentArray.indexOf(targetNode)
+            if (oldIndex < index) index--
+        }
     }
     
     const insertIndex = position === "before" ? index : index + 1
