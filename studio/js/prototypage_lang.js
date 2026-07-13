@@ -93,7 +93,7 @@ const translations = {
         imgstyle: "Style en ligne :",
         imgsource: "Source :",
         // pour la popup division
-        blocktitle: "Paramètres de l'image",
+        blocktitle: "Paramètres de la division",
         blockstyle: "Style en ligne :",
         // pour la popup etiquette
         labeltitle: "Paramètres de l'étiquette",
