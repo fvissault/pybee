@@ -284,8 +284,7 @@ function renderNodeContent(node, el) {
         /* ================= WHILE ================= */
         case "while": {
             const line = document.createElement("div")
-            const condInput = createInput(node, "condition", el)
-            line.append("while ( ", condInput, " ) {")
+            line.append("while ( ", renderSlot(node, "condition"), " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
             const close = document.createElement("div")
@@ -300,8 +299,7 @@ function renderNodeContent(node, el) {
             el.appendChild(openLine)
             el.appendChild(renderSlot(node, "body"))
             const closeLine = document.createElement("div")
-            const condInput = createInput(node, "condition", el)
-            closeLine.append("} while ( ", condInput, " )")
+            closeLine.append("} while ( ", renderSlot(node, "condition"), " )")
             el.appendChild(closeLine)
             break
         }        
