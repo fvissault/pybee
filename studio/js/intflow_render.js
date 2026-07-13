@@ -170,7 +170,11 @@ function getCollapsedLabel(node) {
         case "error":
             return `${node.type} (...)` 
         case "listener":
-            return `${node.type} on ${node.props.fromType}${node.props.fromType=="element"?" " + node.props.element:""}${node.props.fromType=="document"?" element " + node.props.target:""}, event is ${node.props.event}` 
+            return `${node.type} on ${node.props.fromType}${node.props.fromType==="element"?" " + node.props.element:""}${node.props.fromType==="document"?" query " + (node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)):""}${node.props.fromType==="element"&&node.props.selectorType!=="nosel"?" query by " + (node.props.target!==""?node.props.target:" ?"):""}, event is ${node.props.event}` 
+        case "doc_selector":
+            return `on document, get element ${node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)}` 
+        case "el_selector":
+            return `on element ${node.props.element!==""?node.props.element:"?"}, get element ${node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)}` 
         default:
             return node.type
     }
@@ -199,72 +203,6 @@ function renderNodeContent(node, el) {
             const paramsInput = createInput(node, "parameters", el)
             line.append(nameInput, " ( ", paramsInput, " )")
             el.appendChild(line)
-            break
-        }
-        /* ================= EVENT LISTENER ================= */
-        case "listener": {
-            const options = document.createElement("div")
-            const fromSelect = createSelect(node, "fromType", [
-                { value: "document", label: "document" },
-                { value: "window", label: "window" },
-                { value: "element", label: "element" }
-            ], el)
-            const selectorSelect = createSelect(node, "selectorType", [
-                { value: "id", label: "getElementById" },
-                { value: "class", label: "getElementByClassName" },
-                { value: "tag", label: "getElementByTagName" },
-                { value: "query", label: "querySelector" },
-                { value: "queryall", label: "querySelectorAll" }
-            ], el)
-            options.append("On: ", fromSelect, " ")
-            options.append("Selector: ", selectorSelect)
-            el.appendChild(options)
-
-            const line = document.createElement("div")
-            const targetInput = createInput(node, "target", el)
-            if (node.props.selectorType === "id")
-                targetInput.placeholder = "id"
-            if (node.props.selectorType === "class")
-                targetInput.placeholder = "class"
-            if (node.props.selectorType === "tag")
-                targetInput.placeholder = "tag"
-            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
-                targetInput.placeholder = ".class, #id, div > span"
-
-            const eventInput = createSelect(node, "event", EVENTS, el)
-            if (node.props.fromType === "document")
-                line.append("on document, ")
-            if (node.props.fromType === "window")
-                line.append("on window, ")
-            if (node.props.fromType === "element")
-                line.append("on element ")
-
-            if (node.props.fromType === "document") {
-                node.props.element = ""
-                if (node.props.selectorType === "id")
-                    line.append("get element by id(")
-                if (node.props.selectorType === "class")
-                    line.append("get element by class(")
-                if (node.props.selectorType === "tag")
-                    line.append("get element by tag(")
-                if (node.props.selectorType === "query")
-                    line.append("get element by query(")
-                if (node.props.selectorType === "queryall")
-                    line.append("get element by queryall(")
-                line.append(targetInput, ").")
-            } else if (node.props.fromType === "element") {
-                selectorSelect.setAttribute("disabled", true)
-                const elementInput = createInput(node, "element", el)
-                line.append(elementInput, ".")
-            } else if (node.props.fromType === "window") {
-                selectorSelect.setAttribute("disabled", true)
-            }
-            line.append("addEventListener(", eventInput, ", (event) => {")
-            el.appendChild(line)
-            el.appendChild(renderSlot(node, "body"))
-            const close = document.createElement("div")
-            close.innerText = "})"
-            el.appendChild(close)
             break
         }
         /* ================= LOG, WARN, ERROR ================= */
@@ -321,17 +259,7 @@ function renderNodeContent(node, el) {
         /* ================= ASSIGN ================= */
         case "assign": {
             const line = document.createElement("div")
-            const name = createInput(node, "name", el)
-            line.append(name, " = ", renderSlot(node, "body"))
-            el.appendChild(line)
-            break
-        }
-        /* ================= BYID ================= */
-        case "objbyid": {
-            const line = document.createElement("div")
-            const name = createInput(node, "name", el)
-            const id = createInput(node, "id", el)
-            line.append("const ", name, " = document.getElementById('", id, "')")
+            line.append(renderSlot(node, "left"), " = ", renderSlot(node, "right"))
             el.appendChild(line)
             break
         }
@@ -377,6 +305,7 @@ function renderNodeContent(node, el) {
             el.appendChild(closeLine)
             break
         }        
+        /* ================= FOREACH ================= */
         case "foreach": {
             // OPTIONS
             const options = document.createElement("div")
@@ -430,7 +359,7 @@ function renderNodeContent(node, el) {
             el.appendChild(close)
             break
         }
-        /* ================= BREAK ================= */
+        /* ================= BREAK, CONTINUE ================= */
         case "continue":
         case "break": {
             const line = document.createElement("div")
@@ -706,7 +635,7 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= JOIN(INPUT) ================= */
+        /* ================= JOIN(INPUT), SPLIT ================= */
         case "split":
         case "join": {
             const line = document.createElement("div")
@@ -723,7 +652,7 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= FINDINDEX, FIND, FILTER, MAP, FLATMAP, FINDLAST, SOME, EVERY(ARROW, INPUT(thisArg)) ================= */
+        /* ================= FINDINDEX, FIND, FILTER, MAP, FLATMAP, FINDLAST, SOME, EVERY ================= */
         case "every":
         case "some":
         case "findlast":
@@ -783,7 +712,7 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= LASTINDEXOF, INDEXOF, INCLUDES(INPUT) ================= */
+        /* ================= LASTINDEXOF, INDEXOF, INCLUDES ================= */
         case "lastindexof":
         case "indexof":
         case "includes": {
@@ -804,7 +733,7 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= UNSHIFT, PUSH(INPUTS) ================= */
+        /* ================= UNSHIFT, PUSH ================= */
         case "concat":
         case "unshift":
         case "push": {
@@ -944,6 +873,146 @@ function renderNodeContent(node, el) {
             el.appendChild(closingBracket())
             break
         }
+        /* ================= EVENT LISTENER ================= */
+        case "listener": {
+            const options = document.createElement("div")
+            const fromSelect = createSelect(node, "fromType", [
+                { value: "document", label: "document" },
+                { value: "window", label: "window" },
+                { value: "element", label: "element" }
+            ], el)
+            if (node.props.fromType === "document" && node.props.selectorType === "nosel") {
+                node.props.selectorType = "query"
+            }
+            if (node.props.fromType === "element" && node.props.selectorType === "id") {
+                node.props.selectorType = "query"
+            }
+            const selectorSelect = createSelect(node, "selectorType", node.props.fromType==="document"?DOC_SELECTORS:EL_SELECTORS, el)
+            options.append("On: ", fromSelect, " ")
+            options.append("Selector: ", selectorSelect)
+            el.appendChild(options)
+
+            const line = document.createElement("div")
+            const targetInput = createInput(node, "target", el)
+            if (node.props.selectorType === "id")
+                targetInput.placeholder = "id"
+            if (node.props.selectorType === "class")
+                targetInput.placeholder = "class"
+            if (node.props.selectorType === "tag")
+                targetInput.placeholder = "tag"
+            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
+                targetInput.placeholder = ".class, #id, div > span"
+
+            const eventInput = createSelect(node, "event", EVENTS, el)
+            if (node.props.fromType === "document")
+                line.append("on document, ")
+            if (node.props.fromType === "window")
+                line.append("on window, ")
+            if (node.props.fromType === "element")
+                line.append("on element ")
+
+            if (node.props.fromType === "element") {
+                const elementInput = createInput(node, "element", el)
+                line.append(elementInput, ".")
+            }
+            if (node.props.fromType !== "window") {
+                //node.props.element = ""
+                if (node.props.selectorType !== "nosel") {
+                    if (node.props.selectorType === "id")
+                        line.append("get element by id(")
+                    if (node.props.selectorType === "class")
+                        line.append("get element by class(")
+                    if (node.props.selectorType === "tag")
+                        line.append("get element by tag(")
+                    if (node.props.selectorType === "query")
+                        line.append("get element by query(")
+                    if (node.props.selectorType === "queryall")
+                        line.append("get element by queryall(")
+                    line.append(targetInput, ").")
+                } 
+            } else if (node.props.fromType === "window") {
+                selectorSelect.setAttribute("disabled", true)
+            }
+            line.append("addEventListener(", eventInput, ", (event) => {")
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            const close = document.createElement("div")
+            close.innerText = "})"
+            el.appendChild(close)
+            break
+        }
+        /* ================= DOC_SELECTOR ================= */
+        case "doc_selector": {
+            const options = document.createElement("div")
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "selectorType", DOC_SELECTORS, el)
+            options.append("Selector: ", selectorSelect)
+            el.appendChild(options)
+
+            const targetInput = createInput(node, "target", el)
+            if (node.props.selectorType === "id")
+                targetInput.placeholder = "id"
+            if (node.props.selectorType === "class")
+                targetInput.placeholder = "class"
+            if (node.props.selectorType === "tag")
+                targetInput.placeholder = "tag"
+            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
+                targetInput.placeholder = ".class, #id, div > span"
+
+            line.append("on document, ")
+            if (node.props.selectorType === "id")
+                line.append("get element by id(")
+            if (node.props.selectorType === "class")
+                line.append("get element by class(")
+            if (node.props.selectorType === "tag")
+                line.append("get element by tag(")
+            if (node.props.selectorType === "query")
+                line.append("get element by query(")
+            if (node.props.selectorType === "queryall")
+                line.append("get element by queryall(")
+            line.append(targetInput, ").")
+            line.append(renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= EL_SELECTOR ================= */
+        case "el_selector": {
+            const options = document.createElement("div")
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "selectorType", EL_SELECTORS, el)
+            options.append("Selector: ", selectorSelect)
+            el.appendChild(options)
+
+            const targetInput = createInput(node, "target", el)
+            if (node.props.selectorType === "id")
+                targetInput.placeholder = "id"
+            if (node.props.selectorType === "class")
+                targetInput.placeholder = "class"
+            if (node.props.selectorType === "tag")
+                targetInput.placeholder = "tag"
+            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
+                targetInput.placeholder = ".class, #id, div > span"
+
+            const elementInput = createInput(node, "element", el)
+            line.append("on element ", elementInput)
+            if (node.props.selectorType !== "nosel") {
+                line.append(", ")
+                if (node.props.selectorType === "class")
+                    line.append("get element by class(")
+                if (node.props.selectorType === "tag")
+                    line.append("get element by tag(")
+                if (node.props.selectorType === "query")
+                    line.append("get element by query(")
+                if (node.props.selectorType === "queryall")
+                    line.append("get element by queryall(")
+                line.append(targetInput, ").")
+            } else {
+                line.append(".")
+            }
+            line.append(renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
 
         /* ================= REDUCE(ARROW, INPUT(initialvalue)) ================= */
         /* ================= SLICE(INPUT(start), INPUT(end)) ================= */
@@ -970,7 +1039,8 @@ function closingParenthesis() {
 
 function renderSlot(node, slotName) {
     const slotEl = document.createElement("div")
-    slotEl.className = node.slotLayout
+    const layout = typeof node.slotLayout === "string"? node.slotLayout: node.slotLayout[slotName];
+    slotEl.className = layout
 
     slotEl.ondragover = (e) => {
         e.preventDefault()
