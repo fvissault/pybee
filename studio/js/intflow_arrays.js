@@ -12,7 +12,7 @@ const NODE_DEFS = {
         slots: []
     },
     listener: {
-        props: { element: "", fromType: "document", selectorType: "query", target: "", event: "click" },
+        props: { event: "click" },
         slots: ["body"],
         slotLayout:"slot-block"
     },
@@ -52,6 +52,22 @@ const NODE_DEFS = {
         },
         slots: ["body"],
         slotLayout:"slot-block"
+    },
+    forin: {
+        props: { array: "" },
+        slots: ["variable", "body"],
+        slotLayout: {
+            variable: "slot-inline",
+            body: "slot-block"
+        }
+    },
+    forof: {
+        props: { array: "" },
+        slots: ["variable", "body"],
+        slotLayout: {
+            variable: "slot-inline",
+            body: "slot-block"
+        }
     },
     while: {
         props: {},
@@ -101,8 +117,7 @@ const NODE_DEFS = {
     },
     let: {
         props: { name: "" },
-        slots: ["body"],
-        slotLayout:"slot-inline"
+        slots: []
     },
     assign: {
         props: {  op: "=", parenthesis: false },
@@ -111,8 +126,7 @@ const NODE_DEFS = {
     },
     const: {
         props: { name: "" },
-        slots: ["body"],
-        slotLayout:"slot-inline"
+        slots: []
     },
     await: {
         props: {},
@@ -385,16 +399,43 @@ const NODE_DEFS = {
         props: { element: "", selectorType: "query", target: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
+    },
+    document: {
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    window: {
+        props: {},
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    element: {
+        props: { elementName: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    set_style: {
+        props: { styleName: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
+    set_prop: {
+        props: { propFamilyName: "style", propName: "" },
+        slots: ["body"],
+        slotLayout:"slot-inline"
     }
 }
 
 const statements = ["listener", "log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
 const operators = ["add", "sub", "mul", "div"]
 const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal"]
-const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "keys", "values", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
+const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
+const decomposers = ["keys", "values"]
 const classes = ["constructor", "method", "property"]
 const switchcases = ["case", "default"]
-const dom = ["doc_selector", "el_selector"]
+const dom = ["doc_selector", "el_selector", "document", "window", "element"]
+const dom2 = ["set_style", "listener"]
 
 const FAMILIES = {
     statements: statements,
@@ -403,7 +444,9 @@ const FAMILIES = {
     transformers: transformers,
     classes: classes,
     switchcases: switchcases,
-    dom: dom
+    dom: dom,
+    dom2: dom2,
+    decomposers: decomposers
 };
 
 function computeNodesAllowedRules() {
@@ -439,7 +482,37 @@ const RULES = {
             node_allowed: Infinity
         }
     },
+    assign: {
+        left: {
+           allowed: "literal+const+let",
+            node_allowed: 1
+        },
+        right: {
+            allowed: "literal+@decomposers+@operators+call+async+arrow+@dom+@logicals+new+chain",
+            node_allowed: 1
+        }
+    },
     foreach: {
+        body: {
+            allowed: "call+@statements+continue+try+fetch+new+@dom",
+            node_allowed: Infinity
+        }
+    },
+    forin: {
+        variable: {
+            allowed: "const+let",
+            node_allowed: 1
+        },
+        body: {
+            allowed: "call+@statements+continue+try+fetch+new+@dom",
+            node_allowed: Infinity
+        }
+    },
+    forof: {
+        variable: {
+            allowed: "const+let",
+            node_allowed: 1
+        },
         body: {
             allowed: "call+@statements+continue+try+fetch+new+@dom",
             node_allowed: Infinity
@@ -755,13 +828,43 @@ const RULES = {
     },
     doc_selector: {
         body: {
-            allowed: "litteral+call",
+            allowed: "litteral+call+@dom2+assign",
             node_allowed: 1
         }
     },
     el_selector: {
         body: {
-            allowed: "litteral+call",
+            allowed: "litteral+call+@dom2+assign",
+            node_allowed: 1
+        }
+    },
+    document: {
+        body: {
+            allowed: "call+literal+@dom2",
+            node_allowed: 1
+        }
+    },
+    window: {
+        body: {
+            allowed: "call+literal+@dom2",
+            node_allowed: 1
+        }
+    },
+    element: {
+        body: {
+            allowed: "call+literal+@dom2",
+            node_allowed: 1
+        }
+    },
+    set_style: {
+        body: {
+            allowed: ["literal"],
+            node_allowed: 1
+        }
+    },
+    set_prop: {
+        body: {
+            allowed: ["literal+call"],
             node_allowed: 1
         }
     }
@@ -843,6 +946,8 @@ const PALETTE = [
             { type: "case", label: "Case" },
             { type: "default", label: "Default" },
             { type: "for", label: "For loop" },
+            { type: "forin", label: "Forin loop (object)" },
+            { type: "forof", label: "Forof loop (array)" },
             { type: "foreach", label: "ForEach loop" },
             { type: "while", label: "While loop" },
             { type: "dowhile", label: "Do while" },
@@ -952,6 +1057,7 @@ const PALETTE = [
             { type: "el_selector", label: "Element selector" },         // [select fct] on [input name].[slot]
             { type: "listener", label: "Event listener" },
             { type: "set_style", label: "Set style property" },         // style.[input property] = [input value]
+            { type: "set_prop", label: "Set property" },                // [select property name].[input property] = [input value]
             { type: "set_text", label: "Set text" },                    // innerText = [input value]
             { type: "set_html", label: "Set HTML" },                    // innerHTML = [input value]
             { type: "create_element", label: "Create element" },        // create element [input tag name]
@@ -969,7 +1075,6 @@ const PALETTE = [
     }
 ];
 
-
 const COLLAPSIBLE = new Set([
     "function",
     "async",
@@ -983,8 +1088,9 @@ const COLLAPSIBLE = new Set([
     "default",
     "object_create",
     "array_create",
-    "let",
     "for",
+    "forin",
+    "forof",
     "foreach",
     "while",
     "dowhile",
