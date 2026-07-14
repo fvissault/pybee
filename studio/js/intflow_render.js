@@ -97,7 +97,8 @@ function renderNode(node){
 function getCollapsedLabel(node) {
     switch(node.type) {
         case "let":
-            return `let ${node.props.name || "?"} = ...`
+        case "const":
+            return `${node.type} ${node.props.name || "?"}`
         case "function":
             return `function ${node.props.name || "anonymous"} (${node.props.parameters || ""}) {...}`
         case "async":
@@ -114,6 +115,10 @@ function getCollapsedLabel(node) {
             return `if (...) {...}`
         case "for":
             return `for (${node.props.varName || "?"}) {...}`
+        case "forin":
+            return `for (... in ${node.props.array || "?"}) {...}`
+        case "forof":
+            return `for (... of ${node.props.array || "?"}) {...}`
         case "while":
             return `while (${node.props.condition || "?"}) {...}`
         case "foreach":
@@ -170,11 +175,11 @@ function getCollapsedLabel(node) {
         case "error":
             return `${node.type} (...)` 
         case "listener":
-            return `${node.type} on ${node.props.fromType}${node.props.fromType==="element"?" " + node.props.element:""}${node.props.fromType==="document"?" query " + (node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)):""}${node.props.fromType==="element"&&node.props.selectorType!=="nosel"?" query by " + (node.props.target!==""?node.props.target:" ?"):""}, event is ${node.props.event}` 
+            return `add an event ${node.type} with ${node.props.event} event` 
         case "doc_selector":
             return `on document, get element ${node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)}` 
         case "el_selector":
-            return `on element ${node.props.element!==""?node.props.element:"?"}, get element ${node.props.target!==""?(node.props.target + " by " + node.props.selectorType):(" ? by " + node.props.selectorType)}` 
+            return `on element ${node.props.element !== "" ? node.props.element : "?"}${node.props.selectorType !== "nosel"? `, get element ${node.props.target !== ""? node.props.target + " by " + node.props.selectorType: "? by " + node.props.selectorType}`: " by any selector"}` 
         default:
             return node.type
     }
@@ -191,9 +196,7 @@ function renderNodeContent(node, el) {
             line.append("function ", nameInput, " ( ", paramsInput, " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
             break
         }
         /* ================= CALL ================= */
@@ -224,9 +227,7 @@ function renderNodeContent(node, el) {
             elseLine.innerText = "} else {"
             el.appendChild(elseLine)
             el.appendChild(renderSlot(node, "else"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
             break
         }
         /* ================= IF ================= */
@@ -235,9 +236,7 @@ function renderNodeContent(node, el) {
             line.append("if ( ", renderSlot(node, "condition"), " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "then"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
             break
         }
         /* ================= RETURN ================= */
@@ -252,7 +251,7 @@ function renderNodeContent(node, el) {
         case "let": {
             const line = document.createElement("div")
             const name = createInput(node, "name", el)
-            line.append(node.type, " ", name, " = ", renderSlot(node, "body"))
+            line.append(node.type, " ", name)
             el.appendChild(line)
             break
         }
@@ -276,9 +275,22 @@ function renderNodeContent(node, el) {
             line.append("for (let ", varInput, " = ", fromInput, " ; ", document.createTextNode(node.props.varName), " ", conditionText, " ", toInput, " ; ", document.createTextNode(node.props.varName),incrementText, ") {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
+            break
+        }
+        /* ================= FORIN, FOROF ================= */
+        case "forin":
+        case "forof": {
+            const line = document.createElement("div")
+            const arrayInput = createInput(node, "array", el, true)
+            if (node.type === "forin") {
+                line.append("for (", renderSlot(node, "variable"), " in ", arrayInput, ") {")
+            } else {
+                line.append("for (", renderSlot(node, "variable"), " of ", arrayInput, ") {")
+            }
+            el.appendChild(line)
+            el.appendChild(renderSlot(node, "body"))
+            el.appendChild(closingBracket())
             break
         }
         /* ================= WHILE ================= */
@@ -287,9 +299,7 @@ function renderNodeContent(node, el) {
             line.append("while ( ", renderSlot(node, "condition"), " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
             break
         }
         /* ================= DOWHILE ================= */
@@ -371,8 +381,6 @@ function renderNodeContent(node, el) {
             line.className = "await-expr"
             line.append("await", renderSlot(node, "body"))
             el.appendChild(line)
-            // BODY
-            //el.appendChild(renderSlot(node, "body"))
             break
         }
         /* ================= ASYNC ================= */
@@ -383,9 +391,7 @@ function renderNodeContent(node, el) {
             line.append("async function ", nameInput, " ( ", paramsInput, " ) {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
-            const close = document.createElement("div")
-            close.innerText = "}"
-            el.appendChild(close)
+            el.appendChild(closingBracket())
             break
         }
         /* ================= LITERAL ================= */
@@ -873,64 +879,8 @@ function renderNodeContent(node, el) {
         }
         /* ================= EVENT LISTENER ================= */
         case "listener": {
-            const options = document.createElement("div")
-            const fromSelect = createSelect(node, "fromType", [
-                { value: "document", label: "document" },
-                { value: "window", label: "window" },
-                { value: "element", label: "element" }
-            ], el)
-            if (node.props.fromType === "document" && node.props.selectorType === "nosel") {
-                node.props.selectorType = "query"
-            }
-            if (node.props.fromType === "element" && node.props.selectorType === "id") {
-                node.props.selectorType = "query"
-            }
-            const selectorSelect = createSelect(node, "selectorType", node.props.fromType==="document"?DOC_SELECTORS:EL_SELECTORS, el)
-            options.append("On: ", fromSelect, " ")
-            options.append("Selector: ", selectorSelect)
-            el.appendChild(options)
-
             const line = document.createElement("div")
-            const targetInput = createInput(node, "target", el)
-            if (node.props.selectorType === "id")
-                targetInput.placeholder = "id"
-            if (node.props.selectorType === "class")
-                targetInput.placeholder = "class"
-            if (node.props.selectorType === "tag")
-                targetInput.placeholder = "tag"
-            if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
-                targetInput.placeholder = ".class, #id, div > span"
-
             const eventInput = createSelect(node, "event", EVENTS, el)
-            if (node.props.fromType === "document")
-                line.append("on document, ")
-            if (node.props.fromType === "window")
-                line.append("on window, ")
-            if (node.props.fromType === "element")
-                line.append("on element ")
-
-            if (node.props.fromType === "element") {
-                const elementInput = createInput(node, "element", el)
-                line.append(elementInput, ".")
-            }
-            if (node.props.fromType !== "window") {
-                //node.props.element = ""
-                if (node.props.selectorType !== "nosel") {
-                    if (node.props.selectorType === "id")
-                        line.append("get element by id(")
-                    if (node.props.selectorType === "class")
-                        line.append("get element by class(")
-                    if (node.props.selectorType === "tag")
-                        line.append("get element by tag(")
-                    if (node.props.selectorType === "query")
-                        line.append("get element by query(")
-                    if (node.props.selectorType === "queryall")
-                        line.append("get element by queryall(")
-                    line.append(targetInput, ").")
-                } 
-            } else if (node.props.fromType === "window") {
-                selectorSelect.setAttribute("disabled", true)
-            }
             line.append("addEventListener(", eventInput, ", (event) => {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
@@ -1008,6 +958,28 @@ function renderNodeContent(node, el) {
                 line.append(".")
             }
             line.append(renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOCUMENT, WINDOW ================= */
+        case "element":
+        case "window":
+        case "document": {
+            const line = document.createElement("div")
+            if (node.type !== "element")
+                line.append(`on ${node.type} get `, renderSlot(node, "body"))
+            else {
+                const elementInput = createInput(node, "elementName", el)
+                line.append("on element ", elementInput, " get ", renderSlot(node, "body"))
+            }
+            el.appendChild(line)
+            break
+        }
+        /* ================= SET_STYLE ================= */
+        case "set_style": {
+            const line = document.createElement("div")
+            const styleInput = createInput(node, "styleName", el)
+            line.append("get style property ", styleInput, " and set to ", renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
