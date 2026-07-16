@@ -159,12 +159,14 @@ body {
 .node.window,
 .node.element,
 .node.listener,
-.node.set_style,
-.node.set_text,
-.node.set_html,
-.node.create_element,
-.node.append,
-.node.append_child {
+.node.DOMpropertyGet,
+.node.DOMobjectGet,
+.node.DOMpropertySet,
+.node.DOMobjectSet,
+.node.DOMobjectSecondLevelGet,
+.node.DOMcollectionGet,
+.node.DOMcommandAccessor,
+.node.DOMmethodAccessor {
     border-left: 10px solid #e24a4a;
 }
 
