@@ -415,27 +415,102 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    set_style: {
-        props: { styleName: "" },
-        slots: ["body"],
+    DOMpropertyGet: {
+        props: { property: "" },
+        slots: []
+    },
+    DOMpropertySet: {
+        props: { property: "", value: "" },
+        slots: []
+    },
+    DOMobjectGet: {
+        props: { property: "", suproperty: "" },
+        slots: []
+    },
+    DOMobjectSet: {
+        props: { property: "", suproperty: "", value: "" },
+        slots: []
+    },
+    DOMobjectSecondLevelGet: {
+        props: { suproperty: "" },
+        slots: ["property"],
         slotLayout:"slot-inline"
     },
-    set_prop: {
-        props: { propFamilyName: "style", propName: "" },
-        slots: ["body"],
+    DOMcollectionGet: {
+        props: { collectionName: "" },
+        slots: ["index"],
         slotLayout:"slot-inline"
+    },
+    DOMcommandAccessor: {
+        props: { propertyname: "" },
+        slots: ["command"],
+        slotLayout:"slot-inline"
+    },
+    DOMmethodAccessor: {
+        props: { functionname: "", parameters: "" },
+        slots: []
     }
 }
 
-const statements = ["listener", "log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
+/*
+    DOMpropertyGet   => [select (id, className, innerText, innerHTML, value, checked, ...)]
+                          => phrase quand compacté : get property name_of_property
+    DOMpropertySet   => [select (id, className, innerText, innerHTML, value, checked, ...)] = [input value]
+                          => phrase quand compacté : set property name_of_property to value
+
+                          GET : element.property
+                          SET : element.property = value
+    
+    DOMobjectGet   => [select property (style, dataset, ...)] [input subprop]
+                          => phrase quand compacté : get subproperty name_of_subproperty of property name_of_property
+    DOMobjectSet   => [select property (style, dataset, ...)] [input subprop] = [input value]
+                          => phrase quand compacté : set subproperty name_of_subproperty of property name_of_property to value
+
+                          GET : element.property.subproperty
+                          SET : element.property.subproperty = value
+    
+    DOMobjectSecondLevelGet   => [slot property] [input subprop]
+                                => phrase quand compacté : get subproperty name_of_subproperty
+
+                                slot property = CollectionAccessor
+
+                                GET : element.object.subproperty
+
+                                EX : element.options[element.options.selectedIndex].value ==> element dans CollectionAccessor
+                                     element.options[1].value ==> literal dans CollectionAccessor
+    
+    DOMcollectionGet => [select name_of_collection (children, childNodes, attributes, files, options, ...)] [slot index]
+                          => phrase quand compacté : get collection name_of_collection
+
+                          slot index = element
+                          element = expression
+                          expression = Literal | PropertyGet | ObjectGet | ObjectSecondLevelGet | CollectionGet | CommandAccessor | MethodAccessor | @operators
+                          statements += PropertySet | ObjectSet | CommandAccessor | MethodAccessor
+
+                          GET : element.collection[slot]
+
+    DOMcommandAccessor    => [select property (classList, relList, part, attributes ...)] [slot call]
+                          => phrase quand compacté : call method on property
+
+                          element.property.[call]
+
+    DOMmethodAccessor     => [slot call | CollectionAccessor]
+                          => phrase quand compacté : call method directly
+
+                          element.[call]
+
+    les slots body de document et element (et window?), assign_right peuvent contenir les 5 accesseurs
+*/
+
+const statements = ["log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch", "DOMpropertySet", "DOMobjectSet"]
 const operators = ["add", "sub", "mul", "div"]
 const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal"]
 const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
 const decomposers = ["keys", "values"]
 const classes = ["constructor", "method", "property"]
 const switchcases = ["case", "default"]
-const dom = ["doc_selector", "el_selector", "document", "window", "element"]
-const dom2 = ["set_style", "listener"]
+const DOMselector = ["doc_selector", "el_selector", "document", "window", "element"]
+const DOMexpr = ["listener", "Literal", "DOMpropertyGet", "DOMobjectGet", "DOMobjectSecondLevelGet", "DOMcollectionGet", "DOMcommandAccessor", "DOMmethodAccessor"]
 
 const FAMILIES = {
     statements: statements,
@@ -444,8 +519,8 @@ const FAMILIES = {
     transformers: transformers,
     classes: classes,
     switchcases: switchcases,
-    dom: dom,
-    dom2: dom2,
+    DOMselector: DOMselector,
+    DOMexpr: DOMexpr,
     decomposers: decomposers
 };
 
@@ -478,7 +553,7 @@ function computeNodesAllowedRules() {
 const RULES = {
     function: {
         body: {
-            allowed: "function+async+call+@statements+try+fetch+new+@dom",
+            allowed: "function+async+call+@statements+try+fetch+new+@DOMselector",
             node_allowed: Infinity
         }
     },
@@ -488,13 +563,13 @@ const RULES = {
             node_allowed: 1
         },
         right: {
-            allowed: "literal+@decomposers+@operators+call+async+arrow+@dom+@logicals+new+chain",
+            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMexpr+@logicals+new+chain",
             node_allowed: 1
         }
     },
     foreach: {
         body: {
-            allowed: "call+@statements+continue+try+fetch+new+@dom",
+            allowed: "call+@statements+continue+try+fetch+new+@DOMselector",
             node_allowed: Infinity
         }
     },
@@ -504,7 +579,7 @@ const RULES = {
             node_allowed: 1
         },
         body: {
-            allowed: "call+@statements+continue+try+fetch+new+@dom",
+            allowed: "call+@statements+continue+try+fetch+new+@DOMselector",
             node_allowed: Infinity
         }
     },
@@ -514,7 +589,7 @@ const RULES = {
             node_allowed: 1
         },
         body: {
-            allowed: "call+@statements+continue+try+fetch+new+@dom",
+            allowed: "call+@statements+continue+try+fetch+new+@DOMselector",
             node_allowed: Infinity
         }
     },
@@ -526,25 +601,25 @@ const RULES = {
     },
     object_set: {
         body: {
-            allowed: "call+literal+@operators+object_create+array_create+new+@dom",
+            allowed: "call+literal+@operators+object_create+array_create+new+@DOMexpr",
             node_allowed: 1
         }
     },
     array_create: {
         body: {
-            allowed: "call+literal+@operators+object_create+object_set+array_create+chain+new+@dom",
+            allowed: "call+literal+@operators+object_create+object_set+array_create+chain+new+@DOMexpr",
             node_allowed: Infinity
         }
     },
     let: {
         body: {
-            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
+            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@DOMexpr",
             node_allowed: 1
         }
     },
     const: {
         body: {
-            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
+            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@DOMexpr",
             node_allowed: 1
         }
     },
@@ -608,7 +683,7 @@ const RULES = {
             node_allowed: 1
         },
         then: {
-            allowed: "function+async+call+@statements+try+fetch+new+@dom",
+            allowed: "function+async+call+@statements+try+fetch+new",
             node_allowed: Infinity
         }
     },
@@ -618,11 +693,11 @@ const RULES = {
             node_allowed: 1
         },
         then: {
-            allowed: "function+async+call+@statements+try+fetch+new+@dom",
+            allowed: "function+async+call+@statements+try+fetch+new",
             node_allowed: Infinity
         },
         else: {
-            allowed: "function+async+call+@statements+try+fetch+new+@dom",
+            allowed: "function+async+call+@statements+try+fetch+new",
             node_allowed: Infinity
         }
     },
@@ -774,19 +849,19 @@ const RULES = {
     },
     constructor: {
         body: {
-            allowed: "call+@statements+await+try+fetch+new+super+@dom",
+            allowed: "call+@statements+await+try+fetch+new+super",
             node_allowed: Infinity
         }
     },
     method: {
         body: {
-            allowed: "call+@statements+await+try+fetch+new+@dom",
+            allowed: "call+@statements+await+try+fetch+new",
             node_allowed: Infinity
         }
     },
     property: {
         body: {
-            allowed: "call+literal+@operators+arrow+object_create+array_create+chain+new+@dom",
+            allowed: "call+literal+@operators+arrow+object_create+array_create+chain+new+@DOMexpr",
             node_allowed: 1
         }
     },
@@ -798,73 +873,79 @@ const RULES = {
     },
     case: {
         body: {
-            allowed: "call+@statements+break+await+try+fetch+new+@dom",
+            allowed: "call+@statements+break+await+try+fetch+new",
             node_allowed: Infinity
         }
     },
     default: {
         body: {
-            allowed: "call+@statements+break+await+try+fetch+new+@dom",
+            allowed: "call+@statements+break+await+try+fetch+new",
             node_allowed: Infinity
         }
     },
     log: {
         body: {
-            allowed: "call+await+@operators+@logicals+literal+new+@dom",
+            allowed: "call+await+@operators+@logicals+literal+new+@DOMexpr",
             node_allowed: 1
         }
     },
     warn: {
         body: {
-            allowed: "call+await+@operators+@logicals+literal+new+@dom",
+            allowed: "call+await+@operators+@logicals+literal+new+@DOMexpr",
             node_allowed: 1
         }
     },
     error: {
         body: {
-            allowed: "call+await+@operators+@logicals+literal+new+@dom",
+            allowed: "call+await+@operators+@logicals+literal+new+@DOMexpr",
             node_allowed: 1
         }
     },
     doc_selector: {
         body: {
-            allowed: "litteral+call+@dom2+assign",
+            allowed: "litteral+call+@DOMexpr",
             node_allowed: 1
         }
     },
     el_selector: {
         body: {
-            allowed: "litteral+call+@dom2+assign",
+            allowed: "litteral+call+@DOMexpr",
             node_allowed: 1
         }
     },
     document: {
         body: {
-            allowed: "call+literal+@dom2",
+            allowed: "@DOMexpr",
             node_allowed: 1
         }
     },
     window: {
         body: {
-            allowed: "call+literal+@dom2",
+            allowed: "@DOMexpr",
             node_allowed: 1
         }
     },
     element: {
         body: {
-            allowed: "call+literal+@dom2",
+            allowed: "@DOMexpr",
             node_allowed: 1
         }
     },
-    set_style: {
-        body: {
-            allowed: ["literal"],
+    DOMobjectSecondLevelGet: {
+        property: {
+            allowed: ["DOMcollectionGet"],
             node_allowed: 1
         }
     },
-    set_prop: {
-        body: {
-            allowed: ["literal+call"],
+    DOMcollectionGet: {
+        index: {
+            allowed: "@DOMexpr",
+            node_allowed: 1
+        }
+    },
+    DOMcommandAccessor: {
+        command: {
+            allowed: "call",
             node_allowed: 1
         }
     }
@@ -1056,13 +1137,14 @@ const PALETTE = [
             { type: "doc_selector", label: "Document selector" },       // [select fct] on [input name].[slot]
             { type: "el_selector", label: "Element selector" },         // [select fct] on [input name].[slot]
             { type: "listener", label: "Event listener" },
-            { type: "set_style", label: "Set style property" },         // style.[input property] = [input value]
-            { type: "set_prop", label: "Set property" },                // [select property name].[input property] = [input value]
-            { type: "set_text", label: "Set text" },                    // innerText = [input value]
-            { type: "set_html", label: "Set HTML" },                    // innerHTML = [input value]
-            { type: "create_element", label: "Create element" },        // create element [input tag name]
-            { type: "append", label: "Append" },                        // [input object].append([slot] [button +]) OU [input object].append([slot 1], [slot 2] [button supp][button +])
-            { type: "append_child", label: "Append child" }             // [input object].appendChild([slot])
+            { type: "DOMpropertyGet", label: "Property get" },
+            { type: "DOMpropertySet", label: "Property set" },
+            { type: "DOMobjectGet", label: "Object get" },
+            { type: "DOMobjectSet", label: "Object set" },
+            { type: "DOMobjectSecondLevelGet", label: "Second level object get" },
+            { type: "DOMcollectionGet", label: "Collection get" },
+            { type: "DOMcommandAccessor", label: "Command set" },
+            { type: "DOMmethodAccessor", label: "Method set" }
         ]
     },
     {
@@ -1171,4 +1253,89 @@ const EL_SELECTORS = [
     { value: "tag", label: "getElementByTagName" },
     { value: "query", label: "querySelector" },
     { value: "queryall", label: "querySelectorAll" }
+]
+
+const PROPERTIES = [
+    { value: "id", label: "id" },
+    { value: "className", label: "className" },
+    { value: "innerText", label: "innerText" },
+    { value: "value", label: "value" },
+    { value: "checked", label: "checked" },
+    { value: "innerHTML", label: "innerHTML" },
+    { value: "textContent", label: "textContent" },
+    { value: "selected", label: "selected" },
+    { value: "selectedIndex", label: "selectedIndex" },
+    { value: "disabled", label: "disabled" },
+    { value: "readOnly", label: "readOnly" },
+    { value: "required", label: "required" },
+    { value: "multiple", label: "multiple" },
+    { value: "placeholder", label: "placeholder" },
+    { value: "min", label: "min" },
+    { value: "max", label: "max" },
+    { value: "step", label: "step" },
+    { value: "hidden", label: "hidden" },
+    { value: "draggable", label: "draggable" },
+    { value: "contentEditable", label: "contentEditable" },
+    { value: "isContentEditable", label: "isContentEditable" },
+    { value: "href", label: "href" },
+    { value: "src", label: "src" },
+    { value: "alt", label: "alt" },
+    { value: "target", label: "target" },
+    { value: "lang", label: "lang" },
+    { value: "dir", label: "dir" }
+]
+
+const OBJECTS = [
+    { value: "style", label: "style" },
+    { value: "dataset", label: "dataset" },
+    { value: "styleMap", label: "styleMap" },
+    { value: "location", label: "location" }
+]
+
+const COLLECTIONS = [
+    { value: "children", label: "children" },
+    { value: "childNodes", label: "childNodes" },
+    { value: "attributes", label: "attributes" },
+    { value: "files", label: "files" },
+    { value: "options", label: "options" },
+    { value: "selectedOptions", label: "selectedOptions" },
+    { value: "labels", label: "labels" },
+    { value: "rows", label: "rows" },
+    { value: "cells", label: "cells" },
+    { value: "tBodies", label: "tBodies" },
+    { value: "tHead", label: "tHead" },
+    { value: "tFoot", label: "tFoot" }
+]
+
+const COMMANDS = [
+    { value: "classList", label: "classList" },
+    { value: "relList", label: "relList" },
+    { value: "part", label: "part" }
+]
+
+const METHODS = [
+    { value: "closest", label: "closest" },
+    { value: "matches", label: "matches" },
+    { value: "append", label: "append" },
+    { value: "prepend", label: "prepend" },
+    { value: "appendChild", label: "appendChild" },
+    { value: "remove", label: "remove" },
+    { value: "removeChild", label: "removeChild" },
+    { value: "replaceChild", label: "replaceChild" },
+    { value: "insertBefore", label: "insertBefore" },
+    { value: "cloneNode", label: "cloneNode" },
+    { value: "removeEventListener", label: "removeEventListener" },
+    { value: "dispatchEvent", label: "dispatchEvent" },
+    { value: "click", label: "click" },
+    { value: "focus", label: "focus" },
+    { value: "blur", label: "blur" },
+    { value: "getBoundingClientRect", label: "getBoundingClientRect" },
+    { value: "getClientRects", label: "getClientRects" },
+    { value: "scroll", label: "scroll" },
+    { value: "scrollTo", label: "scrollTo" },
+    { value: "scrollBy", label: "scrollBy" },
+    { value: "scrollIntoView", label: "scrollIntoView" },
+    { value: "getAttribute", label: "getAttribute" },
+    { value: "setAttribute", label: "setAttribute" },
+    { value: "removeAttribute", label: "removeAttribute" }
 ]
