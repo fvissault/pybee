@@ -962,9 +962,7 @@ function renderNodeContent(node, el) {
             break
         }
         /* ================= DOCUMENT, WINDOW ================= */
-        case "element":
-        case "window":
-        case "document": {
+        case "window": {
             const line = document.createElement("div")
             if (node.type !== "element")
                 line.append(`on ${node.type} get `, renderSlot(node, "body"))
@@ -975,11 +973,51 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= SET_STYLE ================= */
-        case "set_style": {
+        /* ================= DOMproperty ================= */
+        case "DOMproperty": {
             const line = document.createElement("div")
-            const styleInput = createInput(node, "styleName", el)
-            line.append("get style property ", styleInput, " and set to ", renderSlot(node, "body"))
+            const selectorSelect = createSelect(node, "property", PROPERTIES, el)
+            line.append(selectorSelect)
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOMobject ================= */
+        case "DOMobject": {
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "property", OBJECTS, el)
+            const subpropertyInput = createInput(node, "subproperty", el)
+            line.append(selectorSelect, " . ", subpropertyInput)
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOMcollectionIndexed ================= */
+        case "DOMcollectionIndexed": {
+            const line = document.createElement("div")
+            const collectionSelect = createSelect(node, "collectionName", COLLECTIONS, el)
+            const subpropertyInput = createInput(node, "subproperty", el)
+            line.append(collectionSelect, " [", renderSlot(node, "index"), "]")
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOMcollectionProperty ================= */
+        case "DOMcollectionProperty": {
+            const line = document.createElement("div")
+            el.appendChild(createCheckbox(node, "hasCollection", "Apply to collection", el))
+            const collectionSelect = createSelect(node, "collectionName", COLLECTIONS, el)
+            const propertySelect = createSelect(node, "property", PROPERTIES, el)
+            if (node.props.hasCollection) {
+                line.append(collectionSelect, " . ", propertySelect)
+            } else {
+                line.append(renderSlot(node, "body"), " . ", propertySelect)
+            }
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOMcommand ================= */
+        case "DOMcommand": {
+            const line = document.createElement("div")
+            const propertySelect = createSelect(node, "propertyName", COMMANDS, el)
+            line.append(propertySelect, " . ", renderSlot(node, "command"))
             el.appendChild(line)
             break
         }
