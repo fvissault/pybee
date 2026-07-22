@@ -400,117 +400,45 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    document: {
-        props: {},
-        slots: ["body"],
-        slotLayout:"slot-inline"
-    },
     window: {
         props: {},
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    element: {
-        props: { elementName: "" },
+    DOMproperty: {
+        props: { property: "id" },
+        slots: []
+    },
+    DOMobject: {
+        props: { property: "style", subproperty: "" },
+        slots: []
+    },
+    DOMcollectionProperty: {
+        props: { hasCollection: true, collectionName: "options", property: "value" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    DOMpropertyGet: {
-        props: { property: "" },
-        slots: []
-    },
-    DOMpropertySet: {
-        props: { property: "", value: "" },
-        slots: []
-    },
-    DOMobjectGet: {
-        props: { property: "", suproperty: "" },
-        slots: []
-    },
-    DOMobjectSet: {
-        props: { property: "", suproperty: "", value: "" },
-        slots: []
-    },
-    DOMobjectSecondLevelGet: {
-        props: { suproperty: "" },
-        slots: ["property"],
-        slotLayout:"slot-inline"
-    },
-    DOMcollectionGet: {
-        props: { collectionName: "" },
+    DOMcollectionIndexed: {
+        props: { collectionName: "children" },
         slots: ["index"],
         slotLayout:"slot-inline"
     },
-    DOMcommandAccessor: {
+    DOMcommand: {
         props: { propertyname: "" },
         slots: ["command"],
         slotLayout:"slot-inline"
-    },
-    DOMmethodAccessor: {
-        props: { functionname: "", parameters: "" },
-        slots: []
     }
 }
 
-/*
-    DOMpropertyGet   => [select (id, className, innerText, innerHTML, value, checked, ...)]
-                          => phrase quand compacté : get property name_of_property
-    DOMpropertySet   => [select (id, className, innerText, innerHTML, value, checked, ...)] = [input value]
-                          => phrase quand compacté : set property name_of_property to value
-
-                          GET : element.property
-                          SET : element.property = value
-    
-    DOMobjectGet   => [select property (style, dataset, ...)] [input subprop]
-                          => phrase quand compacté : get subproperty name_of_subproperty of property name_of_property
-    DOMobjectSet   => [select property (style, dataset, ...)] [input subprop] = [input value]
-                          => phrase quand compacté : set subproperty name_of_subproperty of property name_of_property to value
-
-                          GET : element.property.subproperty
-                          SET : element.property.subproperty = value
-    
-    DOMobjectSecondLevelGet   => [slot property] [input subprop]
-                                => phrase quand compacté : get subproperty name_of_subproperty
-
-                                slot property = CollectionAccessor
-
-                                GET : element.object.subproperty
-
-                                EX : element.options[element.options.selectedIndex].value ==> element dans CollectionAccessor
-                                     element.options[1].value ==> literal dans CollectionAccessor
-    
-    DOMcollectionGet => [select name_of_collection (children, childNodes, attributes, files, options, ...)] [slot index]
-                          => phrase quand compacté : get collection name_of_collection
-
-                          slot index = element
-                          element = expression
-                          expression = Literal | PropertyGet | ObjectGet | ObjectSecondLevelGet | CollectionGet | CommandAccessor | MethodAccessor | @operators
-                          statements += PropertySet | ObjectSet | CommandAccessor | MethodAccessor
-
-                          GET : element.collection[slot]
-
-    DOMcommandAccessor    => [select property (classList, relList, part, attributes ...)] [slot call]
-                          => phrase quand compacté : call method on property
-
-                          element.property.[call]
-
-    DOMmethodAccessor     => [slot call | CollectionAccessor]
-                          => phrase quand compacté : call method directly
-
-                          element.[call]
-
-    les slots body de document et element (et window?), assign_right peuvent contenir les 5 accesseurs
-*/
-
-const statements = ["log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch", "DOMpropertySet", "DOMobjectSet"]
+const statements = ["log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
 const operators = ["add", "sub", "mul", "div"]
 const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal"]
 const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
 const decomposers = ["keys", "values"]
 const classes = ["constructor", "method", "property"]
 const switchcases = ["case", "default"]
-const DOMselector = ["doc_selector", "el_selector", "document", "window", "element"]
-const DOMexpr = ["listener", "Literal", "DOMpropertyGet", "DOMobjectGet", "DOMobjectSecondLevelGet", "DOMcollectionGet", "DOMcommandAccessor", "DOMmethodAccessor"]
+const DOMselector = ["doc_selector", "el_selector", "window"]
+const DOMexpr = ["listener", "Literal", "DOMproperty", "DOMobject", "DOMcollectionProperty", "DOMcollectionIndexed", "DOMcommand"]
 
 const FAMILIES = {
     statements: statements,
@@ -559,11 +487,11 @@ const RULES = {
     },
     assign: {
         left: {
-           allowed: "literal+const+let",
+           allowed: "literal+const+let+@DOMexpr",
             node_allowed: 1
         },
         right: {
-            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMexpr+@logicals+new+chain",
+            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty",
             node_allowed: 1
         }
     },
@@ -903,19 +831,13 @@ const RULES = {
     },
     doc_selector: {
         body: {
-            allowed: "litteral+call+@DOMexpr",
+            allowed: "litteral+call+@DOMexpr+assign",
             node_allowed: 1
         }
     },
     el_selector: {
         body: {
-            allowed: "litteral+call+@DOMexpr",
-            node_allowed: 1
-        }
-    },
-    document: {
-        body: {
-            allowed: "@DOMexpr",
+            allowed: "litteral+call+@DOMexpr+assign",
             node_allowed: 1
         }
     },
@@ -925,27 +847,21 @@ const RULES = {
             node_allowed: 1
         }
     },
-    element: {
-        body: {
-            allowed: "@DOMexpr",
-            node_allowed: 1
-        }
-    },
-    DOMobjectSecondLevelGet: {
-        property: {
-            allowed: ["DOMcollectionGet"],
-            node_allowed: 1
-        }
-    },
-    DOMcollectionGet: {
+    DOMcollectionIndexed: {
         index: {
-            allowed: "@DOMexpr",
+            allowed: "doc_selector+el_selector+DOMproperty",
             node_allowed: 1
         }
     },
-    DOMcommandAccessor: {
+    DOMcommand: {
         command: {
             allowed: "call",
+            node_allowed: 1
+        }
+    },
+    DOMcollectionProperty: {
+        body: {
+            allowed: "el_selector+doc_selector",
             node_allowed: 1
         }
     }
@@ -1131,20 +1047,15 @@ const PALETTE = [
     {
         category: "DOM",
         items: [
-            { type: "document", label: "Document" },                    // document.[slot]
-            { type: "window", label: "Window" },                        // window.[slot]
-            { type: "element", label: "Element" },                      // [input element_name].[slot]
-            { type: "doc_selector", label: "Document selector" },       // [select fct] on [input name].[slot]
-            { type: "el_selector", label: "Element selector" },         // [select fct] on [input name].[slot]
+            { type: "window", label: "Window" },
+            { type: "doc_selector", label: "Document selector" },
+            { type: "el_selector", label: "Element selector" },
             { type: "listener", label: "Event listener" },
-            { type: "DOMpropertyGet", label: "Property get" },
-            { type: "DOMpropertySet", label: "Property set" },
-            { type: "DOMobjectGet", label: "Object get" },
-            { type: "DOMobjectSet", label: "Object set" },
-            { type: "DOMobjectSecondLevelGet", label: "Second level object get" },
-            { type: "DOMcollectionGet", label: "Collection get" },
-            { type: "DOMcommandAccessor", label: "Command set" },
-            { type: "DOMmethodAccessor", label: "Method set" }
+            { type: "DOMproperty", label: "DOM Property" },
+            { type: "DOMobject", label: "DOM Object" },
+            { type: "DOMcollectionProperty", label: "DOM collection property" },
+            { type: "DOMcollectionIndexed", label: "DOM collection indexed" },
+            { type: "DOMcommand", label: "DOM Command" }
         ]
     },
     {
@@ -1158,63 +1069,24 @@ const PALETTE = [
 ];
 
 const COLLAPSIBLE = new Set([
-    "function",
-    "async",
-    "arrow",
-    "fetch",
-    "try",
-    "if",
-    "ifelse",
-    "switch",
-    "case",
-    "default",
-    "object_create",
-    "array_create",
-    "for",
-    "forin",
-    "forof",
-    "foreach",
-    "while",
-    "dowhile",
-    "chain",
-    "map",
-    "flatmap",
-    "filter",
-    "join",
-    "split",
-    "flat",
-    "find",
-    "findindex",
-    "findlast",
-    "some",
-    "every",
-    "includes",
-    "indexof",
-    "lastindexof",
-    "push",
-    "unshift",
-    "concat",
-    "class",
-    "constructor",
-    "method",
-    "property",
-    "log",
-    "warn",
-    "error",
-    "listener",
-    "doc_selector",
-    "el_selector"
+    "function", "async", "arrow", "fetch", "try", "if", "ifelse", "switch", "case", "default",
+    "object_create", "array_create", "for", "forin", "forof", "foreach", "while", "dowhile",
+    "chain", "map", "flatmap", "filter", "join", "split", "flat", "find", "findindex", "findlast", "some", "every", "includes", "indexof", "lastindexof", "push", "unshift", "concat",
+    "class", "constructor", "method", "property", "log", "warn", "error", "listener", "doc_selector","el_selector"
 ])
 
+/* ===================================================================================
+ * Définition des selects utilisées dans Intflow
+ */
 const EVENTS = [
     { value: "click", label: "click"},
+    { value: "dblclick", label: "dblclick"},
     { value: "input", label: "input"},
     { value: "change", label: "change"},
     { value: "focus", label: "focus"},
     { value: "focusin", label: "focusin"},
     { value: "focusout", label: "focusout"},
     { value: "blur", label: "blur"},
-    { value: "dblclick", label: "dblclick"},
     { value: "mousedown", label: "mousedown"},
     { value: "mouseup", label: "mouseup"},
     { value: "mousemove", label: "mousemove"},
@@ -1226,6 +1098,31 @@ const EVENTS = [
     { value: "wheel", label: "wheel"},
     { value: "keydown", label: "keydown"},
     { value: "keyup", label: "keyup"},
+    { value: "submit", label: "submit"},
+    { value: "reset", label: "reset"},
+    { value: "invalid", label: "invalid"},
+    { value: "beforeinput", label: "beforeinput"},
+    { value: "copy", label: "copy"},
+    { value: "cut", label: "cut"},
+    { value: "paste", label: "paste"},
+    { value: "pointerdown", label: "pointerdown"},
+    { value: "pointerup", label: "pointerup"},
+    { value: "pointermove", label: "pointermove"},
+    { value: "pointerenter", label: "pointerenter"},
+    { value: "pointerleave", label: "pointerleave"},
+    { value: "pointerover", label: "pointerover"},
+    { value: "pointerout", label: "pointerout"},
+    { value: "pointercancel", label: "pointercancel"},
+    { value: "touchstart", label: "touchstart"},
+    { value: "touchmove", label: "touchmove"},
+    { value: "touchend", label: "touchend"},
+    { value: "touchcancel", label: "touchcancel"},
+    { value: "beforeunload", label: "beforeunload"},
+    { value: "unload", label: "unload"},
+    { value: "hashchange", label: "hashchange"},
+    { value: "popstate", label: "popstate"},
+    { value: "online", label: "online"},
+    { value: "offline", label: "offline"},
     { value: "dragstart", label: "dragstart"},
     { value: "drag", label: "drag"},
     { value: "dragend", label: "dragend"},
@@ -1241,16 +1138,18 @@ const EVENTS = [
 
 const DOC_SELECTORS = [
     { value: "id", label: "getElementById" },
-    { value: "class", label: "getElementByClassName" },
-    { value: "tag", label: "getElementByTagName" },
+    { value: "name", label: "getElementsByName" },
+    { value: "class", label: "getElementsByClassName" },
+    { value: "tag", label: "getElementsByTagName" },
     { value: "query", label: "querySelector" },
     { value: "queryall", label: "querySelectorAll" }
 ]
 
 const EL_SELECTORS = [
     { value: "nosel", label: "No selector" },
-    { value: "class", label: "getElementByClassName" },
-    { value: "tag", label: "getElementByTagName" },
+    { value: "class", label: "getElementsByClassName" },
+    { value: "tag", label: "getElementsByTagName" },
+    { value: "closest", label: "closest" },
     { value: "query", label: "querySelector" },
     { value: "queryall", label: "querySelectorAll" }
 ]
@@ -1282,13 +1181,37 @@ const PROPERTIES = [
     { value: "alt", label: "alt" },
     { value: "target", label: "target" },
     { value: "lang", label: "lang" },
-    { value: "dir", label: "dir" }
+    { value: "dir", label: "dir" },
+    { value: "name", label: "name" },
+    { value: "type", label: "type" },
+    { value: "htmlFor", label: "htmlFor" },
+    { value: "tabIndex", label: "tabIndex" },
+    { value: "title", label: "title" },
+    { value: "accessKey", label: "accessKey" },
+    { value: "spellcheck", label: "spellcheck" },
+    { value: "translate", label: "translate" },
+    { value: "autofocus", label: "autofocus" },
+    { value: "open", label: "open" },
+    { value: "clientWidth", label: "clientWidth" },
+    { value: "clientHeight", label: "clientHeight" },
+    { value: "offsetWidth", label: "offsetWidth" },
+    { value: "offsetHeight", label: "offsetHeight" },
+    { value: "offsetTop", label: "offsetTop" },
+    { value: "offsetLeft", label: "offsetLeft" },
+    { value: "scrollWidth", label: "scrollWidth" },
+    { value: "scrollHeight", label: "scrollHeight" },
+    { value: "clientWidth", label: "clientWidth" },
+    { value: "scrollTop", label: "scrollTop" },
+    { value: "scrollLeft", label: "scrollLeft" }
 ]
 
 const OBJECTS = [
     { value: "style", label: "style" },
     { value: "dataset", label: "dataset" },
-    { value: "styleMap", label: "styleMap" },
+    { value: "document", label: "document" },
+    { value: "history", label: "history" },
+    { value: "navigator", label: "navigator" },
+    { value: "screen", label: "screen" },
     { value: "location", label: "location" }
 ]
 
@@ -1298,6 +1221,12 @@ const COLLECTIONS = [
     { value: "attributes", label: "attributes" },
     { value: "files", label: "files" },
     { value: "options", label: "options" },
+    { value: "forms", label: "forms" },
+    { value: "images", label: "images" },
+    { value: "links", label: "links" },
+    { value: "scripts", label: "scripts" },
+    { value: "styleSheets", label: "styleSheets" },
+    { value: "elements", label: "elements" },
     { value: "selectedOptions", label: "selectedOptions" },
     { value: "labels", label: "labels" },
     { value: "rows", label: "rows" },
@@ -1313,6 +1242,7 @@ const COMMANDS = [
     { value: "part", label: "part" }
 ]
 
+/*
 const METHODS = [
     { value: "closest", label: "closest" },
     { value: "matches", label: "matches" },
@@ -1335,7 +1265,11 @@ const METHODS = [
     { value: "scrollTo", label: "scrollTo" },
     { value: "scrollBy", label: "scrollBy" },
     { value: "scrollIntoView", label: "scrollIntoView" },
+    { value: "contains", label: "contains" },
     { value: "getAttribute", label: "getAttribute" },
     { value: "setAttribute", label: "setAttribute" },
+    { value: "hasAttribute", label: "hasAttribute" },
+    { value: "toggleAttribute", label: "toggleAttribute" },
     { value: "removeAttribute", label: "removeAttribute" }
 ]
+*/
