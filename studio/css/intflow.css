@@ -155,18 +155,13 @@ body {
 
 .node.doc_selector,
 .node.el_selector,
-.node.document,
 .node.window,
-.node.element,
 .node.listener,
-.node.DOMpropertyGet,
-.node.DOMobjectGet,
-.node.DOMpropertySet,
-.node.DOMobjectSet,
-.node.DOMobjectSecondLevelGet,
-.node.DOMcollectionGet,
-.node.DOMcommandAccessor,
-.node.DOMmethodAccessor {
+.node.DOMproperty,
+.node.DOMobject,
+.node.DOMcollectionProperty,
+.node.DOMcollectionIndexed,
+.node.DOMcommand {
     border-left: 10px solid #e24a4a;
 }
 
