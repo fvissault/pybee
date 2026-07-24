@@ -213,7 +213,7 @@ const NODE_DEFS = {
     },
     fetch: { 
         props: { url: "", hasFinally: false, hasCatch: false, slotsthencount: 0 },
-        slots: ["options", "catch-body", "finally-body"],
+        slots: ["options", "catch_body", "finally_body"],
         slotLayout:"slot-block"
     },
     object_create: {
