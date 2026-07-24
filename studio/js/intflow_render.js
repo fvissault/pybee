@@ -419,22 +419,6 @@ function renderNodeContent(node, el) {
         case "mul":
         case "sub":
         case "add": {
-            /*let op = ""
-            if (node.type === "add") op = " + "
-            if (node.type === "sub") op = " - "
-            if (node.type === "mul") op = " * "
-            if (node.type === "div") op = " / "
-            if (node.type === "and") op = " && "
-            if (node.type === "or") op = " || "
-            if (node.type === "equals") op = " === "
-            if (node.type === "notequals") op = " !== "
-            if (node.type === "equal") op = " == "
-            if (node.type === "notequal") op = " != "
-            if (node.type === "inf") op = " < "
-            if (node.type === "infequal") op = " <= "
-            if (node.type === "sup") op = " > "
-            if (node.type === "supequal") op = " >= "
-            node.props.parenthesis = true*/
             const line = document.createElement("div")
             line.append(renderSlot(node, "left"), node.props.op, renderSlot(node, "right"))
             el.appendChild(line)
@@ -515,14 +499,14 @@ function renderNodeContent(node, el) {
 
             for(let i = 1; i <= node.props.slotsthencount; i++) {
                 let thenentry = document.createElement("div")
-                if (node.props[`hasThen-body-${i}`]) {
-                    thenentry.appendChild(createCheckbox(node, `hasThen-body-${i}`, ".then", el))
+                if (node.props[`hasThen_body_${i}`]) {
+                    thenentry.appendChild(createCheckbox(node, `hasThen_body_${i}`, ".then", el))
                     thenentry.append("(")
                     el.appendChild(thenentry)
-                    el.appendChild(renderSlot(node, `then-body-${i}`))
+                    el.appendChild(renderSlot(node, `then_body_${i}`))
                     el.appendChild(closingParenthesis())
                 } else {
-                    thenentry.appendChild(createCheckbox(node, `hasThen-body-${i}`, ".then", el))
+                    thenentry.appendChild(createCheckbox(node, `hasThen_body_${i}`, ".then", el))
                     el.appendChild(thenentry)
                 }
             }
@@ -533,8 +517,8 @@ function renderNodeContent(node, el) {
             thenplus.innerText = "+then"
             thenplus.onclick = () => {
                 node.props.slotsthencount += 1
-                node.slots[`then-body-${node.props.slotsthencount}`] = []
-                node.props[`hasThen-body-${node.props.slotsthencount}`] = false
+                node.slots[`then_body_${node.props.slotsthencount}`] = []
+                node.props[`hasThen_body_${node.props.slotsthencount}`] = false
                 render()
             }
             el.appendChild(thenplus)
@@ -544,7 +528,7 @@ function renderNodeContent(node, el) {
                 catchentry.appendChild(createCheckbox(node, "hasCatch", ".catch", el))
                 catchentry.append("((e) => {")
                 el.appendChild(catchentry)
-                el.appendChild(renderSlot(node, "catch-body"))
+                el.appendChild(renderSlot(node, "catch_body"))
                 let div = document.createElement("div")
                 div.innerText = "})"
                 el.appendChild(div)
@@ -557,7 +541,7 @@ function renderNodeContent(node, el) {
             el.appendChild(finallyentry)
             if (node.props.hasFinally) {
                 finallyentry.append("(() => {")
-                el.appendChild(renderSlot(node, "finally-body"))
+                el.appendChild(renderSlot(node, "finally_body"))
                 let div = document.createElement("div")
                 div.innerText = "})"
                 el.appendChild(div)
