@@ -36,16 +36,6 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-block"
     },
-    forin: {
-        props: { varName: "", object: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
-    forof: {
-        props: { varName: "", object: "" },
-        slots: ["body"],
-        slotLayout:"slot-block"
-    },
     foreach: {
         props: { 
             array: "items", useIndex: false, useArray: false, arrayName: "array", useThisArg: false, thisArg: "object" 
@@ -54,20 +44,14 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     forin: {
-        props: { array: "" },
-        slots: ["variable", "body"],
-        slotLayout: {
-            variable: "slot-inline",
-            body: "slot-block"
-        }
+        props: { object: "", variable: "" },
+        slots: ["body"],
+        slotLayout: "slot-block"
     },
     forof: {
-        props: { array: "" },
-        slots: ["variable", "body"],
-        slotLayout: {
-            variable: "slot-inline",
-            body: "slot-block"
-        }
+        props: { array: "", variable: "" },
+        slots: ["body"],
+        slotLayout: "slot-block"
     },
     while: {
         props: {},
@@ -143,78 +127,83 @@ const NODE_DEFS = {
         slots: []
     },
     add: {
-        props: { op: "+", parenthesis: true },
+        props: { op: " + ", parenthesis: true },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     sub: {
-        props: { op: "-", parenthesis: true },
+        props: { op: " - ", parenthesis: true },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     mul: {
-        props: { op: "*", parenthesis: false },
+        props: { op: " * ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     div: {
-        props: { op: "/", parenthesis: false },
+        props: { op: " / ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     and: {
-        props: { op: "&&", parenthesis: false },
+        props: { op: " && ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     or: {
-        props: { op: "||", parenthesis: true },
+        props: { op: " || ", parenthesis: true },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
+    not: {
+        props: { op: "!", parenthesis: false },
+        slots: ["body"],
+        slotLayout:"slot-inline"
+    },
     equals: {
-        props: { op: "===", parenthesis: true },
+        props: { op: " === ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     notequals: {
-        props: { op: "!==", parenthesis: true },
+        props: { op: " !== ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     equal: {
-        props: { op: "==", parenthesis: true },
+        props: { op: " == ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     notequal: {
-        props: { op: "!=", parenthesis: true },
+        props: { op: " != ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     inf: {
-        props: { op: "<", parenthesis: true },
+        props: { op: " < ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     infequal: {
-        props: { op: "<=", parenthesis: true },
+        props: { op: " <= ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     sup: {
-        props: { op: ">", parenthesis: true },
+        props: { op: " > ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     supequal: {
-        props: { op: ">=", parenthesis: true },
+        props: { op: " >= ", parenthesis: false },
         slots: ["left", "right"],
         slotLayout:"slot-inline"
     },
     try: {
         props: { hasFinally: false },
-        slots: ["body", "catch-body", "finally-body"],
+        slots: ["body", "catch_body", "finally_body"],
         slotLayout:"slot-block"
     },
     arrow: { 
@@ -432,7 +421,7 @@ const NODE_DEFS = {
 
 const statements = ["log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
 const operators = ["add", "sub", "mul", "div"]
-const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal"]
+const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"]
 const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
 const decomposers = ["keys", "values"]
 const classes = ["constructor", "method", "property"]
@@ -485,13 +474,25 @@ const RULES = {
             node_allowed: Infinity
         }
     },
+    async: {
+        body: {
+            allowed: "function+async+call+@statements+try+fetch+new+@DOMselector+await",
+            node_allowed: Infinity
+        }
+    },
+    return: {
+        body: {
+            allowed: "@operators+@logicals+literal+@decomposers+@DOMselector+call",
+            node_allowed: 1
+        }
+    },
     assign: {
         left: {
            allowed: "literal+const+let+@DOMexpr",
             node_allowed: 1
         },
         right: {
-            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty",
+            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty+await",
             node_allowed: 1
         }
     },
@@ -502,20 +503,12 @@ const RULES = {
         }
     },
     forin: {
-        variable: {
-            allowed: "const+let",
-            node_allowed: 1
-        },
         body: {
             allowed: "call+@statements+continue+try+fetch+new+@DOMselector",
             node_allowed: Infinity
         }
     },
     forof: {
-        variable: {
-            allowed: "const+let",
-            node_allowed: 1
-        },
         body: {
             allowed: "call+@statements+continue+try+fetch+new+@DOMselector",
             node_allowed: Infinity
@@ -631,101 +624,107 @@ const RULES = {
     },
     and: {
         left: {
-           allowed: "@logicals+@operators+literal",
+           allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     or: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
+            node_allowed: 1
+        }
+    },
+    not: {
+        body: {
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     equals: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     equal: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     notequals: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     notequal: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     inf: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     infequal: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     sup: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
     supequal: {
         left: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         },
         right: {
-            allowed: "@logicals+@operators+literal",
+            allowed: "@logicals+@operators+literal+call",
             node_allowed: 1
         }
     },
