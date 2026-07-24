@@ -114,17 +114,17 @@ function getCollapsedLabel(node) {
         case "if":
             return `if (...) {...}`
         case "for":
-            return `for (${node.props.varName || "?"}) {...}`
+            return `for ${node.props.varName || "?"} from ${node.props.from} to ${node.props.to} do {...}`
         case "forin":
-            return `for (... in ${node.props.array || "?"}) {...}`
+            return `for ${node.props.variable || "?"} in ${node.props.object || "?"} do {...}`
         case "forof":
-            return `for (... of ${node.props.array || "?"}) {...}`
+            return `for ${node.props.variable || "?"} of ${node.props.array || "?"} do {...}`
         case "while":
-            return `while (${node.props.condition || "?"}) {...}`
+            return `while (...) {...}`
         case "foreach":
             return `${node.props.array || "?"}.forEach (item => {...})`
         case "dowhile":
-            return `do {...} while (${node.props.condition || "?"})`
+            return `do {...} while (...)`
         case "chain":
             return `${node.props.arrayname || "?"}.chain`
         case "arrow":
@@ -282,11 +282,13 @@ function renderNodeContent(node, el) {
         case "forin":
         case "forof": {
             const line = document.createElement("div")
-            const arrayInput = createInput(node, "array", el, true)
+            const variableInput = createInput(node, "variable", el, true)
             if (node.type === "forin") {
-                line.append("for (", renderSlot(node, "variable"), " in ", arrayInput, ") {")
+                const objectInput = createInput(node, "object", el, true)
+                line.append("for (", variableInput, " in ", objectInput, ") {")
             } else {
-                line.append("for (", renderSlot(node, "variable"), " of ", arrayInput, ") {")
+                const arrayInput = createInput(node, "array", el, true)
+                line.append("for (", variableInput, " of ", arrayInput, ") {")
             }
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
@@ -309,7 +311,7 @@ function renderNodeContent(node, el) {
             el.appendChild(openLine)
             el.appendChild(renderSlot(node, "body"))
             const closeLine = document.createElement("div")
-            closeLine.append("} while ( ", renderSlot(node, "condition"), " )")
+            closeLine.append("} while (", renderSlot(node, "condition"), ")")
             el.appendChild(closeLine)
             break
         }        
@@ -417,7 +419,7 @@ function renderNodeContent(node, el) {
         case "mul":
         case "sub":
         case "add": {
-            let op = ""
+            /*let op = ""
             if (node.type === "add") op = " + "
             if (node.type === "sub") op = " - "
             if (node.type === "mul") op = " * "
@@ -432,9 +434,15 @@ function renderNodeContent(node, el) {
             if (node.type === "infequal") op = " <= "
             if (node.type === "sup") op = " > "
             if (node.type === "supequal") op = " >= "
-            node.props.parenthesis = true
+            node.props.parenthesis = true*/
             const line = document.createElement("div")
-            line.append(renderSlot(node, "left"), op, renderSlot(node, "right"))
+            line.append(renderSlot(node, "left"), node.props.op, renderSlot(node, "right"))
+            el.appendChild(line)
+            break
+        }
+        case "not": {
+            const line = document.createElement("div")
+            line.append(node.props.op, renderSlot(node, "body"))
             el.appendChild(line)
             break
         }
@@ -448,14 +456,14 @@ function renderNodeContent(node, el) {
             const catchentry = document.createElement("div")
             catchentry.innerText = "catch (e) {"
             el.appendChild(catchentry)
-            el.appendChild(renderSlot(node, "catch-body"))
+            el.appendChild(renderSlot(node, "catch_body"))
             el.appendChild(closingBracket())
             const finallyentry = document.createElement("div")
             finallyentry.appendChild(createCheckbox(node, "hasFinally", "finally", el))
             el.appendChild(finallyentry)
             if (node.props.hasFinally) {
                 finallyentry.append("{")
-                el.appendChild(renderSlot(node, "finally-body"))
+                el.appendChild(renderSlot(node, "finally_body"))
                 el.appendChild(closingBracket())
             }
             break
