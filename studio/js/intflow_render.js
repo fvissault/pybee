@@ -167,9 +167,9 @@ function getCollapsedLabel(node) {
         case "switch":
             return `${node.type} on ${node.props.varname || "?"} {...}` 
         case "case":
-            return `in ${node.type} ${node.props.varvalue || "?"}: {...}` 
+            return `in ${node.type} ${node.props.varvalue || "?"} do ${node.slots.body.length > 0?"{...}":""}` 
         case "default":
-            return `by ${node.type}: {...}` 
+            return `by ${node.type} do {...}` 
         case "log":
         case "warn":
         case "error":
@@ -567,6 +567,15 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
+        /* ================= OBJECT_GET ================= */
+        case "object_get": {
+            const line = document.createElement("div")
+            const arrayNameInput = createInput(node, "arrayName", el, true)
+            const keyInput = createInput(node, "key", el, true)
+            line.append(arrayNameInput, "[", keyInput, "]")
+            el.appendChild(line)
+            break
+        }
         /* ================= ARRAY_CREATE ================= */
         case "array_create": {
             const line = document.createElement("div")
@@ -585,18 +594,18 @@ function renderNodeContent(node, el) {
             dotplus.innerText = "+"
             dotplus.onclick = () => {
                 node.props.dotslotcount += 1
-                node.slots[`dotplus-${node.props.dotslotcount}`] = []
-                node.props[`hasdotplus-${node.props.dotslotcount}`] = false
-                RULES["chain"][`dotplus-${node.props.dotslotcount}`] = RULES["chain"]["body"]
+                node.slots[`dotplus_${node.props.dotslotcount}`] = []
+                node.props[`hasdotplus_${node.props.dotslotcount}`] = false
+                RULES["chain"][`dotplus_${node.props.dotslotcount}`] = RULES["chain"]["body"]
                 render()
             }
             const dotdel = document.createElement("button")
             dotdel.className = "btn btn-secondary"
             dotdel.innerText = "🗑"
             dotdel.onclick = () => {
-                delete node.slots[`dotplus-${node.props.dotslotcount}`]
-                delete node.props[`hasdotplus-${node.props.dotslotcount}`]
-                delete RULES["chain"][`dotplus-${node.props.dotslotcount}`]
+                delete node.slots[`dotplus_${node.props.dotslotcount}`]
+                delete node.props[`hasdotplus_${node.props.dotslotcount}`]
+                delete RULES["chain"][`dotplus_${node.props.dotslotcount}`]
                 node.props.dotslotcount -= 1
                 render()
             }
@@ -606,22 +615,22 @@ function renderNodeContent(node, el) {
             line.append(paramInput, " .", renderSlot(node, "body"))
 
             for(let i = 1; i <= node.props.dotslotcount; i++) {
-                const slot = renderSlot(node, `dotplus-${i}`)
+                const slot = renderSlot(node, `dotplus_${i}`)
                 slot.onclick = (e) => {
                     if (e.target.closest("input, button, select, textarea, label")) return
                     e.stopPropagation();
-                    if (node.props[`hasdotplus-${i}`]) {
-                        node.props[`hasdotplus-${i}`] = false
+                    if (node.props[`hasdotplus_${i}`]) {
+                        node.props[`hasdotplus_${i}`] = false
                         slot.classList.add("slot-disabled")
                     } else {
-                        node.props[`hasdotplus-${i}`] = true
+                        node.props[`hasdotplus_${i}`] = true
                         slot.classList.remove("slot-disabled")
                     }
                     render()
                 }
 
-                if (!node.props[`hasdotplus-${i}`]) {
-                    node.props[`hasdotplus-${i}`] = false
+                if (!node.props[`hasdotplus_${i}`]) {
+                    node.props[`hasdotplus_${i}`] = false
                     slot.classList.add("slot-disabled")
                     line.append(slot)
                 }
@@ -676,7 +685,7 @@ function renderNodeContent(node, el) {
                 }
             }
             const options = document.createElement("div")
-            options.appendChild(createCheckbox(node, "useThisArg", "thisArg", el))
+            options.appendChild(createCheckbox(node, "useThisArg", "This argument", el))
             el.appendChild(options)
             // LIGNE PRINCIPALE
             const line = document.createElement("div")
@@ -738,16 +747,14 @@ function renderNodeContent(node, el) {
             plusbtn.innerText = "+"
             plusbtn.onclick = () => {
                 node.props.inputcount += 1
-                node.props[`hasinput-${node.props.inputcount}`] = false
-                node.props[`element-${node.props.inputcount}`] = ""
+                node.props[`element_${node.props.inputcount}`] = ""
                 render()
             }
             const delbtn = document.createElement("button")
             delbtn.className = "btn btn-secondary"
             delbtn.innerText = "🗑"
             delbtn.onclick = () => {
-                delete node.props[`hasinput-${node.props.inputcount}`]
-                delete node.props[`element-${node.props.inputcount}`]
+                delete node.props[`element_${node.props.inputcount}`]
                 node.props.inputcount -= 1
                 render()
             }
@@ -757,7 +764,7 @@ function renderNodeContent(node, el) {
             line.append(node.type, " (", elementInput)
 
             for(let i = 1; i <= node.props.inputcount; i++) {
-                const elInput = createInput(node, `element-${i}`, el, true)
+                const elInput = createInput(node, `element_${i}`, el, true)
                 elInput.placeholder = "element"
                 line.append(", ", elInput)
             }
@@ -803,8 +810,9 @@ function renderNodeContent(node, el) {
             const options = document.createElement("div")
             options.appendChild(createCheckbox(node, "useStatic", "Static", el))
             options.appendChild(createCheckbox(node, "usePrivate", "Private", el))
+            options.appendChild(createCheckbox(node, "useAsync", "Async", el))
             el.appendChild(options)
-            line.append(node.props.useStatic?"static ":"", node.props.usePrivate?"#":"", methodInput , " (", paramInput, ") {")
+            line.append(node.props.useStatic?"static ":"", node.props.useAsync?"async ":"", node.props.usePrivate?"#":"", methodInput , " (", paramInput, ") {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
             el.appendChild(closingBracket())
@@ -854,7 +862,7 @@ function renderNodeContent(node, el) {
         case "case": {
             const line = document.createElement("div")
             const varvalue = createInput(node, "varvalue", el)
-            line.append("in case ", varvalue, ": {")
+            line.append("in case ", varvalue, " do {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
             el.appendChild(closingBracket())
@@ -863,7 +871,7 @@ function renderNodeContent(node, el) {
         /* ================= DEFAULT ================= */
         case "default": {
             const line = document.createElement("div")
-            line.append("by default: {")
+            line.append("by default do {")
             el.appendChild(line)
             el.appendChild(renderSlot(node, "body"))
             el.appendChild(closingBracket())
@@ -894,6 +902,8 @@ function renderNodeContent(node, el) {
                 targetInput.placeholder = "id"
             if (node.props.selectorType === "class")
                 targetInput.placeholder = "class"
+            if (node.props.selectorType === "name")
+                targetInput.placeholder = "name"
             if (node.props.selectorType === "tag")
                 targetInput.placeholder = "tag"
             if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
@@ -902,14 +912,16 @@ function renderNodeContent(node, el) {
             line.append("on document, ")
             if (node.props.selectorType === "id")
                 line.append("get element by id(")
+            if (node.props.selectorType === "name")
+                line.append("get elements by name(")
             if (node.props.selectorType === "class")
-                line.append("get element by class(")
+                line.append("get elements by class name(")
             if (node.props.selectorType === "tag")
-                line.append("get element by tag(")
+                line.append("get elements by tag name(")
             if (node.props.selectorType === "query")
-                line.append("get element by query(")
+                line.append("get elements by query(")
             if (node.props.selectorType === "queryall")
-                line.append("get element by queryall(")
+                line.append("get elements by queryall(")
             line.append(targetInput, ").")
             line.append(renderSlot(node, "body"))
             el.appendChild(line)
