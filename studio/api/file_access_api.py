@@ -95,39 +95,21 @@ def save_bst():
 
 
 def create_project():
-
     project = data["project"]
-
     project_path = os.path.join(PROJECTS_DIR, project)
-
     os.makedirs(project_path, exist_ok=True)
-
-    #projects = read_projects()
-
-    #if project not in projects["projects"]:
-    #    projects["projects"][project] = []
-
-    #write_projects(projects)
-
+    project_path = os.path.join(PROJECTS_DIR, project, "js")
+    os.makedirs(project_path, exist_ok=True)
+    project_path = os.path.join(PROJECTS_DIR, project, "css")
+    os.makedirs(project_path, exist_ok=True)
     return {"status": "ok"}
 
 
 def delete_project():
-
     project = data["project"]
-
     project_path = os.path.join(PROJECTS_DIR, project)
-
     if os.path.exists(project_path):
         shutil.rmtree(project_path)
-
-    #projects = read_projects()
-
-    #if project in projects["projects"]:
-    #    del projects["projects"][project]
-
-    #write_projects(projects)
-
     return {"status": "ok"}
 
 
