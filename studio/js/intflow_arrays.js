@@ -221,8 +221,12 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-block"
     },
+    object_get: {
+        props: { arrayName: "", key: ""},
+        slots: []
+    },
     object_set: {
-        props: { key: "key" },
+        props: { key: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -245,17 +249,17 @@ const NODE_DEFS = {
         slots: []
     },
     map: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     flatmap: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     filter: { 
-        props: { array: "", useIndex: false, useArray: false },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -264,27 +268,27 @@ const NODE_DEFS = {
         slots: []
     },
     find: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     findindex: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     findlast: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     some: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
     every: { 
-        props: { useThisArg: false, thisArg: "this argument" },
+        props: { useThisArg: false, thisArg: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -296,16 +300,16 @@ const NODE_DEFS = {
         props: {},
         slots: []
     },
+    reverse: { 
+        props: {},
+        slots: []
+    },
     keys: { 
         props: { object: "" },
         slots: []
     },
     values: { 
         props: { object: "" },
-        slots: []
-    },
-    reverse: { 
-        props: {},
         slots: []
     },
     entries: { 
@@ -347,7 +351,7 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     method: { 
-        props: { methodname: "", parameters: "", useStatic: "", usePrivate: "" },
+        props: { methodname: "", parameters: "", useStatic: false, usePrivate: false, useAsync: false },
         slots: ["body"],
         slotLayout:"slot-block"
     },
@@ -380,7 +384,7 @@ const NODE_DEFS = {
         slotLayout:"slot-block"
     },
     doc_selector: {
-        props: { selectorType: "query", target: "" },
+        props: { selectorType: "id", target: "" },
         slots: ["body"],
         slotLayout:"slot-inline"
     },
@@ -492,7 +496,7 @@ const RULES = {
             node_allowed: 1
         },
         right: {
-            allowed: "literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty+await",
+            allowed: "array_create+object_get+literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty+await",
             node_allowed: 1
         }
     },
@@ -522,26 +526,14 @@ const RULES = {
     },
     object_set: {
         body: {
-            allowed: "call+literal+@operators+object_create+array_create+new+@DOMexpr",
+            allowed: "object_get+call+literal+@operators+object_create+array_create+new+@DOMexpr",
             node_allowed: 1
         }
     },
     array_create: {
         body: {
-            allowed: "call+literal+@operators+object_create+object_set+array_create+chain+new+@DOMexpr",
+            allowed: "object_get+call+literal+@operators+object_create+object_set+array_create+chain+new+@DOMexpr",
             node_allowed: Infinity
-        }
-    },
-    let: {
-        body: {
-            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@DOMexpr",
-            node_allowed: 1
-        }
-    },
-    const: {
-        body: {
-            allowed: "function+async+call+literal+@operators+arrow+object_create+array_create+chain+new+@DOMexpr",
-            node_allowed: 1
         }
     },
     chain: {
