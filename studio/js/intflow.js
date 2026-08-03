@@ -104,23 +104,20 @@ workspaceEl.ondragover = (e)=>{
 }
 
 workspaceEl.ondrop = (e)=>{
-    //console.log("workspaceEl.ondrop", { draggedNode, draggedFrom, dragSource })
+    console.log("workspaceEl.ondrop", { draggedNode, draggedFrom, dragSource })
     e.preventDefault()
 
     if(!draggedNode) return
+
+    removeNodeFromParent()
+
+    tree.push(draggedNode)
 
     // éviter duplication racine
     if(dragSource === "workspace" && draggedFrom === tree){
         resetDrag()
         return
     }
-
-    removeNodeFromParent()
-
-    tree.push(draggedNode)
-
-    window.opener.savebtn.className = "tosave"
-    window.opener.setToSave(true)
 
     resetDrag()
     render()
@@ -152,9 +149,6 @@ function removeNodeFromParent(){
     const index = draggedFrom.indexOf(draggedNode)
     if(index !== -1){
         draggedFrom.splice(index, 1)
-
-        window.opener.savebtn.className = "tosave"
-        window.opener.setToSave(true)
     }
 }
 
@@ -220,6 +214,8 @@ function handleDropAtPosition(targetNode, position){
         return
     }
 
+    removeNodeFromParent();
+    
     let index = parentArray.indexOf(targetNode)
     if(dragSource === "workspace" && draggedFrom === parentArray){
         const oldIndex = draggedFrom.indexOf(draggedNode)
@@ -239,9 +235,6 @@ function handleDropAtPosition(targetNode, position){
     const insertIndex = position === "before" ? index : index + 1
 
     parentArray.splice(insertIndex, 0, draggedNode)
-
-    window.opener.savebtn.className = "tosave"
-    window.opener.setToSave(true)
 
     resetDrag()
     render()
