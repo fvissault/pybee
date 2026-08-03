@@ -330,9 +330,15 @@ function generate(node, indent = 0) {
                 jscode += `\n`
             }
         }
-        if (item.type === "doc_selector") {
-            jscode += indentation + `document.`
-            seltype = "getElementById"
+        if (item.type === "doc_selector" || item.type === "el_selector") {
+            let seltype = ""
+            if (item.type === "doc_selector") {
+                jscode += indentation + `document.`
+                seltype = "getElementById"
+            } else {
+                jscode += indentation + `${item.props.element}.`
+                seltype = ""
+            }
             if (item.props.selectorType === "name") seltype = "getElementsByName"
             if (item.props.selectorType === "class") seltype = "getElementsByClassName"
             if (item.props.selectorType === "tag") seltype = "getElementsByTagName"
@@ -344,21 +350,34 @@ function generate(node, indent = 0) {
         if (item.type === "DOMproperty" || item.type === "WINproperty") {
             jscode += indentation + `${item.props.property}`
         }
-        if (item.type === "el_selector") {
-            jscode += indentation + `${item.props.element}.`
-            seltype = ""
-            if (item.props.selectorType === "name") seltype = "getElementsByName"
-            if (item.props.selectorType === "class") seltype = "getElementsByClassName"
-            if (item.props.selectorType === "tag") seltype = "getElementsByTagName"
-            if (item.props.selectorType === "closest") seltype = "closest"
-            if (item.props.selectorType === "query") seltype = "querySelector"
-            if (item.props.selectorType === "queryall") seltype = "querySelectorAll"
-            jscode += `${seltype}("${item.props.target}")`
-            if (item.slots.body) jscode += "." + generate(item.slots.body)
-        }
         if (item.type === "Window") {
             jscode += indentation + `Window.`
             if (item.slots.body) jscode += generate(item.slots.body)
+        }
+        if (item.type === "DOMmethod" || item.type === "WINmethod") {
+            jscode += indentation + `${item.props.method}(${item.props.parameters})`
+        }
+        if (item.type === "DOMobject") {
+            jscode += indentation + `${item.props.property}.${item.props.subproperty}`
+        }
+        if (item.type === "DOMcollectionProperty") {
+            if (item.props.hasCollection) {
+                jscode += indentation + `${item.props.collectionName}.${item.props.property}`
+            } else {
+                jscode += indentation + generate(item.slots.body) + `.${item.props.property}`
+            }
+        }
+        if (item.type === "DOMcollectionIndexed") {
+            jscode += indentation + `${item.props.collectionName}[`
+            if (item.slots.index.length == 1) jscode += generate(item.slots.index)
+            jscode += indentation + `]`
+        }
+        if (item.type === "DOMcommand") {
+            jscode += indentation + `${item.props.propertyName}`
+            if (item.slots.command.length == 1) jscode += "." + generate(item.slots.command)
+        }
+        if (item.type === "comment") {
+            jscode += indentation + `// ${item.props.comment}\n`
         }
     })
     return jscode
