@@ -104,7 +104,6 @@ workspaceEl.ondragover = (e)=>{
 }
 
 workspaceEl.ondrop = (e)=>{
-    console.log("workspaceEl.ondrop", { draggedNode, draggedFrom, dragSource })
     e.preventDefault()
 
     if(!draggedNode) return
@@ -215,7 +214,7 @@ function handleDropAtPosition(targetNode, position){
     }
 
     removeNodeFromParent();
-    
+
     let index = parentArray.indexOf(targetNode)
     if(dragSource === "workspace" && draggedFrom === parentArray){
         const oldIndex = draggedFrom.indexOf(draggedNode)
