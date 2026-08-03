@@ -341,8 +341,24 @@ function generate(node, indent = 0) {
             jscode += `${seltype}("${item.props.target}")`
             if (item.slots.body) jscode += "." + generate(item.slots.body)
         }
-        if (item.type === "DOMproperty") {
+        if (item.type === "DOMproperty" || item.type === "WINproperty") {
             jscode += indentation + `${item.props.property}`
+        }
+        if (item.type === "el_selector") {
+            jscode += indentation + `${item.props.element}.`
+            seltype = ""
+            if (item.props.selectorType === "name") seltype = "getElementsByName"
+            if (item.props.selectorType === "class") seltype = "getElementsByClassName"
+            if (item.props.selectorType === "tag") seltype = "getElementsByTagName"
+            if (item.props.selectorType === "closest") seltype = "closest"
+            if (item.props.selectorType === "query") seltype = "querySelector"
+            if (item.props.selectorType === "queryall") seltype = "querySelectorAll"
+            jscode += `${seltype}("${item.props.target}")`
+            if (item.slots.body) jscode += "." + generate(item.slots.body)
+        }
+        if (item.type === "Window") {
+            jscode += indentation + `Window.`
+            if (item.slots.body) jscode += generate(item.slots.body)
         }
     })
     return jscode
