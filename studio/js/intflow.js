@@ -60,9 +60,7 @@ function addRootNode(type){
 
 function findParentArray(arr, target){
     for(let i = 0; i < arr.length; i++){
-        if(arr[i] === target){
-        return arr
-        }
+        if(arr[i] === target) return arr
         const node = arr[i]
         if(node.slots){
             for(const slot in node.slots){
@@ -76,16 +74,11 @@ function findParentArray(arr, target){
 
 function findParentNode(nodes, targetNode, parent = null) {
     for (const node of nodes) {
-
-        if (node === targetNode) {
-            return parent
-        }
-
+        if (node === targetNode) return parent
         // Parcourt récursif des propriétés contenant des enfants
         if (node.slots) {
             for (const slotName in node.slots) {
                 const slot = node.slots[slotName]
-
                 if (Array.isArray(slot)) {
                     const found = findParentNode(slot, targetNode, node)
                     if (found) return found
@@ -98,8 +91,7 @@ function findParentNode(nodes, targetNode, parent = null) {
 
 function findSlotName(parentNode, targetNode) {
     for (let key in parentNode.slots) {
-        if (Array.isArray(parentNode.slots[key]) && parentNode.slots[key].includes(targetNode))
-            return key;
+        if (Array.isArray(parentNode.slots[key]) && parentNode.slots[key].includes(targetNode)) return key;
     }
     return null;
 }
