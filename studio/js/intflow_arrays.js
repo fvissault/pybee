@@ -393,10 +393,18 @@ const NODE_DEFS = {
         slots: ["body"],
         slotLayout:"slot-inline"
     },
-    window: {
+    Window: {
         props: {},
         slots: ["body"],
         slotLayout:"slot-inline"
+    },
+    WINproperty: {
+        props: { property: "location" },
+        slots: []
+    },
+    WINmethod: {
+        props: { method: "open", parameters: "" },
+        slots: []
     },
     DOMproperty: {
         props: { property: "id" },
@@ -420,6 +428,10 @@ const NODE_DEFS = {
         props: { propertyname: "" },
         slots: ["command"],
         slotLayout:"slot-inline"
+    },
+    DOMmethod: {
+        props: { method: "append", parameters: "" },
+        slots: []
     }
 }
 
@@ -430,8 +442,8 @@ const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find
 const decomposers = ["keys", "values"]
 const classes = ["constructor", "method", "property"]
 const switchcases = ["case", "default"]
-const DOMselector = ["doc_selector", "el_selector", "window"]
-const DOMexpr = ["listener", "Literal", "DOMproperty", "DOMobject", "DOMcollectionProperty", "DOMcollectionIndexed", "DOMcommand"]
+const DOMselector = ["doc_selector", "el_selector"]
+const DOMexpr = ["listener", "DOMproperty", "DOMobject", "DOMcollectionProperty", "DOMcollectionIndexed", "DOMcommand", "DOMmethod"]
 
 const FAMILIES = {
     statements: statements,
@@ -492,11 +504,11 @@ const RULES = {
     },
     assign: {
         left: {
-           allowed: "literal+const+let+@DOMexpr",
+           allowed: "literal+const+let+@DOMexpr+@DOMselector",
             node_allowed: 1
         },
         right: {
-            allowed: "array_create+object_get+literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty+await",
+            allowed: "Window+array_create+object_get+literal+@decomposers+@operators+call+async+arrow+@DOMselector+@logicals+new+chain+DOMcollectionProperty+await",
             node_allowed: 1
         }
     },
@@ -822,25 +834,25 @@ const RULES = {
     },
     doc_selector: {
         body: {
-            allowed: "litteral+call+@DOMexpr+assign",
+            allowed: "call+@DOMexpr",
             node_allowed: 1
         }
     },
     el_selector: {
         body: {
-            allowed: "litteral+call+@DOMexpr+assign",
+            allowed: "call+@DOMexpr",
             node_allowed: 1
         }
     },
-    window: {
+    Window: {
         body: {
-            allowed: "@DOMexpr",
+            allowed: "WINproperty+WINmethod+fetch",
             node_allowed: 1
         }
     },
     DOMcollectionIndexed: {
         index: {
-            allowed: "doc_selector+el_selector+DOMproperty",
+            allowed: "literal+@DOMselector+DOMproperty",
             node_allowed: 1
         }
     },
@@ -852,7 +864,7 @@ const RULES = {
     },
     DOMcollectionProperty: {
         body: {
-            allowed: "el_selector+doc_selector",
+            allowed: "@DOMselector",
             node_allowed: 1
         }
     }
@@ -1038,7 +1050,9 @@ const PALETTE = [
     {
         category: "DOM",
         items: [
-            { type: "window", label: "Window" },
+            { type: "Window", label: "Window" },
+            { type: "WINproperty", label: "Window property" },
+            { type: "WINmethod", label: "Window method" },
             { type: "doc_selector", label: "Document selector" },
             { type: "el_selector", label: "Element selector" },
             { type: "listener", label: "Event listener" },
@@ -1046,7 +1060,8 @@ const PALETTE = [
             { type: "DOMobject", label: "DOM Object" },
             { type: "DOMcollectionProperty", label: "DOM collection property" },
             { type: "DOMcollectionIndexed", label: "DOM collection indexed" },
-            { type: "DOMcommand", label: "DOM Command" }
+            { type: "DOMcommand", label: "DOM Command" },
+            { type: "DOMmethod", label: "DOM Method" }
         ]
     },
     {
@@ -1196,6 +1211,117 @@ const PROPERTIES = [
     { value: "scrollLeft", label: "scrollLeft" }
 ]
 
+const WINDOW_PROPERTIES = [
+    { value: "caches", label: "caches" },
+    { value: "clientInformation", label: "clientInformation" },
+    { value: "closed", label: "closed" },
+    { value: "cookieStore", label: "cookieStore" },
+    { value: "crashReport", label: "crashReport" },
+    { value: "credentialless", label: "credentialless" },
+    { value: "crossOriginIsolated", label: "crossOriginIsolated" },
+    { value: "crypto", label: "crypto" },
+    { value: "customElements", label: "customElements" },
+    { value: "devicePixelRatio", label: "devicePixelRatio" },
+    { value: "document", label: "document" },
+    { value: "documentPictureInPicture", label: "documentPictureInPicture" },
+    { value: "fence", label: "fence" },
+    { value: "frameElement", label: "frameElement" },
+    { value: "frames", label: "frames" },
+    { value: "fullScreen", label: "fullScreen" },
+    { value: "history", label: "history" },
+    { value: "indexedDB", label: "indexedDB" },
+    { value: "innerHeight", label: "innerHeight" },
+    { value: "innerWidth", label: "innerWidth" },
+    { value: "isSecureContext", label: "isSecureContext" },
+    { value: "launchQueue", label: "launchQueue" },
+    { value: "length", label: "length" },
+    { value: "localStorage", label: "localStorage" },
+    { value: "location", label: "location" },
+    { value: "locationbar", label: "locationbar" },
+    { value: "menubar", label: "menubar" },
+    { value: "mozInnerScreenX", label: "mozInnerScreenX" },
+    { value: "mozInnerScreenY", label: "mozInnerScreenY" },
+    { value: "name", label: "name" },
+    { value: "navigation", label: "navigation" },
+    { value: "navigator", label: "navigator" },
+    { value: "origin", label: "origin" },
+    { value: "originAgentCluster", label: "originAgentCluster" },
+    { value: "outerHeight", label: "outerHeight" },
+    { value: "pageXOffset", label: "pageXOffset" },
+    { value: "pageYOffset", label: "pageYOffset" },
+    { value: "parent", label: "parent" },
+    { value: "performance", label: "performance" },
+    { value: "scheduler", label: "scheduler" },
+    { value: "screen", label: "screen" },
+    { value: "screenX", label: "screenX" },
+    { value: "screenY", label: "screenY" },
+    { value: "scrollbars", label: "scrollbars" },
+    { value: "scrollMaxX", label: "scrollMaxX" },
+    { value: "scrollMaxY", label: "scrollMaxY" },
+    { value: "scrollX", label: "scrollX" },
+    { value: "scrollY", label: "scrollY" },
+    { value: "self", label: "self" },
+    { value: "sessionStorage", label: "sessionStorage" },
+    { value: "sharedStorage", label: "sharedStorage" },
+    { value: "speechSynthesis", label: "speechSynthesis" },
+    { value: "statusbar", label: "statusbar" },
+    { value: "toolbar", label: "toolbar" },
+    { value: "top", label: "top" },
+    { value: "trustedTypes", label: "trustedTypes" },
+    { value: "viewport", label: "viewport" },
+    { value: "visualViewport", label: "visualViewport" },
+    { value: "window", label: "window" }
+]
+
+const WINDOW_METHODS = [
+    { value: "atob", label: "atob" },
+    { value: "alert", label: "alert" },
+    { value: "blur", label: "blur" },
+    { value: "btoa", label: "btoa" },
+    { value: "cancelAnimationFrame", label: "cancelAnimationFrame" },
+    { value: "cancelIdleCallback", label: "cancelIdleCallback" },
+    { value: "clearInterval", label: "clearInterval" },
+    { value: "clearTimeout", label: "clearTimeout" },
+    { value: "close", label: "close" },
+    { value: "confirm", label: "confirm" },
+    { value: "createImageBitmap", label: "createImageBitmap" },
+    { value: "dump", label: "dump" },
+    { value: "find", label: "find" },
+    { value: "focus", label: "focus" },
+    { value: "getComputedStyle", label: "getComputedStyle" },
+    { value: "getDefaultComputedStyle", label: "getDefaultComputedStyle" },
+    { value: "getScreenDetails", label: "getScreenDetails" },
+    { value: "getSelection", label: "getSelection" },
+    { value: "matchMedia", label: "matchMedia" },
+    { value: "moveBy", label: "moveBy" },
+    { value: "moveTo", label: "moveTo" },
+    { value: "open", label: "open" },
+    { value: "postMessage", label: "postMessage" },
+    { value: "print", label: "print" },
+    { value: "prompt", label: "prompt" },
+    { value: "queryLocalFonts", label: "queryLocalFonts" },
+    { value: "queueMicrotask", label: "queueMicrotask" },
+    { value: "reportError", label: "reportError" },
+    { value: "requestAnimationFrame", label: "requestAnimationFrame" },
+    { value: "requestIdleCallback", label: "requestIdleCallback" },
+    { value: "requestResize", label: "requestResize" },
+    { value: "resizeBy", label: "resizeBy" },
+    { value: "resizeTo", label: "resizeTo" },
+    { value: "scroll", label: "scroll" },
+    { value: "scrollBy", label: "scrollBy" },
+    { value: "scrollByLines", label: "scrollByLines" },
+    { value: "scrollByPages", label: "scrollByPages" },
+    { value: "scrollTo", label: "scrollTo" },
+    { value: "setInterval", label: "setInterval" },
+    { value: "setTimeout", label: "setTimeout" },
+    { value: "showDirectoryPicker", label: "showDirectoryPicker" },
+    { value: "showOpenFilePicker", label: "showOpenFilePicker" },
+    { value: "showSaveFilePicker", label: "showSaveFilePicker" },
+    { value: "sizeToContent", label: "sizeToContent" },
+    { value: "stop", label: "stop" },
+    { value: "structuredClone", label: "structuredClone" }
+]
+
 const OBJECTS = [
     { value: "style", label: "style" },
     { value: "dataset", label: "dataset" },
@@ -1233,7 +1359,6 @@ const COMMANDS = [
     { value: "part", label: "part" }
 ]
 
-/*
 const METHODS = [
     { value: "closest", label: "closest" },
     { value: "matches", label: "matches" },
@@ -1263,4 +1388,3 @@ const METHODS = [
     { value: "toggleAttribute", label: "toggleAttribute" },
     { value: "removeAttribute", label: "removeAttribute" }
 ]
-*/
