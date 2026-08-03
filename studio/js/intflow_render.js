@@ -19,8 +19,19 @@ function renderNode(node){
     dropBefore.style.background = "transparent"
     dropAfter.style.background = "transparent"
 
-    dropBefore.ondrop = ()=> handleDropAtPosition(node, "before")
-    dropAfter.ondrop = ()=> handleDropAtPosition(node, "after")
+    dropBefore.ondrop = (e)=> {
+        console.log("DROP BEFORE");
+        e.preventDefault();
+        e.stopPropagation();
+        handleDropAtPosition(node, "before")
+    }
+
+    dropAfter.ondrop = (e)=> {
+        console.log("DROP AFTER");
+        e.preventDefault();
+        e.stopPropagation();
+        handleDropAtPosition(node, "after")
+    }
 
     dropBefore.ondragover = (e) => {
         e.preventDefault()
@@ -174,6 +185,8 @@ function getCollapsedLabel(node) {
         case "warn":
         case "error":
             return `${node.type} (...)` 
+        case "comment":
+            return `${node.type} "${node.props.comment}"` 
         case "listener":
             return `add an event ${node.type} with ${node.props.event} event` 
         case "doc_selector":
@@ -1050,6 +1063,14 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
+        /* ================= comment ================= */
+        case "comment": {
+            const line = document.createElement("div")
+            const commentInput = createInput(node, "comment", el)
+            line.append("/*", commentInput, "*/")
+            el.appendChild(line)
+            break
+        }
 
         /* ================= REDUCE(ARROW, INPUT(initialvalue)) ================= */
         /* ================= SLICE(INPUT(start), INPUT(end)) ================= */
@@ -1088,43 +1109,46 @@ function renderSlot(node, slotName) {
         slotEl.style.background = ""
     }
 
-    slotEl.ondrop = (e) => {
-        e.preventDefault()
-        slotEl.style.background = ""
+    if (node.slots[slotName].length === 0) {
+        slotEl.ondrop = (e) => {
+            console.log("DROP SLOT");
+            e.preventDefault()
+            slotEl.style.background = ""
 
-        if(!draggedNode) return
-        if(draggedNode === node) return
+            if(!draggedNode) return
+            if(draggedNode === node) return
 
-        // validation (très important)
-        if (!isNodeAllowedInNode(node, draggedNode.type, slotName)) {
-            alert(`${draggedNode.type} est interdit dans le slot ${slotName} de ${node.type}`)
-            render()
-            resetDrag()
-            return
-        }
-        if (!isNodeCountAllowedInParent(node, slotName)) {
-            alert("Ce slot est complet")
-            render()
-            resetDrag()
-            return
-        }
-
-        removeNodeFromParent()
-
-        if (dragSource === "workspace") {
-            const index = draggedFrom.indexOf(draggedNode)
-            if (index !== -1) {
-                draggedFrom.splice(index, 1)
+            // validation (très important)
+            if (!isNodeAllowedInNode(node, draggedNode.type, slotName)) {
+                alert(`${draggedNode.type} est interdit dans le slot ${slotName} de ${node.type}`)
+                render()
+                resetDrag()
+                return
             }
+            if (!isNodeCountAllowedInParent(node, slotName)) {
+                alert("Ce slot est complet")
+                render()
+                resetDrag()
+                return
+            }
+
+            removeNodeFromParent()
+
+            if (dragSource === "workspace") {
+                const index = draggedFrom.indexOf(draggedNode)
+                if (index !== -1) {
+                    draggedFrom.splice(index, 1)
+                }
+            }
+
+            // ajouter ici
+            node.slots[slotName].push(draggedNode)
+
+            draggedNode = null
+            draggedFrom = null
+
+            render()
         }
-
-        // ajouter ici
-        node.slots[slotName].push(draggedNode)
-
-        draggedNode = null
-        draggedFrom = null
-
-        render()
     }
 
     node.slots[slotName].forEach(child=>{
