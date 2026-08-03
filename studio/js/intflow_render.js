@@ -20,14 +20,12 @@ function renderNode(node){
     dropAfter.style.background = "transparent"
 
     dropBefore.ondrop = (e)=> {
-        console.log("DROP BEFORE");
         e.preventDefault();
         e.stopPropagation();
         handleDropAtPosition(node, "before")
     }
 
     dropAfter.ondrop = (e)=> {
-        console.log("DROP AFTER");
         e.preventDefault();
         e.stopPropagation();
         handleDropAtPosition(node, "after")
@@ -1111,7 +1109,6 @@ function renderSlot(node, slotName) {
 
     if (node.slots[slotName].length === 0) {
         slotEl.ondrop = (e) => {
-            console.log("DROP SLOT");
             e.preventDefault()
             slotEl.style.background = ""
 
