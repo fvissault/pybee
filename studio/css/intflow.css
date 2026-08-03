@@ -156,6 +156,8 @@ body {
 .node.doc_selector,
 .node.el_selector,
 .node.Window,
+.node.WINproperty,
+.node.WINmethod,
 .node.listener,
 .node.DOMproperty,
 .node.DOMobject,
