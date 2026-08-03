@@ -942,6 +942,8 @@ function renderNodeContent(node, el) {
                 targetInput.placeholder = "class"
             if (node.props.selectorType === "tag")
                 targetInput.placeholder = "tag"
+            if (node.props.selectorType === "closest")
+                targetInput.placeholder = "target closed"
             if (node.props.selectorType === "query" || node.props.selectorType === "queryall")
                 targetInput.placeholder = ".class, #id, div > span"
 
@@ -953,6 +955,8 @@ function renderNodeContent(node, el) {
                     line.append("get element by class(")
                 if (node.props.selectorType === "tag")
                     line.append("get element by tag(")
+                if (node.props.selectorType === "closest")
+                    line.append("get closest element from (")
                 if (node.props.selectorType === "query")
                     line.append("get element by query(")
                 if (node.props.selectorType === "queryall")
@@ -965,15 +969,27 @@ function renderNodeContent(node, el) {
             el.appendChild(line)
             break
         }
-        /* ================= DOCUMENT, WINDOW ================= */
-        case "window": {
+        /* ================= WINDOW ================= */
+        case "Window": {
             const line = document.createElement("div")
-            if (node.type !== "element")
-                line.append(`on ${node.type} get `, renderSlot(node, "body"))
-            else {
-                const elementInput = createInput(node, "elementName", el)
-                line.append("on element ", elementInput, " get ", renderSlot(node, "body"))
-            }
+            line.append(`on ${node.type} get `, renderSlot(node, "body"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= WINproperty ================= */
+        case "WINproperty": {
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "property", WINDOW_PROPERTIES, el)
+            line.append(selectorSelect)
+            el.appendChild(line)
+            break
+        }
+        /* ================= WINmethod ================= */
+        case "WINmethod": {
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "method", WINDOW_METHODS, el)
+            const parametersInput = createInput(node, "parameters", el)
+            line.append(selectorSelect, "(", parametersInput, ")")
             el.appendChild(line)
             break
         }
@@ -1022,6 +1038,15 @@ function renderNodeContent(node, el) {
             const line = document.createElement("div")
             const propertySelect = createSelect(node, "propertyName", COMMANDS, el)
             line.append(propertySelect, " . ", renderSlot(node, "command"))
+            el.appendChild(line)
+            break
+        }
+        /* ================= DOMmethod ================= */
+        case "DOMmethod": {
+            const line = document.createElement("div")
+            const selectorSelect = createSelect(node, "method", METHODS, el)
+            const parametersInput = createInput(node, "parameters", el)
+            line.append(selectorSelect, "(", parametersInput, ")")
             el.appendChild(line)
             break
         }
