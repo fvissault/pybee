@@ -2,6 +2,10 @@
  * Définition des objets de la palette
  *==================================================================================*/
 const NODE_DEFS = {
+    comment: {
+        props: { comment: "" },
+        slots: []
+    },
     function: {
         props: { name: "", parameters: "" },
         slots: ["body"],
@@ -425,7 +429,7 @@ const NODE_DEFS = {
         slotLayout:"slot-inline"
     },
     DOMcommand: {
-        props: { propertyname: "" },
+        props: { propertyName: "classList" },
         slots: ["command"],
         slotLayout:"slot-inline"
     },
@@ -435,7 +439,7 @@ const NODE_DEFS = {
     }
 }
 
-const statements = ["log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
+const statements = ["comment", "log", "warn", "error", "for", "forin", "forof", "foreach", "while", "dowhile", "if", "ifelse", "return", "let", "assign", "const", "switch"]
 const operators = ["add", "sub", "mul", "div"]
 const logicals = ["and", "or", "equals", "notequals", "equal", "notequal", "inf", "infequal", "sup", "supequal", "not"]
 const transformers = ["join", "split", "map", "flatmap", "filter", "flat", "find", "findndex", "findlast", "some", "every", "pop", "shift", "reverse", "entries", "includes", "indexof", "lastindexof", "push", "unshift", "concat"]
@@ -858,7 +862,7 @@ const RULES = {
     },
     DOMcommand: {
         command: {
-            allowed: "call",
+            allowed: "call+literal",
             node_allowed: 1
         }
     },
@@ -1067,6 +1071,7 @@ const PALETTE = [
     {
         category: "Debug",
         items: [
+            { type: "comment", label: "Comment" },
             { type: "log", label: "Log" },
             { type: "warn", label: "Warn" },
             { type: "error", label: "Error" }
@@ -1075,7 +1080,7 @@ const PALETTE = [
 ];
 
 const COLLAPSIBLE = new Set([
-    "function", "async", "arrow", "fetch", "try", "if", "ifelse", "switch", "case", "default",
+    "comment", "function", "async", "arrow", "fetch", "try", "if", "ifelse", "switch", "case", "default",
     "object_create", "array_create", "for", "forin", "forof", "foreach", "while", "dowhile",
     "chain", "map", "flatmap", "filter", "join", "split", "flat", "find", "findindex", "findlast", "some", "every", "includes", "indexof", "lastindexof", "push", "unshift", "concat",
     "class", "constructor", "method", "property", "log", "warn", "error", "listener", "doc_selector","el_selector"
