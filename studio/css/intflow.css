@@ -53,14 +53,6 @@ body {
     font-weight: 600;
 }
 
-.topbar-left button.tosave {
-    background: indianred;
-}
-
-.topbar-left button:hover.tosave {
-    background: rgba(205,92,92,0.8);
-}
-
 .topbar-left button {
     cursor:pointer;
     background: rgba(255,255,255,0.1);
