@@ -7,13 +7,15 @@ let dragSource = null
 let tosave = false
 let tree = []
 const workspaceEl = document.getElementById("workspace")
+const fileid = window.opener.jsfileid
+const projectname = window.opener.project_name
+let pagename = null
 
 /*==================================================================================
  * Initialisation de la page
  *==================================================================================*/
 async function init() {
     const session = await window.opener.getSession()
-    const fileid = window.opener.jsfileid
     computeNodesAllowedRules()
     try {
         fetch("/pybee/studio/api/jsfiles.py", {
@@ -26,6 +28,7 @@ async function init() {
         })
         .then(r => r.json())
         .then(data => {
+            pagename = data.name
             tree = JSON.parse(data.content) || []
             renderPalette("palette_container")
             render()
