@@ -16,6 +16,8 @@ function save() {
         .then(r => r.json())
         .then(data => {
             if (data.status === "ok") {
+                tosave = false
+                document.getElementById("savebtn").className = ""
                 alert("Votre fichier de flux interne est sauvegardé")
             }
         });
