@@ -27,14 +27,12 @@ async function init() {
         .then(r => r.json())
         .then(data => {
             tree = JSON.parse(data.content) || []
+            renderPalette("palette_container")
             render()
         });
     } catch(e) {
         console.error(e)
     }
-    
-    renderPalette("palette_container")
-    render()
 }
 
 
@@ -92,6 +90,14 @@ function findParentNode(nodes, targetNode, parent = null) {
 function findSlotName(parentNode, targetNode) {
     for (let key in parentNode.slots) {
         if (Array.isArray(parentNode.slots[key]) && parentNode.slots[key].includes(targetNode)) return key;
+    }
+    return null;
+}
+
+function findSlotNameByArray(parentNode, parentArray) {
+    for (const key in parentNode.slots) {
+        if (parentNode.slots[key] === parentArray)
+            return key;
     }
     return null;
 }
