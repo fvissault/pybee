@@ -1109,12 +1109,11 @@ function renderSlot(node, slotName) {
 
     if (node.slots[slotName].length === 0) {
         slotEl.ondrop = (e) => {
+            const session = window.opener.getSession()
             e.preventDefault()
             slotEl.style.background = ""
-
             if(!draggedNode) return
             if(draggedNode === node) return
-
             // validation (très important)
             if (!isNodeAllowedInNode(node, draggedNode.type, slotName)) {
                 alert(`${draggedNode.type} est interdit dans le slot ${slotName} de ${node.type}`)
@@ -1128,26 +1127,20 @@ function renderSlot(node, slotName) {
                 resetDrag()
                 return
             }
-
             removeNodeFromParent()
-
             if (dragSource === "workspace") {
                 const index = draggedFrom.indexOf(draggedNode)
                 if (index !== -1) {
                     draggedFrom.splice(index, 1)
                 }
             }
-
             // ajouter ici
             node.slots[slotName].push(draggedNode)
-
             draggedNode = null
             draggedFrom = null
-
             render()
         }
     }
-
     node.slots[slotName].forEach(child=>{
         slotEl.appendChild(renderNode(child))
     })
@@ -1185,7 +1178,12 @@ function renderPalette(containerId) {
             btn.draggable = true;
 
             btn.ondragstart = (e) => handlePaletteDrag(e, item.type);
-            btn.onclick = () => addRootNode(item.type);
+            btn.onclick = () => {
+                const session = window.opener.getSession()
+                addRootNode(item.type);
+                tosave = true
+                document.getElementById("savebtn").className = "tosave"
+            }
 
             content.appendChild(btn);
         });
