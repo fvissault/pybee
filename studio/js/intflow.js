@@ -11,6 +11,12 @@ const fileid = window.opener.jsfileid
 const projectname = window.opener.project_name
 let pagename = null
 
+window.addEventListener("beforeunload", function (e) {
+    if (!tosave) return
+    e.preventDefault()
+    e.returnValue = ""
+});
+
 /*==================================================================================
  * Initialisation de la page
  *==================================================================================*/
@@ -109,7 +115,8 @@ workspaceEl.ondragover = (e)=>{
     e.preventDefault()
 }
 
-workspaceEl.ondrop = (e)=>{
+workspaceEl.ondrop = (e) => {
+    const session = window.opener.getSession()
     e.preventDefault()
     if(!draggedNode) return
     removeNodeFromParent()
@@ -121,6 +128,9 @@ workspaceEl.ondrop = (e)=>{
     }
     resetDrag()
     render()
+
+    tosave = true
+    document.getElementById("savebtn").className = "tosave"
 }
 
 /* =========================
@@ -182,6 +192,7 @@ function createSelect(node, key, options, el){
 }
 
 function handleDropAtPosition(targetNode, position){
+    const session = window.opener.getSession()
     if(!draggedNode) return
     const parentArray = findParentArray(tree, targetNode)
     if(!parentArray) return
@@ -217,6 +228,8 @@ function handleDropAtPosition(targetNode, position){
     parentArray.splice(insertIndex, 0, draggedNode)
     resetDrag()
     render()
+    tosave = true
+    document.getElementById("savebtn").className = "tosave"
 }
 
 function refreshNode(el){
@@ -279,8 +292,8 @@ function createInput(node, key, el, refresh = false){
         }
         if (refresh) preserveFocusAndRefresh(el, key, e.target.selectionStart)
 
-        window.opener.savebtn.className = "tosave"
-        window.opener.setToSave(true)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
     }
     return input
 }
@@ -296,7 +309,10 @@ function restoreDraggable(root) {
 const trash = document.getElementById("trash")
 trash.ondragover = e => e.preventDefault()
 trash.ondrop = ()=>{
+    const session = window.opener.getSession()
     removeNodeFromParent()
     resetDrag()
     render()
+    tosave = true
+    document.getElementById("savebtn").className = "tosave"
 }
