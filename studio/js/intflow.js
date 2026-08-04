@@ -35,9 +35,6 @@ async function init() {
     }
 }
 
-
-
-
 function resetDrag(){
   draggedNode = null
   draggedFrom = null
@@ -111,19 +108,14 @@ workspaceEl.ondragover = (e)=>{
 
 workspaceEl.ondrop = (e)=>{
     e.preventDefault()
-
     if(!draggedNode) return
-
     removeNodeFromParent()
-
     tree.push(draggedNode)
-
     // éviter duplication racine
     if(dragSource === "workspace" && draggedFrom === tree){
         resetDrag()
         return
     }
-
     resetDrag()
     render()
 }
@@ -137,7 +129,6 @@ function generateId(type){
 
 function createNode(type){
     const def = NODE_DEFS[type]
-    
     return {
         id: generateId(type),
         type,
@@ -150,7 +141,6 @@ function createNode(type){
 
 function removeNodeFromParent(){
     if(dragSource !== "workspace") return
-
     const index = draggedFrom.indexOf(draggedNode)
     if(index !== -1){
         draggedFrom.splice(index, 1)
@@ -160,25 +150,20 @@ function removeNodeFromParent(){
 function createCheckbox(node, key, label, el) {
     const wrapper = document.createElement("label")
     wrapper.style.marginRight = "5px"
-
     const checkbox = document.createElement("input")
     checkbox.type = "checkbox"
     checkbox.checked = node.props[key] ?? false
-
     checkbox.onchange = (e) => {
         node.props[key] = e.target.checked
         refreshNode(el)
     }
-
     wrapper.appendChild(checkbox)
     wrapper.append(" " + label)
-
     return wrapper
 }
 
 function createSelect(node, key, options, el){
     const select = document.createElement("select")
-
     options.forEach(opt=>{
         const o = document.createElement("option")
         o.value = opt.value
@@ -186,61 +171,47 @@ function createSelect(node, key, options, el){
         select.appendChild(o)
     })
     select.value = node.props[key] ?? options[0].value
-
     select.onchange = (e)=>{
         node.props[key] = e.target.value
         refreshNode(el)
     }
-
     return select
 }
 
 function handleDropAtPosition(targetNode, position){
-
     if(!draggedNode) return
-
     const parentArray = findParentArray(tree, targetNode)
     if(!parentArray) return
     const parentNode = findParentNode(tree, targetNode)
-
     const slot = findSlotName(parentNode, targetNode);
-
     if (!isNodeAllowedInNode(parentNode, draggedNode.type, slot)) {
         alert(`${draggedNode.type} est interdit dans ${parentNode?.type ?? "root"}`)
         render()
         resetDrag()
         return
     }
-
     if (isNodeCountAllowedInParentArray(parentNode, parentArray)) {
         alert("Ce slot est complet")
         render()
         resetDrag()
         return
     }
-
     removeNodeFromParent();
-
     let index = parentArray.indexOf(targetNode)
     if(dragSource === "workspace" && draggedFrom === parentArray){
         const oldIndex = draggedFrom.indexOf(draggedNode)
-
         if (draggedNode === targetNode) {
             resetDrag()
             return
         }
-
         if(oldIndex !== -1){
             draggedFrom.splice(oldIndex, 1)
             let index = parentArray.indexOf(targetNode)
             if (oldIndex < index) index--
         }
     }
-    
     const insertIndex = position === "before" ? index : index + 1
-
     parentArray.splice(insertIndex, 0, draggedNode)
-
     resetDrag()
     render()
 }
