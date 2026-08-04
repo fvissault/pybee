@@ -891,20 +891,6 @@ function isNodeAllowedInNode(parentNode, childType, targetSlotName) {
     return false
 }
 
-function isNodeAllowedInParent(parentNode, childType) {
-    const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    for (slot in parentNode.slots) {
-        const allowed = rules[slot].allowed ?? ["all"];
-        if (allowed.includes(childType)) {
-            return true
-        } else {
-            return false
-        }
-    }
-    return false
-}
-
 function isNodeCountAllowedInParent(parentNode, slotName) {
     const rules = RULES[parentNode.type];
     if (!rules) return true;
@@ -918,15 +904,13 @@ function isNodeCountAllowedInParent(parentNode, slotName) {
 
 function isNodeCountAllowedInParentArray(parentNode, parentArray) {
     const rules = RULES[parentNode.type];
-    if (!rules) return true;
-    for (slot in NODE_DEFS[parentNode.type].slots) {
-        let slotname = NODE_DEFS[parentNode.type].slots[slot]
-        const node_allowed = rules[slotname].node_allowed ?? 0;
-        if (parentNode.slots[slotname].length === node_allowed) {
-            return true
-        }
-    }
-    return false
+    if (!rules) return false;
+    // Cherche le slot correspondant au tableau parentArray
+    const slotName = findSlotNameByArray(parentNode, parentArray);
+    if (!slotName) return false;
+    const node_allowed = rules[slotName].node_allowed;
+    if (node_allowed === Infinity) return false;
+    return parentArray.length >= node_allowed;
 }
 
 /*==================================================================================
