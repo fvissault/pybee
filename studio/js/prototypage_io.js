@@ -77,7 +77,6 @@ async function loadJS(id) {
     const session = await getSession()
     if (session) {
         jsfileid = id
-        window.jsfileid = jsfileid
         openIntFlow()
     } else {
         alert("Session de travail expirée")
