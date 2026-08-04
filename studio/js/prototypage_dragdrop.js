@@ -18,7 +18,8 @@ async function getSession() {
 let pages = {}
 let components = {}
 let js = {}
-let jsfileid = null
+var jsfileid = null
+var project_name = null
 let currentProject = null
 let currentPage = null
 let currentComponent = null
@@ -133,7 +134,6 @@ const projectid = params.get("projectid")
 //console.log(projectid)
 
 // récupérer le nom du projet et le nom de l'entity auquel le projet appartient
-let project_name = null
 let entity_name = null
 
 async function initPrototypage() {
