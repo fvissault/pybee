@@ -84,35 +84,39 @@ async function loadJS(id) {
 }
 
 async function loadBST(pageid){
-    if (tosave) {
-        if(!confirm("Votre espace de travail va être remplacé. On continue quand même ?"))
-            return
-    }
-    tosave = false
-    document.getElementById("savebtn").className = ""
-    try {
-        fetch("/pybee/studio/api/projectfiles.py", {
-            method: "POST",
-            credentials: "include",
-            body: new URLSearchParams({
-                action: "getbyid",
-                id : pageid
+    const session = await getSession()
+    if (session) {
+        if (tosave) {
+            if(!confirm("Votre espace de travail va être remplacé. On continue quand même ?"))
+                return
+        }
+        tosave = false
+        document.getElementById("savebtn").className = ""
+        try {
+            fetch("/pybee/studio/api/projectfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbyid",
+                    id : pageid
+                })
             })
-        })
-        .then(r => r.json())
-        .then(data => {
-            console.log(data)
-            currentPage = pageid
-            perspective = "page"
-            workspaceRoot = JSON.parse(data.filecontent)||null
-            if (workspaceRoot) rebuildParents(workspaceRoot, null)
-            render()
-            document.getElementById("workspace_content").innerText = "Lecture de la page : " + data.pagename
-        });
-    } catch(e) {
-        console.error(e)
+            .then(r => r.json())
+            .then(data => {
+                //console.log("data = ", data)
+                currentPage = pageid
+                perspective = "page"
+                workspaceRoot = JSON.parse(data.filecontent)||null
+                if (workspaceRoot) rebuildParents(workspaceRoot, null)
+                render()
+                document.getElementById("workspace_content").innerText = "Lecture de la page : " + data.pagename
+            });
+        } catch(e) {
+            console.error(e)
+        }
+    } else {
+        alert("Session de travail expirée")
     }
-
 }
 
 async function loadComponent(componentid){
@@ -179,7 +183,7 @@ async function loadPopup(componentid, popupid){
 }
 
 function deletePopup(componentid, popupid) {
-    console.log(componentid, popupid)
+    //console.log(componentid, popupid)
     if(!confirm("Souhaitez-vous vraiment supprimer cette popup ?"))
         return
     try {
@@ -473,7 +477,7 @@ async function saveFileBST() {
                     })
                     .then(r => r.json())
                     .then(res => {
-                        console.log(res)
+                        //console.log(res)
                         if(res.status === "ok") {
                             tosave = false
                             document.getElementById("savebtn").className = ""
