@@ -1,9 +1,15 @@
-function makeIdClasses(id, classes) {
+function makeIdClasses(id, name, classes) {
     return `<div class="dialog-row">
                 <label for="id">${t("idgen")}</label>
             </div>
             <div class="dialog-row">
                 <input type="text" value="${id}" id="id"/>
+            </div>
+            <div class="dialog-row">
+                <label for="name">Nom :</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${name}" id="name"/>
             </div>
             <div class="dialog-row">
                 <label for="classes">${t("stypeclass")}</label>
@@ -27,12 +33,13 @@ function popupTitle(node) {
     const size = node.props.size||4
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("titletitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="size">${t("sizetitle")}</label>
             </div>
@@ -48,9 +55,9 @@ function saveTitleProps(node){
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     const classes = document.getElementById("classes").value.trim()
     if (classes != "") node.props.classes = classes
@@ -72,11 +79,12 @@ function popupLi(node) {
     const id = node.props.id||""
     const classes = node.props.classes||""
     const beginvalue = node.props.beginvalue||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("lititle")
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + 
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + 
                             `<div class="dialog-row">
                                 <label for="for">${t("lifor")}</label>
                             </div>
@@ -127,9 +135,9 @@ function saveLiProps(node) {
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     node.props.classes = document.getElementById("classes").value.trim()
 
@@ -143,11 +151,12 @@ function saveLiProps(node) {
 function popupGeneric(node, title) {
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = title
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveGenericProps(node)
 }
 
@@ -156,9 +165,9 @@ function saveGenericProps(node) {
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     node.props.classes = document.getElementById("classes").value.trim()
 
@@ -173,6 +182,7 @@ function popupA(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
     const href = node.props.href||""
     const target = node.props.target||""
     const type = node.props.type||""
@@ -182,7 +192,7 @@ function popupA(node) {
     head.innerText = t("atitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="href">${t("aurl")}</label>
             </div>
@@ -228,9 +238,9 @@ function saveAnchorProps(node) {
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     const classes = document.getElementById("classes").value.trim()
     if (classes != "") node.props.classes = classes
@@ -261,12 +271,13 @@ function popupButton(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("buttontitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="content">${t("buttoncontent")}</label>
             </div>
@@ -282,9 +293,9 @@ function saveButtonProps(node){
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     const classes = document.getElementById("classes").value.trim()
     if (classes != "") node.props.classes = classes
@@ -333,12 +344,13 @@ function popupSpan(node) {
     const text = node.props.content||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("spantitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="content">${t("spancontent")}</label>
             </div>
@@ -354,9 +366,9 @@ function saveSpanProps(node){
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.content = document.getElementById("content").value.trim()
@@ -371,12 +383,13 @@ function popupLayout(node) {
     const zone_count = node.children.length
     const id = workspaceRoot.props.id||""
     const classes = workspaceRoot.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("layouttitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="layout_zone_count">${t("layoutzonecount")}</label>
             </div>
@@ -402,11 +415,12 @@ function saveLayoutProps(node){
 function popupLayoutZone(node) {
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = "Paramètres de la zone"
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, classes) + `</div>` + makeDialogButtons()
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => saveLayoutZoneProps(node)
 }
 
@@ -414,9 +428,9 @@ function saveLayoutZoneProps(node) {
     const id = document.getElementById("id").value
     node.props.id = id.trim()
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: ["display:grid"]}]
+        node.css = [{name: id.trim(), type: "id", values: ["display:grid"]}]
     }
 
     node.props.classe = document.getElementById("classes").value.trim()
@@ -633,13 +647,14 @@ function popupImage(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
     const src = node.props.src||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("imgtitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="inline_style">${t("imgstyle")}</label>
             </div>
@@ -660,9 +675,9 @@ function saveImageProps(node) {
     const id = document.getElementById("id").value
     node.props.id = id.trim()
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
@@ -678,12 +693,13 @@ function popupBlock(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("blocktitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="inline_style">${t("blockstyle")}</label>
             </div>
@@ -698,9 +714,9 @@ function saveBlockProps(node) {
     const id = document.getElementById("id").value
     node.props.id = id.trim()
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
 
     node.props.classes = document.getElementById("classes").value.trim()
@@ -717,13 +733,14 @@ function popupLabel(node) {
     const style = node.props.style||""
     const id = node.props.id||""
     const classes = node.props.classes||""
+    const name = node.props.name||""
     const labelfor = node.props.labelfor||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("labeltitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
             `<div class="dialog-row">
                 <label for="for">${t("labelfor")}</label>
             </div>
@@ -745,9 +762,9 @@ function saveLabelProps(node) {
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
 
     node.props.classes = document.getElementById("classes").value.trim()
@@ -783,14 +800,8 @@ function popupTextfield(node) {
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-column">
-            <div class="dialog-section">` + makeIdClasses(id, classes) +
-            `<div class="dialog-row">
-                    <label for="name">${t("tfname")}</label>
-                </div>
-                <div class="dialog-row">
-                    <input type="text" value="${name}" id="name"/>
-                </div>
-                <div class="dialog-row">
+            <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+                `<div class="dialog-row">
                     <label for="value">${t("tftype")}</label>
                 </div>
                 <div class="dialog-row">
@@ -869,9 +880,9 @@ function saveTextfieldProps(node) {
     node.props.id = id.trim()
 
     if (id.trim() == "") {
-        node.props.css = []
+        node.css = []
     } else {
-        node.props.css = [{name: id.trim(), type: "id", values: []}]
+        node.css = [{name: id.trim(), type: "id", values: []}]
     }
 
     node.props.classes = document.getElementById("classes").value.trim()
