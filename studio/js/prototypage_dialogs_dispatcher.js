@@ -15,7 +15,6 @@ async function openDialog(node, cat){
 }
 
 function closeDialog(){
-    //document.getElementById("dialog").style.display="none"
     document.body.style.overflow = ""
     document.getElementById("dialogOverlay").classList.add("hidden")
 }
