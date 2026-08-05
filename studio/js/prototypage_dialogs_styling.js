@@ -37,38 +37,26 @@ function popupWorkspaceCss(node) {
 function renderTreeGeneric(filterFn, withRootButton = false, filterType = null) {
     const properties = currentConfigNode
     const tree = document.getElementById("cssTree")
-
     if (!tree) return
-
     tree.innerHTML = ""
-
-    if (!properties.props.css) properties.props.css = []
-    const css = Array.isArray(properties.props.css) ? properties.props.css : []
-
+    if (!properties.css) properties.css = []
+    const css = Array.isArray(properties.css) ? properties.css : []
     if (withRootButton) {
         const addRoot = document.createElement("div")
         addRoot.className = "tree-row"
-
         addRoot.innerHTML = `<button id="root-button" class="btn btn-secondary" onclick="showAddNode('${filterType}')">+</button>`
-
         tree.appendChild(addRoot)
     }
-
     css.forEach((node, i) => {
         if (!filterFn(node)) return
-
         // Ligne principale
         const row = document.createElement("div")
         row.className = "tree-row"
-
         const removeBtn = `<button class="btn btn-secondary" onclick="removeCssProperty(${i}, '${filterType}')">-</button>`
-
         row.innerHTML = `
             ${removeBtn}
-            <span>${node.type} <b>${node.name}</b></span>
-        `
+            <span>${node.type} <b>${node.name}</b></span>`
         tree.appendChild(row)
-
         // Valeurs
         const values = createValuesBlock(node, i, properties)
         tree.appendChild(values)
@@ -79,47 +67,37 @@ function createValuesBlock(node, i, properties) {
     const values = document.createElement("div")
     values.className = "tree-values"
     values.id = `values-${i}`   // 👈 clé importante
-
     renderValuesContent(values, node, i, properties)
-
     return values
 }
 
 function renderValuesContent(container, node, i, properties) {
     container.innerHTML = ""
-
     node.values.forEach((v, j) => {
         const vrow = document.createElement("div")
         vrow.className = "tree-row"
         vrow.innerHTML = `
             <button class="btn btn-secondary" onclick="removeValue(${i}, ${j})">-</button>
-            <input value="${v}" onchange="updateValue(${i}, ${j},this.value)" style="width:230px;">
-        `
+            <input value="${v}" onchange="updateValue(${i}, ${j},this.value)" style="width:230px;">`
         container.appendChild(vrow)
     })
-
     const addVal = document.createElement("div")
     addVal.className = "tree-row"
     addVal.innerHTML = `
         <button class="btn btn-secondary" onclick="addValue(${i})">+</button>
-        <input placeholder="Nouvelle valeur" style="width:225px;">
-    `
-
+        <input placeholder="Nouvelle valeur" style="width:225px;">`
     addVal.querySelector("input").onchange = (e) => {
-        properties.props.css[i].values.push(e.target.value)
+        properties.css[i].values.push(e.target.value)
         refreshValues(i)
     }
-
     container.appendChild(addVal)
 }
 
 function refreshValues(i) {
     const properties = currentConfigNode
-    const node = properties.props.css[i]
-
+    const node = properties.css[i]
     const container = document.getElementById(`values-${i}`)
     if (!container) return
-
     renderValuesContent(container, node, i, properties)
 }
 
@@ -132,12 +110,9 @@ function renderTree() {
 }
 
 function showAddNode(filter){
-
     const tree = document.getElementById("cssTree")
-
     const rootButton = document.getElementById("root-button")
     rootButton.style.display = "none"
-
     const row = document.createElement("div")
     row.className="tree-row"
     if (filter === "id") {
@@ -157,7 +132,6 @@ function showAddNode(filter){
 
 function addNode(filter){
     const properties = currentConfigNode
-
     const name = document.getElementById("newName").value
     if (name.trim() === "") {
         alert("Veuillez renseigner le nom de la ressource")
@@ -165,7 +139,7 @@ function addNode(filter){
         return
     }
     if (filter === "id") {
-        properties.props.css.push({
+        properties.css.push({
             type:"id",
             name:name,
             values:[]
@@ -173,7 +147,7 @@ function addNode(filter){
         renderTreeById()
     } else {
         const type = document.getElementById("newType").value
-        properties.props.css.push({
+        properties.css.push({
             type:type,
             name:name,
             values:[]
@@ -184,7 +158,7 @@ function addNode(filter){
 
 function removeCssProperty(i, filter){
     const properties = currentConfigNode
-    properties.props.css.splice(i,1)
+    properties.css.splice(i,1)
     if (filter === "id") {
         renderTreeById()
     } else {
@@ -194,19 +168,19 @@ function removeCssProperty(i, filter){
 
 function addValue(i){
     const properties = currentConfigNode
-    properties.props.css[i].values.push("")
+    properties.css[i].values.push("")
     refreshValues(i)
 }
 
 function removeValue(i,j){
     const properties = currentConfigNode
-    properties.props.css[i].values.splice(j,1)
+    properties.css[i].values.splice(j,1)
     refreshValues(i)
 }
 
 function updateValue(i,j,val){
     const properties = currentConfigNode
-    properties.props.css[i].values[j]=val
+    properties.css[i].values[j]=val
 }
 
 
@@ -238,7 +212,7 @@ function popupLayoutCss(node) {
             </div>
             <div class="dialog-row">
                 <ul id="layoutgrid_props" style="width:397px; min-height:100px;">
-                    ${buildLayoutCss(node.props.css||[])}
+                    ${buildLayoutCss(node.css||[])}
                 </ul>
             </div>
         </div>
@@ -251,8 +225,8 @@ function popupLayoutCss(node) {
 function initPropsStruct() {
     const properties = currentConfigNode
 
-    if (!properties.props.css) properties.props.css = []
-    const css = Array.isArray(properties.props.css) ? properties.props.css : []
+    if (!properties.css) properties.css = []
+    const css = Array.isArray(properties.css) ? properties.css : []
     let found = false
     for (let i = 0; i < css.length; i++) {
         if (css[i].name == "parentlayout") {
@@ -321,9 +295,9 @@ function addLayoutProp(){
     list_props.appendChild(li)
 
     const properties = currentConfigNode
-    for (let i = 0; i < properties.props.css.length; i++) {
-        if (properties.props.css[i].name == "parentlayout") {
-            properties.props.css[i].values.push(lg_cat +":"+lg_content)
+    for (let i = 0; i < properties.css.length; i++) {
+        if (properties.css[i].name == "parentlayout") {
+            properties.css[i].values.push(lg_cat +":"+lg_content)
             break
         }
     }
