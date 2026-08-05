@@ -386,3 +386,17 @@ function generate(node, indent = 0) {
 function generateSeparated(nodes, indent, separator) {
     return nodes.map(node => generate([node], indent)).join(separator);
 }
+
+function generatecss(node, indent = 0) {
+    let csscode = ""
+    const indentation = "   ".repeat(indent)
+
+    return csscode
+}
+
+function generatehtml(node, indent = 0) {
+    let htmlcode = ""
+    const indentation = "   ".repeat(indent)
+
+    return htmlcode
+}
