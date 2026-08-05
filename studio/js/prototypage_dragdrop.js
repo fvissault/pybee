@@ -203,7 +203,8 @@ function createNode(type, options={}) {
             id:generateId(type),
             type: "zone",
             parent: null,
-            props: options,
+            props: { id: options.id },
+            css: options.css,
             children: []
         }
     }
