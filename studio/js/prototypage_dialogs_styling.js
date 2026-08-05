@@ -270,7 +270,7 @@ function initPropsStruct() {
 }
 
 function buildLayoutCss(cssprops) {
-    console.log(workspaceRoot)
+    //console.log(workspaceRoot)
     let result = ""
     let values = []
     for (let i = 0; i < cssprops.length; i++) {
