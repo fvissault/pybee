@@ -403,7 +403,7 @@ async function renderComponentSection(entityid = 1) {
     })
     .then(r => r.json())
     .then(res => {
-        console.log(res)
+        //console.log(res)
         if(!res.status) {
             res.forEach(c => {
                 const newcomponent = document.createElement("div")
