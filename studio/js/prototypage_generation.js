@@ -387,10 +387,28 @@ function generateSeparated(nodes, indent, separator) {
     return nodes.map(node => generate([node], indent)).join(separator);
 }
 
-function generatecss(node, indent = 0) {
+function generatecss(node) {
     let csscode = ""
-    const indentation = "   ".repeat(indent)
-
+    const indentation = "   "
+    let prefix = ""
+    if (node.type !== "zone") {
+        node.css.forEach(item => {
+            if (item.type === "id") prefix = "#"
+            if (item.type === "class") prefix = "."
+            csscode += `${prefix}${item.name} {\n`
+            item.values.forEach(value => {
+                csscode += indentation + `${value};\n`
+            })
+            csscode += `}\n\n`
+            node.children.forEach(child => {
+                csscode += generatecss(child)
+            })
+        })
+    } else {
+        node.children.forEach(item => {
+            csscode += generatecss(item)
+        })
+    }
     return csscode
 }
 
