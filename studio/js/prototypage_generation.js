@@ -414,7 +414,42 @@ function generatecss(node) {
 
 function generatehtml(node, indent = 0) {
     let htmlcode = ""
-    const indentation = "   ".repeat(indent)
-
+    const indentation = "   "
+    const dblindentation = "   ".repeat(2)
+    htmlcode += `<!DOCTYPE html>\n`
+    htmlcode += `<html`
+    if (node.props.lang && node.props.lang !== "") htmlcode += ` lang="${node.props.lang}">\n`
+    else htmlcode += `>\n`
+    htmlcode += indentation + `<head>\n`
+    htmlcode += dblindentation + `<meta charset="UTF-8"/>\n`
+    htmlcode += dblindentation + `<meta name="viewport" content="width=device-width, initial-scale=1"/>\n`
+    if (node.props.title && node.props.title !== "") htmlcode += indentation + indentation + `<title>${node.props.title}</title>\n`
+    htmlcode += dblindentation + `<link rel="stylesheet" href="css/${node.props.name}.css"/>\n`
+    htmlcode += dblindentation + `<script defer src="js/${node.props.name}.js"></script>\n`
+    htmlcode += indentation + `</head>\n`
+    htmlcode += indentation + `<body>\n`
+    node.children.forEach(child => {
+        htmlcode += dblindentation + generatebody(child, 2) + "\n"
+    })
+    htmlcode += indentation + `</body>\n`
+    htmlcode += indentation + `</html>`
     return htmlcode
+}
+
+function generatebody(node, indent = 0) {
+    let htmlcode = ""
+    const indentation = "   ".repeat(indent)
+    let prefix = ""
+    if (node.type !== "zone") {
+        node.forEach(item => {
+            node.children.forEach(child => {
+                htmlcode += generatebody(child)
+            })
+        })
+    } else {
+        node.children.forEach(item => {
+            htmlcode += generatebody(item, indent + 1)
+        })
+    }
+    return csscode
 }
