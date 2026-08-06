@@ -47,7 +47,11 @@ function popupTitle(node) {
                 <input type="number" min="1" max="6" id="size" value="${size}"/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveTitleProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveTitleProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveTitleProps(node){
@@ -103,7 +107,11 @@ function popupLi(node) {
                                 </div>
                             </div>
                          </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveLiProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveLiProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function toggleFieldSupp() {
@@ -157,7 +165,11 @@ function popupGeneric(node, title) {
     head.innerText = title
     const content = document.getElementById("dialogContent")
     content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveGenericProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveGenericProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveGenericProps(node) {
@@ -227,8 +239,11 @@ function popupA(node) {
                 <label for="download">${t("adownload")}</label>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveAnchorProps(node)
-
+    content.querySelector("#saveprops").onclick = () => {
+        saveAnchorProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
     const selectType = content.querySelector("#target")
     selectType.value = target || ""
 }
@@ -285,7 +300,11 @@ function popupButton(node) {
                 <input type="text" id="content" value="${text}"/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveButtonProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveButtonProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveButtonProps(node){
@@ -328,7 +347,11 @@ function popupText(node) {
                 <textarea id="content">${text}</textarea>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveTextProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveTextProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveTextProps(node){
@@ -358,7 +381,11 @@ function popupSpan(node) {
                 <textarea id="content">${text}</textarea>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveSpanProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveSpanProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveSpanProps(node){
@@ -397,7 +424,11 @@ function popupLayout(node) {
                 <input type="text" value="${zone_count}" id="layout_zone_count" disabled/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveLayoutProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveLayoutProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveLayoutProps(node){
@@ -421,7 +452,11 @@ function popupLayoutZone(node) {
     head.innerText = "Paramètres de la zone"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveLayoutZoneProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveLayoutZoneProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveLayoutZoneProps(node) {
@@ -441,28 +476,54 @@ function saveLayoutZoneProps(node) {
 // *******************************************************************************
 // popup Page html
 // *******************************************************************************
+// props.cssfiles = [{include: true|false, href: "name_of_file"}, ...]
+// props.jsfiles = [{include: true|false, defer: true|false, src: "name_of_file"}, ...]
+// *******************************************************************************
 async function popupPage() {
     let content = null
     if (perspective === "page") {
         const page_name = workspaceRoot.props.name||""
         const page_title = workspaceRoot.props.title||""
+        const lang = workspaceRoot.props.lang||""
 
         const head = document.getElementById("dialogHeader")
         head.innerText = t("pagetitle")
         content = document.getElementById("dialogContent")
         content.innerHTML = `
-            <div class="dialog-section">
-                <div class="dialog-row">
-                    <label for="page_name">${t("pagename")}</label>
+            <div class="dialog-column">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label for="page_name">${t("pagename")}</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${page_name}" id="page_name"/>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="page_title">${t("pagepagettile")}</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${page_title}" id="page_title"/>
+                    </div>
+                    <div class="dialog-row">
+                        <label for="lang">Langue</label>
+                    </div>
+                    <div class="dialog-row">
+                        <input type="text" value="${lang}" id="lang"/>
+                    </div>
                 </div>
-                <div class="dialog-row">
-                    <input type="text" value="${page_name}" id="page_name"/>
+            </div>
+            <div class="dialog-column">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label>Cascading Style Sheet files</label>
+                    </div>
                 </div>
-                <div class="dialog-row">
-                    <label for="page_title">${t("pagepagettile")}</label>
-                </div>
-                <div class="dialog-row">
-                    <input type="text" value="${page_title}" id="page_title"/>
+            </div>
+            <div class="dialog-column">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label>Script files</label>
+                    </div>
                 </div>
             </div>` + makeDialogButtons()
     } else {
@@ -566,7 +627,11 @@ async function popupPage() {
                 </div>
             </div>` + makeDialogButtons()
     }
-    content.querySelector("#saveprops").onclick = () => savePageProps(workspaceRoot)
+    content.querySelector("#saveprops").onclick = () => {
+        savePageProps(workspaceRoot)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function refreshIcon() {
@@ -585,6 +650,7 @@ function savePageProps(node) {
         }
         node.props.name = pagename.trim()
         node.props.title = document.getElementById("page_title").value.trim()
+        node.props.lang = document.getElementById("lang").value.trim()
         closeDialog()
     } else {
         const composant_name = document.getElementById("comp_name").value
@@ -668,7 +734,11 @@ function popupImage(node) {
                 <input type="text" value="${src}" id="src"/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveImageProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveImageProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveImageProps(node) {
@@ -707,7 +777,11 @@ function popupBlock(node) {
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveBlockProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveBlockProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveBlockProps(node) {
@@ -754,7 +828,11 @@ function popupLabel(node) {
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveLabelProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveLabelProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveLabelProps(node) {
@@ -872,7 +950,11 @@ function popupTextfield(node) {
 
     addfields(min, max, step, checked, maxlength)    
 
-    content.querySelector("#saveprops").onclick = () => saveTextfieldProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveTextfieldProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveTextfieldProps(node) {
@@ -1047,7 +1129,11 @@ function popupForm(node){
     const selectMethod = content.querySelector("#method")
     selectMethod.value = method || "post"
 
-    content.querySelector("#saveprops").onclick = () => saveFormProps(node)
+    content.querySelector("#saveprops").onclick = () => {
+        saveFormProps(node)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 function saveFormProps(node) {
@@ -1082,7 +1168,11 @@ async function commonFilePopup(projectid, type) {
                 </div>
             </div>
         </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => saveFilePopup(type)
+    content.querySelector("#saveprops").onclick = () => {
+        saveFilePopup(type)
+        tosave = true
+        document.getElementById("savebtn").className = "tosave"
+    }
 }
 
 async function saveFilePopup(type) {
