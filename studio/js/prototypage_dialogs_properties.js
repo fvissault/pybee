@@ -478,14 +478,20 @@ function saveLayoutZoneProps(node) {
 // *******************************************************************************
 // props.cssfiles = [{include: true|false, href: "name_of_file"}, ...]
 // props.jsfiles = [{include: true|false, defer: true|false, src: "name_of_file"}, ...]
+// props.metas = [{include: true|false, type: "charset"|"name"|"http-equiv", name: "", content: ""}]
 // *******************************************************************************
 async function popupPage() {
     let content = null
     if (perspective === "page") {
         const page_name = workspaceRoot.props.name||""
         const page_title = workspaceRoot.props.title||""
-        const lang = workspaceRoot.props.lang||""
-
+        const language = workspaceRoot.props.lang||""
+        const cssfiles = workspaceRoot.props.cssfiles||[]
+        const jsfiles = workspaceRoot.props.jsfiles||[]
+        const metas = workspaceRoot.props.metas||[]
+        
+        const dialog = document.getElementById("dialog")
+        dialog.style.width = "1451px"
         const head = document.getElementById("dialogHeader")
         head.innerText = t("pagetitle")
         content = document.getElementById("dialogContent")
@@ -496,36 +502,62 @@ async function popupPage() {
                         <label for="page_name">${t("pagename")}</label>
                     </div>
                     <div class="dialog-row">
-                        <input type="text" value="${page_name}" id="page_name"/>
+                        <input type="text" value="${page_name}" id="page_name" style="width:200px;"/>
                     </div>
                     <div class="dialog-row">
                         <label for="page_title">${t("pagepagettile")}</label>
                     </div>
                     <div class="dialog-row">
-                        <input type="text" value="${page_title}" id="page_title"/>
+                        <input type="text" value="${page_title}" id="page_title" style="width:200px;"/>
                     </div>
                     <div class="dialog-row">
                         <label for="lang">Langue</label>
                     </div>
                     <div class="dialog-row">
-                        <input type="text" value="${lang}" id="lang"/>
+                        <input type="text" value="${language}" id="lang" style="width:200px;"/>
                     </div>
                 </div>
             </div>
-            <div class="dialog-column">
+            <div class="dialog-column" style="border:1px solid gray; height:240px; border-radius:10px; padding-left:10px;">
                 <div class="dialog-section">
                     <div class="dialog-row">
-                        <label>Cascading Style Sheet files</label>
+                        <label>Fichiers css utilisés</label>
                     </div>
+                    <div style="height:170px; overflow:scroll; margin-bottom:4px;">
+                        <div id="cssfiles" style="width:300px;"></div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addCssRow('stylesheet')">+ css</button>
+                    <button class="btn btn-secondary" onclick="addCssRow('icon')">+ icon</button>
                 </div>
             </div>
-            <div class="dialog-column">
+            <div class="dialog-column" style="border:1px solid gray; height:240px; border-radius:10px; padding-left:10px;">
                 <div class="dialog-section">
                     <div class="dialog-row">
-                        <label>Script files</label>
+                        <label>Scripts utilisés</label>
                     </div>
+                    <div style="height:170px; overflow:scroll; margin-bottom:4px;">
+                        <div id="scriptfiles" style="width:385px;"></div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addScriptRow()">+ script file</button>
+                </div>
+            </div>
+            <div class="dialog-column" style="border:1px solid gray; height:240px; border-radius:10px; padding-left:10px;">
+                <div class="dialog-section">
+                    <div class="dialog-row">
+                        <label>Métadonnées</label>
+                    </div>
+                    <div style="height:170px; overflow:scroll; margin-bottom:4px;">
+                        <div id="metatags" style="width:414px;"></div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="addMetaRow('charset')">+ charset</button>
+                    <button class="btn btn-secondary" onclick="addMetaRow('name')">+ name</button>
+                    <button class="btn btn-secondary" onclick="addMetaRow('property')">+ property</button>
+                    <button class="btn btn-secondary" onclick="addMetaRow('http-equiv')">+ http-equiv</button>
                 </div>
             </div>` + makeDialogButtons()
+            createCssRows(cssfiles)
+            createJsRows(jsfiles)
+            createMetaRows(metas)
     } else {
         const session = await getSession()
         console.log(session)
@@ -640,6 +672,221 @@ function refreshIcon() {
     example.innerHTML = icon
 }
 
+let rowCount = 0
+
+function createMetaRows(metas) {
+    metas.forEach((item) => {
+        addMetaRow(item.mode, item.name, item.content, item.include)
+    })
+}
+
+function addMetaRow(mode, name = "", content = "", include = false) {
+    const container = document.getElementById('metatags')
+    const row = document.createElement("div")
+    row.className = "dialog-row-with-checkbox"
+    row.id = `row${rowCount}`
+
+    const modeinput = document.createElement("input")
+    modeinput.type = "hidden"
+    modeinput.className = "mode"
+    modeinput.value = mode
+    row.appendChild(modeinput)
+
+    const input = document.createElement("input")
+    input.type = "checkbox"
+    input.className = "inc"
+    input.checked = include
+    row.appendChild(input)
+
+    switch (mode) {
+        case "charset": {
+            const l = document.createElement("label")
+            l.htmlFor = `content${rowCount}`
+            l.textContent = mode + " :"
+            l.style.marginTop = "9px"
+            l.style.width = "165px"
+            row.appendChild(l)
+
+            const i = document.createElement("input")
+            i.type = "text"
+            i.id = `content${rowCount}`
+            i.className = "content"
+            i.value = content
+            i.style.marginRight = "4px"
+            i.placeholder = "Contenu"
+            i.style.width = "160px"
+            row.appendChild(i)
+            break
+        }
+        case "name": {
+            const l = document.createElement("label")
+            l.htmlFor = `content${rowCount}`
+            l.textContent = mode + " :"
+            l.style.marginTop = "9px"
+            l.style.width = "55px"
+            row.appendChild(l)
+
+            const nameinput = document.createElement("input")
+            nameinput.type = "text"
+            nameinput.id = `name${rowCount}`
+            nameinput.className = "name"
+            nameinput.placeholder = "Nom"
+            nameinput.value = name
+            nameinput.style.marginRight = "4px"
+            nameinput.style.width = "90px"
+            row.appendChild(nameinput)
+
+            const contentinput = document.createElement("input")
+            contentinput.type = "text"
+            contentinput.id = `content${rowCount}`
+            contentinput.className = "content"
+            contentinput.value = content
+            contentinput.style.marginRight = "4px"
+            contentinput.style.width = "160px"
+            contentinput.placeholder = "Contenu"
+            row.appendChild(contentinput)
+            break
+        }
+        case "property": {
+            break
+        }
+        case "http-equiv": {
+            break
+        }
+    }
+
+    const button = document.createElement("button")
+    button.className = "btn btn-secondary"
+    button.onclick = () => removeMetaRow(row.id);
+    button.textContent = "-"
+    row.appendChild(button)
+
+    container.appendChild(row)
+    rowCount++
+}
+
+function removeMetaRow(rowid) {
+    const row = document.getElementById(rowid)
+    row.remove()
+}
+
+function createCssRows(cssfiles) {
+    cssfiles.forEach((item) => {
+        addCssRow(item.type, item.href, item.include)
+    })
+}
+
+function addCssRow(type, href = "", include = false) {
+    const container = document.getElementById('cssfiles')
+    const row = document.createElement("div")
+    row.className = "dialog-row-with-checkbox"
+    row.id = `row${rowCount}`
+
+    const reltype = document.createElement("input")
+    reltype.type = "hidden"
+    reltype.className = "reltype"
+    reltype.value = type
+    row.appendChild(reltype)
+
+    const input = document.createElement("input")
+    input.type = "checkbox"
+    input.className = "inc"
+    input.checked = include
+    row.appendChild(input)
+
+    const l = document.createElement("label")
+    l.htmlFor = `href${rowCount}`
+    if (type === "icon") {
+        l.textContent = "Icon :"
+    } else {
+        l.textContent = "Nom :"
+    }
+    l.style.marginTop = "9px"
+    l.style.width = "45px"
+    row.appendChild(l)
+    const i = document.createElement("input")
+    i.type = "text"
+    i.id = `href${rowCount}`
+    i.className = "href"
+    i.value = href
+    i.style.marginRight = "3px"
+    if (type === "icon") {
+        i.placeholder = "href avec extension"
+    } else {
+        i.placeholder = "href sans extension"
+    }
+    row.appendChild(i)
+
+    const button = document.createElement("button")
+    button.className = "btn btn-secondary"
+    button.onclick = () => removeCssRow(row.id);
+    button.textContent = "-"
+    row.appendChild(button)
+
+    container.appendChild(row)
+    rowCount++
+}
+
+function removeCssRow(rowid) {
+    const row = document.getElementById(rowid)
+    row.remove()
+}
+
+function createJsRows(jsfiles) {
+    jsfiles.forEach((item) => {
+        addScriptRow(item.src, item.include, item.defer)
+    })
+}
+
+function addScriptRow(src = "", include = false, defer = false) {
+    const container = document.getElementById('scriptfiles')
+    const row = document.createElement("div")
+    row.className = "dialog-row-with-checkbox"
+    row.id = `row${rowCount}`
+
+    const inccb = document.createElement("input")
+    inccb.type = "checkbox"
+    inccb.className = "inc"
+    inccb.checked = include
+    row.appendChild(inccb)
+
+    const l = document.createElement("label")
+    l.htmlFor = `src${rowCount}`
+    l.textContent = "Source :"
+    l.style.marginTop = "9px"
+    row.appendChild(l)
+    const i = document.createElement("input")
+    i.type = "text"
+    i.id = `src${rowCount}`
+    i.className = "src"
+    i.placeholder = "Source sans extension"
+    i.style.width = "160px"
+    i.value = src
+    row.appendChild(i)
+
+    const defercb = document.createElement("input")
+    defercb.type = "checkbox"
+    defercb.className = "defer"
+    defercb.id = `defer${rowCount}`
+    defercb.checked = defer
+    row.appendChild(defercb)
+    const labeldefer = document.createElement("label")
+    labeldefer.htmlFor = `defer${rowCount}`
+    labeldefer.textContent = "Reporté"
+    labeldefer.style.marginTop = "9px"
+    labeldefer.style.marginRight = "3px"
+    row.appendChild(labeldefer)
+
+    const button = document.createElement("button")
+    button.className = "btn btn-secondary"
+    button.onclick = () => removeCssRow(row.id);
+    button.textContent = "-"
+    row.appendChild(button)
+
+    container.appendChild(row)
+    rowCount++
+}
+
 function savePageProps(node) {
     if (perspective === "page") {
         const pagename = document.getElementById("page_name").value
@@ -651,7 +898,32 @@ function savePageProps(node) {
         node.props.name = pagename.trim()
         node.props.title = document.getElementById("page_title").value.trim()
         node.props.lang = document.getElementById("lang").value.trim()
+
+        node.props.cssfiles = []
+        const cssRows = document.getElementById("cssfiles")
+        for (const row of cssRows.children) {
+            const h = row.querySelector(".href").value;
+            if (h !== "") {
+                const insert = row.querySelector(".inc").checked;
+                const reltype = row.querySelector(".reltype").value
+                node.props.cssfiles.push({include: insert, href: h, type: reltype})
+            }
+        }
+
+        node.props.jsfiles = []
+        const jsRows = document.getElementById("scriptfiles")
+        for (const row of jsRows.children) {
+            const src = row.querySelector(".src").value;
+            if (src !== "") {
+                const insert = row.querySelector(".inc").checked;
+                const defer = row.querySelector(".defer").checked;
+                node.props.jsfiles.push({include: insert, src: src, defer: defer})
+            }
+        }
+
         closeDialog()
+        const dialog = document.getElementById("dialog")
+        dialog.style.width = ""
     } else {
         const composant_name = document.getElementById("comp_name").value
         if (composant_name.trim() === "") {
