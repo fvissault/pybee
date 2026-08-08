@@ -17,6 +17,9 @@ async function openDialog(node, cat){
 function closeDialog(){
     document.body.style.overflow = ""
     document.getElementById("dialogOverlay").classList.add("hidden")
+    const dialog = document.getElementById("dialog")
+    dialog.style.width = ""
+
 }
 
 document.addEventListener("keydown", (e) => {
