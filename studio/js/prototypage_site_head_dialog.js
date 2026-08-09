@@ -77,7 +77,7 @@ async function popupPage() {
                     <button class="btn btn-secondary" onclick="addMetaRow('charset')">+ charset</button>
                     <button class="btn btn-secondary" onclick="addMetaRow('name')">+ name</button>
                     <button class="btn btn-secondary" onclick="addMetaRow('property')">+ property</button>
-                    <button class="btn btn-secondary" onclick="addMetaRow('http-equiv')">+ http-equiv</button>
+                    <button class="btn btn-secondary" onclick="addMetaRow('http-equiv')">+ directive</button>
                 </div>
             </div>` + makeDialogButtons()
             createCssRows(cssfiles)
@@ -201,7 +201,7 @@ let rowCount = 0
 
 function createMetaRows(metas) {
     metas.forEach((item) => {
-        addMetaRow(item.mode, item.name, item.content, item.include)
+        addMetaRow(item.type, item.name, item.content, item.include)
     })
 }
 
@@ -304,7 +304,7 @@ function addMetaRow(mode, name = "", content = "", include = false) {
         case "http-equiv": {
             const l = document.createElement("label")
             l.htmlFor = `httpequiv${rowCount}`
-            l.textContent = "equiv :"
+            l.textContent = "directive :"
             l.style.marginTop = "9px"
             l.style.width = "70px"
             row.appendChild(l)
@@ -497,6 +497,36 @@ function savePageProps(node) {
                 const insert = row.querySelector(".inc").checked;
                 const defer = row.querySelector(".defer").checked;
                 node.props.jsfiles.push({include: insert, src: src, defer: defer})
+            }
+        }
+
+        node.props.metas = []
+        const metaRows = document.getElementById("metatags")
+        for (const row of metaRows.children) {
+            const mode = row.querySelector(".mode").value;
+            switch (mode) {
+                case "charset": {
+                    const insert = row.querySelector(".inc").checked;
+                    const content = row.querySelector(".content").value;
+                    node.props.metas.push({include: insert, type: mode, name: "", content: content})
+                    break
+                }
+                case "name": {
+                    const insert = row.querySelector(".inc").checked;
+                    const name = row.querySelector(".name").value;
+                    const content = row.querySelector(".content").value;
+                    node.props.metas.push({include: insert, type: mode, name: name, content: content})
+                    break
+                }
+                case "http-equiv":
+                case "property": {
+                    const insert = row.querySelector(".inc").checked;
+                    const selectname = row.querySelector(".name")
+                    const name = selectname.options[selectname.options.selectedIndex].value;
+                    const content = row.querySelector(".content").value;
+                    node.props.metas.push({include: insert, type: mode, name: name, content: content})
+                    break
+                }
             }
         }
 
