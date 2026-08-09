@@ -397,6 +397,7 @@ function saveSpanProps(node){
     } else {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
+    node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.content = document.getElementById("content").value.trim()
     render()
@@ -517,6 +518,7 @@ function saveImageProps(node) {
     } else {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
+    node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
     node.props.src = document.getElementById("src").value.trim()
@@ -577,6 +579,7 @@ function popupLabel(node) {
     const classes = node.props.classes||""
     const name = node.props.name||""
     const labelfor = node.props.labelfor||""
+    const labelcontent = node.props.content||""
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("labeltitle")
@@ -594,6 +597,12 @@ function popupLabel(node) {
             </div>
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
+            </div>
+            <div class="dialog-row">
+                <label for="content">Contenu</label>
+            </div>
+            <div class="dialog-row">
+                <input type="text" value="${labelcontent}" id="content"/>
             </div>
         </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
@@ -613,9 +622,11 @@ function saveLabelProps(node) {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
 
+    node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
     node.props.labelfor = document.getElementById("for").value.trim()
+    node.props.content = document.getElementById("content").value.trim()
 
     render()
     closeDialog()
