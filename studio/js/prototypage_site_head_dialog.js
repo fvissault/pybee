@@ -245,7 +245,7 @@ function addMetaRow(mode, name = "", content = "", include = false) {
         }
         case "name": {
             const l = document.createElement("label")
-            l.htmlFor = `content${rowCount}`
+            l.htmlFor = `name${rowCount}`
             l.textContent = mode + " :"
             l.style.marginTop = "9px"
             l.style.width = "55px"
@@ -263,7 +263,6 @@ function addMetaRow(mode, name = "", content = "", include = false) {
 
             const contentinput = document.createElement("input")
             contentinput.type = "text"
-            contentinput.id = `content${rowCount}`
             contentinput.className = "content"
             contentinput.value = content
             contentinput.style.marginRight = "4px"
@@ -273,9 +272,64 @@ function addMetaRow(mode, name = "", content = "", include = false) {
             break
         }
         case "property": {
+            const l = document.createElement("label")
+            l.htmlFor = `property${rowCount}`
+            l.textContent = mode + " :"
+            l.style.marginTop = "9px"
+            l.style.width = "70px"
+            row.appendChild(l)
+
+            const nameselect = document.createElement("select")
+            nameselect.id = `property${rowCount}`
+            nameselect.className = "name"
+            nameselect.style.marginRight = "4px"
+            PROPERTY_OPTIONS.forEach(opt => {
+                const o = document.createElement("option")
+                o.value = opt.value
+                o.textContent = opt.label
+                nameselect.appendChild(o)
+            })
+            row.appendChild(nameselect)
+
+            const contentinput = document.createElement("input")
+            contentinput.type = "text"
+            contentinput.className = "content"
+            contentinput.value = content
+            contentinput.style.marginRight = "4px"
+            contentinput.style.width = "160px"
+            contentinput.placeholder = "Contenu"
+            row.appendChild(contentinput)
             break
         }
         case "http-equiv": {
+            const l = document.createElement("label")
+            l.htmlFor = `httpequiv${rowCount}`
+            l.textContent = "equiv :"
+            l.style.marginTop = "9px"
+            l.style.width = "70px"
+            row.appendChild(l)
+
+            const nameselect = document.createElement("select")
+            nameselect.id = `httpequiv${rowCount}`
+            nameselect.className = "name"
+            nameselect.style.marginRight = "4px"
+            HTTPEQUIV_OPTIONS.forEach(opt => {
+                const o = document.createElement("option")
+                o.value = opt.value
+                o.textContent = opt.label
+                nameselect.appendChild(o)
+            })
+            row.appendChild(nameselect)
+
+            const contentinput = document.createElement("input")
+            contentinput.type = "text"
+            contentinput.id = `content${rowCount}`
+            contentinput.className = "content"
+            contentinput.value = content
+            contentinput.style.marginRight = "4px"
+            contentinput.style.width = "160px"
+            contentinput.placeholder = "Contenu"
+            row.appendChild(contentinput)
             break
         }
     }
@@ -502,3 +556,42 @@ function savePageProps(node) {
         }
     }
 }
+
+const PROPERTY_OPTIONS = [
+    { value: "og:title", label: "og Title" },
+    { value: "og:type", label: "og Type" },
+    { value: "og:image", label: "og Image" },
+    { value: "og:image:url", label: "og Image url" },
+    { value: "og:image:secure_url", label: "og Image secure url" },
+    { value: "og:image:type", label: "og Image type" },
+    { value: "og:image:width", label: "og Image width" },
+    { value: "og:image:height", label: "og Image height" },
+    { value: "og:image:alt", label: "og Image alt" },
+    { value: "og:video", label: "og Video" },
+    { value: "og:video:url", label: "og Video url" },
+    { value: "og:video:secure_url", label: "og Video secure url" },
+    { value: "og:video:type", label: "og Video type" },
+    { value: "og:video:width", label: "og Video width" },
+    { value: "og:video:height", label: "og Video height" },
+    { value: "og:audio", label: "og Audio" },
+    { value: "og:audio:url", label: "og Audio url" },
+    { value: "og:audio:secure_url", label: "og Audio secure url" },
+    { value: "og:audio:type", label: "og Audio type" },
+    { value: "og:url", label: "og Url" },
+    { value: "og:description", label: "og Description" },
+    { value: "og:site_name", label: "og Site name" },
+    { value: "og:locale", label: "og Locale" },
+    { value: "og:locale:alternate", label: "og Alternate locale" },
+    { value: "article:section", label: "Article section" },
+    { value: "article:published_time", label: "Article published time" },
+    { value: "article:modified_time", label: "Article modified time" },
+    { value: "article:expiration_time", label: "Article expiration time" },
+    { value: "article:author", label: "Article author" },
+    { value: "article:tag", label: "Article tag" }
+]
+
+const HTTPEQUIV_OPTIONS = [
+    { value: "content-security-policy", label: "Content Security Policy" },
+    { value: "default-style", label: "Default Style" },
+    { value: "refresh", label: "Refresh" }
+]
