@@ -506,6 +506,7 @@ function generatebody(node, indent = 0) {
                 htmlcode += indentation + `${nodetext}\n`
                 break
             }
+
             case "TextField": {
                 tagname = "input"
                 const nodeid = node.props.id||""
@@ -515,15 +516,37 @@ function generatebody(node, indent = 0) {
                 const nodevalue = node.props.value||""
                 const nodeplaceholder = node.props.placeholder||""
                 const nodetype = node.props.type||""
-                const nodedisabled = node.props.disabled||""
-                const nodereadonly = node.props.readonly||""
-                const noderequired = node.props.required||""
+                const nodedisabled = node.props.disabled||false
+                const nodereadonly = node.props.readonly||false
+                const noderequired = node.props.required||false
+                const nodeautofocus = node.props.autofocus||false
+                const nodeautocomplete = node.props.autocomplete||false
+                const nodeform = node.props.form||""
+                const nodelist = node.props.list||""
+                const nodetitle = node.props.title||""
+                const nodetabindex = node.props.tabindex||""
+
                 const nodemin = node.props.min||""
                 const nodemax = node.props.max||""
                 const nodestep = node.props.step||""
-                const nodechecked = node.props.checked||""
+                const nodechecked = node.props.checked||false
                 const nodemaxlength = node.props.maxlength||""
-                htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodeplaceholder !== ""?" placeholder='" + nodeplaceholder + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodemaxlength !== ""?" maxlength='" + nodemaxlength + "'":""}${nodemin !== ""?" min='" + nodemin + "'":""}${nodemax !== ""?" max='" + nodemax + "'":""}${nodestep !== ""?" step='" + nodestep + "'":""}${nodedisabled !== ""?" disabled":""}${nodereadonly !== ""?" readonly":""}${noderequired !== ""?" required":""}${nodechecked !== ""?" checked":""}`
+                const nodeminlength = node.props.minlength||""
+                const nodepattern = node.props.pattern||""
+                const nodesize = node.props.size||""
+                const nodemultiple = node.props.multiple||false
+                const nodeaccept = node.props.accept||""
+                const nodecapture = node.props.capture||""
+                const nodeformaction = node.props.formaction||""
+                const nodeformenctype = node.props.formenctype||""
+                const nodeformmethod = node.props.formmethod||""
+                const nodeformnovalidate = node.props.formnovalidate||false
+                const nodeformtarget = node.props.formtarget||""
+                const nodesrc = node.props.src||""
+                const nodealt = node.props.alt||""
+                const nodewidth = node.props.width||""
+                const nodeheight = node.props.height||""
+                htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodeplaceholder !== ""?" placeholder='" + nodeplaceholder + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodeform !== ""?" form='" + nodeform + "'":""}${nodelist !== ""?" list='" + nodelist + "'":""}${nodetitle !== ""?" title='" + nodetitle + "'":""}${nodetabindex !== ""?" tabindex='" + nodetabindex + "'":""}${nodemaxlength !== ""?" maxlength='" + nodemaxlength + "'":""}${nodeminlength !== ""?" minlength='" + nodeminlength + "'":""}${nodepattern !== ""?" pattern='" + nodepattern + "'":""}${nodesize !== ""?" size='" + nodesize + "'":""}${nodemultiple?" multiple":""}${nodeaccept !== ""?" accept='" + nodeaccept + "'":""}${nodecapture !== ""?" capture='" + nodecapture + "'":""}${nodeformaction !== ""?" formaction='" + nodeformaction + "'":""}${nodeformenctype !== ""?" formenctype='" + nodeformenctype + "'":""}${nodeformmethod !== ""?" formmethod='" + nodeformmethod + "'":""}${nodeformtarget !== ""?" formtarget='" + nodeformtarget + "'":""}${nodeformnovalidate?" formnovalidate":""}${nodesrc !== ""?" src='" + nodesrc + "'":""}${nodealt !== ""?" alt='" + nodealt + "'":""}${nodewidth !== ""?" width='" + nodewidth + "'":""}${nodeheight !== ""?" height='" + nodeheight + "'":""}${nodemin !== ""?" min='" + nodemin + "'":""}${nodemax !== ""?" max='" + nodemax + "'":""}${nodestep !== ""?" step='" + nodestep + "'":""}${nodeautofocus?" autofocus":""}${nodeautocomplete?" autocomplete":""}${nodedisabled?" disabled":""}${nodereadonly?" readonly":""}${noderequired?" required":""}${nodechecked?" checked":""}`
                 break
             }
             case "Label": {
@@ -538,6 +561,15 @@ function generatebody(node, indent = 0) {
                 if (nodecontent !== "") htmlcode += indentation + `   ${nodecontent}\n`
                 break
             }
+            case "Paragraph": {
+                tagname = "p"
+                const nodeid = node.props.id||""
+                const nodename = node.props.name||""
+                const nodeclass = node.props.classes||""
+                const nodestyle = node.props.style||""
+                htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}>\n`
+                break
+            }
         }
         if (node.children) {
             node.children.forEach(child => {
@@ -549,8 +581,10 @@ function generatebody(node, indent = 0) {
             htmlcode += indentation + `</${tagname}>`
         } else {
             // ce n'est pas un container
-            if (node.widgetType === "Span" || node.widgetType === "Label") htmlcode += indentation + `</${tagname}>\n`
-            else {
+            if (node.widgetType === "Span" || node.widgetType === "Label") {
+                htmlcode += indentation + `</${tagname}>`
+                if (node.widgetType === "Span" ) htmlcode += "\n"
+            } else {
                 if (node.widgetType === "Text") htmlcode += ""
                 else htmlcode += "/>"
             }
