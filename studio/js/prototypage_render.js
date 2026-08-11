@@ -98,6 +98,7 @@ function renderLayout(layout) {
 function renderWidget(widget){
     const el=document.createElement("div")
     el.className="widget"
+    el.classList.add(widget.widgetType)
     const htmlBtn = createNewButton("⚙", "Paramètres")
     htmlBtn.style.fontSize = "12px"
     htmlBtn.style.marginRight = "6px"
