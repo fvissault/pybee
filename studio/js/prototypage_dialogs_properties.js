@@ -65,6 +65,8 @@ function saveTitleProps(node){
     }
     const classes = document.getElementById("classes").value.trim()
     if (classes != "") node.props.classes = classes
+    const name = document.getElementById("name").value.trim()
+    node.props.name = name
     const size = document.getElementById("size").value.trim()
     if (size == "") {
         alert(t("alertsize"))
@@ -181,6 +183,7 @@ function saveGenericProps(node) {
     } else {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
+    node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
 
     render()
@@ -372,15 +375,7 @@ function popupSpan(node) {
     const head = document.getElementById("dialogHeader")
     head.innerText = t("spantitle")
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
-            `<div class="dialog-row">
-                <label for="content">${t("spancontent")}</label>
-            </div>
-            <div class="dialog-row">
-                <textarea id="content">${text}</textarea>
-            </div>
-        </div>` + makeDialogButtons()
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
         saveSpanProps(node)
         tosave = true
@@ -399,7 +394,6 @@ function saveSpanProps(node){
     }
     node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
-    node.props.content = document.getElementById("content").value.trim()
     render()
     closeDialog()
 }
@@ -598,12 +592,6 @@ function popupLabel(node) {
             <div class="dialog-row">
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
-            <div class="dialog-row">
-                <label for="content">Contenu</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" value="${labelcontent}" id="content"/>
-            </div>
         </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
         saveLabelProps(node)
@@ -626,7 +614,6 @@ function saveLabelProps(node) {
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
     node.props.labelfor = document.getElementById("for").value.trim()
-    node.props.content = document.getElementById("content").value.trim()
 
     render()
     closeDialog()
@@ -664,6 +651,12 @@ function popupForm(node){
                     <input type="text" value="${name}" id="name"/>
                 </div>
                 <div class="dialog-row">
+                    <label for="name">Action</label>
+                </div>
+                <div class="dialog-row">
+                    <input type="text" value="${action}" id="action"/>
+                </div>
+                <div class="dialog-row">
                     <label for="value">${t("formmethod")}</label>
                 </div>
                 <div class="dialog-row">
@@ -677,6 +670,7 @@ function popupForm(node){
                 </div>
                 <div class="dialog-row">
                     <select id="target">
+                        <option value="">Pas de cible</option>
                         <option value="_self">${t("formself")}</option>
                         <option value="_blank">${t("formblank")}</option>
                         <option value="_parent">${t("formparent")}</option>
@@ -688,6 +682,7 @@ function popupForm(node){
                 </div>
                 <div class="dialog-row">
                     <select id="enctype">
+                        <option value="">Pas d'encodage</option>
                         <option value="application/x-www-form-urlencoded">${t("formencdef")}</option>
                         <option value="multipart/form-data">${t("formencfile")}</option>
                         <option value="text/plain">${t("formencplain")}</option>
@@ -700,13 +695,6 @@ function popupForm(node){
             </div>
         </div>` + makeDialogButtons()
 
-    const selectEnctype = content.querySelector("#enctype")
-    selectEnctype.value = enctype || "application/x-www-form-urlencoded"
-    const selectTarget = content.querySelector("#target")
-    selectTarget.value = target || "_self"
-    const selectMethod = content.querySelector("#method")
-    selectMethod.value = method || "post"
-
     content.querySelector("#saveprops").onclick = () => {
         saveFormProps(node)
         tosave = true
@@ -717,6 +705,7 @@ function popupForm(node){
 function saveFormProps(node) {
     node.props.id = document.getElementById("id").value.trim()
     node.props.name = document.getElementById("name").value.trim()
+    node.props.action = document.getElementById("action").value.trim()
     node.props.method = document.getElementById("method").options[document.getElementById("method").selectedIndex].value
     node.props.target = document.getElementById("target").options[document.getElementById("target").selectedIndex].value
     node.props.enctype = document.getElementById("enctype").options[document.getElementById("enctype").selectedIndex].value
