@@ -53,43 +53,63 @@ document.getElementById("workspace_content").innerText = "Création d'une page"
 const widgetDefinitions = {
     Block: {
         name: t("block"), 
-        container: true 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["all"] 
     },
     Form: { 
         name: t("form"), 
-        container: true 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["all"] 
     },
     Ul: { 
         name: t("ul"), 
-        container: true 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["Li"] 
     },
     Ol: { 
         name: t("ol"), 
-        container: true 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["Li"] 
     },
     Li: { 
         name: t("li"), 
-        container: true 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["all"] 
     },
     Paragraph: { 
         name: t("paragraph"), 
-        container: true 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["all"] 
     },
     Fieldset: { 
         name: t("fieldset"), 
-        container: true 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["all"] 
     },
     Article: { 
         name: t("article"), 
-        container: true 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["all"]
     },
     Header: { 
         name: t("header"), 
-        container: true 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["all"] 
     },
     Footer: { 
         name: t("footer"), 
-        container: true 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["all"] 
     },
     Text: { 
         name: t("text"), 
@@ -97,11 +117,15 @@ const widgetDefinitions = {
     },
     Span: { 
         name: t("span"), 
-        container: false 
+        container: true,
+        allowSelf: true,
+        allowedChildren: ["Text", "Strong", "Em", "Anchor", "Image", "Br"] 
     },
     Label: { 
         name: t("label"), 
-        container: false 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["Text", "Span", "Strong", "Em", "Anchor", "Image", "Br"] 
     },
     TextField: { 
         name: t("textfield"), 
@@ -113,7 +137,9 @@ const widgetDefinitions = {
     },
     Button: { 
         name: t("button"), 
-        container: false 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["Text", "Image"] 
     },
     Anchor: { 
         name: t("anchor"), 
@@ -121,7 +147,19 @@ const widgetDefinitions = {
     },
     Title: { 
         name: t("htitle"), 
-        container: false 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["Text", "Image", "Span"] 
+    }
+}
+
+function isNodeAllowed(parent, widget) {
+    if (parent === workspaceRoot) return true
+    const parentAllowedChildren = widgetDefinitions[parent.parent.widgetType].allowedChildren
+    if (parentAllowedChildren.includes("all")) {
+        return parentAllowedChildren.allowSelf
+    } else {
+        return parentAllowedChildren.includes(widget.widgetType)
     }
 }
 
@@ -240,7 +278,7 @@ function createWidget() {
     return widget
 }
 
-function insertNode(parent,node,index) {
+function insertNode(parent, node, index) {
     node.parent=parent
     parent.children.splice(index,0,node)
 }
@@ -469,8 +507,13 @@ workspaceContent.addEventListener("drop",e => {
             alert("Cannot add root widgets when a layout exists.")
             return
         }
-        const widget=createWidget("widget")
-        insertNode(newParent, widget, currentDropIndex??newParent.children.length)
+        const widget=createWidget()
+        if (isNodeAllowed(newParent, widget)) {
+            insertNode(newParent, widget, currentDropIndex??newParent.children.length)
+        } else {
+            alert(`${widget.widgetType} n'est pas autorisé dans ${newParent.parent.widgetType}`)
+        }
+        
         render()
     }
     if(draggedType === "move-widget" && draggedNodeRef) {
@@ -479,9 +522,13 @@ workspaceContent.addEventListener("drop",e => {
             if(check === draggedNodeRef) return
             check=check.parent
         }
-        removeNode(draggedNodeRef)
-        let idx = currentDropIndex??newParent.children.length
-        insertNode(newParent,draggedNodeRef,idx)
+        if (isNodeAllowed(newParent, draggedNodeRef)) {
+            removeNode(draggedNodeRef)
+            let idx = currentDropIndex??newParent.children.length
+            insertNode(newParent,draggedNodeRef,idx)
+        } else {
+            alert(`${draggedNodeRef.widgetType} n'est pas autorisé dans ${newParent.parent.widgetType}`)
+        }
         render()
     }
     currentDropTarget = null
