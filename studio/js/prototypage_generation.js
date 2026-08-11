@@ -459,7 +459,7 @@ function generatehtml(node, indent = 0) {
     htmlcode += indentation + `</head>\n`
     htmlcode += indentation + `<body>\n`
     node.children.forEach(child => {
-        htmlcode += generatebody(child, indent + 2) + "\n"
+        htmlcode += generatebody(child, indent + 2)
     })
     htmlcode += indentation + `</body>\n`
     htmlcode += `</html>`
@@ -470,7 +470,7 @@ function generatebody(node, indent = 0) {
     let htmlcode = ""
     const indentation = "   ".repeat(indent)
     let prefix = ""
-    if (node.type !== "zone") {
+    //if (node.type !== "zone") {
         let tagname = ""
         switch(node.widgetType) {
             case "Block": {
@@ -487,8 +487,8 @@ function generatebody(node, indent = 0) {
                 const nodeid = node.props.id||""
                 const nodename = node.props.name||""
                 const nodeclass = node.props.classes||""
-                htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}>\n`
-                if (node.props.content !== "") htmlcode += indentation + `   ${node.props.content}\n`
+                const nodecontent = node.props.content||""
+                htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}>${nodecontent}\n`
                 break
             }
             case "Image": {
@@ -558,7 +558,6 @@ function generatebody(node, indent = 0) {
                 const nodefor = node.props.labelfor||""
                 const nodecontent = node.props.content||""
                 htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodefor !== ""?" for='" + nodefor + "'":""}>\n`
-                if (nodecontent !== "") htmlcode += indentation + `   ${nodecontent}\n`
                 break
             }
             case "Paragraph": {
@@ -570,29 +569,56 @@ function generatebody(node, indent = 0) {
                 htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}>\n`
                 break
             }
+            case "Form": {
+                tagname = "form"
+                const nodeid = node.props.id||""
+                const nodename = node.props.name||""
+                const nodeaction = node.props.action||""
+                const nodemethod = node.props.method||""
+                const nodetarget = node.props.target||""
+                const nodeenctype = node.props.enctype||""
+                const nodenovalidate = node.props.novalidate||false
+                htmlcode += indentation + `<${tagname}${nodeaction !== ""?" action='" + nodeaction + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodemethod !== ""?" method='" + nodemethod + "'":""}${nodeenctype !== ""?" enctype='" + nodeenctype + "'":""}${nodetarget !== ""?" target='" + nodetarget + "'":""}${nodenovalidate?" novalidate":""}>\n`
+                break
+            }
+            case "Ul": {
+                tagname = "ul"
+                const nodeid = node.props.id||""
+                const nodename = node.props.name||""
+                const nodeclass = node.props.classes||""
+                htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}>\n`
+                break
+            }
+            case "Ol": {
+                tagname = "ol"
+                const nodeid = node.props.id||""
+                const nodename = node.props.name||""
+                const nodeclass = node.props.classes||""
+                htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}>\n`
+                break
+            }
+            case "Li": {
+                tagname = "li"
+                const nodeid = node.props.id||""
+                const nodename = node.props.name||""
+                const nodeclass = node.props.classes||""
+                const nodebegin = node.props.value||""
+                htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodebegin !== ""?" start='" + nodebegin + "'":""}>\n`
+                break
+            }
         }
-        if (node.children) {
-            node.children.forEach(child => {
+        if (node.children && node.children.length === 1 && node.children[0].type === "zone") {
+            node.children[0].children.forEach(child => {
                 htmlcode += generatebody(child, indent + 1)
             })
         }
         if (node.container) {
             // c'est un container
-            htmlcode += indentation + `</${tagname}>`
+            htmlcode += indentation + `</${tagname}>\n`
         } else {
             // ce n'est pas un container
-            if (node.widgetType === "Span" || node.widgetType === "Label") {
-                htmlcode += indentation + `</${tagname}>`
-                if (node.widgetType === "Span" ) htmlcode += "\n"
-            } else {
-                if (node.widgetType === "Text") htmlcode += ""
-                else htmlcode += "/>"
-            }
+            if (node.widgetType === "Text") htmlcode += ""
+            else htmlcode += "/>\n"
         }
-    } else {
-        node.children.forEach(item => {
-            htmlcode += generatebody(item, indent)
-        })
-    }
     return htmlcode
 }
