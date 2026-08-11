@@ -160,6 +160,36 @@ body {
     --color-component : #00ccff;
 }
 
+.widget.Fieldset,
+.widget.Article,
+.widget.Header,
+.widget.Footer,
+.widget.Li,
+.widget.Ol,
+.widget.Ul,
+.widget.Form,
+.widget.Paragraph,
+.widget.Block {
+    border-left:8px solid var(--color-container)
+}
+
+.widget.Title,
+.widget.Image,
+.widget.Label,
+.widget.Span,
+.widget.Text {
+    border-left:8px solid var(--color-text)
+}
+
+.widget.TextField {
+    border-left:8px solid var(--color-form)
+}
+
+.widget.Anchor,
+.widget.Button {
+    border-left:8px solid var(--color-action)
+}
+
 #explorer {
     grid-column:1;
     grid-row:1;
