@@ -236,7 +236,8 @@ function serializeNode(node) {
             css: node.css||{},
             events: node.events||{},
             js: node.js||{},
-            container:node.container
+            container:node.container,
+            ui: node.ui||{}
         }
     } else if (node.type === "container" || node.type === "layout") {
         out = {
