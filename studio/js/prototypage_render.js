@@ -98,7 +98,11 @@ function renderLayout(layout) {
 function renderWidget(widget){
     const el=document.createElement("div")
     el.className="widget"
-    el.classList.add(widget.widgetType)
+    if (widgetDefinitions[widget.widgetType].type) {
+        el.classList.add("Component")    
+    } else {
+        el.classList.add(widget.widgetType)
+    }
     const htmlBtn = createNewButton("⚙", "Paramètres")
     htmlBtn.style.fontSize = "12px"
     htmlBtn.style.marginRight = "6px"
@@ -418,7 +422,7 @@ async function renderComponentSection(entityid = 1) {
 
                 componentcontainer.appendChild(newcomponent)
 
-                widgetDefinitions[c.name] = { name: "Composant : " + c.name, container: false }
+                widgetDefinitions[c.name] = { name: c.name, container: false, type: "Component" }
 
                 newcomponent.addEventListener("dragstart",()=>{
                     draggedType = newcomponent.dataset.type
