@@ -170,7 +170,7 @@ body {
 .widget.Form,
 .widget.Paragraph,
 .widget.Block {
-    border-left:8px solid var(--color-container)
+    border-left:12px solid var(--color-container)
 }
 
 .widget.Title,
@@ -178,16 +178,20 @@ body {
 .widget.Label,
 .widget.Span,
 .widget.Text {
-    border-left:8px solid var(--color-text)
+    border-left:12px solid var(--color-text)
 }
 
 .widget.TextField {
-    border-left:8px solid var(--color-form)
+    border-left:12px solid var(--color-form)
 }
 
 .widget.Anchor,
 .widget.Button {
-    border-left:8px solid var(--color-action)
+    border-left:12px solid var(--color-action)
+}
+
+.widget.Component {
+    border-left:12px solid var(--color-component)
 }
 
 #explorer {
