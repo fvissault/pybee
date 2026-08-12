@@ -156,8 +156,12 @@ const widgetDefinitions = {
 function isNodeAllowed(parent, widget) {
     if (parent === workspaceRoot) return true
     const parentAllowedChildren = widgetDefinitions[parent.parent.widgetType].allowedChildren
+    const parentAllowSelf = widgetDefinitions[parent.parent.widgetType].allowSelf
     if (parentAllowedChildren.includes("all")) {
-        return parentAllowedChildren.allowSelf
+        if (parent.parent.widgetType === widget.widgetType && parentAllowSelf === false)
+            return parentAllowSelf
+        else
+            return true
     } else {
         return parentAllowedChildren.includes(widget.widgetType)
     }
