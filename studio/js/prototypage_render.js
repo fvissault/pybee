@@ -103,6 +103,32 @@ function renderWidget(widget){
     } else {
         el.classList.add(widget.widgetType)
     }
+
+    const toggle = document.createElement("button")
+    toggle.className = "btn btn-primary"
+    toggle.style.fontSize = "12px"
+    toggle.style.marginRight = "6px"
+    toggle.style.height = "29px"
+    toggle.textContent = widget.ui?.collapsed ? "▼" : "▲"
+
+    let z = null
+    if (widget.container) z = renderZone(widget.children[0])
+    if (widget.container && widget.ui) {
+        if (widget.ui.collapsed) {
+            z.style.display = "none"
+        } else {
+            z.style.display = "block"
+        }
+        toggle.onclick = (e) => {
+            e.stopPropagation()
+            widget.ui.collapsed = !widget.ui.collapsed
+            render()
+        }
+    }
+
+    if (widget.container && widget.ui) { 
+        el.appendChild(toggle)
+    }
     const htmlBtn = createNewButton("⚙", "Paramètres")
     htmlBtn.style.fontSize = "12px"
     htmlBtn.style.marginRight = "6px"
@@ -143,7 +169,7 @@ function renderWidget(widget){
     el.appendChild(label)
     el.dataset.nodeId = widget.id
     el.draggable = true
-    if (widget.container) el.appendChild(renderZone(widget.children[0]))
+    if (widget.container) el.appendChild(z)
     return el
 }
 
