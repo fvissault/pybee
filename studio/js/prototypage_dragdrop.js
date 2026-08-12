@@ -237,7 +237,8 @@ function createNode(type, options={}) {
             widgetType: draggedWidgetType,
             container: options.container,
             props: {},
-            children: []
+            children: [],
+            ui: { collapsed : true }
         }
     }
     if (type == "zone") {
