@@ -1,4 +1,4 @@
-function makeIdClasses(id, name, classes) {
+function makeIdClasses(id, name, classes, draggable) {
     return `<div class="dialog-row">
                 <label for="id">${t("idgen")}</label>
             </div>
@@ -16,6 +16,16 @@ function makeIdClasses(id, name, classes) {
             </div>
             <div class="dialog-row">
                 <input type="text" value="${classes}" id="classes"/>
+            </div>
+            <div class="dialog-row">
+                <label for="value">Déplacement :</label>
+            </div>
+            <div class="dialog-row">
+                <select id="draggable">
+                    <option value="auto"${draggable==="auto"??" selected"}>Comportement par défaut</option>
+                    <option value="true"${draggable==="true"??" selected"}>Déplaçable</option>
+                    <option value="false"${draggable==="false"??" selected"}>Non déplaçable</option>
+                </select>
             </div>`
 }
 
@@ -34,12 +44,13 @@ function popupTitle(node) {
     const id = node.props.id||""
     const classes = node.props.classes||""
     const name = node.props.name||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("titletitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
             `<div class="dialog-row">
                 <label for="size">${t("sizetitle")}</label>
             </div>
@@ -63,17 +74,10 @@ function saveTitleProps(node){
     } else {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
-    const classes = document.getElementById("classes").value.trim()
-    if (classes != "") node.props.classes = classes
-    const name = document.getElementById("name").value.trim()
-    node.props.name = name
-    const size = document.getElementById("size").value.trim()
-    if (size == "") {
-        alert(t("alertsize"))
-        document.getElementById("size").focus()
-        return
-    }
-    node.props.size = size
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
+    node.props.classes = document.getElementById("classes").value.trim()
+    node.props.name = document.getElementById("name").value.trim()
+    node.props.size = document.getElementById("size").value.trim()
     render()
     closeDialog()
 }
@@ -86,11 +90,12 @@ function popupLi(node) {
     const classes = node.props.classes||""
     const beginvalue = node.props.beginvalue||""
     const name = node.props.name||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("lititle")
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + 
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) + 
                             `<div class="dialog-row">
                                 <label for="for">${t("lifor")}</label>
                             </div>
@@ -150,6 +155,7 @@ function saveLiProps(node) {
         node.css = [{name: id.trim(), type: "id", values: []}]
     }
     node.props.classes = document.getElementById("classes").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
 
     render()
     closeDialog()
@@ -162,11 +168,12 @@ function popupGeneric(node, title) {
     const id = node.props.id||""
     const classes = node.props.classes||""
     const name = node.props.name||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = title
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
         saveGenericProps(node)
         tosave = true
@@ -185,6 +192,7 @@ function saveGenericProps(node) {
     }
     node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
 
     render()
     closeDialog()
@@ -202,12 +210,13 @@ function popupA(node) {
     const target = node.props.target||""
     const type = node.props.type||""
     const download = node.props.download||false
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("atitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
             `<div class="dialog-row">
                 <label for="href">${t("aurl")}</label>
             </div>
@@ -277,57 +286,8 @@ function saveAnchorProps(node) {
     else node.props.type = ""
 
     node.props.download = document.getElementById("download").checked
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
 
-    render()
-    closeDialog()
-}
-
-// *******************************************************************************
-// popup Button
-// *******************************************************************************
-function popupButton(node) {
-    const text = node.props.content||""
-    const id = node.props.id||""
-    const classes = node.props.classes||""
-    const name = node.props.name||""
-
-    const head = document.getElementById("dialogHeader")
-    head.innerText = t("buttontitle")
-    const content = document.getElementById("dialogContent")
-    content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
-            `<div class="dialog-row">
-                <label for="content">${t("buttoncontent")}</label>
-            </div>
-            <div class="dialog-row">
-                <input type="text" id="content" value="${text}"/>
-            </div>
-        </div>` + makeDialogButtons()
-    content.querySelector("#saveprops").onclick = () => {
-        saveButtonProps(node)
-        tosave = true
-        document.getElementById("savebtn").className = "tosave"
-    }
-}
-
-function saveButtonProps(node){
-    id = document.getElementById("id").value
-    node.props.id = id.trim()
-
-    if (id.trim() == "") {
-        node.css = []
-    } else {
-        node.css = [{name: id.trim(), type: "id", values: []}]
-    }
-    const classes = document.getElementById("classes").value.trim()
-    if (classes != "") node.props.classes = classes
-    const content = document.getElementById("content").value.trim()
-    if (content == "") {
-        alert(t("alertbutton"))
-        document.getElementById("content").focus()
-        return
-    }
-    node.props.content = document.getElementById("content").value.trim()
     render()
     closeDialog()
 }
@@ -371,11 +331,12 @@ function popupSpan(node) {
     const id = node.props.id||""
     const classes = node.props.classes||""
     const name = node.props.name||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("spantitle")
     const content = document.getElementById("dialogContent")
-    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes) + `</div>` + makeDialogButtons()
+    content.innerHTML = `<div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) + `</div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
         saveSpanProps(node)
         tosave = true
@@ -394,6 +355,8 @@ function saveSpanProps(node){
     }
     node.props.name = document.getElementById("name").value.trim()
     node.props.classes = document.getElementById("classes").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
+
     render()
     closeDialog()
 }
@@ -478,12 +441,13 @@ function popupImage(node) {
     const classes = node.props.classes||""
     const name = node.props.name||""
     const src = node.props.src||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("imgtitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
             `<div class="dialog-row">
                 <label for="inline_style">${t("imgstyle")}</label>
             </div>
@@ -516,6 +480,8 @@ function saveImageProps(node) {
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
     node.props.src = document.getElementById("src").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
+
     render()
     closeDialog()
 }
@@ -528,12 +494,13 @@ function popupBlock(node) {
     const id = node.props.id||""
     const classes = node.props.classes||""
     const name = node.props.name||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("blocktitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
             `<div class="dialog-row">
                 <label for="inline_style">${t("blockstyle")}</label>
             </div>
@@ -541,6 +508,7 @@ function popupBlock(node) {
                 <input type="text" value="${style}" id="inline_style"/>
             </div>
         </div>` + makeDialogButtons()
+
     content.querySelector("#saveprops").onclick = () => {
         saveBlockProps(node)
         tosave = true
@@ -559,6 +527,7 @@ function saveBlockProps(node) {
 
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
 
     render()
     closeDialog()
@@ -574,12 +543,13 @@ function popupLabel(node) {
     const name = node.props.name||""
     const labelfor = node.props.labelfor||""
     const labelcontent = node.props.content||""
+    const draggable = node.props.draggable||"auto"
 
     const head = document.getElementById("dialogHeader")
     head.innerText = t("labeltitle")
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
-        <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+        <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
             `<div class="dialog-row">
                 <label for="for">${t("labelfor")}</label>
             </div>
@@ -614,6 +584,7 @@ function saveLabelProps(node) {
     node.props.classes = document.getElementById("classes").value.trim()
     node.props.style = document.getElementById("inline_style").value.trim()
     node.props.labelfor = document.getElementById("for").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
 
     render()
     closeDialog()
