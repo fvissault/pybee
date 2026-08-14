@@ -67,11 +67,11 @@ function stringifyAction(config) {
 }
 
 const AVAILABLE_EVENTS = [
-    "click",
-    "dblclick",
-    "mouseenter",
-    "mouseleave",
-    "change"
+    {value: "onclick", label: "Sur le clic"},
+    {value: "ondblclick", label: "Sur le double clic"},
+    {value: "onmouseenter", label: "Entrée de la souris"},
+    {value: "onmouseleave", label: "Sortie de la souris"},
+    {value: "onchange", label: "Sur la modification"}
 ]
 
 function createEventRow(event = {}) {
@@ -80,10 +80,10 @@ function createEventRow(event = {}) {
 
     row.innerHTML = `
         <select class="event-type" style="width:120px; margin-right:7px;">
-            ${AVAILABLE_EVENTS.map(e => `<option value="${e}">${e}</option>`).join("")}
+            ${AVAILABLE_EVENTS.map(e => `<option value="${e.value}">${e.label}</option>`).join("")}
         </select>
 
-        <input class="event-action" placeholder="addValue(2)" style="margin-right:7px;">
+        <input class="event-action" placeholder="fonction(paramètres)" style="margin-right:7px;">
 
         <button class="btn btn-secondary remove-event">-</button>
     `
