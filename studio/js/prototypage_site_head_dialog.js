@@ -16,7 +16,7 @@ async function popupPage() {
         const metas = workspaceRoot.props.metas||[]
         
         const dialog = document.getElementById("dialog")
-        dialog.style.width = "1451px"
+        dialog.style.width = "1455px"
         const head = document.getElementById("dialogHeader")
         head.innerText = t("pagetitle")
         content = document.getElementById("dialogContent")
