@@ -421,7 +421,7 @@ function generatehtml(node, indent = 0) {
     if (node.props.lang && node.props.lang !== "") htmlcode += ` lang="${node.props.lang}">\n`
     else htmlcode += `>\n`
     htmlcode += indentation + `<head>\n`
-    const metas = node.props.metas
+    const metas = node.props.metas||[]
     metas.forEach(meta => {
         switch (meta.type) {
             case "charset": {
@@ -443,7 +443,7 @@ function generatehtml(node, indent = 0) {
         }
     })
     if (node.props.title && node.props.title !== "") htmlcode += indentation + indentation + `<title>${node.props.title}</title>\n`
-    const cssfiles = node.props.cssfiles
+    const cssfiles = node.props.cssfiles||[]
     cssfiles.forEach(cssfile => {
         if (cssfile.type === "stylesheet") {
             if (cssfile.include) htmlcode += dblindentation + `<link rel="stylesheet" href="css/${cssfile.href}.css"/>\n`
@@ -452,7 +452,7 @@ function generatehtml(node, indent = 0) {
             if (cssfile.include) htmlcode += dblindentation + `<link rel="icon" href="${cssfile.href}"/>\n`
         }
     })
-    const jsfiles = node.props.jsfiles
+    const jsfiles = node.props.jsfiles||[]
     jsfiles.forEach(jsfile => {
         if (jsfile.include) htmlcode += dblindentation + `<script${jsfile.defer?" defer":""} src="js/${jsfile.src}.js"></script>\n`
     })
@@ -478,7 +478,10 @@ function generatebody(node, indent = 0) {
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
             const nodestyle = node.props.style||""
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}>\n`
+            const nodedraggable = node.props.draggable||false
+            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}${nodestyle !== ""?" style=\"" + nodestyle + "\"":""}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Span": {
@@ -486,8 +489,10 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
-            const nodecontent = node.props.content||""
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}>${nodecontent}\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Image": {
@@ -497,7 +502,9 @@ function generatebody(node, indent = 0) {
             const nodeclass = node.props.classes||""
             const nodestyle = node.props.style||""
             const nodesrc = node.props.src||"error:no src"
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodesrc !== ""?" src='" + nodesrc + "'":""}`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}${nodestyle !== ""?" style=\"" + nodestyle + "\"":""}${nodesrc !== ""?" src=\"" + nodesrc + "\"":""}`
+            htmlcode += buildNodeEvents(node)
             break
         }
         case "Text": {
@@ -505,7 +512,6 @@ function generatebody(node, indent = 0) {
             htmlcode += indentation + `${nodetext}\n`
             break
         }
-
         case "TextField": {
             tagname = "input"
             const nodeid = node.props.id||""
@@ -544,7 +550,9 @@ function generatebody(node, indent = 0) {
             const nodealt = node.props.alt||""
             const nodewidth = node.props.width||""
             const nodeheight = node.props.height||""
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodeplaceholder !== ""?" placeholder='" + nodeplaceholder + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodeform !== ""?" form='" + nodeform + "'":""}${nodelist !== ""?" list='" + nodelist + "'":""}${nodetitle !== ""?" title='" + nodetitle + "'":""}${nodetabindex !== ""?" tabindex='" + nodetabindex + "'":""}${nodemaxlength !== ""?" maxlength='" + nodemaxlength + "'":""}${nodeminlength !== ""?" minlength='" + nodeminlength + "'":""}${nodepattern !== ""?" pattern='" + nodepattern + "'":""}${nodesize !== ""?" size='" + nodesize + "'":""}${nodemultiple?" multiple":""}${nodeaccept !== ""?" accept='" + nodeaccept + "'":""}${nodecapture !== ""?" capture='" + nodecapture + "'":""}${nodeformaction !== ""?" formaction='" + nodeformaction + "'":""}${nodeformenctype !== ""?" formenctype='" + nodeformenctype + "'":""}${nodeformmethod !== ""?" formmethod='" + nodeformmethod + "'":""}${nodeformtarget !== ""?" formtarget='" + nodeformtarget + "'":""}${nodeformnovalidate?" formnovalidate":""}${nodesrc !== ""?" src='" + nodesrc + "'":""}${nodealt !== ""?" alt='" + nodealt + "'":""}${nodewidth !== ""?" width='" + nodewidth + "'":""}${nodeheight !== ""?" height='" + nodeheight + "'":""}${nodemin !== ""?" min='" + nodemin + "'":""}${nodemax !== ""?" max='" + nodemax + "'":""}${nodestep !== ""?" step='" + nodestep + "'":""}${nodeautofocus?" autofocus":""}${nodeautocomplete?" autocomplete":""}${nodedisabled?" disabled":""}${nodereadonly?" readonly":""}${noderequired?" required":""}${nodechecked?" checked":""}`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodeplaceholder !== ""?" placeholder='" + nodeplaceholder + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodeform !== ""?" form='" + nodeform + "'":""}${nodelist !== ""?" list='" + nodelist + "'":""}${nodetitle !== ""?" title='" + nodetitle + "'":""}${nodetabindex !== ""?" tabindex='" + nodetabindex + "'":""}${nodemaxlength !== ""?" maxlength='" + nodemaxlength + "'":""}${nodeminlength !== ""?" minlength='" + nodeminlength + "'":""}${nodepattern !== ""?" pattern='" + nodepattern + "'":""}${nodesize !== ""?" size='" + nodesize + "'":""}${nodemultiple?" multiple":""}${nodeaccept !== ""?" accept='" + nodeaccept + "'":""}${nodecapture !== ""?" capture='" + nodecapture + "'":""}${nodeformaction !== ""?" formaction='" + nodeformaction + "'":""}${nodeformenctype !== ""?" formenctype='" + nodeformenctype + "'":""}${nodeformmethod !== ""?" formmethod='" + nodeformmethod + "'":""}${nodeformtarget !== ""?" formtarget='" + nodeformtarget + "'":""}${nodeformnovalidate?" formnovalidate":""}${nodesrc !== ""?" src='" + nodesrc + "'":""}${nodealt !== ""?" alt='" + nodealt + "'":""}${nodewidth !== ""?" width='" + nodewidth + "'":""}${nodeheight !== ""?" height='" + nodeheight + "'":""}${nodemin !== ""?" min='" + nodemin + "'":""}${nodemax !== ""?" max='" + nodemax + "'":""}${nodestep !== ""?" step='" + nodestep + "'":""}${nodeautofocus?" autofocus":""}${nodeautocomplete?" autocomplete":""}${nodedisabled?" disabled":""}${nodereadonly?" readonly":""}${noderequired?" required":""}${nodechecked?" checked":""}`
+            htmlcode += buildNodeEvents(node)
             break
         }
         case "Label": {
@@ -555,7 +563,10 @@ function generatebody(node, indent = 0) {
             const nodestyle = node.props.style||""
             const nodefor = node.props.labelfor||""
             const nodecontent = node.props.content||""
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodefor !== ""?" for='" + nodefor + "'":""}>\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodefor !== ""?" for='" + nodefor + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Paragraph": {
@@ -564,7 +575,10 @@ function generatebody(node, indent = 0) {
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
             const nodestyle = node.props.style||""
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}>\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Form": {
@@ -584,7 +598,10 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
-            htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}>\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Ol": {
@@ -592,7 +609,10 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
-            htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}>\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
         case "Li": {
@@ -601,7 +621,94 @@ function generatebody(node, indent = 0) {
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
             const nodebegin = node.props.value||""
-            htmlcode += indentation + `<${tagname}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodebegin !== ""?" start='" + nodebegin + "'":""}>\n`
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodebegin !== ""?" start='" + nodebegin + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Title": {
+            const nodesize = node.props.size||""
+            tagname = "h" + nodesize
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Fieldset": {
+            tagname = "fieldset"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Article": {
+            tagname = "article"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Header": {
+            tagname = "header"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Footer": {
+            tagname = "footer"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodedraggable = node.props.draggable||"auto"
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
+            break
+        }
+        case "Button": {
+            tagname = "button"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
+            const nodevalue = node.props.value||""
+            const nodetype = node.props.type||""
+            const nodedisabled = node.props.disabled||false
+            const nodeautofocus = node.props.autofocus||false
+            const nodedraggable = node.props.draggable||"auto"
+            const nodeform = node.props.form||""
+            const nodetitle = node.props.title||""
+            const nodetabindex = node.props.tabindex||""
+            const nodeformaction = node.props.formaction||""
+            const nodeformenctype = node.props.formenctype||""
+            const nodeformmethod = node.props.formmethod||""
+            const nodeformnovalidate = node.props.formnovalidate||false
+            const nodeformtarget = node.props.formtarget||""
+            const nodecommand = node.props.command||""
+            const nodecommandfor = node.props.commandfor||""
+            const nodepopovertarget = node.props.popovertarget||""
+            const nodepopovertargetaction = node.props.popovertargetaction||""
+            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodeform !== ""?" form='" + nodeform + "'":""}${nodetitle !== ""?" title='" + nodetitle + "'":""}${nodetabindex !== ""?" tabindex='" + nodetabindex + "'":""}${nodeformaction !== ""?" formaction='" + nodeformaction + "'":""}${nodeformenctype !== ""?" formenctype='" + nodeformenctype + "'":""}${nodeformmethod !== ""?" formmethod='" + nodeformmethod + "'":""}${nodeformtarget !== ""?" formtarget='" + nodeformtarget + "'":""}${nodeformnovalidate?" formnovalidate":""}${nodecommand !== ""?" command='" + nodecommand + "'":""}${nodecommandfor !== ""?" commandfor='" + nodecommandfor + "'":""}${nodepopovertarget !== ""?" popovertarget='" + nodepopovertarget + "'":""}${nodepopovertargetaction !== ""?" popovertargetaction='" + nodepopovertargetaction + "'":""}${nodeautofocus?" autofocus":""}${nodedisabled?" disabled":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}`
+            htmlcode += buildNodeEvents(node)
+            htmlcode += `>\n`
             break
         }
     }
@@ -617,6 +724,14 @@ function generatebody(node, indent = 0) {
         // ce n'est pas un container
         if (node.widgetType === "Text") htmlcode += ""
         else htmlcode += "/>\n"
+    }
+    return htmlcode
+}
+
+function buildNodeEvents(node) {
+    let htmlcode = ""
+    for (const [eventName, event] of Object.entries(node.events)) {
+        htmlcode += ` ${eventName}="${event.type}(${event.params})"`
     }
     return htmlcode
 }
