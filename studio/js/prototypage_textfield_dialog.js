@@ -18,6 +18,7 @@ function popupTextfield(node) {
     const list = node.props.list||""
     const title = node.props.title||""
     const tabindex = node.props.tabindex||""
+    const draggable = node.props.draggable||"auto"
 
     const customProperties = {
         "min": node.props.min||"",
@@ -50,9 +51,9 @@ function popupTextfield(node) {
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-column">
-            <div class="dialog-section">` + makeIdClasses(id, name, classes) +
+            <div class="dialog-section">` + makeIdClasses(id, name, classes, draggable) +
                 `<div class="dialog-row">
-                    <label for="value">${t("tftype")}</label>
+                    <label for="type">${t("tftype")}</label>
                 </div>
                 <div class="dialog-row">
                     <select id="type"></select>
@@ -69,16 +70,16 @@ function popupTextfield(node) {
                 <div class="dialog-row">
                     <input type="text" value="${style}" id="inline_style"/>
                 </div>
+            </div>
+        </div>
+        <div class="dialog-column">
+            <div class="dialog-section">
                 <div class="dialog-row">
                     <label for="placeholder">${t("tfplaceholder")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${placeholder}" id="placeholder"/>
                 </div>
-            </div>
-        </div>
-        <div class="dialog-column">
-            <div class="dialog-section">
                 <div class="dialog-row">
                     <label for="form">Id de formulaire</label>
                 </div>
@@ -146,6 +147,7 @@ function popupTextfield(node) {
 
     addfields(customProperties)    
 
+
     content.querySelector("#saveprops").onclick = () => {
         saveTextfieldProps(node)
         tosave = true
@@ -178,6 +180,7 @@ function saveTextfieldProps(node) {
     node.props.list = document.getElementById("list").value.trim()
     node.props.title = document.getElementById("title").value.trim()
     node.props.tabindex = document.getElementById("tabindex").value.trim()
+    node.props.draggable = document.getElementById("draggable").options[document.getElementById("draggable").selectedIndex].value
     if (document.getElementById("min")) node.props.min = document.getElementById("min").value.trim()
     if (document.getElementById("max")) node.props.max = document.getElementById("max").value.trim()
     if (document.getElementById("step")) node.props.step = document.getElementById("step").value.trim()
@@ -190,9 +193,9 @@ function saveTextfieldProps(node) {
     if (document.getElementById("accept")) node.props.accept = document.getElementById("accept").value.trim()
     if (document.getElementById("capture")) node.props.capture = document.getElementById("capture").value.trim()
     if (document.getElementById("formaction")) node.props.formaction = document.getElementById("formaction").value.trim()
-    if (document.getElementById("formenctype")) node.props.formenctype = document.getElementById("formenctype").value.trim()
-    if (document.getElementById("formmethod")) node.props.formmethod = document.getElementById("formmethod").value.trim()
-    if (document.getElementById("formtarget")) node.props.formtarget = document.getElementById("formtarget").value.trim()
+    if (document.getElementById("formenctype")) node.props.formenctype = document.getElementById("formenctype").options[document.getElementById("formenctype").selectedIndex].value
+    if (document.getElementById("formmethod")) node.props.formmethod = document.getElementById("formmethod").options[document.getElementById("formmethod").selectedIndex].value
+    if (document.getElementById("formtarget")) node.props.formtarget = document.getElementById("formtarget").options[document.getElementById("formtarget").selectedIndex].value
     if (document.getElementById("formnovalidate")) node.props.formnovalidate = document.getElementById("formnovalidate").checked
     if (document.getElementById("src")) node.props.src = document.getElementById("src").value.trim()
     if (document.getElementById("alt")) node.props.alt = document.getElementById("alt").value.trim()
@@ -236,8 +239,24 @@ function createCheckField(container, label, inputid, inputvalue) {
     container.appendChild(row)
 }
 
+function createSelectField(container, label, selectid) {
+    const labelrow = document.createElement("div")
+    labelrow.className = "dialog-row"
+    const l = document.createElement("label")
+    l.for = selectid
+    l.textContent = label
+    labelrow.appendChild(l)
+    container.appendChild(labelrow)
+
+    const row = document.createElement("div")
+    row.className = "dialog-row"
+    const s = document.createElement("select")
+    s.id = selectid
+    row.appendChild(s)
+    container.appendChild(row)
+}
+
 function addfields(customprop) {
-    //customprop = resetCustomProperties(customprop)
     const fieldsupp = document.getElementById("fieldssupp")
     fieldsupp.textContent = ""
     const choice = document.getElementById("type").options[document.getElementById("type").selectedIndex].value
@@ -285,9 +304,33 @@ function addfields(customprop) {
         }
         case "submit": {
             createInputField(fieldsupp, "Action du formulaire :", "formaction", customprop.formaction)
-            createInputField(fieldsupp, "Type d'encodage du formulaire :", "formenctype", customprop.formenctype)
-            createInputField(fieldsupp, "Méthode du formulaire :", "formmethod", customprop.formmethod)
-            createInputField(fieldsupp, "Cible du formulaire :", "formtarget", customprop.formtarget)
+            createSelectField(fieldsupp, "Type d'encodage du formulaire :", "formenctype")
+            const selectEnctype = document.getElementById("formenctype")
+            TEXTFIELD_ENCTYPE.forEach(opt=>{
+                const o = document.createElement("option")
+                o.value = opt.value
+                o.textContent = opt.label
+                selectEnctype.appendChild(o)
+            })
+            selectEnctype.value = customprop.formenctype || ""
+            createSelectField(fieldsupp, "Méthode du formulaire :", "formmethod")
+            const selectMethod = document.getElementById("formmethod")
+            TEXTFIELD_METHOD.forEach(opt=>{
+                const o = document.createElement("option")
+                o.value = opt.value
+                o.textContent = opt.label
+                selectMethod.appendChild(o)
+            })
+            selectMethod.value = customprop.formmethod || ""
+            createSelectField(fieldsupp, "Cible du formulaire :", "formtarget")
+            const selectTarget = document.getElementById("formtarget")
+            TEXTFIELD_TARGET.forEach(opt=>{
+                const o = document.createElement("option")
+                o.value = opt.value
+                o.textContent = opt.label
+                selectTarget.appendChild(o)
+            })
+            selectTarget.value = customprop.formtarget || ""
             createCheckField(fieldsupp, "Pas de validation possible", "formnovalidate", customprop.formnovalidate)
             break
         }
@@ -348,3 +391,26 @@ const TEXTFIELD_TYPES = [
     { value: "time", label: t("tftype20") },
     { value: "url", label: t("tftype21") }
 ]
+
+const TEXTFIELD_ENCTYPE = [
+    { value: "", label: "Pas d'encodage" },
+    { value: "application/x-www-form-urlencoded", label: "Type d'encodage par défaut" },
+    { value: "multipart/form-data", label: "Type d'encodage pour découper les données" },
+    { value: "text/plain", label: "Type d'encodage texte simple pour le débuggage" }
+]
+
+const TEXTFIELD_METHOD = [
+    { value: "", label: "Pas de méthode" },
+    { value: "post", label: "Données cachées (POST)" },
+    { value: "get", label: "Données passées dans l'url (GET)" },
+    { value: "dialog", label: "Données passées à une boite de dialogue (DIALOG)" }
+]
+
+const TEXTFIELD_TARGET = [
+    { value: "", label: "Pas de cible" },
+    { value: "_self", label: "La page courante par défaut" },
+    { value: "_blank", label: "Page vide" },
+    { value: "_parent", label: "Page parente" },
+    { value: "_top", label: "Première page" }
+]
+
