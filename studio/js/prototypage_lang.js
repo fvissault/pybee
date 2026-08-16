@@ -124,7 +124,7 @@ const translations = {
         tftype19: "Numéro de téléphone",
         tftype20: "Heure",
         tftype21: "Url",
-        tfinitialval: "Initial value :",
+        tfinitialval: "Valeur initiale :",
         tfstyle: "Style en ligne :",
         tfplaceholder: "Contenu fictif :",
         tfdisabled: "Indisponible",
