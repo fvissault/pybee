@@ -219,15 +219,6 @@ function generateId(type) {
 }
 
 function createNode(type, options={}) {
-    if (type == "layout") {
-        return {
-            id:generateId(type),
-            type:"layout",
-            parent:null,
-            props:{"id": "parentLayout"},
-            children:[]
-        }
-    }
     if (type == "widget") {
         return {
             id:generateId(draggedWidgetType),
@@ -251,20 +242,6 @@ function createNode(type, options={}) {
             children: []
         }
     }
-}
-
-function createLayout(zoneCount=4) {
-
-    const layout = createNode("layout")
-
-    for(let i = 0; i < zoneCount; i++) {
-        const zone = createNode("zone",{id:"z"+i, css: [{name: "z"+i, type:"id", values:["display:grid"]}]})
-
-        zone.parent = layout
-        layout.children.push(zone)
-    }
-
-    return layout
 }
 
 function createWidget() {
@@ -377,9 +354,6 @@ async function loadProjectFiles() {
 document.querySelectorAll(".palette-item").forEach(item => {
     item.addEventListener("dragstart",() => {
         draggedType = item.dataset.type
-        if(draggedType === "layout") {
-            draggedLayoutZones = parseInt(item.dataset.zones)
-        }
         if(draggedType === "widget") {
             draggedWidgetType = item.dataset.widget
         }
@@ -473,15 +447,6 @@ workspaceContent.addEventListener("drop",e => {
     e.preventDefault()
     if(insertLine) insertLine.remove()
     insertLine=null
-    if(draggedType==="layout"){
-        if(workspaceHasWidgets()){
-            alert("Workspace already contains widgets.")
-            return
-        }
-        workspaceRoot = createLayout(draggedLayoutZones)       
-        render()
-        return
-    }
     let newParent = null
     // drop dans un container existant
     if(currentDropTarget){
@@ -508,10 +473,6 @@ workspaceContent.addEventListener("drop",e => {
     if (newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container) return
 
     if(draggedType==="widget"){
-        if(workspaceRoot && workspaceRoot.type === "layout" && newParent === workspaceRoot) {
-            alert("Cannot add root widgets when a layout exists.")
-            return
-        }
         const widget=createWidget()
         if (isNodeAllowed(newParent, widget)) {
             insertNode(newParent, widget, currentDropIndex??newParent.children.length)
