@@ -19,20 +19,11 @@ function render(){
     workspaceEl.innerHTML=""
     if(!workspaceRoot)
         return
-    if (workspaceRoot.type === "layout") {
-        layout = renderLayout(workspaceRoot)
-        workspaceEl.appendChild(layout)
-        workspaceRoot.children.forEach(child => {
-            if(child.type==="zone")
-                layout.appendChild(renderZoneLayout(child))
-        })
-    } else {
-        workspaceRoot.children.forEach(child => {
-            if(child.type==="widget")
-                workspaceEl.appendChild(renderWidget(child))
+    workspaceRoot.children.forEach(child => {
+        if(child.type==="widget")
+            workspaceEl.appendChild(renderWidget(child))
 
-        })
-    }
+    })
 }
 
 function renderZone(zone){
@@ -41,58 +32,6 @@ function renderZone(zone){
         zoneEl.appendChild(renderWidget(c))
     })
     return zoneEl
-}
-
-function renderZoneLayout(zone){
-    const zoneEl = createNewZone(zone.id)
-    const label=document.createElement("span")
-    label.textContent=zone.id
-    const cssBtn = createNewButton("::", "CSS")
-    cssBtn.style.marginRight="6px"
-    cssBtn.onclick=(e)=>{
-        e.stopPropagation()
-        openDialog(zone, 'css')
-    }
-    const htmlBtn = createNewButton("⚙", "Paramètres")
-    htmlBtn.style.fontSize = "12px"
-    htmlBtn.style.marginRight = "6px"
-    htmlBtn.onclick=(e)=>{
-        e.stopPropagation()
-        openDialog(zone, 'html')
-    }
-    zoneEl.appendChild(htmlBtn)
-    zoneEl.appendChild(cssBtn)
-    zoneEl.appendChild(label)
-    zone.children.forEach(c=>{
-        zoneEl.appendChild(renderWidget(c))
-    })
-    return zoneEl
-}
-
-function renderLayout(layout) {
-    const el = document.createElement("div")
-    el.className = "layout"
-    el.dataset.nodeId = layout.id
-    const label=document.createElement("span")
-    label.textContent=layout.id
-    const cssBtn = createNewButton("::", "CSS")
-    cssBtn.style.marginRight="6px"
-    cssBtn.onclick=(e) => {
-        e.stopPropagation()
-        openDialog(workspaceRoot, "lcss")
-    }
-    const htmlBtn = createNewButton("⚙", "Paramètres")
-    htmlBtn.style.fontSize = "12px"
-    htmlBtn.style.marginRight="6px"
-    htmlBtn.onclick=(e) => {
-        e.stopPropagation()
-        openDialog(workspaceRoot, "lhtml")
-    }
-    el.appendChild(htmlBtn)
-    el.appendChild(cssBtn)
-    el.appendChild(label)
-    el.dataset.nodeId = layout.id
-    return el
 }
 
 function renderWidget(widget){
@@ -108,6 +47,8 @@ function renderWidget(widget){
     toggle.className = "btn btn-primary"
     toggle.style.fontSize = "12px"
     toggle.style.marginRight = "6px"
+    toggle.style.paddingLeft = "12px"
+    toggle.style.paddingRight = "12px"
     toggle.style.height = "29px"
     toggle.textContent = widget.ui?.collapsed ? "▼" : "▲"
 
@@ -146,9 +87,11 @@ function renderWidget(widget){
             openDialog(widget, "css")
         }   
         if (widget.widgetType != "Anchor") {
-            eventsBtn = createNewButton("e", "Evènements")
-            eventsBtn.style.fontSize = "14px"
+            eventsBtn = createNewButton("⚡", "Evènements")
+            eventsBtn.style.fontSize = "13px"
             eventsBtn.style.marginRight = "6px"
+            eventsBtn.style.paddingLeft = "10px"
+            eventsBtn.style.paddingRight = "9px"
             eventsBtn.onclick=(e) => {
                 e.stopPropagation()
                 openDialog(widget, "events")
