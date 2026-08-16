@@ -94,21 +94,6 @@ function buildPopupContent(node, cat){
             popupEvents(node)
         }
     } else {
-        if(node.type==="zone") {
-            if (cat == "css") popupCss(node)
-            if (cat == "html") popupLayoutZone(node)
-        }
-        if(node.type==="layout") {
-            if (cat == "html") popupPage(node)
-            if (cat == "lhtml") popupLayout(node)
-            if (cat == "lcss") {
-                initPropsStruct()
-                popupLayoutCss(node)
-            }
-            if (cat == "css") popupWorkspaceCss(node)
-            if (cat == "model") return popupWorkspaceModel(node)
-        }
-
         if(node.type==="container") {
             if (cat == "html") popupPage(node)
             if (cat == "css") popupWorkspaceCss(node)
@@ -123,7 +108,6 @@ function openIntFlow() {
     } else {
         intflow.location.reload()
         intflow.focus();
-        //intflow.init();
     }
 }
 
