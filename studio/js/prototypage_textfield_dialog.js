@@ -65,7 +65,7 @@ function popupTextfield(node) {
                     <input type="text" value="${value}" id="value"/>
                 </div>
                 <div class="dialog-row">
-                    <label for="inline_style">${t("tfstyle")}</label>
+                    <label for="inline_style">${t("style")}</label>
                 </div>
                 <div class="dialog-row">
                     <input type="text" value="${style}" id="inline_style"/>
