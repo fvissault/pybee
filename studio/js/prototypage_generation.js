@@ -469,7 +469,6 @@ function generatehtml(node, indent = 0) {
 function generatebody(node, indent = 0) {
     let htmlcode = ""
     const indentation = "   ".repeat(indent)
-    let prefix = ""
     let tagname = ""
     switch(node.widgetType) {
         case "Image": {
