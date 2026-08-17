@@ -1,5 +1,12 @@
 const translations = {
-    fr : { 
+    fr : {
+        draggable: "Déplacement :",
+        dragdefault: "Comportement par défaut",
+        drag: "Déplaçable",
+        nodrag: "Non déplaçable",
+
+        name: "Nom :", 
+        style: "Style en ligne :",
         title: "Beetle Studio Prototype",
         proto_header : "Beetle Studio - Prototypage", 
         newworkspace : "Nouvel espace de travail", 
@@ -11,11 +18,6 @@ const translations = {
         containers: "Containers",
         simpleobjs: "Objets simples",
         complexobjs: "Composants",
-        layout1z: "Mise en page 1 zone",
-        layout2z: "Mise en page 2 zones",
-        layout3z: "Mise en page 3 zones",
-        layout4z: "Mise en page 4 zones",
-        layout5z: "Mise en page 5 zones",
         block: "Division",
         text: "Texte brut",
         span: "Zone de texte",
@@ -77,10 +79,6 @@ const translations = {
         textcontent: "Contenu :",
         // pour la popup span
         spantitle: "Paramètres de la zone de texte",
-        spancontent: "Contenu :",
-        // pour la popup mise en page
-        layouttitle: "Paramètres de la mise en page",
-        layoutzonecount: "Nombre de zones :",
         // pour la popup zone
         zonetitle: "Paramètres de la zone",
         // pour la popup page
@@ -90,18 +88,14 @@ const translations = {
         alertpagename: "Le nom de la page est obligatoire",
         // pour la popup image
         imgtitle: "Paramètres de l'image",
-        imgstyle: "Style en ligne :",
         imgsource: "Source :",
         // pour la popup division
         blocktitle: "Paramètres de la division",
-        blockstyle: "Style en ligne :",
         // pour la popup etiquette
         labeltitle: "Paramètres de l'étiquette",
         labelfor: "Label pour :",
-        labelstyle: "Style en ligne :",
         // pour la popup textfield
         tftitle: "Paramètres du champ de texte",
-        tfname: "Nom :",
         tftype: "Type :",
         tftype1: "Texte",
         tftype2: "Mot de passe",
@@ -125,7 +119,6 @@ const translations = {
         tftype20: "Heure",
         tftype21: "Url",
         tfinitialval: "Valeur initiale :",
-        tfstyle: "Style en ligne :",
         tfplaceholder: "Contenu fictif :",
         tfdisabled: "Indisponible",
         tfreadonly: "Lecture seule",
@@ -154,6 +147,12 @@ const translations = {
         formnoval: "Empêcher la validation du formulaire"
     } , 
     en : { 
+        draggable: "Draggable :",
+        dragdefault: "Comportement par défaut",
+        drag: "Déplaçable",
+        nodrag: "Non déplaçable",
+
+        name: "Name :",
         title: "Beetle Studio Prototype",
         proto_header : "Beetle Studio - Prototyping", 
         newworkspace : "New workspace", 
@@ -165,11 +164,6 @@ const translations = {
         containers: "Containers",
         simpleobjs: "Simple objects",
         complexobjs: "Components",
-        layout1z: "1-zone layout",
-        layout2z: "2-zone layout",
-        layout3z: "3-zone layout",
-        layout4z: "4-zone layout",
-        layout5z: "5-zone layout",
         block: "Container",
         text: "Raw text",
         span: "Text span",
@@ -230,10 +224,6 @@ const translations = {
         textcontent: "Content:",
 
         spantitle: "Text span settings",
-        spancontent: "Content:",
-
-        layouttitle: "Layout settings",
-        layoutzonecount: "Number of zones:",
 
         zonetitle: "Zone settings",
 
@@ -243,18 +233,14 @@ const translations = {
         alertpagename: "Page name is required",
 
         imgtitle: "Image settings",
-        imgstyle: "Inline style:",
         imgsource: "Source:",
 
         blocktitle: "Container settings",
-        blockstyle: "Inline style:",
 
         labeltitle: "Label settings",
         labelfor: "Label for:",
-        labelstyle: "Inline style:",
 
         tftitle: "Text field settings",
-        tfname: "Name:",
         tftype: "Type:",
         tftype1: "Text",
         tftype2: "Password",
@@ -278,7 +264,6 @@ const translations = {
         tftype20: "Time",
         tftype21: "URL",
         tfinitialval: "Initial value:",
-        tfstyle: "Inline style:",
         tfplaceholder: "Placeholder:",
         tfdisabled: "Disabled",
         tfreadonly: "Read only",
@@ -307,6 +292,12 @@ const translations = {
         formnoval: "Disable validation"
     },
     it : { 
+        draggable: "Déplacement :",
+        dragdefault: "Comportement par défaut",
+        drag: "Déplaçable",
+        nodrag: "Non déplaçable",
+
+        name: "Nome:",
         title: "Beetle Studio Prototipo",
         proto_header : "Beetle Studio - Prototipazione", 
         newworkspace : "Nuovo spazio di lavoro", 
@@ -318,11 +309,6 @@ const translations = {
         containers: "Contenitori",
         simpleobjs: "Oggetti semplici",
         complexobjs: "Componenti",
-        layout1z: "Layout 1 zona",
-        layout2z: "Layout 2 zone",
-        layout3z: "Layout 3 zone",
-        layout4z: "Layout 4 zone",
-        layout5z: "Layout 5 zone",
         block: "Divisione",
         text: "Testo semplice",
         span: "Area di testo",
@@ -384,10 +370,6 @@ const translations = {
         textcontent: "Contenuto:",
 
         spantitle: "Parametri dell'area di testo",
-        spancontent: "Contenuto:",
-
-        layouttitle: "Parametri del layout",
-        layoutzonecount: "Numero di zone:",
 
         zonetitle: "Parametri della zona",
 
@@ -397,18 +379,14 @@ const translations = {
         alertpagename: "Il nome della pagina è obbligatorio",
 
         imgtitle: "Parametri dell'immagine",
-        imgstyle: "Stile inline:",
         imgsource: "Sorgente:",
 
         blocktitle: "Parametri della divisione",
-        blockstyle: "Stile inline:",
 
         labeltitle: "Parametri dell'etichetta",
         labelfor: "Etichetta per:",
-        labelstyle: "Stile inline:",
 
         tftitle: "Parametri del campo di testo",
-        tfname: "Nome:",
         tftype: "Tipo:",
         tftype1: "Testo",
         tftype2: "Password",
@@ -432,7 +410,6 @@ const translations = {
         tftype20: "Ora",
         tftype21: "URL",
         tfinitialval: "Valore iniziale:",
-        tfstyle: "Stile inline:",
         tfplaceholder: "Segnaposto:",
         tfdisabled: "Disabilitato",
         tfreadonly: "Sola lettura",
@@ -461,6 +438,12 @@ const translations = {
         formnoval: "Disabilita la validazione"
     },
     de : { 
+        draggable: "Déplacement :",
+        dragdefault: "Comportement par défaut",
+        drag: "Déplaçable",
+        nodrag: "Non déplaçable",
+
+        name: "Name:",
         title: "Beetle Studio Prototyp",
         proto_header : "Beetle Studio - Prototyping", 
         newworkspace : "Neuer Arbeitsbereich", 
@@ -472,11 +455,6 @@ const translations = {
         containers: "Container",
         simpleobjs: "Einfache Objekte",
         complexobjs: "Komponenten",
-        layout1z: "Layout mit 1 Bereich",
-        layout2z: "Layout mit 2 Bereichen",
-        layout3z: "Layout mit 3 Bereichen",
-        layout4z: "Layout mit 4 Bereichen",
-        layout5z: "Layout mit 5 Bereichen",
         block: "Bereich",
         text: "Reiner Text",
         span: "Textbereich",
@@ -538,10 +516,6 @@ const translations = {
         textcontent: "Inhalt:",
 
         spantitle: "Textbereich-Einstellungen",
-        spancontent: "Inhalt:",
-
-        layouttitle: "Layout-Einstellungen",
-        layoutzonecount: "Anzahl der Bereiche:",
 
         zonetitle: "Bereich-Einstellungen",
 
@@ -551,18 +525,14 @@ const translations = {
         alertpagename: "Der Seitenname ist erforderlich",
 
         imgtitle: "Bild-Einstellungen",
-        imgstyle: "Inline-Stil:",
         imgsource: "Quelle:",
 
         blocktitle: "Bereich-Einstellungen",
-        blockstyle: "Inline-Stil:",
 
         labeltitle: "Beschriftungs-Einstellungen",
         labelfor: "Beschriftung für:",
-        labelstyle: "Inline-Stil:",
 
         tftitle: "Textfeld-Einstellungen",
-        tfname: "Name:",
         tftype: "Typ:",
         tftype1: "Text",
         tftype2: "Passwort",
@@ -586,7 +556,6 @@ const translations = {
         tftype20: "Zeit",
         tftype21: "URL",
         tfinitialval: "Anfangswert:",
-        tfstyle: "Inline-Stil:",
         tfplaceholder: "Platzhalter:",
         tfdisabled: "Deaktiviert",
         tfreadonly: "Nur lesen",
@@ -615,6 +584,12 @@ const translations = {
         formnoval: "Validierung deaktivieren"
     },
     es : { 
+        draggable: "Déplacement :",
+        dragdefault: "Comportement par défaut",
+        drag: "Déplaçable",
+        nodrag: "Non déplaçable",
+
+        name: "Nombre:",
         title: "Beetle Studio Prototipo",
         proto_header : "Beetle Studio - Prototipado", 
         newworkspace : "Nuevo espacio de trabajo", 
@@ -626,11 +601,6 @@ const translations = {
         containers: "Contenedores",
         simpleobjs: "Objetos simples",
         complexobjs: "Componentes",
-        layout1z: "Diseño de 1 zona",
-        layout2z: "Diseño de 2 zonas",
-        layout3z: "Diseño de 3 zonas",
-        layout4z: "Diseño de 4 zonas",
-        layout5z: "Diseño de 5 zonas",
         block: "División",
         text: "Texto simple",
         span: "Área de texto",
@@ -692,10 +662,6 @@ const translations = {
         textcontent: "Contenido:",
 
         spantitle: "Parámetros del área de texto",
-        spancontent: "Contenido:",
-
-        layouttitle: "Parámetros del diseño",
-        layoutzonecount: "Número de zonas:",
 
         zonetitle: "Parámetros de la zona",
 
@@ -705,18 +671,14 @@ const translations = {
         alertpagename: "El nombre de la página es obligatorio",
 
         imgtitle: "Parámetros de la imagen",
-        imgstyle: "Estilo en línea:",
         imgsource: "Fuente:",
 
         blocktitle: "Parámetros de la división",
-        blockstyle: "Estilo en línea:",
 
         labeltitle: "Parámetros de la etiqueta",
         labelfor: "Etiqueta para:",
-        labelstyle: "Estilo en línea:",
 
         tftitle: "Parámetros del campo de texto",
-        tfname: "Nombre:",
         tftype: "Tipo:",
         tftype1: "Texto",
         tftype2: "Contraseña",
@@ -740,7 +702,6 @@ const translations = {
         tftype20: "Hora",
         tftype21: "URL",
         tfinitialval: "Valor inicial:",
-        tfstyle: "Estilo en línea:",
         tfplaceholder: "Texto de marcador:",
         tfdisabled: "Deshabilitado",
         tfreadonly: "Solo lectura",
