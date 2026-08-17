@@ -143,7 +143,9 @@ const widgetDefinitions = {
     },
     Anchor: { 
         name: t("anchor"), 
-        container: false 
+        container: true, 
+        allowSelf: false,
+        allowedChildren: ["Text", "Image", "Title", "Span", "Paragraph"] 
     },
     Title: { 
         name: t("htitle"), 
