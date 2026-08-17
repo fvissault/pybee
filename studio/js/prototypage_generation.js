@@ -490,7 +490,8 @@ function generatebody(node, indent = 0) {
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}`
+            const nodestyle = node.props.style||""
+            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}${nodestyle !== ""?" style=\"" + nodestyle + "\"":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -598,8 +599,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -609,8 +611,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -621,8 +624,9 @@ function generatebody(node, indent = 0) {
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
             const nodebegin = node.props.value||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodebegin !== ""?" start='" + nodebegin + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodebegin !== ""?" start='" + nodebegin + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -633,8 +637,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -644,8 +649,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -655,8 +661,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -666,8 +673,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -677,8 +685,9 @@ function generatebody(node, indent = 0) {
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
+            const nodestyle = node.props.style||""
             const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
+            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
             break
@@ -709,6 +718,20 @@ function generatebody(node, indent = 0) {
             htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodevalue !== ""?" value='" + nodevalue + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodeform !== ""?" form='" + nodeform + "'":""}${nodetitle !== ""?" title='" + nodetitle + "'":""}${nodetabindex !== ""?" tabindex='" + nodetabindex + "'":""}${nodeformaction !== ""?" formaction='" + nodeformaction + "'":""}${nodeformenctype !== ""?" formenctype='" + nodeformenctype + "'":""}${nodeformmethod !== ""?" formmethod='" + nodeformmethod + "'":""}${nodeformtarget !== ""?" formtarget='" + nodeformtarget + "'":""}${nodeformnovalidate?" formnovalidate":""}${nodecommand !== ""?" command='" + nodecommand + "'":""}${nodecommandfor !== ""?" commandfor='" + nodecommandfor + "'":""}${nodepopovertarget !== ""?" popovertarget='" + nodepopovertarget + "'":""}${nodepopovertargetaction !== ""?" popovertargetaction='" + nodepopovertargetaction + "'":""}${nodeautofocus?" autofocus":""}${nodedisabled?" disabled":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}`
             htmlcode += buildNodeEvents(node)
             htmlcode += `>\n`
+            break
+        }
+        case "Anchor": {
+            tagname = "a"
+            const nodeid = node.props.id||""
+            const nodename = node.props.name||""
+            const nodeclass = node.props.classes||""
+            const nodetype = node.props.type||""
+            const nodedraggable = node.props.draggable||"auto"
+            const nodetarget = node.props.target||""
+            const nodehref = node.props.href||""
+            const nodedownload = node.props.download||""
+            const nodestyle = node.props.style||""
+            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodetype !== ""?" type='" + nodetype + "'":""}${nodehref !== ""?" href='" + nodehref + "'":""}${nodetarget !== ""?" target='" + nodetarget + "'":""}${nodedownload !== ""?" download='" + nodedownload + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodestyle!==""?" style='" + nodestyle + "'":""}>\n`
             break
         }
     }
