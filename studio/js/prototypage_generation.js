@@ -472,30 +472,6 @@ function generatebody(node, indent = 0) {
     let prefix = ""
     let tagname = ""
     switch(node.widgetType) {
-        case "Block": {
-            tagname = "div"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||false
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}${nodestyle !== ""?" style=\"" + nodestyle + "\"":""}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
-        case "Span": {
-            tagname = "span"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodedraggable = node.props.draggable||"auto"
-            const nodestyle = node.props.style||""
-            htmlcode += indentation + `<${tagname}${nodedraggable!=="auto"?" draggable=\"" + nodedraggable + "\"":""}${nodeid !== ""?" id=\"" + nodeid + "\"":""}${nodename !== ""?" name=\"" + nodename + "\"":""}${nodeclass !== ""?" class=\"" + nodeclass + "\"":""}${nodestyle !== ""?" style=\"" + nodestyle + "\"":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
         case "Image": {
             tagname = "img"
             const nodeid = node.props.id||""
@@ -570,18 +546,6 @@ function generatebody(node, indent = 0) {
             htmlcode += `>\n`
             break
         }
-        case "Paragraph": {
-            tagname = "p"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodestyle !== ""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
         case "Form": {
             tagname = "form"
             const nodeid = node.props.id||""
@@ -592,30 +556,6 @@ function generatebody(node, indent = 0) {
             const nodeenctype = node.props.enctype||""
             const nodenovalidate = node.props.novalidate||false
             htmlcode += indentation + `<${tagname}${nodeaction !== ""?" action='" + nodeaction + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}${nodemethod !== ""?" method='" + nodemethod + "'":""}${nodeenctype !== ""?" enctype='" + nodeenctype + "'":""}${nodetarget !== ""?" target='" + nodetarget + "'":""}${nodenovalidate?" novalidate":""}>\n`
-            break
-        }
-        case "Ul": {
-            tagname = "ul"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
-        case "Ol": {
-            tagname = "ol"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
             break
         }
         case "Li": {
@@ -631,57 +571,29 @@ function generatebody(node, indent = 0) {
             htmlcode += `>\n`
             break
         }
-        case "Title": {
-            const nodesize = node.props.size||""
-            tagname = "h" + nodesize
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
-        case "Fieldset": {
-            tagname = "fieldset"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
+        case "Block":
+        case "Span":
+        case "Paragraph":
+        case "Ul":
+        case "Ol":
+        case "Title":
+        case "Footer":
+        case "Header":
+        case "Fieldset": 
         case "Article": {
-            tagname = "article"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
-        case "Header": {
-            tagname = "header"
-            const nodeid = node.props.id||""
-            const nodename = node.props.name||""
-            const nodeclass = node.props.classes||""
-            const nodestyle = node.props.style||""
-            const nodedraggable = node.props.draggable||"auto"
-            htmlcode += indentation + `<${tagname}${nodestyle!==""?" style='" + nodestyle + "'":""}${nodedraggable!=="auto"?" draggable='" + nodedraggable + "'":""}${nodeclass !== ""?" class='" + nodeclass + "'":""}${nodeid !== ""?" id='" + nodeid + "'":""}${nodename !== ""?" name='" + nodename + "'":""}`
-            htmlcode += buildNodeEvents(node)
-            htmlcode += `>\n`
-            break
-        }
-        case "Footer": {
-            tagname = "footer"
+            if (node.widgetType === "Block") tagname = "div"
+            if (node.widgetType === "Span") tagname = "span"
+            if (node.widgetType === "Paragraph") tagname = "p"
+            if (node.widgetType === "Ul") tagname = "ul"
+            if (node.widgetType === "Ol") tagname = "ol"
+            if (node.widgetType === "Article") tagname = "article"
+            if (node.widgetType === "Fieldset") tagname = "fieldset"
+            if (node.widgetType === "Header") tagname = "header"
+            if (node.widgetType === "Footer") tagname = "footer"
+            if (node.widgetType === "Title") {
+                const nodesize = node.props.size||""
+                tagname = "h" + nodesize
+            }
             const nodeid = node.props.id||""
             const nodename = node.props.name||""
             const nodeclass = node.props.classes||""
