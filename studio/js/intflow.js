@@ -21,6 +21,7 @@ window.addEventListener("beforeunload", function (e) {
  * Initialisation de la page
  *==================================================================================*/
 async function init() {
+    console.log(fileid)
     const session = await window.opener.getSession()
     computeNodesAllowedRules()
     try {
