@@ -33,7 +33,9 @@ let intflow = null
 let workspaceRoot = {
     id:generateId("Container"),
     type:"container",
-    props:{},
+    props:{
+        instanceCounter: 0
+    },
     css:{},
     js:[],
     events:{},
@@ -47,6 +49,7 @@ let draggedOldIndex=null
 let insertLine=null
 let draggedLayoutZones = 4
 let draggedWidgetType = null
+let draggedWidgetId = null
 
 document.getElementById("workspace_content").innerText = "Création d'une page"
 
@@ -152,6 +155,12 @@ const widgetDefinitions = {
         container: true, 
         allowSelf: false,
         allowedChildren: ["Text", "Image", "Span"] 
+    },
+    Component: { 
+        name: "Composant", 
+        container: true, 
+        allowSelf: true,
+        allowedChildren: ["all"] 
     }
 }
 
@@ -246,21 +255,41 @@ function createNode(type, options={}) {
     }
 }
 
-function createWidget() {
-
+async function createWidget() {
     const def = widgetDefinitions[draggedWidgetType]
-
-    const widget = createNode("widget", {container:def.container, name:def.name})
-
+    if (draggedWidgetType === "Component") {
+        const response = await fetch("/pybee/studio/api/components.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id: parseInt(draggedWidgetId)
+            })
+        })
+        const data = await response.json()
+        //console.log(data)
+        const widget = createNode("widget", { container: def.container, name: data.name })
+        if (def.container) {
+            const instanceId = workspaceRoot.props.instanceCounter
+            const transformed = data.content.replace(/"id"\s*:\s*"([^"]+)"/g,`"id":"$1_${instanceId}"`)
+            const zone = createNode("zone")
+            const content = JSON.parse(transformed)
+            rebuildParents(content)
+            zone.children = content.children
+            zone.parent = widget
+            widget.children.push(zone)
+        }
+        return widget
+    }
+    const widget = createNode("widget", { container: def.container, name: def.name })
     if (def.container) {
         const zone = createNode("zone")
-
         zone.parent = widget
         widget.children.push(zone)
     }
-
     return widget
 }
+
 
 function insertNode(parent, node, index) {
     node.parent=parent
@@ -347,6 +376,7 @@ async function loadProjectFiles() {
         });
         renderProjectFiles()
     } catch(e) {
+        console.log(e)
         pages = {}
         components = {}
         js = {}
@@ -358,12 +388,13 @@ document.querySelectorAll(".palette-item").forEach(item => {
         draggedType = item.dataset.type
         if(draggedType === "widget") {
             draggedWidgetType = item.dataset.widget
+            draggedWidgetId = item.dataset.id
         }
         draggedNodeRef = null
     })
 })
 
-document.addEventListener("dragstart",e => {
+document.addEventListener("dragstart", e => {
     const session = getSession()
     const widgetEl = e.target.closest(".widget")
     //console.log(widgetEl)
@@ -445,20 +476,22 @@ workspaceContent.addEventListener("dragleave",() => {
     insertLine=null
 })
 
-workspaceContent.addEventListener("drop",e => {
+workspaceContent.addEventListener("drop", async e => {
     e.preventDefault()
-    if(insertLine) insertLine.remove()
+    if (insertLine) insertLine.remove()
     insertLine=null
     let newParent = null
     // drop dans un container existant
-    if(currentDropTarget){
+    if (currentDropTarget) {
         // cas spécial : drop directement dans le workspace
-        if(currentDropTarget === workspaceEl) {
-            if(!workspaceRoot){
+        if (currentDropTarget === workspaceEl) {
+            if (!workspaceRoot) {
                 workspaceRoot = {
                     id: generateId("Container"),
                     type: "container",
-                    props: {},
+                    props: {
+                        instanceCounter: 0
+                    },
                     css:{},
                     js:{},
                     events:{},
@@ -474,8 +507,8 @@ workspaceContent.addEventListener("drop",e => {
     }
     if (newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container) return
 
-    if(draggedType==="widget"){
-        const widget=createWidget()
+    if (draggedType==="widget") {
+        const widget = await createWidget()
         if (isNodeAllowed(newParent, widget)) {
             insertNode(newParent, widget, currentDropIndex??newParent.children.length)
         } else {
@@ -486,14 +519,13 @@ workspaceContent.addEventListener("drop",e => {
     }
     if(draggedType === "move-widget" && draggedNodeRef) {
         let check = newParent
-        while(check) {
-            if(check === draggedNodeRef) return
+        while (check) {
+            if (check === draggedNodeRef) return
             check=check.parent
         }
         if (isNodeAllowed(newParent, draggedNodeRef)) {
             removeNode(draggedNodeRef)
-            let idx = currentDropIndex??newParent.children.length
-            insertNode(newParent,draggedNodeRef,idx)
+            insertNode(newParent, draggedNodeRef, currentDropIndex??newParent.children.length)
         } else {
             alert(`${draggedNodeRef.widgetType} n'est pas autorisé dans ${newParent.parent.widgetType}`)
         }
