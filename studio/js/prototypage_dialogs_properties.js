@@ -660,6 +660,62 @@ async function saveFilePopup(type) {
             });
         }
 
+        if (type === "componentjs") {
+            const session = await getSession()
+            console.log(session)
+            const content = { 
+                id: generateId("Component"), 
+                type:'container', 
+                props:{
+                    name: nameoffile,
+                    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/>
+<rect x="6" y="6" width="5" height="5" rx="1"/>
+<rect x="13" y="6" width="5" height="5" rx="1"/>
+<rect x="9" y="13" width="6" height="5" rx="1"/>
+<circle cx="20" cy="20" r="3" fill="var(--color-component)" stroke="none"/>`,
+                    description: "",
+                    version: "1.0",
+                    type: "private",
+                    id_author: session.userid,
+                    id_entity: 1,
+                    active: 1
+                }, 
+                css:{}, 
+                events:{}, 
+                children:[]
+            }
+            await fetch("/pybee/studio/api/components.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "create",
+                    name: nameoffile,
+                    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/>
+<rect x="6" y="6" width="5" height="5" rx="1"/>
+<rect x="13" y="6" width="5" height="5" rx="1"/>
+<rect x="9" y="13" width="6" height="5" rx="1"/>
+<circle cx="20" cy="20" r="3" fill="var(--color-component)" stroke="none"/>`,
+                    description: "",
+                    content: JSON.stringify(content),
+                    version: "1.0",
+                    popups: JSON.stringify([]),
+                    type: "private",
+                    id_author: session.userid,
+                    id_entity: 1,
+                    active: 1
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                console.log(res)
+                if(res.status === "ok") {
+                    alert("Votre nouveau composant est bien créé")
+                } else {
+                    alert("Network error : New component not created")
+                }
+            });
+        }
+
         await fetch("/pybee/studio/api/jsfiles.py", {
             method: "POST",
             credentials: "include",
@@ -675,7 +731,6 @@ async function saveFilePopup(type) {
         .then(res => {
             console.log(res)
             if(res.status === "ok") {
-                alert("Votre nouveau fichier de flux interne est bien créé")
                 loadProjectFiles()
                 closeDialog()
             } else {
