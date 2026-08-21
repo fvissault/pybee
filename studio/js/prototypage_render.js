@@ -168,7 +168,7 @@ function renderProjectFiles() {
         label.textContent = title
         header.appendChild(arrow)
         header.appendChild(label)
-        if (commonSection === "common" || commonSection === "pages") {
+        if (commonSection === "common" || commonSection === "pages" || commonSection === "components") {
             const newCommonFile = document.createElement("button")
             newCommonFile.className = "btn btn-primary"
             newCommonFile.title = "Nouveau fichier"
@@ -181,6 +181,7 @@ function renderProjectFiles() {
                 e.stopPropagation()
                 if (commonSection === "common") commonFilePopup(projectid, "commonjs")
                 if (commonSection === "pages") commonFilePopup(projectid, 'pagejs')
+                if (commonSection === "components") commonFilePopup(projectid, 'componentjs')
             })
             header.appendChild(newCommonFile)
         }
@@ -248,7 +249,7 @@ function renderProjectFiles() {
                 const el = createItemContainer()
                 const label = createItemLabel("📄 " + f.name)
                 label.addEventListener("click", () => {
-                    loadJS(f.name)
+                    loadJS(f.id)
                 })
                 const del = createDelButton("Supprimer le fichier IntFlow")
                 del.addEventListener("click", (e) => {
@@ -271,7 +272,7 @@ function renderProjectFiles() {
                 const el = createItemContainer()
                 const label = createItemLabel("📄 " + f.name)
                 label.addEventListener("click", () => {
-                    loadJS(f.name)
+                    loadJS(f.id)
                 })
                 const del = createDelButton("Supprimer le fichier IntFlow")
                 del.addEventListener("click", (e) => {
@@ -307,10 +308,11 @@ function renderProjectFiles() {
     }
 
     // --- SECTION COMPONENTS ---
-    const componentsContainer = createSection("Composants", true)
+    const componentsContainer = createSection("Composants", true, "components")
 
     if (typeof components !== "undefined" && !components.error) {
         components.forEach(c => {
+            if (c.popups === "") c.popups = "[]"
             let popups = JSON.parse(c.popups)
             const el = createItemContainer()
             const label = createItemLabel(`🧩 ${c.name} (${popups.length})`)
@@ -338,27 +340,29 @@ function renderProjectFiles() {
             el.appendChild(newPopup)
             componentsContainer.appendChild(el)
             // 🔸 POPUPS (niveau inférieur)
-            let comppops = JSON.parse(c.popups)
-            if (comppops && comppops.length > 0) {
-                const popupContainer = document.createElement("div")
-                popupContainer.style.marginLeft = "16px"
-                comppops.forEach((p, index) => {
-                    const popupEl = createItemContainer()
-                    const popupLabel = createItemLabel(`⚙️ admin ${index + 1} ${p.props.name?p.props.name:""}`)
-                    popupLabel.style.opacity = "0.8" // léger différenciateur
-                    popupLabel.addEventListener("click", () => {
-                        loadPopup(c.id, index)
+            if (c.popups !== "") {
+                let comppops = JSON.parse(c.popups)
+                if (comppops && comppops.length > 0) {
+                    const popupContainer = document.createElement("div")
+                    popupContainer.style.marginLeft = "16px"
+                    comppops.forEach((p, index) => {
+                        const popupEl = createItemContainer()
+                        const popupLabel = createItemLabel(`⚙️ admin ${index + 1} ${p.props.name?p.props.name:""}`)
+                        popupLabel.style.opacity = "0.8" // léger différenciateur
+                        popupLabel.addEventListener("click", () => {
+                            loadPopup(c.id, index)
+                        })
+                        const del = createDelButton("Supprimer la popup")
+                        del.addEventListener("click", (e) => {
+                            e.stopPropagation()
+                            deletePopup(c.id, index)
+                        })
+                        popupEl.appendChild(popupLabel)
+                        popupEl.appendChild(del)
+                        popupContainer.appendChild(popupEl)
                     })
-                    const del = createDelButton("Supprimer la popup")
-                    del.addEventListener("click", (e) => {
-                        e.stopPropagation()
-                        deletePopup(c.id, index)
-                    })
-                    popupEl.appendChild(popupLabel)
-                    popupEl.appendChild(del)
-                    popupContainer.appendChild(popupEl)
-                })
-                componentsContainer.appendChild(popupContainer)
+                    componentsContainer.appendChild(popupContainer)
+                }
             }
         })
     }
@@ -377,25 +381,28 @@ async function renderComponentSection(entityid = 1) {
     })
     .then(r => r.json())
     .then(res => {
-        //console.log(res)
+        console.log(res)
         if(!res.status) {
+            componentcontainer.replaceChildren()
             res.forEach(c => {
                 const newcomponent = document.createElement("div")
                 newcomponent.className = "palette-item"
                 newcomponent.draggable = "true"
                 newcomponent.dataset.type = "widget"
-                newcomponent.dataset.widget = c.name
+                newcomponent.dataset.widget = "Component"
+                newcomponent.dataset.id = c.id
                 newcomponent.title = c.name
                 
                 newcomponent.innerHTML = `<svg class="icon" viewbox="0 0 24 24">${c.icon}</svg>`
 
                 componentcontainer.appendChild(newcomponent)
 
-                widgetDefinitions[c.name] = { name: c.name, container: false, type: "Component" }
+                workspaceRoot.props.instanceCounter++
 
                 newcomponent.addEventListener("dragstart",()=>{
                     draggedType = newcomponent.dataset.type
                     draggedWidgetType = newcomponent.dataset.widget
+                    draggedWidgetId = newcomponent.dataset.id
                     draggedNodeRef = null
                 })
             })
