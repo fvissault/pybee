@@ -300,28 +300,47 @@ async function saveFileBST() {
     // se trouve en base
     // ---------------------------------------------------------------
     if (perspective === "page") {
-        pagename = prompt("Page name ?")
-        if (!pagename) return
-        // ---------------------------------------------------------------
-        // ma page existe t-elle dans la base?
-        // si oui, newfile est à false
-        // si non, newfile est à true
-        // ---------------------------------------------------------------
-        await fetch("/pybee/studio/api/projectfiles.py", {
-            method: "POST",
-            credentials: "include",
-            body: new URLSearchParams({
-                action: "getbypagename",
-                pagename: pagename
+        if (currentPage != null) {
+            await fetch("/pybee/studio/api/projectfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbyid",
+                    id: currentPage
+                })
             })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (!data.error) {
-                currentfilefound = data.id
-                newfile = false
-            }
-        });
+            .then(r => r.json())
+            .then(data => {
+                if (!data.error) {
+                    currentfilefound = currentPage
+                    newfile = false
+                    pagename = data.pagename
+                }
+            });
+        } else {
+            pagename = prompt("Page name ?")
+            if (!pagename) return
+            // ---------------------------------------------------------------
+            // ma page existe t-elle dans la base?
+            // si oui, newfile est à false
+            // si non, newfile est à true
+            // ---------------------------------------------------------------
+            await fetch("/pybee/studio/api/projectfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbypagename",
+                    pagename: pagename
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (!data.error) {
+                    currentfilefound = data.id
+                    newfile = false
+                }
+            });
+        }
     } else if (perspective === "component") {
         // ---------------------------------------------------------------
         // mon composant existe t-il dans la base?
