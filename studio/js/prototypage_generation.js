@@ -1,3 +1,7 @@
+// ------------------------------------------------------------------------
+// Génération du code javascript
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
 function generate(node, indent = 0) {
     let jscode = ""
     const indentation = "   ".repeat(indent)
@@ -387,31 +391,48 @@ function generateSeparated(nodes, indent, separator) {
     return nodes.map(node => generate([node], indent)).join(separator);
 }
 
+// ------------------------------------------------------------------------
+// Génération du code css
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
 function generatecss(node) {
     let csscode = ""
     const indentation = "   "
     let prefix = ""
     if (node.type !== "zone") {
-        node.css.forEach(item => {
-            if (item.type === "id") prefix = "#"
-            if (item.type === "class") prefix = "."
-            csscode += `${prefix}${item.name} {\n`
-            item.values.forEach(value => {
-                csscode += indentation + `${value};\n`
+        if (node.css && node.css.length > 0) {
+            node.css.forEach(item => {
+                if (item.values.length > 0) {
+                    if (item.type === "id") prefix = "#"
+                    if (item.type === "class") prefix = "."
+                    csscode += `${prefix}${item.name} {\n`
+                    item.values.forEach(value => {
+                        csscode += indentation + `${value};\n`
+                    })
+                    csscode += `}\n\n`
+                }
+                if (node.children && node.children.length > 0) {
+                    node.children.forEach(child => {
+                        csscode += generatecss(child)
+                    })
+                }
             })
-            csscode += `}\n\n`
-            node.children.forEach(child => {
-                csscode += generatecss(child)
-            })
-        })
+        }
     } else {
-        node.children.forEach(item => {
-            csscode += generatecss(item)
-        })
+        if (node.children && node.children.length > 0) {
+            node.children.forEach(item => {
+                csscode += generatecss(item)
+            })
+        }
     }
+    //console.log(csscode)
     return csscode
 }
 
+// ------------------------------------------------------------------------
+// Génération du code html
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
 function generatehtml(node, indent = 0) {
     let htmlcode = ""
     const indentation = "   "
@@ -466,6 +487,11 @@ function generatehtml(node, indent = 0) {
     return htmlcode
 }
 
+// ------------------------------------------------------------------------
+// Génération du code html du body
+// fonction récursive
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
 function generatebody(node, indent = 0) {
     let htmlcode = ""
     const indentation = "   ".repeat(indent)
@@ -485,6 +511,7 @@ function generatebody(node, indent = 0) {
         }
         case "Text": {
             const nodetext = node.props.text||""
+            console.log("TEXT =", nodetext)
             htmlcode += indentation + `${nodetext}\n`
             break
         }
@@ -662,10 +689,115 @@ function generatebody(node, indent = 0) {
     return htmlcode
 }
 
+// ------------------------------------------------------------------------
+// Génération du code des évènements
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
 function buildNodeEvents(node) {
     let htmlcode = ""
     for (const [eventName, event] of Object.entries(node.events)) {
         htmlcode += ` ${eventName}="${event.type}(${event.params})"`
     }
     return htmlcode
+}
+
+// ------------------------------------------------------------------------
+// Génération du code complet d'une page (html, css et js)
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
+function generatepage() {
+    fetch("/pybee/studio/api/projectfiles.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getbyid",
+            id : currentPage
+        })
+    })
+    .then(r => r.json())
+    .then(data1 => {
+        //console.log(data1)
+        fetch("/pybee/studio/api/jsfiles.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyname",
+                name : data1.pagename
+            })
+        })
+        .then(r => r.json())
+        .then(data2 => {
+            //console.log(data2)
+            //console.log("data2.content :", data2.content)
+            const pagejs = generate(JSON.parse(data2.content))
+            fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    file_content: pagejs,
+                    file_name: data1.pagename
+                })
+            })
+            .then(r => r.json())
+            .then(data3 => {
+                //console.log(data3)
+                if (data3.status === "ok") {
+                    console.log("Génération du javascript de la page : ok")
+                }
+            });
+
+            const pagecss = generatecss(workspaceRoot)
+            fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    file_content: pagecss,
+                    file_name: data1.pagename
+                })
+            })
+            .then(r => r.json())
+            .then(data4 => {
+                //console.log(data4)
+                if (data4.status === "ok") {
+                    console.log("Génération du css de la page : ok")
+                }
+            });
+
+            const pagecode = generatehtml(workspaceRoot)
+            console.log(pagecode)
+            console.log("AVANT ENVOI :", pagecode.includes("deuxième"))
+            console.log(JSON.stringify({
+                file_content: pagecode,
+                file_name: data1.pagename
+            }))
+            fetch("/pybee/studio/api/file_access_api.py?action=save_html_file&entity=" + project_name, {
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    file_content: pagecode,
+                    file_name: data1.pagename
+                })
+            })
+            .then(r => r.json())
+            .then(data5 => {
+                //console.log(data(4))
+                if (data5.status === "ok") {
+                    console.log("Génération du html de la page : ok")
+                }
+            });
+        });
+    });
+
+    //const pagecss = generatecss(workspaceRoot)
+    //const pagecode = generatehtml(workspaceRoot)
+
+
+    /*if (!pagepreview) {
+        pagepreview = window.open("", "_blank", "popup=yes,width=800,height=600")
+    }
+    pagepreview.document.title = `Prévisualisation de ${pagename}.js`;
+    pagepreview.focus()*/
 }
