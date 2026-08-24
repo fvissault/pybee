@@ -17,15 +17,15 @@ entity = query.get("entity", [""])[0]
 PROJECTS_DIR = os.path.join(ROOT, "projects/" + entity)
 
 length = int(os.environ.get("CONTENT_LENGTH", 0))
-body = sys.stdin.read(length) if length > 0 else ""
+body = sys.stdin.buffer.read(length) if length > 0 else b""
 data = json.loads(body) if body else {}
 
-def save_file(dir):
+def save_file(dir, ext):
     file = data["file_name"]
     file_content = data["file_content"]
     directory = os.path.join(PROJECTS_DIR, dir)
     os.makedirs(directory, exist_ok=True)
-    filepath = os.path.join(directory, file + ".js")
+    filepath = os.path.join(directory, file + "." + ext)
     with open(filepath, "w", encoding="utf8") as f:
         f.write(file_content)
     return {"status": "ok"}
@@ -50,11 +50,11 @@ def delete_project():
 
 
 if action == "save_js_file":
-    result = save_file("js")
+    result = save_file("js", "js")
 elif action == "save_css_file":
-    result = save_file("css")
-elif action == "save_css_file":
-    result = save_file("css")
+    result = save_file("css", "css")
+elif action == "save_html_file":
+    result = save_file("", "html")
 elif action == "create_project":
     result = create_project()
 elif action == "delete_project":
