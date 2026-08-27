@@ -8,6 +8,10 @@ from urllib.parse import parse_qs
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 
+def debug(*args):
+    with open(os.path.join(ROOT, "logs", "debug.log"), "a", encoding="utf8") as f:
+        print(*args, file=f)
+
 print("Content-Type: application/json\n")
 
 query = parse_qs(os.environ.get("QUERY_STRING", ""))
@@ -19,6 +23,10 @@ PROJECTS_DIR = os.path.join(ROOT, "projects/" + entity)
 length = int(os.environ.get("CONTENT_LENGTH", 0))
 body = sys.stdin.buffer.read(length) if length > 0 else b""
 data = json.loads(body) if body else {}
+
+debug("action =", action)
+debug("entity =", entity)
+debug("data =", repr(data))
 
 def save_file(dir, ext):
     file = data["file_name"]
