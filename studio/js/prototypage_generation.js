@@ -430,6 +430,31 @@ function generatecss(node) {
 }
 
 // ------------------------------------------------------------------------
+// Génération du code css global (utilisé pour le css global d'un composant)
+// renvoie une chaine de caractère
+// ------------------------------------------------------------------------
+function generateglobalcss(node) {
+    let csscode = ""
+    const indentation = "   "
+    let prefix = ""
+    if (node.css && node.css.length > 0) {
+        node.css.forEach(item => {
+            if (item.values.length > 0) {
+                if (item.type === "tag") prefix = ""
+                if (item.type === "class") prefix = "."
+                csscode += `${prefix}${item.name} {\n`
+                item.values.forEach(value => {
+                    csscode += indentation + `${value};\n`
+                })
+                csscode += `}\n\n`
+            }
+        })
+    }
+    //console.log(csscode)
+    return csscode
+}
+
+// ------------------------------------------------------------------------
 // Génération du code html
 // renvoie une chaine de caractère
 // ------------------------------------------------------------------------
@@ -511,7 +536,6 @@ function generatebody(node, indent = 0) {
         }
         case "Text": {
             const nodetext = node.props.text||""
-            console.log("TEXT =", nodetext)
             htmlcode += indentation + `${nodetext}\n`
             break
         }
@@ -675,16 +699,19 @@ function generatebody(node, indent = 0) {
     }
     if (node.children && node.children.length === 1 && node.children[0].type === "zone") {
         node.children[0].children.forEach(child => {
+            if (node.widgetType === "Component") indent--
             htmlcode += generatebody(child, indent + 1)
         })
     }
-    if (node.container) {
-        // c'est un container
-        htmlcode += indentation + `</${tagname}>\n`
-    } else {
-        // ce n'est pas un container
-        if (node.widgetType === "Text") htmlcode += ""
-        else htmlcode += "/>\n"
+    if (node.widgetType != "Component") {
+        if (node.container) {
+            // c'est un container
+            htmlcode += indentation + `</${tagname}>\n`
+        } else {
+            // ce n'est pas un container
+            if (node.widgetType === "Text") htmlcode += ""
+            else htmlcode += "/>\n"
+        }
     }
     return htmlcode
 }
@@ -728,50 +755,55 @@ function generatepage() {
         .then(r => r.json())
         .then(data2 => {
             //console.log(data2)
-            //console.log("data2.content :", data2.content)
             const pagejs = generate(JSON.parse(data2.content))
-            fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    file_content: pagejs,
-                    file_name: data1.pagename
+            if (pagejs !== "") {
+                fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        file_content: pagejs,
+                        file_name: data1.pagename
+                    })
                 })
-            })
-            .then(r => r.json())
-            .then(data3 => {
-                //console.log(data3)
-                if (data3.status === "ok") {
-                    console.log("Génération du javascript de la page : ok")
-                }
-            });
+                .then(r => r.json())
+                .then(data3 => {
+                    //console.log(data3)
+                    if (data3.status === "ok") {
+                        console.log("Génération du javascript de la page : ok")
+                    }
+                });
 
+                const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === data1.pagename);
+                if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:data1.pagename, defer:true})
+            } else {
+                console.log(`Pas de code javascript associé à la page ${data1.pagename}`)
+            }
             const pagecss = generatecss(workspaceRoot)
-            fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    file_content: pagecss,
-                    file_name: data1.pagename
+            if (pagecss !== "") {
+                fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        file_content: pagecss,
+                        file_name: data1.pagename
+                    })
                 })
-            })
-            .then(r => r.json())
-            .then(data4 => {
-                //console.log(data4)
-                if (data4.status === "ok") {
-                    console.log("Génération du css de la page : ok")
-                }
-            });
+                .then(r => r.json())
+                .then(data4 => {
+                    //console.log(data4)
+                    if (data4.status === "ok") {
+                        console.log("Génération du css de la page : ok")
+                    }
+                });
 
+                const cssexists = workspaceRoot.props.cssfiles.some(f => f.href === data1.pagename);
+                if (!cssexists) workspaceRoot.props.cssfiles.push({include:true, href:data1.pagename, type:"stylesheet"})
+            } else {
+                console.log(`Pas de stylisation de la page ${data1.pagename}`)
+            }
             const pagecode = generatehtml(workspaceRoot)
-            console.log(pagecode)
-            console.log("AVANT ENVOI :", pagecode.includes("deuxième"))
-            console.log(JSON.stringify({
-                file_content: pagecode,
-                file_name: data1.pagename
-            }))
             fetch("/pybee/studio/api/file_access_api.py?action=save_html_file&entity=" + project_name, {
                 method: "POST",
                 credentials: "include",
@@ -783,21 +815,11 @@ function generatepage() {
             })
             .then(r => r.json())
             .then(data5 => {
-                //console.log(data(4))
+                //console.log(data(5))
                 if (data5.status === "ok") {
                     console.log("Génération du html de la page : ok")
                 }
             });
         });
     });
-
-    //const pagecss = generatecss(workspaceRoot)
-    //const pagecode = generatehtml(workspaceRoot)
-
-
-    /*if (!pagepreview) {
-        pagepreview = window.open("", "_blank", "popup=yes,width=800,height=600")
-    }
-    pagepreview.document.title = `Prévisualisation de ${pagename}.js`;
-    pagepreview.focus()*/
 }
