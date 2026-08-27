@@ -37,7 +37,7 @@ function renderZone(zone){
 function renderWidget(widget){
     const el=document.createElement("div")
     el.className="widget"
-    if (widgetDefinitions[widget.widgetType].type) {
+    if (widget.widgetType === "Component") {
         el.classList.add("Component")    
     } else {
         el.classList.add(widget.widgetType)
@@ -70,31 +70,34 @@ function renderWidget(widget){
     if (widget.container && widget.ui) { 
         el.appendChild(toggle)
     }
-    const htmlBtn = createNewButton("⚙", "Paramètres")
-    htmlBtn.style.fontSize = "12px"
-    htmlBtn.style.marginRight = "6px"
-    htmlBtn.onclick=(e) => {
-        e.stopPropagation()
-        openDialog(widget, "html")
-    }
+    let htmlBtn = null
     let cssBtn = null
     let eventsBtn = null
-    if (widget.widgetType != "Text" && widget.widgetType != "Form") {
-        cssBtn = createNewButton("::", "CSS")
-        cssBtn.style.marginRight="6px"
-        cssBtn.onclick=(e) => {
+    if (widget.widgetType !== "Component") {
+        htmlBtn = createNewButton("⚙", "Paramètres")
+        htmlBtn.style.fontSize = "12px"
+        htmlBtn.style.marginRight = "6px"
+        htmlBtn.onclick=(e) => {
             e.stopPropagation()
-            openDialog(widget, "css")
-        }   
-        if (widget.widgetType != "Anchor") {
-            eventsBtn = createNewButton("⚡", "Evènements")
-            eventsBtn.style.fontSize = "13px"
-            eventsBtn.style.marginRight = "6px"
-            eventsBtn.style.paddingLeft = "10px"
-            eventsBtn.style.paddingRight = "9px"
-            eventsBtn.onclick=(e) => {
+            openDialog(widget, "html")
+        }
+        if (widget.widgetType != "Text" && widget.widgetType != "Form") {
+            cssBtn = createNewButton("::", "CSS")
+            cssBtn.style.marginRight="6px"
+            cssBtn.onclick=(e) => {
                 e.stopPropagation()
-                openDialog(widget, "events")
+                openDialog(widget, "css")
+            }   
+            if (widget.widgetType != "Anchor") {
+                eventsBtn = createNewButton("⚡", "Evènements")
+                eventsBtn.style.fontSize = "13px"
+                eventsBtn.style.marginRight = "6px"
+                eventsBtn.style.paddingLeft = "10px"
+                eventsBtn.style.paddingRight = "9px"
+                eventsBtn.onclick=(e) => {
+                    e.stopPropagation()
+                    openDialog(widget, "events")
+                }
             }
         }
     }
@@ -104,10 +107,12 @@ function renderWidget(widget){
     if (widget.widgetType === "Text" && widget.props.text) labeltext += " : " + widget.props.text
     if (widget.widgetType === "TextField" && widget.props.type) labeltext += " : type=" + widget.props.type
     label.textContent = labeltext 
-    el.appendChild(htmlBtn)
-    if (widget.widgetType != "Text" && widget.widgetType != "Form") {
-        el.appendChild(cssBtn)
-        if (widget.widgetType != "Anchor") el.appendChild(eventsBtn)
+    if (widget.widgetType !== "Component") {
+        el.appendChild(htmlBtn)
+        if (widget.widgetType != "Text" && widget.widgetType != "Form") {
+            el.appendChild(cssBtn)
+            if (widget.widgetType != "Anchor") el.appendChild(eventsBtn)
+        }
     }
     el.appendChild(label)
     el.dataset.nodeId = widget.id
@@ -397,7 +402,6 @@ async function renderComponentSection(entityid = 1) {
 
                 componentcontainer.appendChild(newcomponent)
 
-                workspaceRoot.props.instanceCounter++
 
                 newcomponent.addEventListener("dragstart",()=>{
                     draggedType = newcomponent.dataset.type
