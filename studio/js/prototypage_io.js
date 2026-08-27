@@ -338,6 +338,8 @@ async function saveFileBST() {
                 if (!data.error) {
                     currentfilefound = data.id
                     newfile = false
+                } else {
+                    newfile = true
                 }
             });
         }
@@ -387,6 +389,7 @@ async function saveFileBST() {
             .then(r => r.json())
             .then(res => {
                 if(res.status === "ok") {
+                    currentPage = res.id
                     fetch("/pybee/studio/api/jsfiles.py", {
                         method: "POST",
                         credentials: "include",
@@ -444,7 +447,7 @@ async function saveFileBST() {
                     if(res.status === "ok") {
                         tosave = false
                         document.getElementById("savebtn").className = ""
-                        document.getElementById("workspace_content").innerText = "Page sauvegardée : " + workspaceRoot.props.name
+                        document.getElementById("workspace_content").innerText = "Page sauvegardée : " + pagename
                         loadProjectFiles()
                     } else {
                         alert("Network error : file not saved")
