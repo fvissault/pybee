@@ -3,7 +3,7 @@ function resetPopup(componentid, componentname) {
         id:generateId("Popup"),
         type:"container",
         props:{},
-        css:{},
+        css:[],
         js:{},
         events:{},
         children:[]
@@ -42,15 +42,20 @@ function preview() {
         })
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             if (!data.error) {
                 generatepage()
-                if (!pagepreview) {
-                    pagepreview = window.open(`projects/${project_name}/${data.pagename}.html`, "_blank", "popup=yes,width=800,height=600")
+                if (pagepreview) pagepreview.close()
+                pagepreview = window.open(`projects/${project_name}/${data.pagename}.html`, "_blank", "popup=yes,width=1200,height=800")
+                pagepreview.onload = () => {
+                    let title = pagepreview.document.querySelector("title")
+                    if (!title) {
+                        title = pagepreview.document.createElement("title")
+                        title.textContent = `Prévisualisation de ${data.pagename}.html`
+                        pagepreview.document.head.appendChild(title)
+                    }
+                    
                 }
-                pagepreview.document.title = `Prévisualisation de ${data.pagename}.js`;
-                //pagepreview.document.body.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace;">${generatedString}</pre>`;
-                pagepreview.focus()
             } else {
                 alert("Problème de réseau : impossible d'afficher la page")
             }
