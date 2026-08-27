@@ -34,9 +34,12 @@ let workspaceRoot = {
     id:generateId("Container"),
     type:"container",
     props:{
-        instanceCounter: 0
+        instanceCounter: 0,
+        cssfiles: [],
+        jsfiles: [],
+        metas: []
     },
-    css:{},
+    css:[],
     js:[],
     events:{},
     children:[]
@@ -220,6 +223,7 @@ async function initPrototypage() {
 }
 
 window.addEventListener("beforeunload", function (e) {
+    if (pagepreview) pagepreview.close()
     if (!tosave) return
     e.preventDefault()
     e.returnValue = ""
@@ -271,13 +275,42 @@ async function createWidget() {
         const widget = createNode("widget", { container: def.container, name: data.name })
         if (def.container) {
             const instanceId = workspaceRoot.props.instanceCounter
-            const transformed = data.content.replace(/"id"\s*:\s*"([^"]+)"/g,`"id":"$1_${instanceId}"`)
             const zone = createNode("zone")
-            const content = JSON.parse(transformed)
+            const content = JSON.parse(data.content)
+            updateInstanceIds(content, instanceId)
             rebuildParents(content)
             zone.children = content.children
             zone.parent = widget
             widget.children.push(zone)
+
+            // créer le fichier global css du composant
+            const globalcss = generateglobalcss(content)
+            //console.log(globalcss)
+            if (globalcss != "") {
+                fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        file_content: globalcss,
+                        file_name: content.props.name
+                    })
+                })
+                .then(r => r.json())
+                .then(response => {
+                    //console.log(response)
+                    if (response.status === "ok") {
+                        console.log(`Génération du css global du composant ${content.props.name} : ok`)
+                        if (!workspaceRoot.props.cssfiles) workspaceRoot.props.cssfiles = []
+                        const cssexists = workspaceRoot.props.cssfiles.some(f => f.href === content.props.name);
+                        if (!cssexists) workspaceRoot.props.cssfiles.push({include:true, href:content.props.name, type:"stylesheet"})
+                    } else {
+                        console.log(`Génération du css global du composant ${content.props.name} : nok`)
+                    }
+                });
+            }
+            // création du fichier js spécifique à l'instance du composant
+            
         }
         return widget
     }
@@ -290,6 +323,28 @@ async function createWidget() {
     return widget
 }
 
+function updateInstanceIds(node, instanceId) {
+    if (!node || typeof node !== "object")
+        return
+
+    // ID HTML
+    if (node.props?.id)
+        node.props.id = `${node.props.id}_${instanceId}`
+
+    // Sélecteur CSS de type ID
+    if (Array.isArray(node.css)) {
+        node.css.forEach(rule => {
+            if (rule.type === "id" && rule.name)
+                rule.name = `${rule.name}_${instanceId}`
+        })
+    }
+
+    if (Array.isArray(node.children)) {
+        node.children.forEach(child => {
+            updateInstanceIds(child, instanceId)
+        })
+    }
+}
 
 function insertNode(parent, node, index) {
     node.parent=parent
@@ -490,9 +545,12 @@ workspaceContent.addEventListener("drop", async e => {
                     id: generateId("Container"),
                     type: "container",
                     props: {
-                        instanceCounter: 0
+                        instanceCounter: 0,
+                        jsfiles: [],
+                        cssfiles: [],
+                        metas: []
                     },
-                    css:{},
+                    css:[],
                     js:{},
                     events:{},
                     children: []
@@ -505,6 +563,9 @@ workspaceContent.addEventListener("drop", async e => {
                 return
         }
     }
+
+    workspaceRoot.props.instanceCounter++
+
     if (newParent.parent && newParent.parent.type === "widget" && !newParent.parent.container) return
 
     if (draggedType==="widget") {
@@ -514,7 +575,6 @@ workspaceContent.addEventListener("drop", async e => {
         } else {
             alert(`${widget.widgetType} n'est pas autorisé dans ${newParent.parent.widgetType}`)
         }
-        
         render()
     }
     if(draggedType === "move-widget" && draggedNodeRef) {
@@ -538,6 +598,11 @@ workspaceContent.addEventListener("drop", async e => {
     document.getElementById("savebtn").className = "tosave"
 })
 
+function hasComponent(node, name) {
+    if (!node?.children) return false;
+    return node.children.some(child => (child.type === "widget" && child.widgetType === "Component" && child.name === name) || hasComponent(child, name));
+}
+
 trashEl.addEventListener("dragover",e => {
     e.preventDefault()
 })
@@ -546,6 +611,15 @@ trashEl.addEventListener("drop",e => {
     e.preventDefault()
     if(draggedType === "move-widget" && draggedNodeRef) {
         removeNode(draggedNodeRef)
+        if (draggedWidgetType === "Component") {
+            // c'est un composant que je suis en train de mettre à la poubelle
+            if (!hasComponent(workspaceRoot, draggedNodeRef.name)) {
+                // le composant n'existe plus dans la page
+                console.log("le composant n'existe plus dans la page")
+                const index = workspaceRoot.props.cssfiles.findIndex(f => f.href === draggedNodeRef.name);
+                if (index !== -1) workspaceRoot.props.cssfiles.splice(index, 1);
+            }
+        }
         render()
     }
     tosave = true
