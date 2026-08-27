@@ -606,10 +606,6 @@ function saveFormProps(node) {
     closeDialog()
 }
 
-function getWorkspace(){
-  return workspaceRoot
-}
-
 async function commonFilePopup(projectid, type) {
     const session = await getSession()
     document.getElementById("dialogOverlay").classList.remove("hidden")
@@ -629,8 +625,8 @@ async function commonFilePopup(projectid, type) {
         </div>` + makeDialogButtons()
     content.querySelector("#saveprops").onclick = () => {
         saveFilePopup(type)
-        tosave = true
-        document.getElementById("savebtn").className = "tosave"
+        //tosave = true
+        //document.getElementById("savebtn").className = "tosave"
     }
 }
 
@@ -638,31 +634,86 @@ async function saveFilePopup(type) {
     const nameoffile = document.getElementById("filename").value.trim()
     if (nameoffile !== "") {
         if (type === "pagejs") {
-            const content = { id: generateId("Container"), type:'container', props:{}, css:{}, events:{}, children:[]}
+            let filefound = false
+            const content = { 
+                id: generateId("Container"), 
+                type:'container', 
+                props: {
+                    instanceCounter:0, 
+                    name: nameoffile, 
+                    title: "",
+                    lang: "",
+                    cssfiles: [], 
+                    jsfiles: [], 
+                    metas: []
+                }, 
+                css:[], 
+                events:{}, 
+                children:[]
+            }
+
             await fetch("/pybee/studio/api/projectfiles.py", {
                 method: "POST",
                 credentials: "include",
                 body: new URLSearchParams({
-                    action: "create",
-                    id_project: projectid,
-                    filecontent: JSON.stringify(serializeNode(content)),
+                    action: "getbypagename",
                     pagename: nameoffile
                 })
             })
             .then(r => r.json())
-            .then(res => {
-                console.log(res)
-                if(res.status === "ok") {
-                    alert("Votre nouvelle page est bien créée")
+            .then(data => {
+                //console.log(data)
+                if (data.error) {
+                    fetch("/pybee/studio/api/projectfiles.py", {
+                        method: "POST",
+                        credentials: "include",
+                        body: new URLSearchParams({
+                            action: "create",
+                            id_project: projectid,
+                            filecontent: JSON.stringify(serializeNode(content)),
+                            pagename: nameoffile
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        //console.log(res)
+                        if(res.status === "ok") {
+                            alert("Votre nouvelle page est bien créée")
+                        } else {
+                            alert("Network error : New file not created")
+                        }
+                    });
                 } else {
-                    alert("Network error : New file not created")
+                    alert("Cette page existe déjà. Choisissez un autre nom")
+                    filefound = true
+                    document.getElementById("filename").focus()
                 }
             });
+            if (filefound) return
         }
 
         if (type === "componentjs") {
             const session = await getSession()
-            console.log(session)
+            //console.log(session)
+            let entity_id = 0
+            await fetch("/pybee/studio/api/users.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getuserinfo",
+                    userid: session.userid
+                })
+            })
+            .then(r => r.json())
+            .then(userinfo => {
+                //console.log(userinfo)
+                if(userinfo.error) {
+                    console.log(userinfo.error)
+                } else {
+                    entity_id = userinfo.id_entity
+                }
+            });
+
             const content = { 
                 id: generateId("Component"), 
                 type:'container', 
@@ -677,10 +728,10 @@ async function saveFilePopup(type) {
                     version: "1.0",
                     type: "private",
                     id_author: session.userid,
-                    id_entity: 1,
+                    id_entity: entity_id,
                     active: 1
                 }, 
-                css:{}, 
+                css:[], 
                 events:{}, 
                 children:[]
             }
@@ -690,24 +741,20 @@ async function saveFilePopup(type) {
                 body: new URLSearchParams({
                     action: "create",
                     name: nameoffile,
-                    icon: `<rect x="3" y="3" width="18" height="18" rx="2"/>
-<rect x="6" y="6" width="5" height="5" rx="1"/>
-<rect x="13" y="6" width="5" height="5" rx="1"/>
-<rect x="9" y="13" width="6" height="5" rx="1"/>
-<circle cx="20" cy="20" r="3" fill="var(--color-component)" stroke="none"/>`,
-                    description: "",
+                    icon: content.props.icon,
+                    description: content.props.descrption,
                     content: JSON.stringify(content),
-                    version: "1.0",
+                    version: content.props.version,
                     popups: JSON.stringify([]),
-                    type: "private",
+                    type: content.props.type,
                     id_author: session.userid,
-                    id_entity: 1,
-                    active: 1
+                    id_entity: content.props.id_entity,
+                    active: content.props.active
                 })
             })
             .then(r => r.json())
             .then(res => {
-                console.log(res)
+                //console.log(res)
                 if(res.status === "ok") {
                     alert("Votre nouveau composant est bien créé")
                 } else {
@@ -729,7 +776,7 @@ async function saveFilePopup(type) {
         })
         .then(r => r.json())
         .then(res => {
-            console.log(res)
+            //console.log(res)
             if(res.status === "ok") {
                 loadProjectFiles()
                 closeDialog()
