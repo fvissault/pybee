@@ -310,7 +310,85 @@ async function createWidget() {
                 });
             }
             // création du fichier js spécifique à l'instance du composant
-            
+            // je créé le fichier d'encapsulation du code du composant : component[component_name].js
+            // 1. lecture en base du code du composant
+            await fetch("/pybee/studio/api/jsfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbyname",
+                    name: content.props.name
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                //console.log(res)
+                if(!res.error) {
+                    // 2. générer le code js
+                    const componentjs = generate(JSON.parse(res.content), 1)
+                    // 3. encapsuler ce qui a été généré : le nom de l'encapsulation pourrait être component[component_name]
+                    const encapsulation = `const component${content.props.name} = (() => {\n${componentjs}\n   return { createComponent };\n})();` 
+                    // 4. sauvegarder le fichier
+                    fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            file_content: encapsulation,
+                            file_name: `component${content.props.name}`
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(response => {
+                        //console.log(response)
+                        if (response.status === "ok") {
+                            console.log(`Encapsulation du composant ${content.props.name} : ok`)
+                            // j'insère dans jsfiles 
+                            if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
+                            const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `component${content.props.name}`);
+                            if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`component${content.props.name}`, defer:true})
+                            // insertion du createComponent(instance_number) dans [page_name]_components_init.js
+                            fetch("/pybee/studio/api/file_access_api.py?action=read_js_file&entity=" + project_name, {
+                                method: "POST",
+                                credentials: "include",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({
+                                    file_name: `${workspaceRoot.props.name}_components_init`
+                                })
+                            })
+                            .then(r => r.json())
+                            .then(initresponse => {
+                                if (initresponse.status === "ok") {
+                                    const initcontent =  `${initresponse.file_content}component${content.props.name}.createComponent(${instanceId});\n`
+                                    fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
+                                        method: "POST",
+                                        credentials: "include",
+                                        headers: {"Content-Type": "application/json"},
+                                        body: JSON.stringify({
+                                            file_content: initcontent,
+                                            file_name: `${workspaceRoot.props.name}_components_init`
+                                        })
+                                    })
+                                    .then(r => r.json())
+                                    .then(response => {
+                                        //console.log(response)
+                                        if (response.status === "ok") {
+                                            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : ok`)
+                                            if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
+                                            const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `${workspaceRoot.props.name}_components_init`);
+                                            if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`${workspaceRoot.props.name}_components_init`, defer:true})
+                                        } else {
+                                            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : nok`)
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            console.log(`Encapsulation du composant ${content.props.name} : nok`)
+                        }
+                    });
+                }
+            })
         }
         return widget
     }
