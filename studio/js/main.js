@@ -265,5 +265,8 @@ function disconnect() {
         credentials: "include",
         body: JSON.stringify({ action: "destroy" })
     })
-    .then(() => location.href = "signin.html");
+    .then(() => {
+        if (prototypageWindow) prototypageWindow.close()
+        location.href = "signin.html"
+    });
 }
