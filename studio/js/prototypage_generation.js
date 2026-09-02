@@ -134,7 +134,7 @@ function generate(node, indent = 0) {
             jscode += indentation
             if (item.slots.left) jscode += generate(item.slots.left)
             jscode += ` = `
-            if (item.slots.right) jscode += generate(item.slots.right)
+            if (item.slots.right) jscode += generate(item.slots.right, indent)
             jscode += `;\n`
         }
         if (item.type === "await") {
@@ -159,8 +159,10 @@ function generate(node, indent = 0) {
             if (item.props.useIndex) jscode += `, ${item.props.indexName}`
             if (item.props.useArray) jscode += `, ${item.props.arrayName}`
             jscode += `) => {\n`
-            if (item.slots.body) jscode += generate(item.slots.body, indent + 1)
-            jscode += `}`
+            if (item.slots.body) {
+                jscode += generate(item.slots.body, indent + 1)
+            }
+            jscode += indentation + "}"
         }
         if (item.type === "fetch") {
             jscode += indentation + `fetch ("${item.props.url}", {\n`
@@ -348,8 +350,8 @@ function generate(node, indent = 0) {
             if (item.props.selectorType === "tag") seltype = "getElementsByTagName"
             if (item.props.selectorType === "query") seltype = "querySelector"
             if (item.props.selectorType === "queryall") seltype = "querySelectorAll"
-            jscode += `${seltype}("${item.props.target}")`
-            if (item.slots.body) jscode += "." + generate(item.slots.body)
+            jscode += `${seltype}(${item.props.target})`
+            if (item.slots.body.length > 0) jscode += "." + generate(item.slots.body)
         }
         if (item.type === "DOMproperty" || item.type === "WINproperty") {
             jscode += indentation + `${item.props.property}`
