@@ -690,6 +690,47 @@ async function saveFilePopup(type) {
                 }
             });
             if (filefound) return
+            await fetch("/pybee/studio/api/jsfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "create",
+                    id_project: projectid,
+                    content_type: type,
+                    name: nameoffile,
+                    content: "[]"
+                })
+            })
+            .then(r => r.json())
+            .then(res => {
+                //console.log(res)
+                if(res.status === "ok") {
+                    loadProjectFiles()
+                    closeDialog()
+                } else {
+                    alert("Network error : New file not created")
+                }
+            });
+
+            // créer le fichier d'initialisation des composants de la page
+            await fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
+                method: "POST",
+                credentials: "include",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    file_content: "// DON'T MODIFY THIS FILE\n",
+                    file_name: `${nameoffile}_components_init`
+                })
+            })
+            .then(r => r.json())
+            .then(response => {
+                //console.log(response)
+                if (response.status === "ok") {
+                    console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : ok`)
+                } else {
+                    console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : nok`)
+                }
+            });
         }
 
         if (type === "componentjs") {
@@ -761,29 +802,48 @@ async function saveFilePopup(type) {
                     alert("Network error : New component not created")
                 }
             });
-        }
 
-        await fetch("/pybee/studio/api/jsfiles.py", {
-            method: "POST",
-            credentials: "include",
-            body: new URLSearchParams({
-                action: "create",
-                id_project: projectid,
-                content_type: type,
-                name: nameoffile,
-                content: "[]"
+            // Création du cadre de développement du composant à partir d'un template caché dans la base
+            await fetch("/pybee/studio/api/jsfiles.py", {
+                method: "POST",
+                credentials: "include",
+                body: new URLSearchParams({
+                    action: "getbyname",
+                    name: "template_component"
+                })
             })
-        })
-        .then(r => r.json())
-        .then(res => {
-            //console.log(res)
-            if(res.status === "ok") {
-                loadProjectFiles()
-                closeDialog()
-            } else {
-                alert("Network error : New file not created")
-            }
-        });
+            .then(r => r.json())
+            .then(res => {
+                //console.log(res)
+                if(!res.error) {
+                    fetch("/pybee/studio/api/jsfiles.py", {
+                        method: "POST",
+                        credentials: "include",
+                        body: new URLSearchParams({
+                            action: "create",
+                            id_project: projectid,
+                            content_type: type,
+                            name: nameoffile,
+                            content: res.content
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        //console.log(res)
+                        if(res.status === "ok") {
+                            loadProjectFiles()
+                            closeDialog()
+                        } else {
+                            alert("Network error : New file not created")
+                        }
+                    });
+                    loadProjectFiles()
+                    closeDialog()
+                } else {
+                    alert("Network error : component template missing")
+                }
+            });
+        }
     } else {
         document.getElementById("filename").focus()
     }
