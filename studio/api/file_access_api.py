@@ -28,6 +28,16 @@ debug("action =", action)
 debug("entity =", entity)
 debug("data =", repr(data))
 
+def read_file(dir, ext):
+    file = data["file_name"]
+    directory = os.path.join(PROJECTS_DIR, dir)
+    filepath = os.path.join(directory, file + "." + ext)
+    if not os.path.exists(filepath):
+        return {"status": "error", "error": "file_not_found"}
+    with open(filepath, "r", encoding="utf8") as f:
+        file_content = f.read()
+    return {"status": "ok", "file_content": file_content}
+
 def save_file(dir, ext):
     file = data["file_name"]
     file_content = data["file_content"]
@@ -63,6 +73,12 @@ elif action == "save_css_file":
     result = save_file("css", "css")
 elif action == "save_html_file":
     result = save_file("", "html")
+elif action == "read_js_file":
+    result = read_file("js", "js")
+elif action == "read_css_file":
+    result = read_file("css", "css")
+elif action == "read_html_file":
+    result = read_file("", "html")
 elif action == "create_project":
     result = create_project()
 elif action == "delete_project":
