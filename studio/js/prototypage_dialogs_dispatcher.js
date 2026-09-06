@@ -4,9 +4,9 @@ async function openDialog(node, cat){
     const session = await getSession()
     currentConfigNode = node
     buildPopupContent(node, cat)
-    if(node.type === "layout" && cat == "lcss") {
-        initLayoutPopupEvents()
-    }
+    //if(node.type === "layout" && cat == "lcss") {
+    //    initLayoutPopupEvents()
+    //}
     if((node.type === "container" || node.type === "layout") && cat == "css") renderTree()
     if((node.type === "zone" || node.type === "widget") && cat == "css") renderTreeById()
 
@@ -86,6 +86,8 @@ function buildPopupContent(node, cat){
                     break
                 case "Paragraph":
                     popupGeneric(node, "Paramètres du paragraphe")
+                    break
+                case "Component":
                     break
             }
         } else if (cat == "css") {
