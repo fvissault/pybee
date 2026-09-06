@@ -783,7 +783,7 @@ async function saveFilePopup(type) {
                     action: "create",
                     name: nameoffile,
                     icon: content.props.icon,
-                    description: content.props.descrption,
+                    description: content.props.description,
                     content: JSON.stringify(content),
                     version: content.props.version,
                     popups: JSON.stringify([]),
