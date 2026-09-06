@@ -171,7 +171,7 @@ async function loadPopup(componentid, popupid){
         .then(data => {
             currentPopup = popupid
             currentComponent = componentid
-            perspective = "component"
+            perspective = "popup"
             let popups = JSON.parse(data.popups)
             workspaceRoot = popups[popupid] || null
             if (workspaceRoot) rebuildParents(workspaceRoot, null)
@@ -249,7 +249,7 @@ function serializeNode(node) {
             widgetType: node.widgetType,
             name: node.name,
             props: node.props||{},
-            css: node.css||{},
+            css: node.css||[],
             events: node.events||{},
             js: node.js||{},
             container:node.container,
@@ -261,7 +261,7 @@ function serializeNode(node) {
             type: node.type,
             name: node.name,
             props: node.props||{},
-            css: node.css||{},
+            css: node.css||[],
             events: node.events||{},
             js: node.js||{},
             container:node.container
@@ -470,10 +470,10 @@ async function saveFileBST() {
                         action: "update",
                         name: workspaceRoot.props.name,
                         icon: workspaceRoot.props.icon,
-                        description: workspaceRoot.props.description,
+                        description: workspaceRoot.props.description || "",
                         content: JSON.stringify(serializeNode(workspaceRoot)),
                         version: workspaceRoot.props.version,
-                        popups: JSON.stringify([]),
+                        popups: JSON.stringify(workspaceRoot.popups),
                         type: workspaceRoot.props.type,
                         id_author: parseInt(workspaceRoot.props.id_author),
                         id_entity: workspaceRoot.props.id_entity,
@@ -505,6 +505,7 @@ async function saveFileBST() {
             })
             .then(r => r.json())
             .then(data => {
+                console.log(data)
                 if(!data.error) {
                     let pops = JSON.parse(data.popups)
                     if (currentPopup === "new-popup") {
@@ -520,7 +521,7 @@ async function saveFileBST() {
                             action: "update",
                             name: data.name,
                             icon: data.icon,
-                            description: data.description,
+                            description: data.description || "",
                             content: data.content,
                             popups: JSON.stringify(pops.map(p => serializeNode(p))),
                             version: data.version,
@@ -535,29 +536,45 @@ async function saveFileBST() {
                     .then(res => {
                         //console.log(res)
                         if(res.status === "ok") {
+                            // on cherche à savoir si le fichier js du popup existe
                             fetch("/pybee/studio/api/jsfiles.py", {
                                 method: "POST",
                                 credentials: "include",
                                 body: new URLSearchParams({
-                                    action: "create",
-                                    id_project: projectid,
-                                    content_type: "compadmjs",
-                                    name: data.name + "_admin_" + pops.length,
-                                    content: "[]"
+                                    action: "getbyname",
+                                    name: data.name + "_admin_" + pops.length
                                 })
                             })
                             .then(r => r.json())
                             .then(res => {
                                 console.log(res)
-                                if(res.status === "ok") {
-                                    tosave = false
-                                    document.getElementById("savebtn").className = ""
-                                    document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
-                                    loadProjectFiles()
-                                } else {
-                                    alert("Network error : New file not created")
+                                if(res.error) {
+                                    // l  n'existe pas
+                                    fetch("/pybee/studio/api/jsfiles.py", {
+                                        method: "POST",
+                                        credentials: "include",
+                                        body: new URLSearchParams({
+                                            action: "create",
+                                            id_project: projectid,
+                                            content_type: "compadmjs",
+                                            name: data.name + "_admin_" + pops.length,
+                                            content: "[]"
+                                        })
+                                    })
+                                    .then(r => r.json())
+                                    .then(res => {
+                                        console.log(res)
+                                        if(res.status === "ok") {
+                                            tosave = false
+                                            document.getElementById("savebtn").className = ""
+                                            document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
+                                            loadProjectFiles()
+                                        } else {
+                                            alert("Network error : New file not created")
+                                        }
+                                    });
                                 }
-                            });
+                            })
                         } else {
                             alert("Network error : Popup not saved")
                         }
