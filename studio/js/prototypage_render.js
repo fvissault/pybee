@@ -73,14 +73,14 @@ function renderWidget(widget){
     let htmlBtn = null
     let cssBtn = null
     let eventsBtn = null
+    htmlBtn = createNewButton("⚙", "Paramètres")
+    htmlBtn.style.fontSize = "12px"
+    htmlBtn.style.marginRight = "6px"
+    htmlBtn.onclick=(e) => {
+        e.stopPropagation()
+        openDialog(widget, "html")
+    }
     if (widget.widgetType !== "Component") {
-        htmlBtn = createNewButton("⚙", "Paramètres")
-        htmlBtn.style.fontSize = "12px"
-        htmlBtn.style.marginRight = "6px"
-        htmlBtn.onclick=(e) => {
-            e.stopPropagation()
-            openDialog(widget, "html")
-        }
         if (widget.widgetType != "Text" && widget.widgetType != "Form") {
             cssBtn = createNewButton("::", "CSS")
             cssBtn.style.marginRight="6px"
@@ -107,8 +107,8 @@ function renderWidget(widget){
     if (widget.widgetType === "Text" && widget.props.text) labeltext += " : " + widget.props.text
     if (widget.widgetType === "TextField" && widget.props.type) labeltext += " : type=" + widget.props.type
     label.textContent = labeltext 
+    el.appendChild(htmlBtn)
     if (widget.widgetType !== "Component") {
-        el.appendChild(htmlBtn)
         if (widget.widgetType != "Text" && widget.widgetType != "Form") {
             el.appendChild(cssBtn)
             if (widget.widgetType != "Anchor") el.appendChild(eventsBtn)
@@ -352,7 +352,7 @@ function renderProjectFiles() {
                     popupContainer.style.marginLeft = "16px"
                     comppops.forEach((p, index) => {
                         const popupEl = createItemContainer()
-                        const popupLabel = createItemLabel(`⚙️ admin ${index + 1} ${p.props.name?p.props.name:""}`)
+                        const popupLabel = createItemLabel(`⚙️ ${p.props.name?p.props.name:""}`)
                         popupLabel.style.opacity = "0.8" // léger différenciateur
                         popupLabel.addEventListener("click", () => {
                             loadPopup(c.id, index)
