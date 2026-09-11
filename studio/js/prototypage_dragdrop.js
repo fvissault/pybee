@@ -5,7 +5,8 @@ async function getSession() {
         credentials: "include",
         body: new URLSearchParams({ action: "read" })
     });
-    let session = await res.json();
+    const session = await res.json();
+    //console.log(session)
     // 2. Vérification
     if(!session || session.status || !session.auth) {
         if (intflow && !intflow.closed) intflow.close()
@@ -196,6 +197,7 @@ let entity_name = null
 
 async function initPrototypage() {
     const session = await getSession()
+    //console.log(session)
     if (session) {
         fetch("/pybee/studio/api/projects.py", {
             method: "POST",
@@ -209,6 +211,8 @@ async function initPrototypage() {
         .then(data => {
             project_name = data["project_name"]
             entity_name = data["entity_name"]
+            entity_id = data["entity_id"]
+            //console.log(entity_id)
             loadProjectFiles()
 
             document.querySelectorAll(".palette_section").forEach(item=>{
@@ -217,7 +221,7 @@ async function initPrototypage() {
                 };
             })
 
-            renderComponentSection()
+            renderComponentSection(parseInt(entity_id))
         });
     }
 }
@@ -274,6 +278,7 @@ async function createWidget() {
         //console.log(data)
         const widget = createNode("widget", { container: def.container, name: data.name })
         if (def.container) {
+            //on insère le widget dans la feuille
             const instanceId = workspaceRoot.props.instanceCounter
             const zone = createNode("zone")
             const content = JSON.parse(data.content)
@@ -283,32 +288,10 @@ async function createWidget() {
             zone.parent = widget
             widget.children.push(zone)
 
-            // créer le fichier global css du composant
-            const globalcss = generateglobalcss(content)
-            //console.log(globalcss)
-            if (globalcss != "") {
-                fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        file_content: globalcss,
-                        file_name: content.props.name
-                    })
-                })
-                .then(r => r.json())
-                .then(response => {
-                    //console.log(response)
-                    if (response.status === "ok") {
-                        console.log(`Génération du css global du composant ${content.props.name} : ok`)
-                        if (!workspaceRoot.props.cssfiles) workspaceRoot.props.cssfiles = []
-                        const cssexists = workspaceRoot.props.cssfiles.some(f => f.href === content.props.name);
-                        if (!cssexists) workspaceRoot.props.cssfiles.push({include:true, href:content.props.name, type:"stylesheet"})
-                    } else {
-                        console.log(`Génération du css global du composant ${content.props.name} : nok`)
-                    }
-                });
-            }
+            // créer le fichier global css du composant seulement si du css existe
+            // si du css existe, on l'ajoute au cssfiles de la page ou le composant est insérer
+            saveGlobalcss(workspaceRoot, content)
+
             // création du fichier js spécifique à l'instance du composant
             // je créé le fichier d'encapsulation du code du composant : component[component_name].js
             // 1. lecture en base du code du composant
@@ -324,71 +307,11 @@ async function createWidget() {
             .then(res => {
                 //console.log(res)
                 if(!res.error) {
-                    // 2. générer le code js
-                    const componentjs = generate(JSON.parse(res.content), 1)
-                    // 3. encapsuler ce qui a été généré : le nom de l'encapsulation pourrait être component[component_name]
-                    const encapsulation = `const component${content.props.name} = (() => {\n${componentjs}\n   return { createComponent };\n})();` 
-                    // 4. sauvegarder le fichier
-                    fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                        method: "POST",
-                        credentials: "include",
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({
-                            file_content: encapsulation,
-                            file_name: `component${content.props.name}`
-                        })
-                    })
-                    .then(r => r.json())
-                    .then(response => {
-                        //console.log(response)
-                        if (response.status === "ok") {
-                            console.log(`Encapsulation du composant ${content.props.name} : ok`)
-                            // j'insère dans jsfiles 
-                            if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
-                            const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `component${content.props.name}`);
-                            if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`component${content.props.name}`, defer:true})
-                            // insertion du createComponent(instance_number) dans [page_name]_components_init.js
-                            fetch("/pybee/studio/api/file_access_api.py?action=read_js_file&entity=" + project_name, {
-                                method: "POST",
-                                credentials: "include",
-                                headers: {"Content-Type": "application/json"},
-                                body: JSON.stringify({
-                                    file_name: `${workspaceRoot.props.name}_components_init`
-                                })
-                            })
-                            .then(r => r.json())
-                            .then(initresponse => {
-                                if (initresponse.status === "ok") {
-                                    const initcontent =  `${initresponse.file_content}component${content.props.name}.createComponent(${instanceId});\n`
-                                    fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                                        method: "POST",
-                                        credentials: "include",
-                                        headers: {"Content-Type": "application/json"},
-                                        body: JSON.stringify({
-                                            file_content: initcontent,
-                                            file_name: `${workspaceRoot.props.name}_components_init`
-                                        })
-                                    })
-                                    .then(r => r.json())
-                                    .then(response => {
-                                        //console.log(response)
-                                        if (response.status === "ok") {
-                                            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : ok`)
-                                            if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
-                                            const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `${workspaceRoot.props.name}_components_init`);
-                                            if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`${workspaceRoot.props.name}_components_init`, defer:true})
-                                        } else {
-                                            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : nok`)
-                                        }
-                                    })
-                                }
-                            })
-                        } else {
-                            console.log(`Encapsulation du composant ${content.props.name} : nok`)
-                        }
-                    });
+                    saveJsEncapsulation(workspaceRoot, content, res)
+                    saveInitComponents(workspaceRoot, content, instanceId)
                 }
-            })
+            });
+
         }
         return widget
     }
@@ -399,6 +322,81 @@ async function createWidget() {
         widget.children.push(zone)
     }
     return widget
+}
+
+async function saveInitComponents(node, content, instanceId) {
+    // lire le contenu du fichier init de node
+    const response = await fileReadAction("js", `${node.props.name}_components_init`)
+    if (response.status === "ok") {
+        const initcontent =  `${reponse.file_content}component${content.props.name}.createComponent(${instanceId});\n`
+        const filesave = await fileSaveAction("js", `${node.props.name}_components_init`, initcontent)
+        if (filesave.status === "ok") {
+            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : ok`)
+            insertFile(node, "js", `${node.props.name}_components_init`)
+        } else {
+            console.log(`Insertion de l'initialisation de l'instance du composant ${content.props.name} : nok`)
+        }
+    }
+}
+
+function saveJsEncapsulation(node, content, jsToEncapsulate) {
+    fetch("/pybee/studio/api/jsfiles.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({
+            action: "getbyname",
+            name: content.props.name
+        })
+    })
+    .then(r => r.json())
+    .then(async res => {
+        //console.log(res)
+        if(!res.error) {
+            // 2. générer le code js
+            const componentjs = generate(JSON.parse(jsToEncapsulate.content), 1)
+            // 3. encapsuler ce qui a été généré : le nom de l'encapsulation pourrait être component[component_name]
+            const encapsulation = `const component${content.props.name} = (() => {\n${componentjs}\n   return { createComponent };\n})();` 
+            // 4. sauvegarder le fichier
+            const response = await fileSaveAction("js", `component${content.props.name}`, encapsulation)
+            if (response.status === "ok") {
+                console.log(`Encapsulation du composant ${content.props.name} : ok`)
+                insertFile(node, "js", `component${content.props.name}`) 
+            } else {
+                console.log(`Encapsulation du composant ${content.props.name} : nok`)
+            }
+        }
+    });
+}
+
+async function saveGlobalcss(node, content) {
+    // créer le fichier global css du composant seulement si du css existe
+    // si du css existe, on l'ajoute au cssfiles de la page ou le composant est insérer
+    const globalcss = generateglobalcss(content)
+    //console.log(globalcss)
+    if (globalcss != "") {
+        const response = await fileSaveAction("css", content.props.name, globalcss)
+        //console.log(response)
+        if (response.status === "ok") {
+            console.log(`Génération du css global du composant ${content.props.name} : ok`)
+            insertFile(node, "css", content.props.name)
+        } else {
+            console.log(`Génération du css global du composant ${content.props.name} : nok`)
+        }
+    }
+
+}
+
+function insertFile(node, fileType, filename) {
+    if (fileType === "css") {
+        if (!node.props.cssfiles) node.props.cssfiles = []
+        const exists = node.props.cssfiles.some(f => f.href === filename);
+        if (!exists) node.props.cssfiles.push({include:true, href:filename, type:"stylesheet"})
+    }
+    if (fileType === "js") {
+        if (!node.props.jsfiles) node.props.jsfiles = []
+        const exists = node.props.jsfiles.some(f => f.href === filename);
+        if (!exists) node.props.jsfiles.push({include:true, src:filename, defer:true})
+    }
 }
 
 function updateInstanceIds(node, instanceId) {
