@@ -256,13 +256,7 @@ function renderProjectFiles() {
                 label.addEventListener("click", () => {
                     loadJS(f.id)
                 })
-                const del = createDelButton("Supprimer le fichier IntFlow")
-                del.addEventListener("click", (e) => {
-                    e.stopPropagation()
-                    deleteJS(f.id)
-                })
                 el.appendChild(label)
-                el.appendChild(del)
                 jscomponentsContainer.appendChild(el)
             }
         })
@@ -279,13 +273,7 @@ function renderProjectFiles() {
                 label.addEventListener("click", () => {
                     loadJS(f.id)
                 })
-                const del = createDelButton("Supprimer le fichier IntFlow")
-                del.addEventListener("click", (e) => {
-                    e.stopPropagation()
-                    deleteJS(f.id)
-                })
                 el.appendChild(label)
-                el.appendChild(del)
                 jsadmcomponentsContainer.appendChild(el)
             }
         })
@@ -386,7 +374,7 @@ async function renderComponentSection(entityid = 1) {
     })
     .then(r => r.json())
     .then(res => {
-        console.log(res)
+        //console.log(res)
         if(!res.status) {
             componentcontainer.replaceChildren()
             res.forEach(c => {
