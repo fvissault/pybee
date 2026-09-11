@@ -652,6 +652,33 @@ async function saveFilePopup(type) {
                 children:[]
             }
 
+            // créer le fichier css de la page
+            const responsepagecss = await fileSaveAction("css", `${nameoffile}`, "")
+            if (responsepagecss.status === "ok") {
+                console.log(`Création du fichier css de la page ${nameoffile} : ok`)
+                insertFile(content, "css", nameoffile)
+            } else {
+                console.log(`Création du fichier css de la page ${nameoffile} : nok`)
+            }
+
+            // créer le fichier js de la page
+            const responsepagejs = await fileSaveAction("js", `${nameoffile}`, "")
+            if (responsepagejs.status === "ok") {
+                console.log(`Création du fichier javascript de la page ${nameoffile} : ok`)
+                insertFile(content, "js", nameoffile)
+            } else {
+                console.log(`Création du fichier javascript de la page ${nameoffile} : nok`)
+            }
+
+            // créer le fichier d'initialisation des composants de la page
+            const response = await fileSaveAction("js", `${nameoffile}_components_init`, "// DON'T MODIFY THIS FILE\n")
+            if (response.status === "ok") {
+                console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : ok`)
+                insertFile(content, "js", nameoffile)
+            } else {
+                console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : nok`)
+            }
+
             await fetch("/pybee/studio/api/projectfiles.py", {
                 method: "POST",
                 credentials: "include",
@@ -709,26 +736,6 @@ async function saveFilePopup(type) {
                     closeDialog()
                 } else {
                     alert("Network error : New file not created")
-                }
-            });
-
-            // créer le fichier d'initialisation des composants de la page
-            await fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    file_content: "// DON'T MODIFY THIS FILE\n",
-                    file_name: `${nameoffile}_components_init`
-                })
-            })
-            .then(r => r.json())
-            .then(response => {
-                //console.log(response)
-                if (response.status === "ok") {
-                    console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : ok`)
-                } else {
-                    console.log(`Création du fichier d'initialisation des composants de la page ${nameoffile} : nok`)
                 }
             });
         }
@@ -830,10 +837,7 @@ async function saveFilePopup(type) {
                     .then(r => r.json())
                     .then(res => {
                         //console.log(res)
-                        if(res.status === "ok") {
-                            loadProjectFiles()
-                            closeDialog()
-                        } else {
+                        if(res.status !== "ok") {
                             alert("Network error : New file not created")
                         }
                     });
