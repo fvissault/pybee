@@ -41,7 +41,7 @@ elif action == "getprojectbyid":
 # SELECT (getprojectandentity)
 elif action == "getprojectandentity":
     data = normalize(form, ["id"])
-    sql = "SELECT DISTINCT a.name AS project_name, b.name AS entity_name FROM projects AS a, entities AS b WHERE a.id=%s AND a.id_entity=b.id"
+    sql = "SELECT DISTINCT a.name AS project_name, b.name AS entity_name, b.id AS entity_id FROM projects AS a, entities AS b WHERE a.id=%s AND a.id_entity=b.id"
     cursor.execute(sql, (
         data["id"],
     ))
