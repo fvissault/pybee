@@ -1,4 +1,5 @@
 async function deleteJS(fileid){
+    let filename = ""
     await fetch("/pybee/studio/api/jsfiles.py", {
         method: "POST",
         credentials: "include",
@@ -10,6 +11,7 @@ async function deleteJS(fileid){
     .then(r => r.json())
     .then(data => {
         if (!data.error) {
+            filename = data.name
             if(!confirm("Supprimer le fichier de flux interne '" + data.name + "' ?")) {
                 return
             } else {
@@ -28,9 +30,17 @@ async function deleteJS(fileid){
             }
         }
     });
+
+    const deletejs = await fileDeleteAction("js", filename)
+    if (deletejs.status === "ok") {
+        console.log(`Suppression de fichier javsacript ${filename} : ok`)
+    } else {
+        console.log(`Suppression de fichier javsacript ${filename} : nok`)
+    }
 }
 
-async function deleteBST(file){
+async function deleteBST(file) {
+    let pagename = ""
     await fetch("/pybee/studio/api/projectfiles.py", {
         method: "POST",
         credentials: "include",
@@ -42,6 +52,7 @@ async function deleteBST(file){
     .then(r => r.json())
     .then(data => {
         if (!data.error) {
+            pagename = data.pagename
             if(!confirm("Delete file '"+ data.pagename + "' ?")) {
                 return
             } else {
@@ -71,6 +82,26 @@ async function deleteBST(file){
             }
         }
     });
+    const deletecss = await fileDeleteAction("css", pagename)
+    if (deletecss.status === "ok") {
+        console.log(`Suppression de fichier css de la page ${pagename} : ok`)
+    } else {
+        console.log(`Suppression de fichier css de la page ${pagename} : nok`)
+    }
+
+    const deletejs = await fileDeleteAction("js", pagename)
+    if (deletejs.status === "ok") {
+        console.log(`Suppression de fichier javsacript de la page ${pagename} : ok`)
+    } else {
+        console.log(`Suppression de fichier javsacript de la page ${pagename} : nok`)
+    }
+
+    const deleteinitjs = await fileDeleteAction("js", `${pagename}_components_init`)
+    if (deleteinitjs.status === "ok") {
+        console.log(`Suppression de fichier javsacript d'initialisation des composants de la page ${pagename} : ok`)
+    } else {
+        console.log(`Suppression de fichier javsacript d'initialisation des composants de la page ${pagename} : nok`)
+    }
 }
 
 async function loadJS(id) {
@@ -218,7 +249,7 @@ function deletePopup(componentid, popupid) {
                         credentials: "include",
                         body: new URLSearchParams({
                             action: "deletebyname",
-                            name : `${data.name}_admin_${popupid + 1}`
+                            name : `${data.name}_adm_${popupid + 1}`
                         })
                     })
                     .then(r => r.json())
@@ -507,78 +538,77 @@ async function saveFileBST() {
             .then(data => {
                 console.log(data)
                 if(!data.error) {
-                    let pops = JSON.parse(data.popups)
-                    if (currentPopup === "new-popup") {
-                        // création d'un popup
-                        pops.push(workspaceRoot)
-                    } else {
+                    if (currentPopup !== null) {
+                        let pops = JSON.parse(data.popups)
                         pops[currentPopup] = workspaceRoot
-                    }
-                    fetch("/pybee/studio/api/components.py", {
-                        method: "POST",
-                        credentials: "include",
-                        body: new URLSearchParams({
-                            action: "update",
-                            name: data.name,
-                            icon: data.icon,
-                            description: data.description || "",
-                            content: data.content,
-                            popups: JSON.stringify(pops.map(p => serializeNode(p))),
-                            version: data.version,
-                            type: data.type,
-                            id_author: data.id_author,
-                            id_entity: data.id_entity,
-                            active: data.active?1:0,
-                            id : currentComponent
+                        fetch("/pybee/studio/api/components.py", {
+                            method: "POST",
+                            credentials: "include",
+                            body: new URLSearchParams({
+                                action: "update",
+                                name: data.name,
+                                icon: data.icon,
+                                description: data.description || "",
+                                content: data.content,
+                                popups: JSON.stringify(pops.map(p => serializeNode(p))),
+                                version: data.version,
+                                type: data.type,
+                                id_author: data.id_author,
+                                id_entity: data.id_entity,
+                                active: data.active?1:0,
+                                id : currentComponent
+                            })
                         })
-                    })
-                    .then(r => r.json())
-                    .then(res => {
-                        //console.log(res)
-                        if(res.status === "ok") {
-                            // on cherche à savoir si le fichier js du popup existe
-                            fetch("/pybee/studio/api/jsfiles.py", {
-                                method: "POST",
-                                credentials: "include",
-                                body: new URLSearchParams({
-                                    action: "getbyname",
-                                    name: data.name + "_admin_" + pops.length
-                                })
-                            })
-                            .then(r => r.json())
-                            .then(res => {
-                                console.log(res)
-                                if(res.error) {
-                                    // l  n'existe pas
-                                    fetch("/pybee/studio/api/jsfiles.py", {
-                                        method: "POST",
-                                        credentials: "include",
-                                        body: new URLSearchParams({
-                                            action: "create",
-                                            id_project: projectid,
-                                            content_type: "compadmjs",
-                                            name: data.name + "_admin_" + pops.length,
-                                            content: "[]"
-                                        })
+                        .then(r => r.json())
+                        .then(res => {
+                            //console.log(res)
+                            if(res.status === "ok") {
+                                // on cherche à savoir si le fichier js du popup existe
+                                fetch("/pybee/studio/api/jsfiles.py", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    body: new URLSearchParams({
+                                        action: "getbyname",
+                                        name: data.name + "_adm_" + pops.length
                                     })
-                                    .then(r => r.json())
-                                    .then(res => {
-                                        console.log(res)
-                                        if(res.status === "ok") {
-                                            tosave = false
-                                            document.getElementById("savebtn").className = ""
-                                            document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
-                                            loadProjectFiles()
-                                        } else {
-                                            alert("Network error : New file not created")
-                                        }
-                                    });
-                                }
-                            })
-                        } else {
-                            alert("Network error : Popup not saved")
-                        }
-                    });
+                                })
+                                .then(r => r.json())
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.error) {
+                                        // il n'existe pas
+                                        fetch("/pybee/studio/api/jsfiles.py", {
+                                            method: "POST",
+                                            credentials: "include",
+                                            body: new URLSearchParams({
+                                                action: "create",
+                                                id_project: projectid,
+                                                content_type: "compadmjs",
+                                                name: data.name + "_adm_" + pops.length,
+                                                content: "[]"
+                                            })
+                                        })
+                                        .then(r => r.json())
+                                        .then(res => {
+                                            console.log(res)
+                                            if(res.status === "ok") {
+                                                tosave = false
+                                                document.getElementById("savebtn").className = ""
+                                                document.getElementById("workspace_content").innerText = "Popup sauvegardée du composant : " + data.name
+                                                loadProjectFiles()
+                                            } else {
+                                                alert("Network error : New file not created")
+                                            }
+                                        });
+
+                                        // s'il y a des composants dans cette page d'admin, il faut créer le fichier init de cette page
+                                    }
+                                })
+                            } else {
+                                alert("Network error : Popup not saved")
+                            }
+                        });
+                    }
                 }
             });
         }
