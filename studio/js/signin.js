@@ -29,6 +29,7 @@ function signin(){
     })
     .then(r => r.json())
     .then(data => {
+        //console.log(data)
         if(data.error){
             alert("Failed authentication");
         } else {
@@ -38,9 +39,12 @@ function signin(){
                 body: new URLSearchParams({
                     action: "create",
                     userid: data.id,
+                    entityid: data.id_entity,
                     email: data.email
                 })
-            }).then(() => location.href = "main.html");
+            }).then(() => {
+                location.href = "main.html"
+            });
         }
     });
 }
