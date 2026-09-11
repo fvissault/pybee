@@ -755,73 +755,43 @@ function generatepage() {
             })
         })
         .then(r => r.json())
-        .then(data2 => {
+        .then(async data2 => {
             //console.log(data2)
-            const pagejs = generate(JSON.parse(data2.content))
-            if (pagejs !== "") {
-                fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        file_content: pagejs,
-                        file_name: data1.pagename
-                    })
-                })
-                .then(r => r.json())
-                .then(data3 => {
-                    //console.log(data3)
-                    if (data3.status === "ok") {
-                        console.log("Génération du javascript de la page : ok")
+            if (!data2.error) {
+                const pagejs = generate(JSON.parse(data2.content))
+                if (pagejs !== "") {
+                    const responsejs = await fileSaveAction("js", data1.pagename, pagejs)
+                    if (responsejs.status === "ok") {
+                        console.log(`Génération du javascript de la page ${data1.pagename} : ok`)
+                        insertFile(workspaceRoot, "js", data1.pagename)
+                    } else {
+                        console.log(`Génération du javascript de la page ${data1.pagename} : nok`)
                     }
-                });
-
-                const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === data1.pagename);
-                if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:data1.pagename, defer:true})
-            } else {
-                console.log(`Pas de code javascript associé à la page ${data1.pagename}`)
-            }
-            const pagecss = generatecss(workspaceRoot)
-            if (pagecss !== "") {
-                fetch("/pybee/studio/api/file_access_api.py?action=save_css_file&entity=" + project_name, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({
-                        file_content: pagecss,
-                        file_name: data1.pagename
-                    })
-                })
-                .then(r => r.json())
-                .then(data4 => {
-                    //console.log(data4)
-                    if (data4.status === "ok") {
-                        console.log("Génération du css de la page : ok")
-                    }
-                });
-
-                const cssexists = workspaceRoot.props.cssfiles.some(f => f.href === data1.pagename);
-                if (!cssexists) workspaceRoot.props.cssfiles.push({include:true, href:data1.pagename, type:"stylesheet"})
-            } else {
-                console.log(`Pas de stylisation de la page ${data1.pagename}`)
-            }
-            const pagecode = generatehtml(workspaceRoot)
-            fetch("/pybee/studio/api/file_access_api.py?action=save_html_file&entity=" + project_name, {
-                method: "POST",
-                credentials: "include",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    file_content: pagecode,
-                    file_name: data1.pagename
-                })
-            })
-            .then(r => r.json())
-            .then(data5 => {
-                //console.log(data(5))
-                if (data5.status === "ok") {
-                    console.log("Génération du html de la page : ok")
+                } else {
+                    console.log(`Pas de code javascript associé à la page ${data1.pagename}`)
                 }
-            });
+                const pagecss = generatecss(workspaceRoot)
+                if (pagecss !== "") {
+                    const responsecss = await fileSaveAction("css", data1.pagename, pagecss)
+                    if (responsecss.status === "ok") {
+                        console.log(`Génération du css de la page ${data1.pagename} : ok`)
+                        insertFile(workspaceRoot, "css", data1.pagename)
+                    } else {
+                        console.log(`Génération du css de la page ${data1.pagename} : nok`)
+                    }
+                } else {
+                    console.log(`Pas de stylisation de la page ${data1.pagename}`)
+                }
+                const pagecode = generatehtml(workspaceRoot)
+                const responsehtml = await fileSaveAction("html", data1.pagename, pagecode)
+                if (responsehtml.status === "ok") {
+                    console.log(`Génération du html de la page ${data1.pagename} : ok`)
+                } else {
+                    console.log(`Génération du html de la page ${data1.pagename} : nok`)
+                }
+            } else {
+                console.log(`Cette page ${data1.pagename} n'existe pas`)
+            }
         });
     });
 }
