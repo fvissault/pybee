@@ -10,10 +10,11 @@ action = form.getvalue("action") or ""
 cookie = http.cookies.SimpleCookie()
 
 if action == "create":
-    data = normalize(form, ["email", "userid"])
+    data = normalize(form, ["email", "userid", "entityid"])
     session = {
         "email": data["email"],
         "userid": data["userid"],
+        "entityid": data["entityid"],
         "auth": 1,
         "exp": int(time.time()) + 1800
     }
