@@ -1,26 +1,3 @@
-/*
-function resetPopup(componentid, componentname) {
-    workspaceRoot = {
-        id:generateId("Popup"),
-        type:"container",
-        props:{
-            instanceCounter : 0,
-            name: "admin popup"
-        },
-        css:[],
-        js:{},
-        events:{},
-        children:[]
-    }
-    workspaceEl.innerHTML = ""
-    currentPage = null
-    currentComponent = componentid
-    currentPopup = "new-popup"
-    perspective = "popup"
-    document.getElementById("workspace_content").innerText = "Création d'une fenêtre de paramétrage pour le composant : " + componentname
-}
-*/
-
 function createPopup(componentid, componentname) {
     fetch("/pybee/studio/api/components.py", {
         method: "POST",
@@ -31,21 +8,50 @@ function createPopup(componentid, componentname) {
         })
     })
     .then(r => r.json())
-    .then(data => {
+    .then(async data => {
         //console.log(data)
         if(!data.error) {
+            const popupname = `${componentname}_adm_${JSON.parse(data.popups).length + 1}`
             popupRoot = {
                 id:generateId("Popup"),
                 type:"container",
                 props:{
                     instanceCounter : 0,
-                    name: `${componentname}_adm_${JSON.parse(data.popups).length + 1}`
+                    name: popupname
                 },
                 css:[],
                 js:{},
                 events:{},
                 children:[]
             }
+
+            // créer le fichier css de la page
+            const responsepagecss = await fileSaveAction("css", `${popupname}`, "")
+            if (responsepagecss.status === "ok") {
+                console.log(`Création du fichier css de la popup ${popupname} : ok`)
+                insertFile(popupRoot, "css", popupname)
+            } else {
+                console.log(`Création du fichier css de la popup ${popupname} : nok`)
+            }
+
+            // créer le fichier js de la page
+            const responsepagejs = await fileSaveAction("js", `${popupname}`, "")
+            if (responsepagejs.status === "ok") {
+                console.log(`Création du fichier javascript de la page ${popupname} : ok`)
+                insertFile(popupRoot, "js", popupname)
+            } else {
+                console.log(`Création du fichier javascript de la page ${popupname} : nok`)
+            }
+
+            // créer le fichier d'initialisation des composants de la page
+            const response = await fileSaveAction("js", `${popupname}_components_init`, "// DON'T MODIFY THIS FILE\n")
+            if (response.status === "ok") {
+                console.log(`Création du fichier d'initialisation des composants de la page ${popupname} : ok`)
+                insertFile(popupRoot, "js", popupname)
+            } else {
+                console.log(`Création du fichier d'initialisation des composants de la page ${popupname} : nok`)
+            }
+
             fetch("/pybee/studio/api/components.py", {
                 method: "POST",
                 credentials: "include",
@@ -101,7 +107,7 @@ function createPopup(componentid, componentname) {
 }
 
 let pagepreview = null
-function preview() {
+async function preview() {
     if (currentPage != null) {
         fetch("/pybee/studio/api/projectfiles.py", {
             method: "POST",
@@ -129,7 +135,7 @@ function preview() {
                             })
                         })
                         .then(r => r.json())
-                        .then(res => {
+                        .then(async res => {
                             //console.log(res)
                             if(!res.error) {
                                 // 2. générer le code js
@@ -137,25 +143,13 @@ function preview() {
                                 // 3. encapsuler ce qui a été généré : le nom de l'encapsulation pourrait être component[component_name]
                                 const encapsulation = `const component${component} = (() => {\n${componentjs}\n   return { createComponent };\n})();` 
                                 // 4. sauvegarder le fichier
-                                fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + project_name, {
-                                    method: "POST",
-                                    credentials: "include",
-                                    headers: {"Content-Type": "application/json"},
-                                    body: JSON.stringify({
-                                        file_content: encapsulation,
-                                        file_name: `component${component}`
-                                    })
-                                })
-                                .then(r => r.json())
-                                .then(response => {
-                                    //console.log(response)
-                                    if (response.status === "ok") {
-                                        // on vérifie qu'il fait bien partie des jsfiles
-                                        if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
-                                        const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `component${component}`);
-                                        if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`component${component}`, defer:true})
-                                    }
-                                })
+                                const response = await fileSaveAction("js", `component${component}`, encapsulation)
+                                if (response.status === "ok") {
+                                    // on vérifie qu'il fait bien partie des jsfiles
+                                    if (!workspaceRoot.props.jsfiles) workspaceRoot.props.jsfiles = []
+                                    const jsexists = workspaceRoot.props.jsfiles.some(f => f.src === `component${component}`);
+                                    if (!jsexists) workspaceRoot.props.jsfiles.push({include:true, src:`component${component}`, defer:true})
+                                }
                             }
                         })
                     }
