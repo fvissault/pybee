@@ -7,7 +7,7 @@
 // *******************************************************************************
 async function popupPage() {
     let content = null
-    if (perspective === "page") {
+    if (perspective === "page" || perspective === "popup") {
         const page_name = workspaceRoot.props.name||""
         const page_title = workspaceRoot.props.title||""
         const language = workspaceRoot.props.lang||""
