@@ -7,7 +7,7 @@ async function openDialog(node, cat){
     //if(node.type === "layout" && cat == "lcss") {
     //    initLayoutPopupEvents()
     //}
-    if((node.type === "container" || node.type === "layout") && cat == "css") renderTree()
+    if(node.type === "container" && cat == "css") renderTree()
     if((node.type === "zone" || node.type === "widget") && cat == "css") renderTreeById()
 
     document.body.style.overflow = "hidden"
