@@ -40,33 +40,22 @@ function closefct() {
 }
 
 let preview = null
-function generatejsfile() {
+async function generatejsfile() {
     try {
         const session = window.opener.getSession()
         const generatedString = generate(tree)
-        fetch("/pybee/studio/api/file_access_api.py?action=save_js_file&entity=" + projectname, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                file_content: generatedString,
-                file_name: pagename
-            })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.status === "ok") {
-                alert("Votre fichier js a bien été généré. Vous allez le visualiser...")
-                if (!preview) {
-                    preview = window.open("", "_blank", "popup=yes,width=800,height=600")
-                }
-                preview.document.title = `Prévisualisation de ${pagename}.js`;
-                preview.document.body.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace;">${generatedString}</pre>`;
-                preview.focus()
+        const response = await fileSaveAction("js", pagename, generatedString)
+        if (response.status === "ok") {
+            alert("Votre fichier js a bien été généré. Vous allez le visualiser...")
+            if (!preview) {
+                preview = window.open("", "_blank", "popup=yes,width=800,height=600")
             }
-        });
+            preview.document.title = `Prévisualisation de ${pagename}.js`;
+            preview.document.body.innerHTML = `<pre style="white-space: pre-wrap; font-family: monospace;">${generatedString}</pre>`;
+            preview.focus()
+        } else {
+            alert("Votre fichier js n'a bien été généré")
+        }
     } catch(e) {
         console.error(e)
     }
