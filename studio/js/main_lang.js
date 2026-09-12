@@ -65,7 +65,8 @@ const translations = {
         alertinvalidpass: "Votre nouveau mot de passe n'est pas valide",
         alertinvalidconfirm: "La confirmation ne corresponds pas au nouveau mot de passe",
         alertoldpassused: "Votre nouveau mot de passe est identique à l'ancien",
-        alertpasschanged: "Votre mot de passe a bien été modifié"
+        alertpasschanged: "Votre mot de passe a bien été modifié",
+        model: "Modèle de données"
     } , 
 
     en : { 
@@ -134,7 +135,8 @@ const translations = {
         alertinvalidpass: "Your new password is not valid",
         alertinvalidconfirm: "Confirmation does not match the new password",
         alertoldpassused: "Your new password is the same as the old one",
-        alertpasschanged: "Your password has been successfully changed"
+        alertpasschanged: "Your password has been successfully changed",
+        model: "Data model"
     },
 
     it : {
