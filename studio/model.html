@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title data-i18n="text:title">Beetle Studio : Modèle de données</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="css/model.css">
+        <script src="js/lang.js"></script>
+        <script defer src="js/common_io.js"></script>
+        <script defer src="js/model.js"></script>
+        <!--<script defer src="js/main_dialogs.js"></script>-->
+        <script defer src="js/model_lang.js"></script>
+    </head>
+    <body onload="initModels()">
+        <header class="topbar">
+            <div class="topbar-left">
+                <img src="images/logo.png" class="logo"/>
+                <span class="title" data-i18n="text:header">Beetle Studio : Modèle de données du projet ...</span>
+            </div>
+        </header>
+        <div id="main">
+            <div class="panel">
+                <h4 data-i18n="text:menu">Menu</h4>
+
+                <a href="../studio/docs/index.html" target="_blank">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 18h6M10 14h4M12 2a7 7 0 0 0-4 12.9V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.1A7 7 0 0 0 12 2z"/>
+                    </svg>
+                    <span data-i18n="text:help">Aide</span>
+                </a>
+
+                <a href="#" onclick="createModel()">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H3z"/>
+                        <path d="M12 13v6M9 16h6"/>
+                    </svg>
+                    <span data-i18n="text:newmodel"></span>
+                </a>
+
+                <a href="#" onclick="window.close()" class="danger">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <path d="M16 17l5-5-5-5"/>
+                        <path d="M21 12H9"/>
+                    </svg>
+                    <span data-i18n="text:disconnect"></span>
+                </a>
+            </div>
+            <div class="panel">
+                <h4 data-i18n="text:mymodels"></h4>
+                <div id="models"></div>
+            </div>
+            <div id="footer">Beetle studio &copy; 2026</div>
+        </div>
+
+        <div id="dialog" class="dialog-popup">
+            <div id="dialogHeader" class="dialog-header"></div>
+            <div id="dialogContent"></div>
+        </div>
+    </body>
+</html>
