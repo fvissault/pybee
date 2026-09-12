@@ -60,6 +60,18 @@ const trash_icon = `
         <path d="M9 6V4h6v2"></path>
     </svg>`;
 
+const model_icon = `
+    <svg class="icon" viewBox="0 0 24 24">
+        <g transform="translate(0 2)">
+            <ellipse cx="9" cy="5" rx="6" ry="2.5"/>
+            <path d="M3 5v5c0 1.4 2.7 2.5 6 2.5"/>
+            <path d="M3 10v5c0 1.4 2.7 2.5 6 2.5"/>
+            <path d="M15 5v5"/>
+            <path d="M14 16h7"/>
+            <path d="M18 13l3 3-3 3"/>
+        </g>
+    </svg>`;
+
 const addmember_icon = `
     <svg class="icon" viewBox="0 0 24 24">
         <circle cx="12" cy="8" r="4"></circle>
@@ -91,6 +103,9 @@ function renderCard(projects, session) {
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
                                     </button>
+                                    <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
+                                        ${model_icon}
+                                    </button>
                                     <button class="card_button" onclick="prototypage(${p.id});" data-i18n="title:proto">
                                         ${prototypage_icon}
                                     </button>
@@ -114,6 +129,9 @@ function renderCard(projects, session) {
                                 <div class="block_buttons">
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
+                                    </button>
+                                    <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
+                                        ${model_icon}
                                     </button>
                                     <button class="card_button" onclick="prototypage(${p.id});" data-i18n="title:proto">
                                         ${prototypage_icon}
@@ -140,6 +158,9 @@ function renderCard(projects, session) {
                                     </button>
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
+                                    </button>
+                                    <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
+                                        ${model_icon}
                                     </button>
                                     <button class="card_button btn-delete" onclick="suppress(${p.id})" data-i18n="title:delproj" title="Supprimer">
                                         ${trash_icon}
@@ -177,6 +198,13 @@ let prototypageWindow = null
 async function prototypage(projectid) {
     const session = await getSession()
     prototypageWindow = window.open(`prototypage.html?projectid=${projectid}`, "_blank");
+}
+
+let modelWindow = null
+
+async function model(projectid) {
+    const session = await getSession()
+    modelWindow = window.open(`model.html?projectid=${projectid}`, "_blank");
 }
 
 async function active_project(projectid, activevalue) {
