@@ -42,11 +42,19 @@ async function addNewTable() {
     const session = await getSession()
     const tablename = document.getElementById("tablename")
 
-    if (tableNameExists(tablename.value)) {
+    if (tableNameExists(tablename.value.trim())) {
         alert("Votre table existe déjà")
         tablename.focus()
         return
     }
+    const result = validateDatabaseName(tablename.value.trim());
+
+    if (!result.valid) {
+        alert(result.message);
+        tablename.focus()
+        return;
+    }
+
     if (tablename.value.trim() === "") {
         alert("Le nom de votre table est obligatoire")
         tablename.focus()
@@ -56,7 +64,7 @@ async function addNewTable() {
             id: `table_${objectCounter}`,
             x: 100,
             y: 50,
-            name: normalizeDatabaseName(tablename.value),
+            name: normalizeDatabaseName(tablename.value.trim()),
             fields: []
         }
         objectCounter++
@@ -270,23 +278,31 @@ function refresh(value) {
 function addNewAttr(node, field) {
     // il faut connaitre l'id du field pour avoir le currentField correct
     const currentField = field
-    if (fieldNameExists(node, document.getElementById("attrname").value)) {
+    if (document.getElementById("attrname").value.trim() === "") {
+        alert("Le nom de votre attribut est obligatoire")
+        document.getElementById("attrname").focus()
+        return
+    }
+    if (fieldNameExists(node, document.getElementById("attrname").value.trim())) {
         alert("Votre attribut existe déjà")
         document.getElementById("attrname").focus()
         return
     }
+    const result = validateDatabaseName(document.getElementById("attrname").value.trim());
+
+    if (!result.valid) {
+        alert(result.message);
+        document.getElementById("attrname").focus()
+        return;
+    }
+    
     if (currentField) {
         // modification du champ
     } else {
         // ajout pur et simple
-        if (document.getElementById("attrname").value.trim() === "") {
-            alert("Le nom de votre attribut est obligatoire")
-            document.getElementById("attrname").focus()
-            return
-        }
         const newfield = {
             id: `field_${objectCounter}`,
-            name: normalizeDatabaseName(document.getElementById("attrname").value),
+            name: normalizeDatabaseName(document.getElementById("attrname").value.trim()),
             type: document.getElementById("attrtype").options[document.getElementById("attrtype").selectedIndex].value,
             length: document.getElementById("attrlength").value,
             precision: document.getElementById("attrprecision").value,
@@ -379,3 +395,49 @@ const ATTRIBUT_ATTRIBUTE = [
     { value: "binary", label: "Binaire" },
     { value: "unsigned", label: "Non signé" }
 ]
+
+const SQL_RESERVED_WORDS = new Set(`
+    ACCESSIBLE ADD ALL ALTER ANALYZE AND AS ASC ASENSITIVE
+    BEFORE BETWEEN BIGINT BINARY BLOB BOTH BY
+    CALL CASCADE CASE CHANGE CHAR CHARACTER CHECK COLLATE COLUMN
+    CONDITION CONSTRAINT CONTINUE CONVERSION CONVERT CREATE CROSS
+    CURRENT_DATE CURRENT_ROLE CURRENT_TIME CURRENT_TIMESTAMP CURRENT_USER
+    CURSOR DATABASE DATABASES
+    DAY_HOUR DAY_MICROSECOND DAY_MINUTE DAY_SECOND
+    DEC DECIMAL DECLARE DEFAULT DELAYED DELETE DESC DESCRIBE
+    DETERMINISTIC DISTINCT DISTINCTROW DIV DOUBLE DROP DUAL
+    EACH ELSE ELSEIF ENCLOSED ESCAPED EXCEPT EXISTS EXIT EXPLAIN
+    FALSE FETCH FLOAT FLOAT4 FLOAT8 FOR FORCE FOREIGN FROM FULLTEXT
+    GENERAL GRANT GROUP HAVING HIGH_PRIORITY
+    HOUR_MICROSECOND HOUR_MINUTE HOUR_SECOND
+    IF IGNORE IN INDEX INFILE INNER INOUT INSENSITIVE INSERT
+    INT INT1 INT2 INT3 INT4 INT8 INTEGER INTERSECT INTERVAL INTO IS ITERATE
+    JOIN KEY KEYS KILL LEADING LEAVE LEFT LIKE LIMIT LINEAR LINES LOAD
+    LOCALTIME LOCALTIMESTAMP LOCK LONG LONGBLOB LONGTEXT LOOP LOW_PRIORITY
+    MATCH MAXVALUE MEDIUMBLOB MEDIUMINT MEDIUMTEXT MIDDLEINT
+    MINUTE_MICROSECOND MINUTE_SECOND MOD MODIFIES NATURAL NOT
+    NO_WRITE_TO_BINLOG NULL NUMERIC OFFSET ON OPTIMIZE OPTION OPTIONALLY
+    OR ORDER OUT OUTER OUTFILE OVER PARTITION PRECISION PRIMARY PROCEDURE
+    PURGE RANGE READ READS READ_WRITE REAL RECURSIVE REFERENCES REGEXP
+    RELEASE RENAME REPEAT REPLACE REQUIRE RESIGNAL RESTRICT RETURN
+    RETURNING REVOKE RIGHT RLIKE ROW_NUMBER ROWS
+    SCHEMA SCHEMAS SECOND_MICROSECOND SELECT SENSITIVE SEPARATOR SET
+    SHOW SIGNAL SLOW SMALLINT SPATIAL SPECIFIC SQL SQLEXCEPTION SQLSTATE
+    SQLWARNING SQL_BIG_RESULT SQL_CALC_FOUND_ROWS SQL_SMALL_RESULT SSL
+    STARTING STRAIGHT_JOIN TABLE TERMINATED THEN
+    TINYBLOB TINYINT TINYTEXT TO TO_DATE TRAILING TRIGGER TRUE
+    UNDO UNION UNIQUE UNLOCK UNSIGNED UPDATE USAGE USE USING
+    UTC_DATE UTC_TIME UTC_TIMESTAMP VALUES VARBINARY VARCHAR VARCHARACTER
+    VARYING VECTOR WHEN WHERE WHILE WINDOW WITH WRITE XOR YEAR_MONTH ZEROFILL
+`.trim().split(/\s+/));
+
+function isSqlReservedWord(name) {
+    return SQL_RESERVED_WORDS.has(name.toUpperCase());
+}
+
+function validateDatabaseName(name) {
+    const normalizedName = normalizeDatabaseName(name);
+    if (!normalizedName) return {valid: false, name: "", message: "Le nom est obligatoire."};
+    if (isSqlReservedWord(normalizedName)) return {valid: false, name: normalizedName, message: `"${normalizedName}" est un mot réservé SQL.`};
+    return {valid: true, name: normalizedName, message: ""};
+}
