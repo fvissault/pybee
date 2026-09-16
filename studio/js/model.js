@@ -8,8 +8,8 @@ async function getSession() {
     let session = await res.json();
     // 2. Vérification
     if(!session || session.status || !session.auth) {
-        window.opener.location.href = "signin.html"
         window.opener.focus()
+        window.opener.location.href = "signin.html"
         window.close()
         return;
     }
@@ -86,4 +86,11 @@ function renderCard(models, session) {
     });
     document.getElementById("models").innerHTML = html;
     renderUI()
+}
+
+let modelprotoWindow = null
+
+async function model(modelid) {
+    const session = await getSession()
+    modelprotoWindow = window.open(`modelproto.html?modelid=${modelid}`, "_blank");
 }
