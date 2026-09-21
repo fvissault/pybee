@@ -13,15 +13,20 @@ function closeDialog() {
 }
 
 function buildPopupContent(cat){
-    if (cat == "addtable") popupAddTable()
-    if (cat == "addattr") popupAddAttr(currenttable)
+    if (cat == "addtable") popupTable()
+    if (cat == "renametable") popupTable(currenttable)
+    if (cat == "addattr") popupAttr(currenttable)
     else return "<div>No content</div>"
 }
 
 // ----------------------------------------------------------------------------------------------------
 // Popup pour l'ajout d'une table dans le workspace
 // ----------------------------------------------------------------------------------------------------
-function popupAddTable() {
+function popupTable(node = null) {
+    let tablename = ""
+    if (node) {
+        tablename = node.name
+    }
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">
@@ -29,24 +34,25 @@ function popupAddTable() {
                 <label for="tablename">Nom de votre table</label>
             </div>
             <div class="dialog-row">
-                <input id="tablename" type="text">
+                <input id="tablename" type="text" value="${tablename}">
             </div>
         </div>
         <div class="dialog-actions">
-            <button class="btn btn-primary" onclick="addNewTable()">${t("validate")}</button>
+            <button id="save" class="btn btn-primary">${t("validate")}</button>
             <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
         </div>`
+
+        content.querySelector("#save").onclick = () => {
+            addNewTable(node)
+            tosave = true
+            document.getElementById("savebtn").className = "tosave"
+        }
 }
 
-async function addNewTable() {
+async function addNewTable(node) {
     const session = await getSession()
     const tablename = document.getElementById("tablename")
 
-    if (tableNameExists(tablename.value.trim())) {
-        alert("Votre table existe déjà")
-        tablename.focus()
-        return
-    }
     const result = validateDatabaseName(tablename.value.trim());
 
     if (!result.valid) {
@@ -55,25 +61,34 @@ async function addNewTable() {
         return;
     }
 
+    if (tableNameExists(tablename.value.trim(), tablename)) {
+        alert("Votre table existe déjà")
+        tablename.focus()
+        return
+    }
+
     if (tablename.value.trim() === "") {
         alert("Le nom de votre table est obligatoire")
         tablename.focus()
         return
     } else {
-        let newtable = {
-            id: `table_${objectCounter}`,
-            x: 100,
-            y: 50,
-            name: normalizeDatabaseName(tablename.value.trim()),
-            fields: []
+        if (node === null) {
+            let newtable = {
+                id: `table_${objectCounter}`,
+                x: 100,
+                y: 50,
+                name: normalizeDatabaseName(tablename.value.trim()),
+                fields: []
+            }
+            objectCounter++
+            modelRoot.tables.push(newtable)
+            modelRoot.objectCounter = objectCounter
+            console.log(modelRoot)
+        } else {
+            node.name = tablename.value.trim()
         }
-        objectCounter++
-        modelRoot.tables.push(newtable)
-        modelRoot.objectCounter = objectCounter
-        console.log(modelRoot)
         tosave = true
         document.getElementById("savebtn").className = "tosave"
-
         // Tracer les tables du modèle
         renderModel()
     }
@@ -83,7 +98,7 @@ async function addNewTable() {
 // ----------------------------------------------------------------------------------------------------
 // Popup pour l'ajout d'un attribut dans une table
 // ----------------------------------------------------------------------------------------------------
-function popupAddAttr(node) {
+function popupAttr(node) {
     // il faut connaitre l'id du field pour avoir le currentField correct
     const currentField = node?.fields.find(field => field.id === currentfield);
     let attrname = ""
@@ -191,7 +206,7 @@ function popupAddAttr(node) {
                 <div id="autoincrement" style="display:none;">
                     <div class="dialog-row-with-checkbox">
                         <input type="checkbox" id="attrautoincrement"${attrautoincrement?" checked":""}/>
-                        <label for="autoincrement">Incrémentation automatique</label>
+                        <label for="attrautoincrement">Incrémentation automatique</label>
                     </div>
                 </div>
                 <div class="dialog-row">
@@ -234,7 +249,7 @@ function popupAddAttr(node) {
             o.textContent = opt.label
             selectIndex.appendChild(o)
         })
-        selectIndex.value = attrindex || "primary"
+        selectIndex.value = attrindex || ""
 
         const selectAttribute = content.querySelector("#attrattribute")
         ATTRIBUT_ATTRIBUTE.forEach(opt=>{
@@ -283,7 +298,7 @@ function addNewAttr(node, field) {
         document.getElementById("attrname").focus()
         return
     }
-    if (fieldNameExists(node, document.getElementById("attrname").value.trim())) {
+    if (fieldNameExists(node, document.getElementById("attrname").value.trim(), currentField?currentField.id:null)) {
         alert("Votre attribut existe déjà")
         document.getElementById("attrname").focus()
         return
@@ -298,6 +313,18 @@ function addNewAttr(node, field) {
     
     if (currentField) {
         // modification du champ
+        currentField.name = normalizeDatabaseName(document.getElementById("attrname").value.trim())
+        currentField.type = document.getElementById("attrtype").options[document.getElementById("attrtype").selectedIndex].value
+        currentField.length = document.getElementById("attrlength").value
+        currentField.precision = document.getElementById("attrprecision").value
+        currentField.scale = document.getElementById("attrscale").value
+        currentField.nullable = document.getElementById("nullable").checked?true:false
+        currentField.defaultValue = document.getElementById("attrdefault").value
+        currentField.index = document.getElementById("attrindex").options[document.getElementById("attrindex").selectedIndex].value
+        currentField.autoIncrement = document.getElementById("attrautoincrement").checked?true:false
+        currentField.attribute = document.getElementById("attrattribute").options[document.getElementById("attrattribute").selectedIndex].value
+        currentField.values = document.getElementById("attrvalues").value
+        currentField.comment = document.getElementById("attrcomment").value
     } else {
         // ajout pur et simple
         const newfield = {
@@ -317,8 +344,8 @@ function addNewAttr(node, field) {
         }
         objectCounter++
         node.fields.push(newfield)
-        renderModel()
     }
+    renderModel()
     closeDialog()
 }
 
