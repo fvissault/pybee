@@ -106,10 +106,10 @@ async function addTable() {
     openDialog("addtable")
 }
 
-async function openAddFieldPopup(tableId) {
+async function openAddFieldPopup(tableId, fieldId = null) {
     const session = await getSession()
     currenttable = modelRoot.tables.find(table => table.id === tableId);
-    currentfield = null
+    currentfield = fieldId
     if (!currenttable) {
         alert(`Table introuvable : ${tableId}`);
         return;
@@ -117,6 +117,18 @@ async function openAddFieldPopup(tableId) {
     const head = document.getElementById("dialogHeader")
     head.innerText = "Ajouter un nouvel attribut"
     openDialog("addattr")
+}
+
+async function openRenameTablePopup(tableId) {
+    const session = await getSession()
+    currenttable = modelRoot.tables.find(table => table.id === tableId);
+    if (!currenttable) {
+        alert(`Table introuvable : ${tableId}`);
+        return;
+    }
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Renommer une table"
+    openDialog("renametable")
 }
 
 function renderModel() {
@@ -213,16 +225,51 @@ function renderField(field) {
     const fieldName = document.createElement("span");
     fieldName.className = "model-field-name";
     fieldName.textContent = field.name;
+    fieldName.title = field.name;
 
     const fieldType = document.createElement("span");
     fieldType.className = "model-field-type";
     fieldType.textContent = formatFieldType(field);
 
-    fieldElement.append(
-        keyContainer,
-        fieldName,
-        fieldType
+    const menuContainer = document.createElement("div");
+    menuContainer.className = "model-field-menu";
+
+    const menuButton = document.createElement("button");
+    menuButton.type = "button";
+    menuButton.className = "model-field-menu-button";
+    menuButton.dataset.action = "toggle-field-menu";
+    menuButton.draggable = false;
+    menuButton.title = "Actions sur l’attribut";
+    menuButton.textContent = "⋮";
+
+    const menu = document.createElement("div");
+    menu.className = "model-field-menu-content";
+    menu.hidden = true;
+
+    menu.append(
+        createTableMenuItem("edit-field", "Modifier l’attribut"),
+        createTableMenuItem("delete-field", "Supprimer l’attribut", true)
     );
+
+    menuContainer.append(menuButton, menu);
+
+    const dragHandle = document.createElement("span");
+
+    dragHandle.className = "model-field-drag-handle";
+    dragHandle.draggable = true;
+    dragHandle.title = "Déplacer l’attribut";
+
+    dragHandle.innerHTML = `
+        <svg viewBox="0 0 12 18" width="12" height="18">
+            <circle cx="3" cy="4" r="1.2"></circle>
+            <circle cx="9" cy="4" r="1.2"></circle>
+            <circle cx="3" cy="9" r="1.2"></circle>
+            <circle cx="9" cy="9" r="1.2"></circle>
+            <circle cx="3" cy="14" r="1.2"></circle>
+            <circle cx="9" cy="14" r="1.2"></circle>
+        </svg>
+    `;
+    fieldElement.append(dragHandle, keyContainer, fieldName, fieldType,menuContainer);
 
     return fieldElement;
 }
@@ -293,56 +340,30 @@ function deleteTable(tableId) {
     renderModel();
 }
 
-workspace.addEventListener("click", event => {
-    const actionElement = event.target.closest("[data-action]");
+function deleteField(tableId, fieldId) {
+    const table = modelRoot.tables.find(table => table.id === tableId);
+    if (!table) return;
+    const field = table.fields.find(
+        field => field.id === fieldId
+    );
+    if (!field) return;
+    const confirmed = confirm(`Supprimer l’attribut "${field.name}" ` + `de la table "${table.name}" ?`);
+    if (!confirmed) return;
+    table.fields = table.fields.filter(field => field.id !== fieldId);
+    renderModel();
+}
 
-    if (!actionElement) {
-        closeTableMenus();
-        return;
-    }
-
-    const tableElement = actionElement.closest(".model-table");
-
-    if (!tableElement) return;
-
-    const tableId = tableElement.dataset.tableId;
-    const action = actionElement.dataset.action;
-
-    event.stopPropagation();
-
-    if (action === "toggle-table-menu") {
-        const menu = tableElement.querySelector(".model-table-menu-content");
-        const mustOpen = menu.hidden;
-        closeTableMenus();
-        menu.hidden = !mustOpen;
-        return;
-    }
-
-    closeTableMenus();
-
-    switch (action) {
-        case "add-field":
-            openAddFieldPopup(tableId);
-            break;
-
-        case "rename-table":
-            openRenameTablePopup(tableId);
-            break;
-
-        case "delete-table":
-            deleteTable(tableId);
-            break;
-    }
-});
-
-document.addEventListener("click", () => {
-    closeTableMenus();
-});
-
-function closeTableMenus() {
+function closeActionMenus() {
     document
-        .querySelectorAll(".model-table-menu-content")
+        .querySelectorAll(`
+            .model-table-menu-content,
+            .model-field-menu-content
+        `)
         .forEach(menu => {
             menu.hidden = true;
         });
 }
+
+document.addEventListener("click", () => {
+    closeActionMenus();
+});
