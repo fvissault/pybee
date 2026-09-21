@@ -91,85 +91,10 @@ body {
     min-height:0;
 }
 
-.icon {
-    width: 26px;
-    height: 26px;
-    stroke: #6b7280;
-    stroke-width: 2;
-    fill: none;
-    transition: all 0.2s ease;
-}
-
-.icon_explorer {
-    width: 20px;
-    height: 20px;
-    stroke: #6b7280;
-    stroke-width: 2;
-    fill: none;
-    transition: all 0.2s ease;
-}
-
-:root {
-    --color-layout : #3b82f6;
-    --color-container : #22c55e;
-    --color-text : #a855f7;
-    --color-form : #f97316;
-    --color-action : #eab308;
-    --color-component : #00ccff;
-}
-
-.widget.Fieldset,
-.widget.Article,
-.widget.Header,
-.widget.Footer,
-.widget.Li,
-.widget.Ol,
-.widget.Ul,
-.widget.Form,
-.widget.Paragraph,
-.widget.Block {
-    border-left:12px solid var(--color-container)
-}
-
-.widget.Title,
-.widget.Image,
-.widget.Label,
-.widget.Span,
-.widget.Text {
-    border-left:12px solid var(--color-text)
-}
-
-.widget.TextField {
-    border-left:12px solid var(--color-form)
-}
-
-.widget.Anchor,
-.widget.Button {
-    border-left:12px solid var(--color-action)
-}
-
-.widget.Component {
-    border-left:12px solid var(--color-component)
-}
-
 #workspace-panel {
     grid-column:1;
     grid-row:1;
     padding: 10px;
-}
-
-.zone {
-    position: relative;
-    border: 2px dashed #d6dde5;
-    border-radius: 10px;
-    padding: 12px;
-    background: #fafbfd;
-    transition: all 0.2s;
-}
-
-.zone:hover {
-    border-color: #4a90e2;
-    background: #f0f6ff;
 }
 
 .dialog-overlay {
@@ -371,86 +296,6 @@ body {
 #dialogContent {
     padding:10px;
 }
-
-/* concerne les arbres */
-.tree {
-    font-family: system-ui, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.tree-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 3px 0;
-}
-
-.tree-row input {
-    padding:4px;
-    width:314px;
-    border-radius:8px;
-    background: #f5f7fa;
-    font-size:16px;
-    border:1px solid #ddd;
-}
-
-.tree-values {
-    margin-left: 28px;
-    border-left: 1px solid #ddd;
-    padding-left: 10px;
-}
-
-.tree button:hover {
-    background: #e9e9e9;
-}
-
-/* editeur js */
-.editor-container {
-    width: 100%;
-    max-width: 600px;
-}
-
-.editor {
-    position: relative;
-    height: 200px;
-    width: 600px;
-    font-family: monospace;
-}
-
-.editor textarea,
-.editor pre {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 580px;
-    height: 100%;
-    margin: 0;
-    padding: 10px;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow: auto;
-    white-space: pre;
-}
-
-.editor textarea {
-    background: transparent;
-    color: transparent;
-    caret-color: black;
-    z-index: 2;
-    resize: none;
-    border: 1px solid #ccc;
-}
-
-.editor pre {
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* coloration simple */
-.keyword { color: #0077aa; }
-.string  { color: #a31515; }
-.comment { color: #6a9955; }
 
 #workspace {
     position: relative;
