@@ -27,6 +27,7 @@ let model_description = null
 let objectCounter = 1
 let currenttable = null
 let currentfield = null
+let currentrelation = null
 let tosave = false
 
 let modelRoot = {
@@ -47,7 +48,6 @@ let tableRoot = {
 let relationRoot = 
 {
     id: "r1",
-    name: "commandes_client",
     source: {
         tableId: "table-client",
         fieldId: "client-id",
@@ -60,7 +60,8 @@ let relationRoot =
         cardinality: "0..n",
         role: "commandes"
     },
-    foreignKeySide: "target"
+    foreignKeySide: "target",
+    comment:""
 }
 
 let fieldRoot = {
@@ -106,6 +107,13 @@ async function addTable() {
     openDialog("addtable")
 }
 
+async function addRel() {
+    const session = await getSession()
+    //const head = document.getElementById("dialogHeader")
+    //head.innerText = "Ajouter une nouvelle table"
+    openDialog("addrel")
+}
+
 async function openAddFieldPopup(tableId, fieldId = null) {
     const session = await getSession()
     currenttable = modelRoot.tables.find(table => table.id === tableId);
@@ -132,7 +140,7 @@ async function openRenameTablePopup(tableId) {
 }
 
 function renderModel() {
-    const workspace = document.getElementById("workspace");
+    const workspace = document.getElementById("tables-layer");
     const fragment = document.createDocumentFragment();
 
     for (const table of modelRoot.tables) {
@@ -185,7 +193,7 @@ function renderTable(table) {
     const fields = document.createElement("div");
     fields.className = "model-table-fields";
     for (const field of table.fields) {
-        fields.appendChild(renderField(field));
+        fields.appendChild(renderField(field, table));
     }
 
     tableElement.append(header, fields);
@@ -209,11 +217,12 @@ function createTableMenuItem(action, label, danger = false) {
     return button;
 }
 
-function renderField(field) {
+function renderField(field, table) {
     const fieldElement = document.createElement("div");
 
     fieldElement.className = "model-table-field";
     fieldElement.dataset.fieldId = field.id;
+    fieldElement.dataset.tableId = table.id;
 
     const keyContainer = document.createElement("span");
     keyContainer.className = "model-field-key";
@@ -247,8 +256,8 @@ function renderField(field) {
     menu.hidden = true;
 
     menu.append(
-        createTableMenuItem("edit-field", "Modifier l’attribut"),
-        createTableMenuItem("delete-field", "Supprimer l’attribut", true)
+        createTableMenuItem("edit-field", "Modifier l'attribut"),
+        createTableMenuItem("delete-field", "Supprimer l'attribut", true)
     );
 
     menuContainer.append(menuButton, menu);
@@ -257,7 +266,7 @@ function renderField(field) {
 
     dragHandle.className = "model-field-drag-handle";
     dragHandle.draggable = true;
-    dragHandle.title = "Déplacer l’attribut";
+    dragHandle.title = "Déplacer l'attribut";
 
     dragHandle.innerHTML = `
         <svg viewBox="0 0 12 18" width="12" height="18">
@@ -272,6 +281,12 @@ function renderField(field) {
     fieldElement.append(dragHandle, keyContainer, fieldName, fieldType,menuContainer);
 
     return fieldElement;
+}
+
+function getFieldElement(tableId, fieldId) {
+   return document.querySelector(
+      `[data-table-id="${tableId}"][data-field-id="${fieldId}"]`
+   );
 }
 
 function formatFieldType(field) {
