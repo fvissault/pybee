@@ -570,3 +570,50 @@ body {
 .model-field-drop-after::after {
     bottom: -1px;
 }
+
+
+#tables-layer {
+   position: relative;
+   z-index: 2;
+}
+
+#relations-layer {
+   position: absolute;
+   top: 0;
+   left: 0;
+   z-index: 1;
+   overflow: visible;
+   pointer-events: none;
+}
+
+.relation {
+   pointer-events: auto;
+   cursor: pointer;
+}
+
+.relation-line {
+   fill: none;
+   stroke: #64748b;
+   stroke-width: 2;
+   pointer-events: none;
+}
+
+.relation-hitbox {
+   fill: none;
+   stroke: transparent;
+   stroke-width: 12;
+   pointer-events: stroke;
+}
+
+.relation:hover .relation-line {
+   stroke: #2563eb;
+   stroke-width: 2.5;
+}
+
+.relation-cardinality {
+   fill: #334155;
+   font-size: 11px;
+   font-weight: 600;
+   user-select: none;
+   pointer-events: none;
+}
