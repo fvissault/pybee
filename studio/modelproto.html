@@ -11,6 +11,7 @@
         <script defer src="js/modelproto.js"></script>
         <script defer src="js/modelproto_dragdrop.js"></script>
         <script defer src="js/modelproto_dialogs.js"></script>
+        <script defer src="js/modelproto_relations.js"></script>
     </head>
     <body onload="initModelProto()">
         <!-- Menu -->
@@ -30,12 +31,15 @@
                 <div class="panel-header">
                     <div>
                         <button id="addtable" class="btn btn-secondary" style="font-weight:bold;" onclick="addTable()" data-i18n="title:param">Ajouter une table</button> 
-                        <button id="addrelation" class="btn btn-secondary" style="font-weight:bold;" onclick="" data-i18n="title:css">Ajouter une relation</button> 
+                        <button id="addrelation" class="btn btn-secondary" style="font-weight:bold;" onclick="addRel()" data-i18n="title:css">Ajouter une relation</button> 
                         <span data-i18n="text:workspace"></span>
                     </div>
                 </div>
                 <div class="panel-content">
-                    <div id="workspace"></div>
+                    <div id="workspace">
+                        <svg id="relations-layer"></svg>
+                        <div id="tables-layer"></div>
+                    </div>
                 </div>
             </div>
         </div>
