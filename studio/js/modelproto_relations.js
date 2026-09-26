@@ -10,101 +10,231 @@ function createSvgElement(tag, attributes = {}) {
     return element;
 }
 
-function getWorkspacePoint(element, side) {
-    const workspace = document.getElementById("workspace");
-    const workspaceRect = workspace.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
+function getWorkspacePoint(fieldElement, tableElement, side) {
+   const workspace = document.getElementById("workspace");
 
-    let x;
+   const workspaceRect = workspace.getBoundingClientRect();
+   const fieldRect = fieldElement.getBoundingClientRect();
+   const tableRect = tableElement.getBoundingClientRect();
 
-    if (side === "left") {
-        x = elementRect.left - workspaceRect.left;
-    } else {
-        x = elementRect.right - workspaceRect.left;
-    }
+   let x;
+   let y;
 
-    return {
-        x: x + workspace.scrollLeft,
-        y: elementRect.top
-            - workspaceRect.top
-            + workspace.scrollTop
-            + elementRect.height / 2
-    };
+   if (side === "left") {
+      x = tableRect.left;
+      y = fieldRect.top + fieldRect.height / 2;
+   } else if (side === "right") {
+      x = tableRect.right;
+      y = fieldRect.top + fieldRect.height / 2;
+   } else if (side === "top") {
+      x = fieldRect.left + fieldRect.width / 2;
+      y = tableRect.top;
+   } else {
+      x = fieldRect.left + fieldRect.width / 2;
+      y = tableRect.bottom;
+   }
+
+   return {
+      x: x - workspaceRect.left + workspace.scrollLeft,
+      y: y - workspaceRect.top + workspace.scrollTop
+   };
 }
 
-function getRelationSides(sourceElement, targetElement) {
-    const sourceRect = sourceElement.getBoundingClientRect();
-    const targetRect = targetElement.getBoundingClientRect();
+/*function getRelationSides(sourceTable, targetTable) {
+   const sourceRect = sourceTable.getBoundingClientRect();
+   const targetRect = targetTable.getBoundingClientRect();
 
-    const sourceCenter = sourceRect.left + sourceRect.width / 2;
-    const targetCenter = targetRect.left + targetRect.width / 2;
+   // La source est entièrement à gauche de la cible.
+   if (sourceRect.right <= targetRect.left) {
+      return {
+         sourceSide: "right",
+         targetSide: "left",
+         orientation: "horizontal"
+      };
+   }
 
-    if (sourceCenter <= targetCenter) {
-        return {
-            sourceSide: "right",
-            targetSide: "left"
-        };
-    }
+   // La source est entièrement à droite de la cible.
+   if (targetRect.right <= sourceRect.left) {
+      return {
+         sourceSide: "left",
+         targetSide: "right",
+         orientation: "horizontal"
+      };
+   }
 
-    return {
-        sourceSide: "left",
-        targetSide: "right"
-    };
+   // La source est entièrement au-dessus de la cible.
+   if (sourceRect.bottom <= targetRect.top) {
+      return {
+         sourceSide: "bottom",
+         targetSide: "top",
+         orientation: "vertical"
+      };
+   }
+
+   // La source est entièrement en dessous de la cible.
+   if (targetRect.bottom <= sourceRect.top) {
+      return {
+         sourceSide: "top",
+         targetSide: "bottom",
+         orientation: "vertical"
+      };
+   }
+
+   *
+    * Cas où les tables se chevauchent partiellement.
+    * On choisit l'axe sur lequel leurs centres sont les plus éloignés.
+    *
+   const sourceCenterX = sourceRect.left + sourceRect.width / 2;
+   const sourceCenterY = sourceRect.top + sourceRect.height / 2;
+   const targetCenterX = targetRect.left + targetRect.width / 2;
+   const targetCenterY = targetRect.top + targetRect.height / 2;
+
+   const deltaX = targetCenterX - sourceCenterX;
+   const deltaY = targetCenterY - sourceCenterY;
+
+   if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+      return {
+         sourceSide: deltaX >= 0 ? "right" : "left",
+         targetSide: deltaX >= 0 ? "left" : "right",
+         orientation: "horizontal"
+      };
+   }
+
+   return {
+      sourceSide: deltaY >= 0 ? "bottom" : "top",
+      targetSide: deltaY >= 0 ? "top" : "bottom",
+      orientation: "vertical"
+   };
+}*/
+
+function getRelationSides(sourceTable, targetTable) {
+   const sourceRect = sourceTable.getBoundingClientRect();
+   const targetRect = targetTable.getBoundingClientRect();
+
+   // Tables côte à côte.
+   if (sourceRect.right <= targetRect.left) {
+      return {sourceSide: "right", targetSide: "left", orientation: "horizontal"};
+   }
+
+   if (targetRect.right <= sourceRect.left) {
+      return {sourceSide: "left", targetSide: "right", orientation: "horizontal"};
+   }
+
+   /*
+    * Tables superposées verticalement :
+    * les deux liens sortent du même côté.
+    */
+   if (sourceRect.bottom <= targetRect.top || targetRect.bottom <= sourceRect.top) {
+        const outsideSide = getOutsideSide(sourceTable, targetTable);
+        return {sourceSide: outsideSide, targetSide: outsideSide, orientation: "vertical-outside"};
+   }
+
+   // Cas de chevauchement partiel.
+   const sourceCenterX = sourceRect.left + sourceRect.width / 2;
+   const sourceCenterY = sourceRect.top + sourceRect.height / 2;
+   const targetCenterX = targetRect.left + targetRect.width / 2;
+   const targetCenterY = targetRect.top + targetRect.height / 2;
+
+   const deltaX = targetCenterX - sourceCenterX;
+   const deltaY = targetCenterY - sourceCenterY;
+
+   if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+      return {sourceSide: deltaX >= 0 ? "right" : "left", targetSide: deltaX >= 0 ? "left" : "right", orientation: "horizontal"};
+   }
+
+   return {sourceSide: "right", targetSide: "right", orientation: "vertical-outside"};
 }
 
-function buildRelationPath(sourcePoint, targetPoint) {
-    const middleX = (sourcePoint.x + targetPoint.x) / 2;
+/*function buildRelationPath(sourcePoint, targetPoint, orientation) {
+   if (orientation === "vertical") {
+      const middleY = (sourcePoint.y + targetPoint.y) / 2;
 
-    return [
-        `M ${sourcePoint.x} ${sourcePoint.y}`,
-        `H ${middleX}`,
-        `V ${targetPoint.y}`,
-        `H ${targetPoint.x}`
-    ].join(" ");
+      return [
+         `M ${sourcePoint.x} ${sourcePoint.y}`,
+         `V ${middleY}`,
+         `H ${targetPoint.x}`,
+         `V ${targetPoint.y}`
+      ].join(" ");
+   }
+
+   const middleX = (sourcePoint.x + targetPoint.x) / 2;
+
+   return [
+      `M ${sourcePoint.x} ${sourcePoint.y}`,
+      `H ${middleX}`,
+      `V ${targetPoint.y}`,
+      `H ${targetPoint.x}`
+   ].join(" ");
+}*/
+
+function buildRelationPath(
+   sourcePoint,
+   targetPoint,
+   orientation,
+   sourceSide
+) {
+   if (orientation === "vertical-outside") {
+      const outsideMargin = 40;
+
+      const outsideX = sourceSide === "right"
+         ? Math.max(sourcePoint.x, targetPoint.x) + outsideMargin
+         : Math.min(sourcePoint.x, targetPoint.x) - outsideMargin;
+
+      return [
+         `M ${sourcePoint.x} ${sourcePoint.y}`,
+         `H ${outsideX}`,
+         `V ${targetPoint.y}`,
+         `H ${targetPoint.x}`
+      ].join(" ");
+   }
+
+   const middleX = (sourcePoint.x + targetPoint.x) / 2;
+
+   return [
+      `M ${sourcePoint.x} ${sourcePoint.y}`,
+      `H ${middleX}`,
+      `V ${targetPoint.y}`,
+      `H ${targetPoint.x}`
+   ].join(" ");
 }
 
 function createCardinalityText(cardinality, point, side) {
-    const offset = side === "right" ? 10 : -10;
+   const offsets = {
+      left:   { x: -10, y: -7, anchor: "end" },
+      right:  { x:  10, y: -7, anchor: "start" },
+      top:    { x:  8,  y: -10, anchor: "start" },
+      bottom: { x:  8,  y:  18, anchor: "start" }
+   };
 
-    const text = createSvgElement("text", {
-        x: point.x + offset,
-        y: point.y - 7,
-        class: "relation-cardinality",
-        "text-anchor": side === "right" ? "start" : "end"
-    });
+   const offset = offsets[side];
 
-    text.textContent = cardinality;
+   const text = createSvgElement("text", {
+      x: point.x + offset.x,
+      y: point.y + offset.y,
+      class: "relation-cardinality",
+      "text-anchor": offset.anchor
+   });
 
-    return text;
+   text.textContent = cardinality;
+
+   return text;
 }
 
 function renderRelation(relation, svg) {
-    const sourceElement = getFieldElement(
-        relation.source.tableId,
-        relation.source.fieldId
-    );
+    const sourceField = getFieldElement(relation.source.tableId, relation.source.fieldId);
+    const targetField = getFieldElement(relation.target.tableId, relation.target.fieldId);
+    if (!sourceField || !targetField) return;
 
-    const targetElement = getFieldElement(
-        relation.target.tableId,
-        relation.target.fieldId
-    );
+    const sourceTable = getTableElement(relation.source.tableId);
+    const targetTable = getTableElement(relation.target.tableId);
+    if (!sourceTable || !targetTable) return;
 
-    if (!sourceElement || !targetElement) {
-        console.warn(
-            `Impossible de tracer la relation ${relation.id} : attribut introuvable`
-        );
-        return;
-    }
+    const {sourceSide, targetSide, orientation} = getRelationSides(sourceTable, targetTable);
 
-    const { sourceSide, targetSide } = getRelationSides(
-        sourceElement,
-        targetElement
-    );
-
-    const sourcePoint = getWorkspacePoint(sourceElement, sourceSide);
-    const targetPoint = getWorkspacePoint(targetElement, targetSide);
-
-    const pathData = buildRelationPath(sourcePoint, targetPoint);
+    const sourcePoint = getWorkspacePoint(sourceField, sourceTable, sourceSide);
+    const targetPoint = getWorkspacePoint(targetField, targetTable, targetSide);
+    //const pathData = buildRelationPath(sourcePoint, targetPoint, orientation);
+    const pathData = buildRelationPath(sourcePoint, targetPoint, orientation, sourceSide);
 
     const group = createSvgElement("g", {
         class: "relation",
@@ -121,32 +251,16 @@ function renderRelation(relation, svg) {
         class: "relation-line"
     });
 
-    const sourceCardinality = createCardinalityText(
-        relation.source.cardinality,
-        sourcePoint,
-        sourceSide
-    );
+    const sourceCardinality = createCardinalityText(relation.source.cardinality, sourcePoint, sourceSide);
+    const targetCardinality = createCardinalityText(relation.target.cardinality, targetPoint, targetSide);
 
-    const targetCardinality = createCardinalityText(
-        relation.target.cardinality,
-        targetPoint,
-        targetSide
-    );
-
-    group.append(
-        hitbox,
-        line,
-        sourceCardinality,
-        targetCardinality
-    );
+    group.append(hitbox, line, sourceCardinality, targetCardinality);
 
     group.addEventListener("click", event => {
         event.stopPropagation();
-
         // Remplace le nom si ta fonction s’appelle autrement.
         openRelationPopup(relation);
     });
-
     svg.appendChild(group);
 }
 
@@ -166,4 +280,37 @@ function renderRelations() {
     modelRoot.relations.forEach(relation => {
         renderRelation(relation, svg);
     });
+}
+
+function getTableElement(tableId) {
+    return document.querySelector(`.model-table[data-table-id="${tableId}"]`);
+}
+
+function getFieldElement(tableId, fieldId) {
+   return document.querySelector(
+      `[data-table-id="${tableId}"][data-field-id="${fieldId}"]`
+   );
+}
+
+function getOutsideSide(sourceTable, targetTable) {
+    const workspace = document.getElementById("workspace");
+    const workspaceRect = workspace.getBoundingClientRect();
+
+    const sourceRect = sourceTable.getBoundingClientRect();
+    const targetRect = targetTable.getBoundingClientRect();
+
+    const leftEdge = Math.min(
+        sourceRect.left,
+        targetRect.left
+    ) - workspaceRect.left;
+
+    const rightEdge = Math.max(
+        sourceRect.right,
+        targetRect.right
+    ) - workspaceRect.left;
+
+    const leftSpace = leftEdge;
+    const rightSpace = workspace.clientWidth - rightEdge;
+
+    return rightSpace >= leftSpace ? "right" : "left";
 }
