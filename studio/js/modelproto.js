@@ -283,12 +283,6 @@ function renderField(field, table) {
     return fieldElement;
 }
 
-function getFieldElement(tableId, fieldId) {
-   return document.querySelector(
-      `[data-table-id="${tableId}"][data-field-id="${fieldId}"]`
-   );
-}
-
 function formatFieldType(field) {
     const type = field.type.toUpperCase();
 
