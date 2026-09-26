@@ -137,6 +137,7 @@ workspace.addEventListener("drop", event => {
     draggedTable = null;
 
     renderModel();
+    renderRelations();
 });
 
 workspace.addEventListener("click", event => {
