@@ -16,6 +16,7 @@ function buildPopupContent(cat){
     if (cat == "addtable") popupTable()
     if (cat == "renametable") popupTable(currenttable)
     if (cat == "addattr") popupAttr(currenttable)
+    if (cat == "addrel") popupRelation()
     else return "<div>No content</div>"
 }
 
@@ -27,6 +28,8 @@ function popupTable(node = null) {
     if (node) {
         tablename = node.name
     }
+    const dialog = document.getElementById("dialog")
+    dialog.style.width = "320px"
     const content = document.getElementById("dialogContent")
     content.innerHTML = `
         <div class="dialog-section">
@@ -345,6 +348,276 @@ function addNewAttr(node, field) {
         objectCounter++
         node.fields.push(newfield)
     }
+    renderModel()
+    closeDialog()
+}
+
+// ----------------------------------------------------------------------------------------------------
+// Popup pour l'ajout d'une relation entre 2 tables
+// ----------------------------------------------------------------------------------------------------
+function popupRelation() {
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Ajouter une nouvelle relation"
+
+    // il faut connaitre l'id du field pour avoir le currentField correct
+    const currentRelation = modelRoot?.relations.find(relation => relation.id === currentrelation);
+    let relsourcetableid = ""
+    let relsourcefieldid = ""
+    let relsourcecardinality = ""
+    let relsourcerole = ""
+    let reltargettableid = ""
+    let reltargetfieldid = ""
+    let reltargetcardinality = ""
+    let reltargetrole = ""
+    let relforeignkeyside = ""
+    let relcomment = ""
+    if (currentRelation) {
+        head.innerText = "Modifier une relation"
+        relsourcetableid = currentRelation.source.tableId||""
+        relsourcefieldid = currentRelation.source.fieldId||""
+        relsourcecardinality = currentRelation.source.cardinality||""
+        relsourcerole = currentRelation.source.role||""
+        reltargettableid = currentRelation.target.tableId||""
+        reltargetfieldid = currentRelation.target.fieldId||""
+        reltargetcardinality = currentRelation.target.cardinality||""
+        reltargetrole = currentRelation.target.role||""
+        relforeignkeyside = currentRelation.foreignKeySide||""
+        relcomment = currentRelation.comment||""
+    }
+    const dialog = document.getElementById("dialog")
+    dialog.style.width = "740px"
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-column">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="relsourcetableid">Table source :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="relsourcetableid"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="relsourcefieldid">Attribut source :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="relsourcefieldid"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="relsourcecardinality">Cardinalité de la source :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="relsourcecardinality"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="relsourcerole">Rôle de la source :</label>
+                </div>
+                <div class="dialog-row">
+                    <input id="relsourcerole" type="text" value="${relsourcerole}">
+                </div>
+                <div id="fkside" sytle="display:none;">
+                    <div class="dialog-row">
+                        <label for="relforeignkeyside">Extrémité de la clé étrangère :</label>
+                    </div>
+                    <div class="dialog-row">
+                        <select id="relforeignkeyside">
+                            <option value="">Aucune extrémité</option>
+                            <option value="source">Source</option>
+                            <option value="target">Cible</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-column">
+            <div class="dialog-section">
+                <div class="dialog-row">
+                    <label for="reltargettableid">Table cible :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="reltargettableid"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="reltargetfieldid">Attribut cible :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="reltargetfieldid"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="reltargetcardinality">Cardinalité de la cible :</label>
+                </div>
+                <div class="dialog-row">
+                    <select id="reltargetcardinality"></select>
+                </div>
+                <div class="dialog-row">
+                    <label for="reltargetrole">Rôle de la cible :</label>
+                </div>
+                <div class="dialog-row">
+                    <input id="reltargetrole" type="text" value="${reltargetrole}">
+                </div>
+                <div class="dialog-row">
+                    <label for="relcomment">Commentaire :</label>
+                </div>
+                <div class="dialog-row">
+                    <textarea id="relcomment">${relcomment}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button id="save" class="btn btn-primary">${t("validate")}</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
+        </div>`
+
+        content.querySelector("#save").onclick = () => {
+            addRelation(currentRelation)
+            tosave = true
+            document.getElementById("savebtn").className = "tosave"
+        }
+
+        const relstableid = content.querySelector("#relsourcetableid")
+        modelRoot.tables.forEach(opt=>{
+            const o = document.createElement("option")
+            o.value = opt.id
+            o.textContent = opt.name
+            relstableid.appendChild(o)
+        })
+        if (relsourcetableid === "") {
+            relstableid.options.selectedIndex = 0
+        } else {
+            relstableid.value = relsourcetableid
+        }
+        refreshFieldElement(relstableid, content, "#relsourcefieldid")
+        relstableid.onchange = () => {
+            refreshFieldElement(relstableid, content, "#relsourcefieldid")
+        }
+
+        const relttableid = content.querySelector("#reltargettableid")
+        modelRoot.tables.forEach(opt=>{
+            const o = document.createElement("option")
+            o.value = opt.id
+            o.textContent = opt.name
+            relttableid.appendChild(o)
+        })
+        if (reltargettableid === "") {
+            relttableid.options.selectedIndex = 0
+        } else {
+            relttableid.value = reltargettableid
+        }
+        refreshFieldElement(relttableid, content, "#reltargetfieldid")
+        relttableid.onchange = () => {
+            refreshFieldElement(relttableid, content, "#reltargetfieldid")
+        }
+
+        const selectSourceCardinality = content.querySelector("#relsourcecardinality")
+        CARDINALITY.forEach(opt=>{
+            const o = document.createElement("option")
+            o.value = opt.value
+            o.textContent = opt.label
+            selectSourceCardinality.appendChild(o)
+        })
+        selectSourceCardinality.value = relsourcecardinality || "0..1"
+
+        const selectTargetCardinality = content.querySelector("#reltargetcardinality")
+        CARDINALITY.forEach(opt=>{
+            const o = document.createElement("option")
+            o.value = opt.value
+            o.textContent = opt.label
+            selectTargetCardinality.appendChild(o)
+        })
+        selectTargetCardinality.value = reltargetcardinality || "0..1"
+
+        refreshForeignKeySideElement(content)
+        selectSourceCardinality.onchange = () => {
+            refreshForeignKeySideElement(content)
+        }
+        selectTargetCardinality.onchange = () => {
+            refreshForeignKeySideElement(content)
+        }
+
+}
+
+function refreshFieldElement(reltableElement, content, relfieldId) {
+    if (reltableElement.options.selectedIndex !== -1) {
+        const selectedtableId = reltableElement.options[reltableElement.options.selectedIndex].value
+        const selectedtable = modelRoot.tables.find(table => table.id === selectedtableId);
+        const relationfieldid = content.querySelector(relfieldId)
+        relationfieldid.options.length = 0
+        selectedtable.fields.forEach(opt=>{
+            const o = document.createElement("option")
+            o.value = opt.id
+            o.textContent = opt.name
+            relationfieldid.appendChild(o)
+        })
+    }
+}
+
+function refreshForeignKeySideElement(content) {
+    const relforeignkeyside = content.querySelector("#relforeignkeyside")
+    relforeignkeyside.value = ""
+    const fkside = content.querySelector("#fkside")
+    const selectSourceCardinality = content.querySelector("#relsourcecardinality")
+    const selectTargetCardinality = content.querySelector("#reltargetcardinality")
+    const sourceCardinality = selectSourceCardinality.options[selectSourceCardinality.options.selectedIndex].value
+    const targetCardinality = selectTargetCardinality.options[selectTargetCardinality.options.selectedIndex].value
+    if ((sourceCardinality === "0..1" || sourceCardinality === "1..1") && (targetCardinality === "0..1" || targetCardinality === "1..1")) {
+        fkside.style.display = "block"
+    } else {
+        fkside.style.display = "none"
+    }
+    if (sourceCardinality === "0..n" || sourceCardinality === "1..n") {
+        relforeignkeyside.value = "source"
+    }
+    if (targetCardinality === "0..n" || targetCardinality === "1..n") {
+        relforeignkeyside.value = "target"
+    }
+    if ((sourceCardinality === "0..n" || sourceCardinality === "1..n")  && (targetCardinality === "0..n" || targetCardinality === "1..n")) {
+        relforeignkeyside.value = ""
+    }
+}
+
+const CARDINALITY = [
+    { value: "0..1", label: "0..1 — Zéro ou un" },
+    { value: "1..1", label: "1..1 — Exactement un" },
+    { value: "0..n", label: "0..n — Zéro ou plusieurs" },
+    { value: "1..n", label: "1..n — Un ou plusieurs" }
+]
+
+function addRelation(node) {
+    if (node) {
+        // modification de la relation
+        node.source.tableId = document.getElementById("relsourcetableid").options[document.getElementById("relsourcetableid").selectedIndex].value
+        node.source.fieldId = document.getElementById("relsourcefieldid").options[document.getElementById("relsourcefieldid").selectedIndex].value
+        node.source.cardinality = document.getElementById("relsourcecardinality").options[document.getElementById("relsourcecardinality").selectedIndex].value
+        node.source.role = document.getElementById("relsourcerole").value
+        node.target.tableId = document.getElementById("reltargettableid").options[document.getElementById("reltargettableid").selectedIndex].value
+        node.target.fieldId = document.getElementById("reltargetfieldid").options[document.getElementById("reltargetfieldid").selectedIndex].value
+        node.target.cardinality = document.getElementById("reltargetcardinality").options[document.getElementById("reltargetcardinality").selectedIndex].value
+        node.target.role = document.getElementById("reltargetrole").value
+        node.foreignKeySide = document.getElementById("relforeignkeyside").options[document.getElementById("relforeignkeyside").selectedIndex].value
+        node.comment = document.getElementById("relcomment").value
+    } else {
+        // ajout pur et simple
+        const newrelation = {
+            id: `relation_${objectCounter}`,
+            source : {
+                tableId: document.getElementById("relsourcetableid").options[document.getElementById("relsourcetableid").selectedIndex].value,
+                fieldId: document.getElementById("relsourcefieldid").options[document.getElementById("relsourcefieldid").selectedIndex].value,
+                cardinality: document.getElementById("relsourcecardinality").options[document.getElementById("relsourcecardinality").selectedIndex].value,
+                role: document.getElementById("relsourcerole").value
+            },
+            target : {
+                tableId: document.getElementById("reltargettableid").options[document.getElementById("reltargettableid").selectedIndex].value,
+                fieldId: document.getElementById("reltargetfieldid").options[document.getElementById("reltargetfieldid").selectedIndex].value,
+                cardinality: document.getElementById("reltargetcardinality").options[document.getElementById("reltargetcardinality").selectedIndex].value,
+                role: document.getElementById("reltargetrole").value
+            },
+            foreignKeySide : document.getElementById("relforeignkeyside").options[document.getElementById("relforeignkeyside").selectedIndex].value,
+            comment: document.getElementById("relcomment").value
+        }
+        objectCounter++
+        modelRoot.relations.push(newrelation)
+        console.log(newrelation)
+    }
+    renderRelations()
     renderModel()
     closeDialog()
 }
