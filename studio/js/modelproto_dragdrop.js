@@ -105,15 +105,11 @@ workspace.addEventListener("drop", event => {
                 "model-field-drop-after"
             );
 
-        reorderField(
-            draggedField.tableId,
-            draggedField.fieldId,
-            targetFieldId,
-            placeAfter
-        );
+        reorderField(draggedField.tableId, draggedField.fieldId, targetFieldId, placeAfter);
 
         clearFieldDrag();
         renderModel();
+        renderRelations()
 
         return;
     }
