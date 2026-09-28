@@ -486,6 +486,12 @@ function popupRelation() {
             relstableid.value = relsourcetableid
         }
         refreshFieldElement(relstableid, content, "#relsourcefieldid")
+        const relsourcefield = content.querySelector("#relsourcefieldid")
+        if (relsourcefieldid === "") {
+            relsourcefield.options.selectedIndex = 0
+        } else {
+            relsourcefield.value = relsourcefieldid
+        }
         relstableid.onchange = () => {
             refreshFieldElement(relstableid, content, "#relsourcefieldid")
         }
@@ -503,6 +509,13 @@ function popupRelation() {
             relttableid.value = reltargettableid
         }
         refreshFieldElement(relttableid, content, "#reltargetfieldid")
+        const reltargetfield = content.querySelector("#reltargetfieldid")
+        if (reltargetfieldid === "") {
+            reltargetfield.options.selectedIndex = 0
+        } else {
+            reltargetfield.value = reltargetfieldid
+        }
+
         relttableid.onchange = () => {
             refreshFieldElement(relttableid, content, "#reltargetfieldid")
         }
@@ -582,6 +595,11 @@ const CARDINALITY = [
 ]
 
 function addRelation(node) {
+    // contrôles indispensables
+    if (document.getElementById("relsourcefieldid").options[document.getElementById("relsourcefieldid").selectedIndex].value === document.getElementById("reltargetfieldid").options[document.getElementById("reltargetfieldid").selectedIndex].value) {
+            alert("L'attribut de la source ne peut pas identique à l'attribut de la cible")
+            return
+        }
     if (node) {
         // modification de la relation
         node.source.tableId = document.getElementById("relsourcetableid").options[document.getElementById("relsourcetableid").selectedIndex].value
