@@ -109,8 +109,12 @@ async function addTable() {
 
 async function addRel() {
     const session = await getSession()
-    //const head = document.getElementById("dialogHeader")
-    //head.innerText = "Ajouter une nouvelle table"
+    openDialog("addrel")
+}
+
+async function editRel(relationId) {
+    const session = await getSession()
+    currentrelation = relationId
     openDialog("addrel")
 }
 
