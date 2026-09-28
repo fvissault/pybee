@@ -610,6 +610,10 @@ body {
    stroke-width: 2.5;
 }
 
+.relation:hover .relation-cardinality-marker {
+   color: #2563eb;
+}
+
 .relation-cardinality {
    fill: #334155;
    font-size: 11px;
@@ -617,3 +621,23 @@ body {
    user-select: none;
    pointer-events: none;
 }
+
+.relation-cardinality-marker {
+   color: #64748b;
+   pointer-events: none;
+}
+
+.cardinality-symbol {
+   fill: none;
+   stroke: currentColor;
+   stroke-width: 1.8;
+   stroke-linecap: round;
+   stroke-linejoin: round;
+}
+
+.cardinality-circle {
+   fill: #ffffff;
+   stroke: currentColor;
+   stroke-width: 1.8;
+}
+
