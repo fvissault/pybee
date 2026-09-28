@@ -40,76 +40,26 @@ function getWorkspacePoint(fieldElement, tableElement, side) {
    };
 }
 
-/*function getRelationSides(sourceTable, targetTable) {
-   const sourceRect = sourceTable.getBoundingClientRect();
-   const targetRect = targetTable.getBoundingClientRect();
-
-   // La source est entièrement à gauche de la cible.
-   if (sourceRect.right <= targetRect.left) {
-      return {
-         sourceSide: "right",
-         targetSide: "left",
-         orientation: "horizontal"
-      };
-   }
-
-   // La source est entièrement à droite de la cible.
-   if (targetRect.right <= sourceRect.left) {
-      return {
-         sourceSide: "left",
-         targetSide: "right",
-         orientation: "horizontal"
-      };
-   }
-
-   // La source est entièrement au-dessus de la cible.
-   if (sourceRect.bottom <= targetRect.top) {
-      return {
-         sourceSide: "bottom",
-         targetSide: "top",
-         orientation: "vertical"
-      };
-   }
-
-   // La source est entièrement en dessous de la cible.
-   if (targetRect.bottom <= sourceRect.top) {
-      return {
-         sourceSide: "top",
-         targetSide: "bottom",
-         orientation: "vertical"
-      };
-   }
-
-   *
-    * Cas où les tables se chevauchent partiellement.
-    * On choisit l'axe sur lequel leurs centres sont les plus éloignés.
-    *
-   const sourceCenterX = sourceRect.left + sourceRect.width / 2;
-   const sourceCenterY = sourceRect.top + sourceRect.height / 2;
-   const targetCenterX = targetRect.left + targetRect.width / 2;
-   const targetCenterY = targetRect.top + targetRect.height / 2;
-
-   const deltaX = targetCenterX - sourceCenterX;
-   const deltaY = targetCenterY - sourceCenterY;
-
-   if (Math.abs(deltaX) >= Math.abs(deltaY)) {
-      return {
-         sourceSide: deltaX >= 0 ? "right" : "left",
-         targetSide: deltaX >= 0 ? "left" : "right",
-         orientation: "horizontal"
-      };
-   }
-
-   return {
-      sourceSide: deltaY >= 0 ? "bottom" : "top",
-      targetSide: deltaY >= 0 ? "top" : "bottom",
-      orientation: "vertical"
-   };
-}*/
-
 function getRelationSides(sourceTable, targetTable) {
    const sourceRect = sourceTable.getBoundingClientRect();
    const targetRect = targetTable.getBoundingClientRect();
+
+      /*
+    * Relation réflexive :
+    * les deux attributs appartiennent à la même table.
+    */
+   if (sourceTable === targetTable) {
+      const outsideSide = getOutsideSide(
+         sourceTable,
+         targetTable
+      );
+
+      return {
+         sourceSide: outsideSide,
+         targetSide: outsideSide,
+         orientation: "reflexive"
+      };
+   }
 
    // Tables côte à côte.
    if (sourceRect.right <= targetRect.left) {
@@ -145,34 +95,22 @@ function getRelationSides(sourceTable, targetTable) {
    return {sourceSide: "right", targetSide: "right", orientation: "vertical-outside"};
 }
 
-/*function buildRelationPath(sourcePoint, targetPoint, orientation) {
-   if (orientation === "vertical") {
-      const middleY = (sourcePoint.y + targetPoint.y) / 2;
+function buildRelationPath(sourcePoint, targetPoint, orientation, sourceSide) {
+   if (orientation === "reflexive") {
+      const loopWidth = 50;
+
+      const outsideX = sourceSide === "right"
+         ? Math.max(sourcePoint.x, targetPoint.x) + loopWidth
+         : Math.min(sourcePoint.x, targetPoint.x) - loopWidth;
 
       return [
          `M ${sourcePoint.x} ${sourcePoint.y}`,
-         `V ${middleY}`,
-         `H ${targetPoint.x}`,
-         `V ${targetPoint.y}`
+         `H ${outsideX}`,
+         `V ${targetPoint.y}`,
+         `H ${targetPoint.x}`
       ].join(" ");
    }
 
-   const middleX = (sourcePoint.x + targetPoint.x) / 2;
-
-   return [
-      `M ${sourcePoint.x} ${sourcePoint.y}`,
-      `H ${middleX}`,
-      `V ${targetPoint.y}`,
-      `H ${targetPoint.x}`
-   ].join(" ");
-}*/
-
-function buildRelationPath(
-   sourcePoint,
-   targetPoint,
-   orientation,
-   sourceSide
-) {
    if (orientation === "vertical-outside") {
       const outsideMargin = 40;
 
@@ -233,7 +171,6 @@ function renderRelation(relation, svg) {
 
     const sourcePoint = getWorkspacePoint(sourceField, sourceTable, sourceSide);
     const targetPoint = getWorkspacePoint(targetField, targetTable, targetSide);
-    //const pathData = buildRelationPath(sourcePoint, targetPoint, orientation);
     const pathData = buildRelationPath(sourcePoint, targetPoint, orientation, sourceSide);
 
     const group = createSvgElement("g", {
@@ -251,15 +188,14 @@ function renderRelation(relation, svg) {
         class: "relation-line"
     });
 
-    const sourceCardinality = createCardinalityText(relation.source.cardinality, sourcePoint, sourceSide);
-    const targetCardinality = createCardinalityText(relation.target.cardinality, targetPoint, targetSide);
+    const sourceCardinality = createCardinalityMarker(relation.source.cardinality, sourcePoint, sourceSide);
+    const targetCardinality = createCardinalityMarker(relation.target.cardinality, targetPoint, targetSide);
 
     group.append(hitbox, line, sourceCardinality, targetCardinality);
 
     group.addEventListener("click", event => {
         event.stopPropagation();
-        // Remplace le nom si ta fonction s’appelle autrement.
-        openRelationPopup(relation);
+        editRel(relation.id);
     });
     svg.appendChild(group);
 }
@@ -313,4 +249,72 @@ function getOutsideSide(sourceTable, targetTable) {
     const rightSpace = workspace.clientWidth - rightEdge;
 
     return rightSpace >= leftSpace ? "right" : "left";
+}
+
+function createCardinalityMarker(cardinality, point, side) {
+    const angles = {right: 0, bottom: 90, left: 180, top: -90};
+    const group = createSvgElement("g", {
+        class: "relation-cardinality-marker",
+        transform: `translate(${point.x} ${point.y}) rotate(${angles[side]})`
+    });
+
+    const addLine = (x1, y1, x2, y2) => {
+        group.appendChild(
+            createSvgElement("line", {
+                x1,
+                y1,
+                x2,
+                y2,
+                fill: "none",
+                stroke: "#64748b",
+                "stroke-width": "1.8",
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                class: "cardinality-symbol"
+            })
+        );
+    };
+
+    const addCircle = (cx, cy, radius) => {
+        group.appendChild(
+            createSvgElement("circle", {
+                cx,
+                cy,
+                r: radius,
+                fill: "#ffffff",
+                stroke: "#64748b",
+                "stroke-width": "1.8",
+                class: "cardinality-circle"
+            })
+        );
+    };
+    /*
+        * Le symbole du maximum est placé au plus près
+        * de la table.
+        */
+    const maximumIsMany = cardinality.endsWith("n");
+
+    if (maximumIsMany) {
+        // Patte de corbeau.
+        addLine(11, 0, 1, -7);
+        addLine(11, 0, 3, 0);
+        addLine(11, 0, 1, 7);
+    } else {
+        // Maximum égal à 1.
+        addLine(6, -7, 6, 7);
+    }
+
+    /*
+        * Le symbole du minimum est placé légèrement
+        * plus loin de la table.
+        */
+    const minimumIsZero = cardinality.startsWith("0");
+
+    if (minimumIsZero) {
+        addCircle(17, 0, 4);
+    } else {
+        addLine(15, -7, 15, 7);
+    }
+
+    return group;
 }
