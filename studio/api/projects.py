@@ -36,7 +36,9 @@ elif action == "getprojectbyid":
         data["id"],
     ))
     project = cursor.fetchone()
-    json_response(project)
+    if project:
+        project = clean_row(project)
+    json_response(project if project is not None else {"error": "project by id don't exists"})
 
 # SELECT (getprojectandentity)
 elif action == "getprojectandentity":
@@ -46,7 +48,9 @@ elif action == "getprojectandentity":
         data["id"],
     ))
     project = cursor.fetchone()
-    json_response(project)
+    if project:
+        project = clean_row(project)
+    json_response(project if project is not None else {"error": "project and entity by id don't exists"})
 
 # SELECT (projects from user)
 elif action == "getproject":
@@ -56,7 +60,9 @@ elif action == "getproject":
         data["id"],
     ))
     project = cursor.fetchone()
-    json_response(project)
+    if project:
+        project = clean_row(project)
+    json_response(project if project is not None else {"error": "project by user don't exists"})
 
 # SELECT (projects from user)
 elif action == "list":
@@ -66,7 +72,8 @@ elif action == "list":
         data["userid"],
     ))
     projects = cursor.fetchall()
-    json_response(projects)
+    projects = [clean_row(c) for c in projects]
+    json_response(projects if projects is not None else {"error": "projects by user don't exists"})
 
 # UPDATE (active/deactive)
 elif action == "updateactive":
