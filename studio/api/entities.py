@@ -17,7 +17,9 @@ if action == "getByName":
         data["name"],
     ))
     entity = cursor.fetchone()
-    json_response(entity if entity else {"error": "Organization don't exists"})
+    if entity:
+        entity = clean_row(entity)
+    json_response(entity if entity is not None else {"error": "entity by name don't exists"})
 else:
     session = require_auth()
     
