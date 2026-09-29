@@ -28,8 +28,9 @@ elif action == "listusers":
     cursor.execute(sql, (
         data["projectid"],
     ))
-    projects = cursor.fetchall()
-    json_response(projects)
+    users = cursor.fetchall()
+    users = [clean_row(c) for c in users]
+    json_response(users if users is not None else {"error": "users by project don't exists"})
 
 # SELECT (users from project without owner)
 elif action == "listuserswithoutowner":
@@ -38,8 +39,9 @@ elif action == "listuserswithoutowner":
     cursor.execute(sql, (
         data["projectid"],
     ))
-    projects = cursor.fetchall()
-    json_response(projects)
+    users = cursor.fetchall()
+    users = [clean_row(c) for c in users]
+    json_response(users if users is not None else {"error": "users by project without owner don't exists"})
 
 # SELECT (projects from user)
 elif action == "list":
@@ -49,7 +51,8 @@ elif action == "list":
         data["userid"],
     ))
     projects = cursor.fetchall()
-    json_response(projects)
+    projects = [clean_row(c) for c in projects]
+    json_response(projects if projects is not None else {"error": "projects by user don't exists"})
 
 # UPDATE
 elif action == "update":
