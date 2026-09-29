@@ -35,7 +35,9 @@ elif action == "getbyid":
         data["id"],
     ))
     projectfile = cursor.fetchone()
-    json_response(projectfile if projectfile else {"error": "file don't exists"})
+    if projectfile:
+        projectfile = clean_row(projectfile)
+    json_response(projectfile if projectfile is not None else {"error": "project file by id don't exists"})
 
 # SELECT (getbypagename)
 elif action == "getbypagename":
@@ -45,7 +47,9 @@ elif action == "getbypagename":
         data["pagename"],
     ))
     projectfile = cursor.fetchone()
-    json_response(projectfile if projectfile else {"error": "file don't exists"})
+    if projectfile:
+        projectfile = clean_row(projectfile)
+    json_response(projectfile if projectfile is not None else {"error": "project file by pagename don't exists"})
 
 # SELECT (getbyproject)
 elif action == "getbyproject":
@@ -55,7 +59,8 @@ elif action == "getbyproject":
         data["id"],
     ))
     projectfiles = cursor.fetchall()
-    json_response(projectfiles if projectfiles else {"error": "files don't exists"})
+    projectfiles = [clean_row(c) for c in projectfiles]
+    json_response(projectfiles if projectfiles is not None else {"error": "project files by project id don't exists"})
 
 # UPDATE (filecontent)
 elif action == "filecontent":
