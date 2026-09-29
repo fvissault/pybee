@@ -18,8 +18,10 @@ if action == "getByName":
     cursor.execute(sql, (
         data["name"],
     ))
-    entity = cursor.fetchone()
-    json_response(entity if entity else {"error": "Model don't exists"})
+    model = cursor.fetchone()
+    if model:
+        credential = clean_row(model)
+    json_response(model if model is not None else {"error": "Model by name don't exists"})
 
 # SELECT (getById)
 elif action == "getById":
@@ -28,8 +30,10 @@ elif action == "getById":
     cursor.execute(sql, (
         data["id"],
     ))
-    entity = cursor.fetchone()
-    json_response(entity if entity else {"error": "Model don't exists"})
+    model = cursor.fetchone()
+    if model:
+        credential = clean_row(model)
+    json_response(model if model is not None else {"error": "Model by id don't exists"})
 
 # CREATE
 elif action == "create":
@@ -62,7 +66,8 @@ elif action == "list":
         data["id_project"],
     ))
     models = cursor.fetchall()
-    json_response(models)
+    models = [clean_row(c) for c in models]
+    json_response(models if models is not None else {"error": "Models by project don't exists"})
 
 # DELETE
 elif action == "delete":
