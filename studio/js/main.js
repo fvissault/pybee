@@ -87,6 +87,16 @@ const delmember_icon = `
         <line x1="18" y1="11" x2="24" y2="11"></line>
     </svg>`;
 
+const credentials_icon = `
+    <svg class="icon" viewBox="0 0 24 24">
+        <ellipse cx="8.5" cy="5" rx="5.5" ry="2.3"/>
+        <path d="M3 5v11c0 1.3 2.5 2.3 5.5 2.3 1.1 0 2.1-.1 2.9-.4"/>
+        <path d="M14 5v5"/>
+        <path d="M3 10.5c0 1.3 2.5 2.3 5.5 2.3.8 0 1.5-.1 2.1-.2"/>
+        <rect x="14" y="15" width="8" height="6" rx="1"/>
+        <path d="M16 15v-2a2 2 0 0 1 4 0v2"/>
+    </svg>`;
+
 function renderCard(projects, session) {
     let html = "";
     projects.forEach(p => {
@@ -102,6 +112,9 @@ function renderCard(projects, session) {
                                     </button>
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
+                                    </button>
+                                    <button class="card_button" onclick="credentials(${p.id});" data-i18n="title:credentials">
+                                        ${credentials_icon}
                                     </button>
                                     <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
                                         ${model_icon}
@@ -205,6 +218,13 @@ let modelWindow = null
 async function model(projectid) {
     const session = await getSession()
     modelWindow = window.open(`model.html?projectid=${projectid}`, "_blank");
+}
+
+var credentialslWindow = null
+
+async function credentials(projectid) {
+    const session = await getSession()
+    credentialslWindow = window.open(`credentials.html?projectid=${projectid}`, "_blank");
 }
 
 async function active_project(projectid, activevalue) {
