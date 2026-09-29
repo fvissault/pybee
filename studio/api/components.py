@@ -80,7 +80,7 @@ elif action == "getbyid":
         composant = cursor.fetchone()
         if composant:
             composant = clean_row(composant)
-        json_response(composant if composant else {"error": "Composant don't exists"})
+        json_response(composant if composant is not None else {"error": "Component by id don't exists"})
     except Exception as e:
         json_response({"status": "nok", "message": str(e)})
 
@@ -95,7 +95,7 @@ elif action == "getbyname":
         composant = cursor.fetchone()
         if composant:
             composant = clean_row(composant)
-        json_response(composant if composant else {"error": "Composant don't exists"})
+        json_response(composant if composant is not None else {"error": "component by name don't exists"})
     except Exception as e:
         json_response({"status": "nok", "message": str(e)})
 
@@ -105,7 +105,7 @@ elif action == "getallcomponents":
         cursor.execute(sql)
         composants = cursor.fetchall()
         composants = [clean_row(c) for c in composants]
-        json_response(composants)
+        json_response(composants if composants is not None else {"error": "components don't exists"})
     except Exception as e:
         json_response({"status": "nok", "message": str(e)})
 
@@ -118,7 +118,7 @@ elif action == "getorgcomponents":
         ))
         composants = cursor.fetchall()
         composants = [clean_row(c) for c in composants]
-        json_response(composants)
+        json_response(composants if composants is not None else {"error": "components by organization don't exists"})
     except Exception as e:
         json_response({"status": "nok", "message": str(e)})
 
