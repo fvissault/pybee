@@ -35,7 +35,9 @@ elif action == "getbyid":
         data["id"],
     ))
     cssfile = cursor.fetchone()
-    json_response(cssfile if cssfile else {"error": "file don't exists"})
+    if cssfile:
+        cssfile = clean_row(cssfile)
+    json_response(cssfile if cssfile is not None else {"error": "css file by id don't exists"})
 
 # SELECT (getbyname)
 elif action == "getbyname":
@@ -45,7 +47,9 @@ elif action == "getbyname":
         data["name"],
     ))
     cssfile = cursor.fetchone()
-    json_response(cssfile if cssfile else {"error": "file don't exists"})
+    if cssfile:
+        cssfile = clean_row(cssfile)
+    json_response(cssfile if cssfile is not None else {"error": "css file by name don't exists"})
 
 # SELECT (getbyproject)
 elif action == "getbyproject":
@@ -55,7 +59,8 @@ elif action == "getbyproject":
         data["id"],
     ))
     cssfiles = cursor.fetchall()
-    json_response(cssfiles if cssfiles else {"error": "files don't exists"})
+    cssfiles = [clean_row(c) for c in cssfiles]
+    json_response(cssfiles if cssfiles is not None else {"error": "css files by project don't exists"})
 
 # UPDATE (filecontent)
 elif action == "updatecontent":
