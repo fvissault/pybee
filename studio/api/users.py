@@ -123,7 +123,7 @@ elif action == "reset":
 else:
     session = require_auth()
 
-    # UPDATE (password)
+    # SELECT (password)
     if action == "getoldpass":
         data = normalize(form, ["newpassword", "email"])
         sql = "SELECT * FROM users WHERE email=%s"
@@ -131,10 +131,12 @@ else:
             data["email"],
         ))
         user = cursor.fetchone()
+        if user:
+            user = clean_row(user)
         if user["password"] == hash_password(data["newpassword"]):
             json_response({"status": "nok"})
         else:
-            json_response(user if user else {"error": "user don't exists"})
+            json_response(user if user is not None else {"error": "user don't exists"})
 
     # SELECT (getmembertoadd)
     elif action == "getmembertoadd":
@@ -150,7 +152,8 @@ else:
             data["projectid"],
         ))
         users = cursor.fetchall()
-        json_response(users)
+        users = [clean_row(c) for c in users]
+        json_response(users if users is not None else {"error": "users by project id don't exists"})
 
     # SELECT (getuser)
     elif action == "getuser":
@@ -160,7 +163,9 @@ else:
             data["userid"],
         ))
         user = cursor.fetchone()
-        json_response(user if user else {"error": "user don't exists"})
+        if user:
+            user = clean_row(user)
+        json_response(user if user is not None else {"error": "user and entity by id don't exists"})
 
     # SELECT (getuserinfo)
     elif action == "getuserinfo":
@@ -170,7 +175,9 @@ else:
             data["userid"],
         ))
         user = cursor.fetchone()
-        json_response(user if user else {"error": "user don't exists"})
+        if user:
+            user = clean_row(user)
+        json_response(user if user is not None else {"error": "user by id don't exists"})
 
     # UPDATE
     elif action == "update":
