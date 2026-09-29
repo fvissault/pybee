@@ -15,6 +15,9 @@ const translations = {
         delproj: "Supprimer le projet",
         addmember: "Ajouter un membre",
         delmember: "Supprimer un membre",
+
+        credentials: "Identifiants de base de données",
+        
         alertactiv: "L'activation du projet a bien été effectuée",
         alertdeactiv: "La désactivation du projet a bien été effectuée",
         confirmdelproj: "Dois-je vraiment supprimer ce projet?",
