@@ -36,7 +36,9 @@ elif action == "getbyid":
         data["id"],
     ))
     jsfile = cursor.fetchone()
-    json_response(jsfile if jsfile else {"error": "file don't exists"})
+    if jsfile:
+        jsfile = clean_row(jsfile)
+    json_response(jsfile if jsfile else {"error": "js file by id don't exists"})
 
 # SELECT (getbyname)
 elif action == "getbyname":
@@ -46,7 +48,9 @@ elif action == "getbyname":
         data["name"],
     ))
     jsfile = cursor.fetchone()
-    json_response(jsfile if jsfile else {"error": "file don't exists"})
+    if jsfile:
+        jsfile = clean_row(jsfile)
+    json_response(jsfile if jsfile is not None else {"error": "js file by name don't exists"})
 
 # SELECT (getbyproject)
 elif action == "getbyproject":
@@ -56,7 +60,8 @@ elif action == "getbyproject":
         data["id"],
     ))
     jsfiles = cursor.fetchall()
-    json_response(jsfiles if jsfiles else {"error": "files don't exists"})
+    jsfiles = [clean_row(c) for c in jsfiles]
+    json_response(jsfiles if jsfiles is not None else {"error": "js files by project don't exists"})
 
 # SELECT (getbytype)
 elif action == "getbytype":
@@ -67,7 +72,8 @@ elif action == "getbytype":
         data["content_type"],
     ))
     jsfiles = cursor.fetchall()
-    json_response(jsfiles if jsfiles else {"error": "files don't exists"})
+    jsfiles = [clean_row(c) for c in jsfiles]
+    json_response(jsfiles if jsfiles is not None else {"error": "js files by type don't exists"})
 
 # UPDATE (filecontent)
 elif action == "updatecontent":
