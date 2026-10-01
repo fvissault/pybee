@@ -1,0 +1,157 @@
+let project_id = 0
+let creds_id = 0
+
+function openDialog(cat) {
+    buildPopupContent(cat)
+    document.getElementById("dialog").style.display="block"
+}
+
+function closeDialog() {
+    document.getElementById("dialogHeader").innerHTML = ""
+    document.getElementById("dialogContent").innerHTML = ""
+    document.getElementById("dialog").style.display="none"
+}
+
+function buildPopupContent(cat){
+    if (cat == "addcreds") popupCredentials()
+    if (cat == "editcreds") popupCredentials(creds_id)
+    return "<div>No content</div>"
+}
+
+async function addcreds(idproject) {
+    const session = await getSession()
+    project_id = idproject
+    creds_id = null
+    openDialog("addcreds")
+}
+
+async function editcreds(idproject, credsid) {
+    const session = await getSession()
+    project_id = idproject
+    creds_id = credsid
+    openDialog("editcreds")
+}
+
+async function popupCredentials(credentialsid = null) {
+    const head = document.getElementById("dialogHeader")
+    head.innerText = "Ajout d'un nouveau identifiant de base de données"
+
+    let credname = ""
+    let credservername = ""
+    let creddbname = ""
+    let credusername = ""
+    let creduserpass = ""
+
+    if (credentialsid) {
+        // édition
+    }
+
+    const content = document.getElementById("dialogContent")
+    content.innerHTML = `
+        <div class="dialog-section">
+            <div class="dialog-row">
+                <label for="credname">Nom du jeu :</label>
+            </div>
+            <div class="dialog-row">
+                <input id="credname" type="text" value="${credname}">
+            </div>
+            <div class="dialog-row">
+                <label for="credservername">Nom du serveur :</label>
+            </div>
+            <div class="dialog-row">
+                <input id="credservername" type="text" value="${credservername}" placeholder="localhost">
+            </div>
+            <div class="dialog-row">
+                <label for="creddbname">Nom du modèle :</label>
+            </div>
+            <div class="dialog-row">
+                <select id="creddbname"></select>
+            </div>
+            <div class="dialog-row">
+                <label for="credusername">Nom de l'utilisateur :</label>
+            </div>
+            <div class="dialog-row">
+                <input id="credusername" type="text" value="${credusername}" placeholder="root">
+            </div>
+            <div class="dialog-row">
+                <label for="creduserpass">Mot de passe de l'utilisateur :</label>
+            </div>
+            <div class="dialog-row">
+                <input id="creduserpass" type="text" value="${creduserpass}">
+            </div>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn btn-primary" onclick="saveCredentials(${project_id})">Valider</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+        </div>`
+
+        const credDbNameSelect = document.getElementById("creddbname")
+        await fetch("/pybee/studio/api/models.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "list",
+                id_project: projectid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            if (!data.status) {
+                data.forEach(opt => {
+                    const o = document.createElement("option")
+                    o.value = opt.name
+                    o.textContent = opt.name
+                    credDbNameSelect.appendChild(o)
+                })
+                if (creddbname === "") {
+                    credDbNameSelect.options.selectedIndex = 0
+                } else {
+                    credDbNameSelect.value = creddbname
+                }
+            }
+        });
+}
+
+async function saveCredentials(idproject) {
+    const session = await getSession()
+    const credname = document.getElementById("credname")
+    if (credname.value.trim() === "") {
+        alert("Le nom du jeu de données est obligatoire")
+        credname.focus()
+        return
+    }
+    const credservername = document.getElementById("credservername")
+    const creddbname = document.getElementById("creddbname")
+    const credusername = document.getElementById("credusername")
+    const creduserpass = document.getElementById("creduserpass")
+
+    if (creds_id) {
+        // cas de l'update
+    } else {
+        await fetch("/pybee/studio/api/models_credentials.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "create",
+                id_project: idproject,
+                name: credname.value.trim(),
+                servername: credservername.value.trim(),
+                databasename: creddbname.value.trim(),
+                username: credusername.value.trim(),
+                userpass: creduserpass.value
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            if (data.status === "ok") {
+                alert("Vos identifiants de base de données ont bien été enregistrés")
+            } else {
+                alert("Erreur : vos identifiants de base de données n'ont pas été enregistrés")
+            }
+        });
+    }
+    displayCredentials(document.getElementById("credentials"), idproject)
+    closeDialog()
+}
