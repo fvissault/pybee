@@ -124,7 +124,10 @@ elif action == "getorgcomponents":
 
 # DELETE
 elif action == "delete":
-    data = normalize(form, ["id"])
-    cursor.execute("DELETE FROM composants WHERE id=%s", (data["id"],))
-    db.commit()
-    json_response({"status": "ok"})
+    try:
+        data = normalize(form, ["id"])
+        cursor.execute("DELETE FROM composants WHERE id=%s", (data["id"],))
+        db.commit()
+        json_response({"status": "ok"})
+    except Exception as e:
+        json_response({"status": "nok", "message": str(e)})
