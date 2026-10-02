@@ -117,7 +117,7 @@ async function displayCredentials(element, idProject) {
                 </svg>
             `;
             boutonEditer.addEventListener("click", () => {
-                editCredential(credential);
+                editcreds(idProject, credential["id"]);
             });
 
             const boutonSupprimer = document.createElement("button");
@@ -133,7 +133,7 @@ async function displayCredentials(element, idProject) {
                 </svg>
             `;
             boutonSupprimer.addEventListener("click", () => {
-                deleteCredential(credential);
+                delcreds(idProject, credential["id"]);
             });
 
             actions.append(boutonEditer, boutonSupprimer);
