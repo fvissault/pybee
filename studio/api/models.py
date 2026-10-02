@@ -44,12 +44,13 @@ elif action == "getById":
 # CREATE
 elif action == "create":
     try:
-        data = normalize(form, ["id_project", "name", "description"])
-        sql = "INSERT INTO models (id_project, name, descrption, modelcontent) VALUES (%s,%s,%s,'{}')"
+        data = normalize(form, ["id_project", "name", "description", "id_credentials"])
+        sql = "INSERT INTO models (id_project, name, description, id_credentials, modelcontent) VALUES (%s,%s,%s,%s,'{}')"
         cursor.execute(sql, (
             data["id_project"],
             data["name"],
             data["description"],
+            data["id_credentials"],
         ))
         db.commit()
         json_response({"status": "ok"})
