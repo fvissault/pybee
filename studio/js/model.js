@@ -71,7 +71,7 @@ function renderCard(models, session) {
                         <div class="card_title">${model.name}</div>
                         <div class="card_desc">${model.description}</div>
                         <div class="block_buttons">
-                            <button class="card_button" onclick="details_project(${model.id});" data-i18n="title:infos">
+                            <button class="card_button" onclick="details_model(${model.id});" data-i18n="title:infos">
                                 ${details_icon}
                             </button>
                             <button class="card_button" onclick="model(${model.id});" data-i18n="title:model">
@@ -93,4 +93,19 @@ let modelprotoWindow = null
 async function model(modelid) {
     const session = await getSession()
     modelprotoWindow = window.open(`modelproto.html?modelid=${modelid}`, "_blank");
+}
+
+async function details_model(modelid) {
+    const session = await getSession()
+
+}
+
+async function suppress(modelid) {
+    const session = await getSession()
+
+}
+
+async function createModel() {
+    const session = await getSession()
+
 }
