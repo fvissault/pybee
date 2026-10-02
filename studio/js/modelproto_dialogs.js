@@ -80,7 +80,7 @@ async function addNewTable(node) {
                 id: `table_${objectCounter}`,
                 x: 100,
                 y: 50,
-                name: normalizeDatabaseName(tablename.value.trim()),
+                name: normalizeName(tablename.value.trim()),
                 fields: []
             }
             objectCounter++
@@ -316,7 +316,7 @@ function addNewAttr(node, field) {
     
     if (currentField) {
         // modification du champ
-        currentField.name = normalizeDatabaseName(document.getElementById("attrname").value.trim())
+        currentField.name = normalizeName(document.getElementById("attrname").value.trim())
         currentField.type = document.getElementById("attrtype").options[document.getElementById("attrtype").selectedIndex].value
         currentField.length = document.getElementById("attrlength").value
         currentField.precision = document.getElementById("attrprecision").value
@@ -332,7 +332,7 @@ function addNewAttr(node, field) {
         // ajout pur et simple
         const newfield = {
             id: `field_${objectCounter}`,
-            name: normalizeDatabaseName(document.getElementById("attrname").value.trim()),
+            name: normalizeName(document.getElementById("attrname").value.trim()),
             type: document.getElementById("attrtype").options[document.getElementById("attrtype").selectedIndex].value,
             length: document.getElementById("attrlength").value,
             precision: document.getElementById("attrprecision").value,
@@ -641,27 +641,6 @@ function addRelation(node) {
 }
 
 // ----------------------------------------------------------------------------------------------------
-// Normalise tous les noms utilisés : transforme l'espace en _
-// ----------------------------------------------------------------------------------------------------
-function normalizeDatabaseName(name) {
-    let normalizedName = name
-        .trim()
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, "")
-        .replace(/\s+/g, "_")
-        .replace(/[^a-zA-Z0-9_]/g, "_")
-        .replace(/_+/g, "_")
-        .replace(/^_+|_+$/g, "");
-
-    // Un identifiant ne doit pas commencer par un chiffre
-    if (/^\d/.test(normalizedName)) {
-        normalizedName = `_${normalizedName}`;
-    }
-
-    return normalizedName;
-}
-
-// ----------------------------------------------------------------------------------------------------
 // Interdit les doublons de noms des tables
 // ----------------------------------------------------------------------------------------------------
 function tableNameExists(name, excludedTableId = null) {
@@ -754,7 +733,7 @@ function isSqlReservedWord(name) {
 }
 
 function validateDatabaseName(name) {
-    const normalizedName = normalizeDatabaseName(name);
+    const normalizedName = normalizeName(name);
     if (!normalizedName) return {valid: false, name: "", message: "Le nom est obligatoire."};
     if (isSqlReservedWord(normalizedName)) return {valid: false, name: normalizedName, message: `"${normalizedName}" est un mot réservé SQL.`};
     return {valid: true, name: normalizedName, message: ""};
