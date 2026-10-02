@@ -55,3 +55,24 @@ async function fileReadAction(action, filename) {
     const data = await response.json()
     return data
 }
+
+// ----------------------------------------------------------------------------------------------------
+// Normalise tous les noms utilisés : transforme l'espace en _
+// ----------------------------------------------------------------------------------------------------
+function normalizeName(name) {
+    let normalizedName = name
+        .trim()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .replace(/\s+/g, "_")
+        .replace(/[^a-zA-Z0-9_]/g, "_")
+        .replace(/_+/g, "_")
+        .replace(/^_+|_+$/g, "");
+
+    // Un identifiant ne doit pas commencer par un chiffre
+    if (/^\d/.test(normalizedName)) {
+        normalizedName = `_${normalizedName}`;
+    }
+
+    return normalizedName;
+}
