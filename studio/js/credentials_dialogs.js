@@ -32,6 +32,32 @@ async function editcreds(idproject, credsid) {
     openDialog("editcreds")
 }
 
+async function delcreds(idproject, credsid) {
+    const session = await getSession()
+    creds_id = credsid
+    const check = confirm("Etes-vous sûr de supprimer ces identifiants?")
+    if (check) {
+        await fetch("/pybee/studio/api/models_credentials.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "deletebyid",
+                id: credsid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            if (data.status === "ok") {
+                alert("Vos identifiants ont bien été supprimés")
+                displayCredentials(document.getElementById("credentials"), idproject)
+            } else {
+                alert("Vos identifiants n'ont pas été supprimés")
+            }
+        });
+    }
+}
+
 async function popupCredentials(credentialsid = null) {
     const head = document.getElementById("dialogHeader")
     head.innerText = "Ajout d'un nouveau identifiant de base de données"
@@ -44,6 +70,25 @@ async function popupCredentials(credentialsid = null) {
 
     if (credentialsid) {
         // édition
+        await fetch("/pybee/studio/api/models_credentials.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getbyid",
+                id: credentialsid
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            if (!data.status) {
+                credname = data.name
+                credservername = data.servername
+                creddbname = data.databasename
+                credusername = data.username
+                creduserpass = data.userpass
+            }
+        });
     }
 
     const content = document.getElementById("dialogContent")
@@ -77,7 +122,7 @@ async function popupCredentials(credentialsid = null) {
                 <label for="creduserpass">Mot de passe de l'utilisateur :</label>
             </div>
             <div class="dialog-row">
-                <input id="creduserpass" type="text" value="${creduserpass}">
+                <input id="creduserpass" type="password" value="${creduserpass}">
             </div>
         </div>
         <div class="dialog-actions">
@@ -128,6 +173,28 @@ async function saveCredentials(idproject) {
 
     if (creds_id) {
         // cas de l'update
+        await fetch("/pybee/studio/api/models_credentials.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "update",
+                name: credname.value.trim(),
+                servername: credservername.value.trim(),
+                databasename: creddbname.value.trim(),
+                username: credusername.value.trim(),
+                userpass: creduserpass.value,
+                id: creds_id
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            console.log(data)
+            if (data.status === "ok") {
+                alert("Vos identifiants de base de données ont bien été enregistrés")
+            } else {
+                alert("Erreur : vos identifiants de base de données n'ont pas été enregistrés")
+            }
+        });
     } else {
         await fetch("/pybee/studio/api/models_credentials.py", {
             method: "POST",
