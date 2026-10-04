@@ -8,9 +8,10 @@ async function getSession() {
     let session = await res.json();
     // 2. Vérification
     if(!session || session.status || !session.auth) {
-        window.opener.focus()
-        window.opener.location.href = "signin.html"
-        window.close()
+        window.opener.href = "signin.html";
+        if (window.opener.credentialslWindow) window.opener.credentialslWindow.close();
+        if (window.opener.prototypageWindow) window.opener.prototypageWindow.close();
+        window.close();
         return;
     }
     return session
@@ -36,10 +37,10 @@ async function initModels() {
     }
 }
 
-const details_icon = `
+const edit_icon = `
     <svg class="icon" viewBox="0 0 24 24">
-        <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6-10-6-10-6z"></path>
-        <circle cx="12" cy="12" r="3"></circle>
+        <path d="m16 3 5 5-12 12-6 1 1-6Z"/>
+        <path d="m14 5 5 5"/>
     </svg>`;
 
 const model_icon = `
@@ -71,8 +72,8 @@ function renderCard(models, session) {
                         <div class="card_title">${model.name}</div>
                         <div class="card_desc">${model.description}</div>
                         <div class="block_buttons">
-                            <button class="card_button" onclick="details_model(${model.id});" data-i18n="title:infos">
-                                ${details_icon}
+                            <button class="card_button" onclick="edit_model(${model.id});" data-i18n="title:editmodel">
+                                ${edit_icon}
                             </button>
                             <button class="card_button" onclick="model(${model.id});" data-i18n="title:model">
                                 ${model_icon}
@@ -92,20 +93,50 @@ let modelprotoWindow = null
 
 async function model(modelid) {
     const session = await getSession()
-    modelprotoWindow = window.open(`modelproto.html?modelid=${modelid}`, "_blank");
+    if (modelprotoWindow && modelprotoWindow.closed) modelprotoWindow = null
+    if (modelprotoWindow)  {
+        modelprotoWindow.location.reload()
+        modelprotoWindow.focus()
+    } else modelprotoWindow = window.open(`modelproto.html?modelid=${modelid}`, "_blank");
 }
 
-async function details_model(modelid) {
+async function edit_model(modelid) {
     const session = await getSession()
-
+    editModel(projectid, modelid)
 }
 
 async function suppress(modelid) {
     const session = await getSession()
-
+    const check = confirm("Souhaitez-vous vraiment suppimer ce modèle?")
+    if (check) {
+        await fetch("/pybee/studio/api/models.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "delete",
+                id: modelid
+            })
+        })
+        .then(r => r.json())
+        .then(async data => {
+            //console.log(data)
+            if (data.status === "ok") {
+                alert("Votre modèle a bien été supprimé")
+                const response = await fetch("/pybee/studio/api/models.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "list",
+                        id_project: projectid
+                    })
+                });
+                const models = await response.json();
+                renderCard(models, session)
+            } else {
+                alert("Erreur : votre modèle n'a pas été supprimé")
+            }
+            closeDialog()
+        });
+    }
 }
 
-async function createModel() {
-    const session = await getSession()
-
-}
