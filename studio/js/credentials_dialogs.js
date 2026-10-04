@@ -35,7 +35,7 @@ async function editcreds(idproject, credsid) {
 async function delcreds(idproject, credsid) {
     const session = await getSession()
     creds_id = credsid
-    const check = confirm("Etes-vous sûr de supprimer ces identifiants?")
+    const check = confirm(t("checkdel"))
     if (check) {
         await fetch("/pybee/studio/api/models_credentials.py", {
             method: "POST",
@@ -49,10 +49,10 @@ async function delcreds(idproject, credsid) {
         .then(data => {
             console.log(data)
             if (data.status === "ok") {
-                alert("Vos identifiants ont bien été supprimés")
+                alert(t("delok"))
                 displayCredentials(document.getElementById("credentials"), idproject)
             } else {
-                alert("Vos identifiants n'ont pas été supprimés")
+                alert(t("delko"))
             }
         });
     }
@@ -60,7 +60,7 @@ async function delcreds(idproject, credsid) {
 
 async function popupCredentials(credentialsid = null) {
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Ajout d'un nouveau identifiant de base de données"
+    head.innerText = t("addtitle")
 
     let credname = ""
     let credservername = ""
@@ -95,39 +95,39 @@ async function popupCredentials(credentialsid = null) {
     content.innerHTML = `
         <div class="dialog-section">
             <div class="dialog-row">
-                <label for="credname">Nom du jeu :</label>
+                <label for="credname">${t("namelabel")}</label>
             </div>
             <div class="dialog-row">
-                <input id="credname" type="text" value="${credname}">
+                <input id="credname" type="text" value="${credname}" maxlength="50">
             </div>
             <div class="dialog-row">
-                <label for="credservername">Nom du serveur :</label>
+                <label for="credservername">${t("serverlabel")}</label>
             </div>
             <div class="dialog-row">
-                <input id="credservername" type="text" value="${credservername}" placeholder="localhost">
+                <input id="credservername" type="text" value="${credservername}" placeholder="localhost" maxlength="250">
             </div>
             <div class="dialog-row">
-                <label for="creddbname">Nom du modèle :</label>
+                <label for="creddbname">${t("modelnamelabel")}</label>
             </div>
             <div class="dialog-row">
                 <select id="creddbname"></select>
             </div>
             <div class="dialog-row">
-                <label for="credusername">Nom de l'utilisateur :</label>
+                <label for="credusername">${t("usernamelabel")}</label>
             </div>
             <div class="dialog-row">
-                <input id="credusername" type="text" value="${credusername}" placeholder="root">
+                <input id="credusername" type="text" value="${credusername}" placeholder="root" maxlength="50">
             </div>
             <div class="dialog-row">
-                <label for="creduserpass">Mot de passe de l'utilisateur :</label>
+                <label for="creduserpass">${t("userpasslabel")}</label>
             </div>
             <div class="dialog-row">
-                <input id="creduserpass" type="password" value="${creduserpass}">
+                <input id="creduserpass" type="password" value="${creduserpass}" maxlength="50">
             </div>
         </div>
         <div class="dialog-actions">
-            <button class="btn btn-primary" onclick="saveCredentials(${project_id})">Valider</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+            <button class="btn btn-primary" onclick="saveCredentials(${project_id})">${t("validate")}</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
         </div>`
 
         const credDbNameSelect = document.getElementById("creddbname")
@@ -162,7 +162,7 @@ async function saveCredentials(idproject) {
     const session = await getSession()
     const credname = document.getElementById("credname")
     if (credname.value.trim() === "") {
-        alert("Le nom du jeu de données est obligatoire")
+        alert(t("namemandatory"))
         credname.focus()
         return
     }
@@ -190,9 +190,9 @@ async function saveCredentials(idproject) {
         .then(data => {
             console.log(data)
             if (data.status === "ok") {
-                alert("Vos identifiants de base de données ont bien été enregistrés")
+                alert(t("recordok"))
             } else {
-                alert("Erreur : vos identifiants de base de données n'ont pas été enregistrés")
+                alert(t("recordko"))
             }
         });
     } else {
@@ -213,9 +213,9 @@ async function saveCredentials(idproject) {
         .then(data => {
             console.log(data)
             if (data.status === "ok") {
-                alert("Vos identifiants de base de données ont bien été enregistrés")
+                alert(t("recordok"))
             } else {
-                alert("Erreur : vos identifiants de base de données n'ont pas été enregistrés")
+                alert(t("recordko"))
             }
         });
     }
