@@ -9,7 +9,8 @@ async function getSession() {
     // 2. Vérification
     if(!session || session.status || !session.auth) {
         window.opener.href = "signin.html";
-        window.opener.credentialslWindow = null;
+        if (window.opener.modelWindow) window.opener.modelWindow.close();
+        if (window.opener.prototypageWindow) window.opener.prototypageWindow.close();
         window.close();
         return;
     }
