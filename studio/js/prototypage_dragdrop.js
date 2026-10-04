@@ -11,6 +11,8 @@ async function getSession() {
     if(!session || session.status || !session.auth) {
         if (intflow && !intflow.closed) intflow.close()
         window.opener.location.href = "signin.html";
+        if (window.opener.modelWindow) window.opener.modelWindow.close();
+        if (window.opener.credentialslWindow) window.opener.credentialslWindow.close();
         window.opener.focus()
         window.close()
         return;
