@@ -41,7 +41,23 @@ async function popupModel() {
     let modelcredential = ""
 
     if (model_id) {
-
+        await fetch("/pybee/studio/api/models.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "getById",
+                id: model_id
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            //console.log(data)
+            if (!data.status) {
+                modelname = data.name
+                modeldescription = data.description
+                modelcredential = data.id_credentials
+            }
+        });
     }
 
     const content = document.getElementById("dialogContent")
@@ -51,7 +67,7 @@ async function popupModel() {
                 <label for="modelname">Nom du modèle (50 car. max) :</label>
             </div>
             <div class="dialog-row">
-                <input id="modelname" type="text" value="${modelname}" maxlength="50">
+                <input id="modelname" type="text" value="${modelname}" maxlength="50"${model_id?" disabled":""}>
             </div>
             <div class="dialog-row">
                 <label for="modeldescription">Description (250 car. max) :</label>
@@ -67,8 +83,8 @@ async function popupModel() {
             </div>
         </div>
         <div class="dialog-actions">
-            <button class="btn btn-primary" onclick="saveModel()">Valider</button>
-            <button class="btn btn-secondary" onclick="closeDialog()">Fermer</button>
+            <button class="btn btn-primary" onclick="saveModel()">${t("validate")}</button>
+            <button class="btn btn-secondary" onclick="closeDialog()">${t("close")}</button>
         </div>`
 
         const credentialSelect = document.getElementById("modelcredentials")
@@ -114,6 +130,36 @@ async function saveModel() {
 
     if (model_id) {
         // cas de l'update
+        await fetch("/pybee/studio/api/models.py", {
+            method: "POST",
+            credentials: "include",
+            body: new URLSearchParams({
+                action: "update",
+                description: modeldescription.value.trim(),
+                id_credentials: modelcredentials.value,
+                id: model_id
+            })
+        })
+        .then(r => r.json())
+        .then(async data => {
+            //console.log(data)
+            if (data.status === "ok") {
+                alert("Votre modèle a bien été modifié")
+                const response = await fetch("/pybee/studio/api/models.py", {
+                    method: "POST",
+                    credentials: "include",
+                    body: new URLSearchParams({
+                        action: "list",
+                        id_project: projectid
+                    })
+                });
+                const models = await response.json();
+                renderCard(models, session)
+            } else {
+                alert("Erreur : votre modèle n'a pas été modifié")
+            }
+            closeDialog()
+        });
     } else {
         await fetch("/pybee/studio/api/models.py", {
             method: "POST",
