@@ -9,14 +9,21 @@ async function getSession() {
     //console.log(session)
     // 2. Vérification
     if(!session || session.status || !session.auth) {
-        if (intflow && !intflow.closed) intflow.close()
-        window.opener.location.href = "signin.html";
-        window.opener.focus()
+        window.opener.opener.href = "signin.html";
+        if (window.opener.opener.prototypageWindow) window.opener.opener.prototypageWindow.close();
+        if (window.opener.opener.credentialslWindow) window.opener.opener.credentialslWindow.close();
+        window.opener.close()
         window.close()
         return;
     }
     return session
 }
+
+window.addEventListener("beforeunload", function (e) {
+    if (!tosave) return
+    e.preventDefault()
+    e.returnValue = ""
+});
 
 // récupérer l'identifiant du projet
 const params = new URLSearchParams(window.location.search)
