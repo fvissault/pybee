@@ -43,7 +43,7 @@ async function initCreds() {
 
 async function displayCredentials(element, idProject) {
     element.replaceChildren();
-    element.textContent = "Chargement des credentials…";
+    element.textContent = t("load");
 
     try {
         const response = await fetch("/pybee/studio/api/models_credentials.py", {
@@ -62,21 +62,21 @@ async function displayCredentials(element, idProject) {
         const credentials = await response.json();
 
         if (!Array.isArray(credentials)) {
-            throw new Error(credentials.error || "Réponse inattendue du serveur");
+            throw new Error(credentials.error || t("error"));
         }
 
         element.replaceChildren();
 
         if (credentials.length === 0) {
-            element.textContent = "Aucun credential pour ce projet.";
+            element.textContent = t("nocreds");
             return;
         }
 
         const colonnes = [
-            ["name", "Nom"],
-            ["servername", "Serveur"],
-            ["databasename", "Base de données"],
-            ["username", "Utilisateur"]
+            ["name", t("name")],
+            ["servername", t("server")],
+            ["databasename", t("database")],
+            ["username", t("user")]
         ];
 
         const tableau = document.createElement("table");
@@ -84,7 +84,7 @@ async function displayCredentials(element, idProject) {
 
         const entete = tableau.createTHead().insertRow();
 
-        for (const titre of [...colonnes.map(([, titre]) => titre), "Actions"]) {
+        for (const titre of [...colonnes.map(([, titre]) => titre), t("actions")]) {
             const cellule = document.createElement("th");
             cellule.scope = "col";
             cellule.textContent = titre;
@@ -106,7 +106,7 @@ async function displayCredentials(element, idProject) {
             const boutonEditer = document.createElement("button");
             boutonEditer.className = "credential-action credential-action-edit";
             boutonEditer.type = "button";
-            boutonEditer.title = "Éditer ce jeu de credentials";
+            boutonEditer.title = t("editcreds");
             boutonEditer.setAttribute("aria-label", boutonEditer.title);
             boutonEditer.innerHTML = `
                 <svg width="24" height="24" viewBox="0 0 24 24"
@@ -124,7 +124,7 @@ async function displayCredentials(element, idProject) {
             const boutonSupprimer = document.createElement("button");
             boutonSupprimer.className = "credential-action credential-action-delete";
             boutonSupprimer.type = "button";
-            boutonSupprimer.title = "Supprimer ce jeu de credentials";
+            boutonSupprimer.title = t("delcreds");
             boutonSupprimer.setAttribute("aria-label", boutonSupprimer.title);
             boutonSupprimer.innerHTML = `
                 <svg width="24" height="24" viewBox="0 0 24 24"
@@ -142,8 +142,8 @@ async function displayCredentials(element, idProject) {
 
         element.append(tableau);
     } catch (error) {
-        console.error("Chargement des credentials :", error);
-        element.textContent = "Impossible de charger les credentials.";
+        console.error(t("errorload"), error);
+        element.textContent = t("errorreason");
     }
 }
 
