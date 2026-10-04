@@ -8,6 +8,9 @@ async function getSession() {
     let session = await res.json();
     // 2. Vérification
     if(!session || session.status || !session.auth) {
+        if (modelWindow) modelWindow.close()
+        if (credentialslWindow) credentialslWindow.close()
+        if (prototypageWindow) prototypageWindow.close()
         location.href = "signin.html";
         return;
     }
@@ -206,25 +209,38 @@ function renderCard(projects, session) {
     renderUI()
 }
 
-let prototypageWindow = null
+var prototypageWindow = null
 
 async function prototypage(projectid) {
     const session = await getSession()
-    prototypageWindow = window.open(`prototypage.html?projectid=${projectid}`, "_blank");
+    if (prototypageWindow && prototypageWindow.closed) prototypageWindow = null
+    if (prototypageWindow)  {
+        prototypageWindow.location.reload()
+        prototypageWindow.focus()
+    } else prototypageWindow = window.open(`prototypage.html?projectid=${projectid}`, "_blank");
+
 }
 
-let modelWindow = null
+var modelWindow = null
 
 async function model(projectid) {
     const session = await getSession()
-    modelWindow = window.open(`model.html?projectid=${projectid}`, "_blank");
+    if (modelWindow && modelWindow.closed) modelWindow = null
+    if (modelWindow)  {
+        modelWindow.location.reload()
+        modelWindow.focus()
+    } else modelWindow = window.open(`model.html?projectid=${projectid}`, "_blank");
 }
 
 var credentialslWindow = null
 
 async function credentials(projectid) {
     const session = await getSession()
-    credentialslWindow = window.open(`credentials.html?projectid=${projectid}`, "_blank");
+    if (credentialslWindow && credentialslWindow.closed) credentialslWindow = null
+    if (credentialslWindow)  {
+        credentialslWindow.location.reload()
+        credentialslWindow.focus()
+    } else credentialslWindow = window.open(`credentials.html?projectid=${projectid}`, "_blank");
 }
 
 async function active_project(projectid, activevalue) {
