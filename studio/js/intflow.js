@@ -1,3 +1,23 @@
+async function getSession() {
+    // 1. Récupération session
+    const res = await fetch("/pybee/studio/api/session.py", {
+        method: "POST",
+        credentials: "include",
+        body: new URLSearchParams({ action: "read" })
+    });
+    let session = await res.json();
+    // 2. Vérification
+    if(!session || session.status || !session.auth) {
+        window.opener.opener.href = "signin.html";
+        if (window.opener.opener.modelWindow) window.opener.opener.modelWindow.close();
+        if (window.opener.opener.credentialslWindow) window.opener.opener.credentialslWindow.close();
+        window.opener.close()
+        window.close();
+        return;
+    }
+    return session
+}
+
 /*==================================================================================
  * Variables globales
  *==================================================================================*/
@@ -22,7 +42,7 @@ window.addEventListener("beforeunload", function (e) {
  *==================================================================================*/
 async function init() {
     console.log(fileid)
-    const session = await window.opener.getSession()
+    const session = await getSession()
     computeNodesAllowedRules()
     try {
         fetch("/pybee/studio/api/jsfiles.py", {
@@ -116,8 +136,8 @@ workspaceEl.ondragover = (e)=>{
     e.preventDefault()
 }
 
-workspaceEl.ondrop = (e) => {
-    const session = window.opener.getSession()
+workspaceEl.ondrop = async (e) => {
+    const session = await getSession()
     e.preventDefault()
     if(!draggedNode) return
     removeNodeFromParent()
@@ -309,8 +329,8 @@ function restoreDraggable(root) {
  *==================================================================================*/
 const trash = document.getElementById("trash")
 trash.ondragover = e => e.preventDefault()
-trash.ondrop = ()=>{
-    const session = window.opener.getSession()
+trash.ondrop = async ()=>{
+    const session = await getSession()
     removeNodeFromParent()
     resetDrag()
     render()
