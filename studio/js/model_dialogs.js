@@ -34,7 +34,7 @@ async function editModel(idproject, modelid) {
 
 async function popupModel() {
     const head = document.getElementById("dialogHeader")
-    head.innerText = "Création d'un nouveau modèle"
+    head.innerText = t("newmodeltitle")
 
     let modelname = ""
     let modeldescription = ""
@@ -64,19 +64,19 @@ async function popupModel() {
     content.innerHTML = `
         <div class="dialog-section">
             <div class="dialog-row">
-                <label for="modelname">Nom du modèle (50 car. max) :</label>
+                <label for="modelname">${t("namelabel")}</label>
             </div>
             <div class="dialog-row">
                 <input id="modelname" type="text" value="${modelname}" maxlength="50"${model_id?" disabled":""}>
             </div>
             <div class="dialog-row">
-                <label for="modeldescription">Description (250 car. max) :</label>
+                <label for="modeldescription">${t("descriptionlabel")}</label>
             </div>
             <div class="dialog-row">
                 <input id="modeldescription" type="text" value="${modeldescription}" maxlength="250">
             </div>
             <div class="dialog-row">
-                <label for="modelcredentials">Jeu d'identifiants :</label>
+                <label for="modelcredentials">${t("setlabel")}</label>
             </div>
             <div class="dialog-row">
                 <select id="modelcredentials"></select>
@@ -120,7 +120,7 @@ async function saveModel() {
     const session = await getSession()
     const modelname = document.getElementById("modelname")
     if (modelname.value.trim() === "") {
-        alert("Le nom de votre nouveau modèle est obligatoire")
+        alert(t("saveerror"))
         modelname.focus()
         return
     }
@@ -144,7 +144,7 @@ async function saveModel() {
         .then(async data => {
             //console.log(data)
             if (data.status === "ok") {
-                alert("Votre modèle a bien été modifié")
+                alert(t("saveok"))
                 const response = await fetch("/pybee/studio/api/models.py", {
                     method: "POST",
                     credentials: "include",
@@ -156,7 +156,7 @@ async function saveModel() {
                 const models = await response.json();
                 renderCard(models, session)
             } else {
-                alert("Erreur : votre modèle n'a pas été modifié")
+                alert(t("saveko"))
             }
             closeDialog()
         });
@@ -176,7 +176,7 @@ async function saveModel() {
         .then(async data => {
             //console.log(data)
             if (data.status === "ok") {
-                alert("Votre nouveau modèle a bien été créé")
+                alert(t("createok"))
                 const response = await fetch("/pybee/studio/api/models.py", {
                     method: "POST",
                     credentials: "include",
@@ -188,7 +188,7 @@ async function saveModel() {
                 const models = await response.json();
                 renderCard(models, session)
             } else {
-                alert("Erreur : votre nouveau modèle n'a pas été créé")
+                alert(t("createko"))
             }
             closeDialog()
         });
