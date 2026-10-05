@@ -57,6 +57,20 @@ elif action == "create":
     except Exception as e:
         json_response({"status": "ko", "message": str(e)})
 
+# SAVE
+elif action == "savemodel":
+    try:
+        data = normalize(form, ["id", "modelcontent"])
+        sql = "UPDATE models SET modelcontent=%s WHERE id=%s"
+        cursor.execute(sql, (
+            data["modelcontent"],
+            data["id"],
+        ))
+        db.commit()
+        json_response({"status": "ok"})
+    except Exception as e:
+        json_response({"status": "ko", "message": str(e)})
+
 # CHANGE DESCRIPTION
 elif action == "change-description":
     try:
