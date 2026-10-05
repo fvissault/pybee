@@ -107,7 +107,7 @@ async function edit_model(modelid) {
 
 async function suppress(modelid) {
     const session = await getSession()
-    const check = confirm("Souhaitez-vous vraiment suppimer ce modèle?")
+    const check = confirm(t("delanswer"))
     if (check) {
         await fetch("/pybee/studio/api/models.py", {
             method: "POST",
@@ -121,7 +121,7 @@ async function suppress(modelid) {
         .then(async data => {
             //console.log(data)
             if (data.status === "ok") {
-                alert("Votre modèle a bien été supprimé")
+                alert(t("delok"))
                 const response = await fetch("/pybee/studio/api/models.py", {
                     method: "POST",
                     credentials: "include",
@@ -133,7 +133,7 @@ async function suppress(modelid) {
                 const models = await response.json();
                 renderCard(models, session)
             } else {
-                alert("Erreur : votre modèle n'a pas été supprimé")
+                alert(t("delko"))
             }
             closeDialog()
         });
