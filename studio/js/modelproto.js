@@ -103,6 +103,9 @@ async function initModelProto() {
         .then(data => {
             model_name = data["name"]
             model_description = data["description"]
+            modelRoot = JSON.parse(data["modelcontent"])
+            renderModel()
+            renderRelations()
         });
     }
 }
@@ -342,6 +345,28 @@ function createPrimaryKeyIcon() {
     return svg;
 }
 
+function deleteRelationsByTable(tableId) {
+
+    modelRoot.relations = modelRoot.relations.filter(relation =>
+        relation.source.tableId !== tableId &&
+        relation.target.tableId !== tableId
+    );
+}
+
+function deleteRelationsByField(tableId, fieldId) {
+
+    modelRoot.relations = modelRoot.relations.filter(relation =>
+        !(
+            relation.source.tableId === tableId &&
+            relation.source.fieldId === fieldId
+        ) &&
+        !(
+            relation.target.tableId === tableId &&
+            relation.target.fieldId === fieldId
+        )
+    );
+}
+
 function deleteTable(tableId) {
     const table = modelRoot.tables.find(
         table => table.id === tableId
@@ -353,11 +378,21 @@ function deleteTable(tableId) {
 
     if (!confirmed) return;
 
+    deleteRelationsByTable(tableId);
+
     modelRoot.tables = modelRoot.tables.filter(
         table => table.id !== tableId
     );
 
+    currenttable = null;
+    currentfield = null;
+    currentrelation = null;
+
+    tosave = true;
+    document.getElementById("savebtn").className = "tosave"
+
     renderModel();
+    renderRelations();
 }
 
 function deleteField(tableId, fieldId) {
@@ -369,11 +404,46 @@ function deleteField(tableId, fieldId) {
     if (!field) return;
     const confirmed = confirm(`Supprimer l’attribut "${field.name}" ` + `de la table "${table.name}" ?`);
     if (!confirmed) return;
+    deleteRelationsByField(tableId, fieldId);
     table.fields = table.fields.filter(field => field.id !== fieldId);
+
+    currentfield = null;
+    currentrelation = null;
+
+    tosave = true;
+    document.getElementById("savebtn").className = "tosave"
+
     renderModel();
+    renderRelations();
+}
+
+function deleteRelation(relationId) {
+
+    const relation = modelRoot.relations.find(
+        relation => relation.id === relationId
+    );
+
+    if (!relation) return;
+
+    const confirmed = confirm(
+        "Supprimer cette relation ?"
+    );
+
+    if (!confirmed) return;
+
+    modelRoot.relations = modelRoot.relations.filter(
+        relation => relation.id !== relationId
+    );
+
+    currentrelation = null;
+    tosave = true;
+    document.getElementById("savebtn").className = "tosave"
+
+    renderRelations();
 }
 
 function closeActionMenus() {
+
     document
         .querySelectorAll(`
             .model-table-menu-content,
@@ -382,6 +452,8 @@ function closeActionMenus() {
         .forEach(menu => {
             menu.hidden = true;
         });
+
+    closeRelationMenu();
 }
 
 document.addEventListener("click", () => {
