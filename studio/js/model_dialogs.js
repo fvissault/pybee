@@ -34,7 +34,11 @@ async function editModel(idproject, modelid) {
 
 async function popupModel() {
     const head = document.getElementById("dialogHeader")
-    head.innerText = t("newmodeltitle")
+    if (model_id) {
+        head.innerText = t("editmodel")
+    } else {
+        head.innerText = t("newmodeltitle")
+    }
 
     let modelname = ""
     let modeldescription = ""
