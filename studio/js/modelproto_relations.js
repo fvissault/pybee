@@ -195,9 +195,79 @@ function renderRelation(relation, svg) {
 
     group.addEventListener("click", event => {
         event.stopPropagation();
-        editRel(relation.id);
+
+        closeActionMenus();
+
+        openRelationMenu(event, relation.id);
     });
+    /*group.addEventListener("click", event => {
+        event.stopPropagation();
+        editRel(relation.id);
+    });*/
     svg.appendChild(group);
+}
+
+function openRelationMenu(event, relationId) {
+
+    // Supprime un éventuel menu de relation déjà ouvert
+    closeRelationMenu();
+
+    const relation = modelRoot.relations.find(
+        relation => relation.id === relationId
+    );
+
+    if (!relation) return;
+
+    currentrelation = relationId;
+
+    const menu = document.createElement("div");
+
+    menu.className = "model-relation-menu-content";
+    menu.dataset.relationId = relationId;
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "model-table-menu-item";
+    editButton.textContent = "Modifier la relation";
+
+    editButton.addEventListener("click", event => {
+        event.stopPropagation();
+
+        closeRelationMenu();
+
+        editRel(relationId);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "model-table-menu-item danger";
+    deleteButton.textContent = "Supprimer la relation";
+
+    deleteButton.addEventListener("click", event => {
+        event.stopPropagation();
+
+        closeRelationMenu();
+
+        deleteRelation(relationId);
+    });
+
+    menu.append(editButton, deleteButton);
+
+    document.body.appendChild(menu);
+
+    menu.style.left = `${event.clientX}px`;
+    menu.style.top = `${event.clientY}px`;
+}
+
+function closeRelationMenu() {
+
+    const menu = document.querySelector(
+        ".model-relation-menu-content"
+    );
+
+    if (menu) {
+        menu.remove();
+    }
 }
 
 function renderRelations() {
