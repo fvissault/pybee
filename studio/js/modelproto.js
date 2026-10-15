@@ -346,51 +346,28 @@ function createPrimaryKeyIcon() {
 }
 
 function deleteRelationsByTable(tableId) {
-
-    modelRoot.relations = modelRoot.relations.filter(relation =>
-        relation.source.tableId !== tableId &&
-        relation.target.tableId !== tableId
-    );
+    modelRoot.relations = modelRoot.relations.filter(relation => relation.source.tableId !== tableId && relation.target.tableId !== tableId);
 }
 
 function deleteRelationsByField(tableId, fieldId) {
-
-    modelRoot.relations = modelRoot.relations.filter(relation =>
-        !(
-            relation.source.tableId === tableId &&
-            relation.source.fieldId === fieldId
-        ) &&
-        !(
-            relation.target.tableId === tableId &&
-            relation.target.fieldId === fieldId
-        )
+    modelRoot.relations = modelRoot.relations.filter(relation => 
+        !(relation.source.tableId === tableId && relation.source.fieldId === fieldId) &&
+        !(relation.target.tableId === tableId && relation.target.fieldId === fieldId)
     );
 }
 
 function deleteTable(tableId) {
-    const table = modelRoot.tables.find(
-        table => table.id === tableId
-    );
-
+    const table = modelRoot.tables.find(table => table.id === tableId);
     if (!table) return;
-
     const confirmed = confirm(`Supprimer la table "${table.name}" ?`);
-
     if (!confirmed) return;
-
     deleteRelationsByTable(tableId);
-
-    modelRoot.tables = modelRoot.tables.filter(
-        table => table.id !== tableId
-    );
-
+    modelRoot.tables = modelRoot.tables.filter(table => table.id !== tableId);
     currenttable = null;
     currentfield = null;
     currentrelation = null;
-
     tosave = true;
     document.getElementById("savebtn").className = "tosave"
-
     renderModel();
     renderRelations();
 }
@@ -398,61 +375,36 @@ function deleteTable(tableId) {
 function deleteField(tableId, fieldId) {
     const table = modelRoot.tables.find(table => table.id === tableId);
     if (!table) return;
-    const field = table.fields.find(
-        field => field.id === fieldId
-    );
+    const field = table.fields.find(field => field.id === fieldId);
     if (!field) return;
     const confirmed = confirm(`Supprimer l’attribut "${field.name}" ` + `de la table "${table.name}" ?`);
     if (!confirmed) return;
     deleteRelationsByField(tableId, fieldId);
     table.fields = table.fields.filter(field => field.id !== fieldId);
-
     currentfield = null;
     currentrelation = null;
-
     tosave = true;
     document.getElementById("savebtn").className = "tosave"
-
     renderModel();
     renderRelations();
 }
 
 function deleteRelation(relationId) {
-
-    const relation = modelRoot.relations.find(
-        relation => relation.id === relationId
-    );
-
+    const relation = modelRoot.relations.find(relation => relation.id === relationId);
     if (!relation) return;
-
-    const confirmed = confirm(
-        "Supprimer cette relation ?"
-    );
-
+    const confirmed = confirm("Supprimer cette relation ?");
     if (!confirmed) return;
-
-    modelRoot.relations = modelRoot.relations.filter(
-        relation => relation.id !== relationId
-    );
-
+    modelRoot.relations = modelRoot.relations.filter(relation => relation.id !== relationId);
     currentrelation = null;
     tosave = true;
     document.getElementById("savebtn").className = "tosave"
-
     renderRelations();
 }
 
 function closeActionMenus() {
-
-    document
-        .querySelectorAll(`
-            .model-table-menu-content,
-            .model-field-menu-content
-        `)
-        .forEach(menu => {
-            menu.hidden = true;
-        });
-
+    document.querySelectorAll(`.model-table-menu-content,.model-field-menu-content`).forEach(menu => {
+        menu.hidden = true;
+    });
     closeRelationMenu();
 }
 
