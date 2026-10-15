@@ -110,6 +110,8 @@ workspace.addEventListener("drop", event => {
         clearFieldDrag();
         renderModel();
         renderRelations()
+        tosave = true;
+        document.getElementById("savebtn").className = "tosave"
 
         return;
     }
@@ -131,6 +133,9 @@ workspace.addEventListener("drop", event => {
     }
 
     draggedTable = null;
+
+    tosave = true;
+    document.getElementById("savebtn").className = "tosave"
 
     renderModel();
     renderRelations();
