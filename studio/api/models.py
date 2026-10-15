@@ -1,7 +1,7 @@
 #!C:\Users\A648326\AppData\Local\Programs\Python\Python312\python.exe
 from db import get_db
 from utils import *
-
+from deploy_database import execute_model_sql
 
 form = get_post_data()
 action = form.getvalue("action") or ""
@@ -123,3 +123,44 @@ elif action == "delete":
         json_response({"status": "ok"})
     except Exception as e:
         json_response({"status": "ko", "message": str(e)})
+
+# EXECUTE SQL
+elif action == "execute-model":
+    try:
+        data = normalize(form,["id", "typeDb", "sql", "mode"])
+
+        type_db = str(data["typeDb"]).lower()
+        mode = data.get("mode") or "install"
+        if type_db not in ("mysql", "pgsql"):
+            raise ValueError("Type attendu : mysql ou pgsql")
+        cursor.execute("SELECT * FROM models WHERE id=%s", (data["id"],))
+        model = cursor.fetchone()
+        if model is None:
+            raise ValueError("Modèle introuvable")
+        cursor.execute("""SELECT * FROM models_credentials WHERE id=%s AND id_project=%s""",
+            (model["id_credentials"], model["id_project"])
+        )
+        credential = cursor.fetchone()
+        if credential is None:
+            raise ValueError("Credentials introuvables pour ce projet")
+        config = {
+            "host": credential["servername"],
+            "port": (
+                3306 if type_db == "mysql" else 5432
+            ),
+            "database": credential["databasename"],
+            "user": credential["username"],
+            "password": credential["userpass"],
+            "create_database": True,
+            "protected_databases": [
+                getattr(db, "database", None)
+                or "beetle_studio"
+            ]
+        }
+
+        result = execute_model_sql(type_db, config, data["sql"], mode)
+
+    except Exception as error:
+        result = {"status": "ko", "message": str(error)}
+
+    json_response(result)
