@@ -17,6 +17,7 @@ const translations = {
         delmember: "Supprimer un membre",
 
         credentials: "Identifiants de base de données",
+        deployment: "Déploiements",
         
         alertactiv: "L'activation du projet a bien été effectuée",
         alertdeactiv: "La désactivation du projet a bien été effectuée",
