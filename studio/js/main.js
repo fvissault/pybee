@@ -17,7 +17,6 @@ async function getSession() {
     return session
 }
 
-
 async function initMain() {
     const session = await getSession()
     if (session) {
@@ -100,6 +99,19 @@ const credentials_icon = `
         <path d="M16 15v-2a2 2 0 0 1 4 0v2"/>
     </svg>`;
 
+const deployment_icon = `
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Corps de la fusée -->
+        <path d="M12 15 9 12C11 6 15 3 21 3c0 6-3 10-9 12Z"/>
+        <!-- Hublot -->
+        <circle cx="16" cy="8" r="1.5"/>
+        <!-- Ailerons -->
+        <path d="M9 8H5l-3 5h7"/>
+        <path d="M16 15v4l-5 3v-7"/>
+        <!-- Flamme -->
+        <path d="M7 15c-2 0-4 2-4 6 4 0 6-2 6-4"/>
+    </svg>`;
+
 function renderCard(projects, session) {
     let html = "";
     projects.forEach(p => {
@@ -115,6 +127,9 @@ function renderCard(projects, session) {
                                     </button>
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
+                                    </button>
+                                    <button class="card_button" onclick="deployment(${p.id});" data-i18n="title:deployment">
+                                        ${deployment_icon}
                                     </button>
                                     <button class="card_button" onclick="credentials(${p.id});" data-i18n="title:credentials">
                                         ${credentials_icon}
@@ -146,6 +161,9 @@ function renderCard(projects, session) {
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
                                     </button>
+                                    <button class="card_button" onclick="deployment(${p.id});" data-i18n="title:deployment">
+                                        ${deployment_icon}
+                                    </button>
                                     <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
                                         ${model_icon}
                                     </button>
@@ -174,6 +192,9 @@ function renderCard(projects, session) {
                                     </button>
                                     <button class="card_button" onclick="details_project(${p.id});" data-i18n="title:infos">
                                         ${details_icon}
+                                    </button>
+                                    <button class="card_button" onclick="deployment(${p.id});" data-i18n="title:deployment">
+                                        ${deployment_icon}
                                     </button>
                                     <button class="card_button" onclick="model(${p.id});" data-i18n="title:model">
                                         ${model_icon}
@@ -331,6 +352,19 @@ function disconnect() {
     })
     .then(() => {
         if (prototypageWindow) prototypageWindow.close()
+        if (credentialslWindow) credentialslWindow.close()
+        if (modelWindow) modelWindow.close()
         location.href = "signin.html"
     });
+}
+
+var deploymentWindow = null
+
+async function deployment(projectid) {
+    const session = await getSession()
+    if (deploymentWindow && deploymentWindow.closed) deploymentWindow = null
+    if (deploymentWindow)  {
+        deploymentWindow.location.reload()
+        deploymentWindow.focus()
+    } else deploymentWindow = window.open(`deployment.html?projectid=${projectid}`, "_blank");
 }
