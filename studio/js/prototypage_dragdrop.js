@@ -10,9 +10,10 @@ async function getSession() {
     // 2. Vérification
     if(!session || session.status || !session.auth) {
         if (intflow && !intflow.closed) intflow.close()
-        window.opener.location.href = "signin.html";
         if (window.opener.modelWindow) window.opener.modelWindow.close();
         if (window.opener.credentialslWindow) window.opener.credentialslWindow.close();
+        if (window.opener.deploymentWindow) window.opener.deploymentWindow.close();
+        window.opener.location.href = "signin.html";
         window.opener.focus()
         window.close()
         return;
