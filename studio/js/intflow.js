@@ -8,9 +8,10 @@ async function getSession() {
     let session = await res.json();
     // 2. Vérification
     if(!session || session.status || !session.auth) {
-        window.opener.opener.href = "signin.html";
         if (window.opener.opener.modelWindow) window.opener.opener.modelWindow.close();
         if (window.opener.opener.credentialslWindow) window.opener.opener.credentialslWindow.close();
+        if (window.opener.opener.deploymentWindow) window.opener.opener.deploymentWindow.close();
+        window.opener.opener.href = "signin.html";
         window.opener.close()
         window.close();
         return;
