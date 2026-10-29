@@ -29,7 +29,7 @@ function signin(){
     })
     .then(r => r.json())
     .then(data => {
-        //console.log(data)
+        console.log(data)
         if(data.error){
             alert("Failed authentication");
         } else {
