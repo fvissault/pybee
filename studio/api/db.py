@@ -5,5 +5,5 @@ def get_db():
         host="127.0.0.1",
         user="root",
         password="",
-        database="beetle_studio"
+        database="studio_beetle"
     )
