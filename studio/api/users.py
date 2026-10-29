@@ -4,6 +4,10 @@ from utils import *
 import uuid
 import sys
 
+ROOT = os.path.dirname(os.path.dirname(__file__))
+def debug(*args):
+    with open(os.path.join(ROOT, "logs", "debug.log"), "a", encoding="utf8") as f:
+        print(*args, file=f)
 
 form = get_post_data()
 action = form.getvalue("action") or ""
@@ -65,6 +69,11 @@ elif action == "login":
             hash_password(data["password"]),
         ))
         user = cursor.fetchone()
+
+        debug("action =", action)
+        debug("sql =", sql)
+        debug("user =", user)
+
         json_response(user if user else {"error": "auth_failed"})
     except Exception as e:
         json_response({"status": "nok", "message": str(e)})
