@@ -334,6 +334,11 @@ root {
     border:1px solid #ddd;
 }
 
+.dialog-column {
+    float:left; 
+    margin-right:20px;
+}
+
 /* Label */
 .label {
     color: #6b7280;
@@ -447,94 +452,50 @@ root {
 
 
 
-.credentials-table {
-    width: 100%;
-    border-spacing: 0;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    font-size: 13px;
-    color: #334155;
-}
 
-.credentials-table th {
-    padding: 11px 16px;
-    background: #f1f5f9;
-    border-bottom: 1px solid #e2e8f0;
-    text-align: left;
-    font-weight: 600;
-    white-space: nowrap;
-    color: #475569;
-}
 
-.credentials-table td {
-    padding: 10px 16px;
-    vertical-align: middle;
-}
-
-.credentials-table tbody tr + tr td {
-    border-top: 1px solid #edf0f4;
-}
-
-.credentials-table tbody tr:hover {
-    background: #f8fafc;
-}
-
-.credentials-table td:first-child {
-    font-weight: 600;
-    color: #1e293b;
-}
-
-.credentials-table th:last-child,
-.credentials-table .credentials-actions {
-    width: 90px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-.credential-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border: none;
-    border-radius: 5px;
-    background: transparent;
+.accordion {
+    background-color: #eee;
+    color: #444;
+    padding:20px;
     cursor: pointer;
-    vertical-align: middle;
-    transition: background-color 0.15s;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    transition: 0.4s;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    gap: 12px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
 }
 
-.credential-action + .credential-action {
-    margin-left: 4px;
+.accordion-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.credential-action svg {
-    width: 18px;
-    height: 18px;
+.active, .accordion:hover {
+    background-color: #ddd;
 }
 
-.credential-action-edit {
-    color: #475569;
-}
-
-.credential-action-edit:hover {
-    color: #2563eb;
-    background: #eff6ff;
-}
-
-.credential-action-delete {
-    color: #dc2626;
-}
-
-.credential-action-delete:hover {
-    background: #fef2f2;
-}
-
-.credential-action:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
+.accordion-panel {
+    padding:0px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
 }
