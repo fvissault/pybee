@@ -18,12 +18,13 @@ cursor = db.cursor(dictionary=True)
 # CREATE
 if action == "create":
     try:
-        data = normalize(form, ["id_project", "name", "description"])
-        sql = "INSERT INTO deployments_profiles (id_project, name, description, profilecontent) VALUES (%s,%s,%s,'{}')"
+        data = normalize(form, ["id_project", "name", "description", "profilecontent"])
+        sql = "INSERT INTO deployments_profiles (id_project, name, description, active, profilecontent) VALUES (%s,%s,%s,0,%s)"
         cursor.execute(sql, (
             data["id_project"],
             data["name"],
             data["description"],
+            data["profilecontent"],
         ))
         db.commit()
 
@@ -74,7 +75,7 @@ elif action == "getbyproject":
 
         debug("action =", action)
         debug("sql =", sql)
-        debug("id =", data["id"])
+        debug("id_project =", data["id_project"])
         debug("profiles =", profiles)
 
         json_response(profiles if profiles is not None else {"error": "deployment profiles by project don't exists"})
@@ -84,11 +85,12 @@ elif action == "getbyproject":
 # UPDATE (profiles)
 elif action == "update":
     try:
-        data = normalize(form, ["name", "description", "id"])
-        sql = "UPDATE deployments_profiles SET name=%s, description=%s WHERE id=%s"
+        data = normalize(form, ["name", "description", "profileontent", "id"])
+        sql = "UPDATE deployments_profiles SET name=%s, description=%s, profilecontent=%s WHERE id=%s"
         cursor.execute(sql, (
             data["name"],
             data["description"],
+            data["profilecontent"],
             data["id"],
         ))
         db.commit()
